@@ -126,6 +126,10 @@ func loc(key_or_text: String) -> String:
 
 func _register_csv_translations(csv_path: String) -> void:
 	if not FileAccess.file_exists(csv_path):
+		if ResourceLoader.exists("res://locales/zh_CN.zh_CN.translation"):
+			var tr_res: Translation = load("res://locales/zh_CN.zh_CN.translation") as Translation
+			if tr_res != null:
+				TranslationServer.add_translation(tr_res)
 		return
 	var f: FileAccess = FileAccess.open(csv_path, FileAccess.READ)
 	if f == null:
