@@ -13,7 +13,7 @@
 本仓库导出的三端发行产物位于本地 `builds/` 目录（可通过 `bash tools/export_builds.sh` 一键重构建）：
 
 - **Web 浏览器免安装版 (`builds/web/`)**：
-  - 产物：`builds/web/index.html`、`index.wasm`、`index.pck`、`index.js`（单线程 `gl_compatibility` 模式，无需特殊 COOP/COEP 响应头，支持任意现代桌面浏览器全屏游玩，自动通过浏览器 IndexedDB 持久化存档与设置）。
+  - 产物：`builds/web/index.html`、`index.wasm`（含 `.wasm.gz` 与 `chunks/` `<1.5 MiB` 并发分片包）、`index.pck`、`index.js`（单线程 `gl_compatibility` 模式，无需特殊 COOP/COEP 响应头，支持任意现代桌面浏览器与远程预览沙盒流畅加载，自动通过 IndexedDB / 内存安全降级持久化存档与设置）。
   - 本地启动静态服务示例：`python3 -m http.server 8080 --directory builds/web`
 - **Windows 桌面版 (`builds/windows/`)**：
   - 产物：`builds/windows/chenyuan-xianxia.exe` + `chenyuan-xianxia.pck`（保持同目录双击 `chenyuan-xianxia.exe` 即可运行）。
@@ -23,13 +23,13 @@
 ### 2. 使用 Godot 4.3 编辑器打开源码工程
 
 ```bash
-# 校验 149 项入库美术与民乐音效资产 SHA-256 及来源台账
+# 校验 151 项入库美术与民乐音效资产 SHA-256 及来源台账
 python3 tools/manifest_guard.py --check
 
 # 使用 Godot 4.3 直接启动运行工程
 godot --path project
 
-# 一键重新导出 Web / Linux / Windows 三端构建包
+# 一键重新导出 Web（含自动分片压缩） / Linux / Windows 三端构建包
 bash tools/export_builds.sh
 ```
 
@@ -46,7 +46,7 @@ bash tools/export_builds.sh
 | **推进对白 / CG** | `Enter` 或 **鼠标左键点击卷轴** | 附带 `400ms` 切入防连点锁；已读对白支持按住 `Ctrl` 快进；分支道心抉择须主动点击选项 |
 | **小队主控切换** | `F1 ~ F4` / `Tab` | `F1~F4` 瞬切 1~4 号阵位同伴（双击镜头居中）；`Tab` 智能优先锁定正在吟唱危招的敌方 |
 | **核心战技栏** | `1 ~ 4` / `Q` / `E` / `R` / `G` | `1~4` 常驻循环（`1.5s` GCD）、`Q` 离轴秒断/位移、`E` 职责招牌技、`R` 本命古宝、`G` 双人羁绊合击【青莲引剑】 |
-| **灵丹与奇门抽屉** | `5 ~ 6` / `Z` / `Ctrl+1 ~ 2` | `5~6` 战中瞬回丹药、`Z` 奇门阵图切换抽屉、`Ctrl+1/2` 灵宠手动护主与破敌技 |
+| **丹符与奇门抽屉** | `5 ~ 6` / `Z` / `Ctrl+1 ~ 2` | `5~6` 瞬发丹药与【敛息符】快捷槽、`Z` 奇门阵图切换抽屉、`Ctrl+1/2` 灵宠手动护主与破敌技 |
 | **Mouseover 悬停施法** | **鼠标悬停左下小队框 + 按技能键** | 无需切换当前敌方锁定目标，鼠标指谁即可对谁秒放治疗、护盾或净衣驱散 |
 | **《万象道匣》与舆图** | `C` / `N` / `B` / `J` / `M` / `Esc` | 修行·兵甲 (`C`)、道途·奇门 (`N`)、行囊·剑匣 (`B`)、问道手札 (`J`)、手绘淡墨舆图 (`M`)、设置 (`Esc`) |
 
@@ -55,11 +55,11 @@ bash tools/export_builds.sh
 ## 三、工程三层架构与目录导航
 
 - `docs/design/` —— 全部 15 份定稿系统与关卡设计规格书（[`00-gdd.md`](docs/design/00-gdd.md) 至 [`40-vertical-slice-plan.md`](docs/design/40-vertical-slice-plan.md)）
-- `docs/asset-manifest.json` & `assets_src/` —— 全量 149 项宋明工笔青绿山水美术与民乐音效资产的来源台账、SHA-256 校验值与原始分层母版
+- `docs/asset-manifest.json` & `assets_src/` —— 全量 151 项宋明工笔青绿山水美术与民乐音效资产的来源台账、SHA-256 校验值与原始分层母版
 - `project/src/core_rules/` —— **第一层：纯数学与确定性规则核**（`StatLedger` 45/35/20 三桶账本与双曲递减、`FormationRules` 奇门阵法、`RtwpSimStep` RTwP 步进与五行相生破罡、`EconomyRules` 丹道控火与防套利公式，零场景节点依赖）
 - `project/src/game_state/` —— **第二层：战役状态与持久化服务**（`DataDB`、`NotifyHub` 唯一四级通知中枢、`InputRouter` 唯一键鼠路由、`CampaignState`、`SaveManager` SHA-256 信封校验与 `.tmp`/`.bak` 零覆盖保护）
 - `project/src/presentation/` —— **第三层：青岚三连无缝箱庭、RTwP 战场演出、古典器物 UI 与动态双轨民乐**
-- `project/data/` & `project/locales/zh_CN.csv` —— 第一章完整结构化 JSON 配表与 503 条古典白话文本表
+- `project/data/` & `project/locales/zh_CN.csv` —— 第一章完整结构化 JSON 配表与 505 条古典白话文本表
 
 ## 四、原型归档说明
 

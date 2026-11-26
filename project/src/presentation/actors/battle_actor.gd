@@ -329,12 +329,40 @@ func _draw() -> void:
 func _draw_bark_bubble(font: Font, anchor_y: float) -> void:
 	if _bark_timer <= 0.0 or _bark_text == "":
 		return
+	var reg_font: Font = UIThemeBuilder.get_regular_font()
+	if reg_font == null:
+		reg_font = font
 	var fade: float = clampf(minf(_bark_timer / 0.45, (_bark_duration - _bark_timer + 0.15) / 0.25), 0.0, 1.0)
-	var text_w: float = minf(340.0, font.get_string_size(_bark_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x + 24.0)
-	var rect: Rect2 = Rect2(-text_w * 0.5, anchor_y - 32.0, text_w, 30.0)
-	draw_rect(rect, Color(0.86, 0.82, 0.75, 0.94 * fade), true)
-	draw_rect(rect, Color(0.42, 0.33, 0.22, 0.94 * fade), false, 1.8)
-	draw_string(font, Vector2(rect.position.x + 12.0, rect.position.y + 21.0), _bark_text, HORIZONTAL_ALIGNMENT_LEFT, text_w - 20.0, 16, Color(0.14, 0.11, 0.09, fade))
+	var max_content_w: float = 264.0
+	var single_w: float = reg_font.get_string_size(_bark_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
+	var wrap_w: float = minf(max_content_w, maxf(112.0, single_w + 6.0))
+	var cjk_brk: int = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_GRAPHEME_BOUND
+	var msize: Vector2 = reg_font.get_multiline_string_size(_bark_text, HORIZONTAL_ALIGNMENT_LEFT, wrap_w, 16, -1, cjk_brk)
+	var box_w: float = wrap_w + 26.0
+	var box_h: float = maxf(34.0, msize.y + 18.0)
+	var rect: Rect2 = Rect2(-box_w * 0.5, anchor_y - box_h - 8.0, box_w, box_h)
+
+	# 宣纸底衬阴影 + 框体 + 指向三角尾标
+	draw_rect(Rect2(rect.position + Vector2(2.0, 3.0), rect.size), Color(0.06, 0.05, 0.04, 0.42 * fade), true)
+	draw_rect(rect, Color(0.89, 0.85, 0.77, 0.96 * fade), true)
+	draw_rect(rect, Color(0.42, 0.32, 0.20, 0.96 * fade), false, 1.8)
+	var tail_pts: PackedVector2Array = PackedVector2Array([
+		Vector2(-7.0, rect.end.y - 1.0),
+		Vector2(7.0, rect.end.y - 1.0),
+		Vector2(0.0, rect.end.y + 7.0),
+	])
+	draw_colored_polygon(tail_pts, Color(0.89, 0.85, 0.77, 0.96 * fade))
+	draw_multiline_string(
+		reg_font,
+		Vector2(rect.position.x + 13.0, rect.position.y + 22.0),
+		_bark_text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		wrap_w,
+		16,
+		-1,
+		Color(0.14, 0.11, 0.09, fade),
+		cjk_brk
+	)
 
 
 func _draw_ellipse(center: Vector2, rx: float, ry: float, col: Color, width: float) -> void:

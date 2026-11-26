@@ -12,14 +12,14 @@ var _tip_label: Label
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	UIThemeBuilder.bind_full_rect(self)
 	color = Color(0.05, 0.04, 0.04, 0.84)
 	visible = false
 	theme = UIThemeBuilder.get_global_theme()
 
 	var center: CenterContainer = CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	UIThemeBuilder.bind_full_rect(center)
 
 	var scroll_panel: PanelContainer = PanelContainer.new()
 	scroll_panel.custom_minimum_size = Vector2(780.0, 480.0)

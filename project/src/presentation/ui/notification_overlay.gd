@@ -27,13 +27,13 @@ var _pending_crisis_slot: String = ""
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	UIThemeBuilder.bind_full_rect(self)
 	theme = UIThemeBuilder.get_global_theme()
 
 	_floater_layer = Control.new()
 	_floater_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_floater_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(_floater_layer)
+	UIThemeBuilder.bind_full_rect(_floater_layer)
 
 	# 顶部偏上战斗核心横幅（P1）
 	_banner_box = PanelContainer.new()

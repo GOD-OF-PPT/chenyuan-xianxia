@@ -12,7 +12,6 @@ signal open_casket_requested(tab_id: String)
 signal open_map_requested()
 signal open_save_modal_requested()
 signal open_settings_requested()
-signal stealth_talisman_clicked()
 
 var combat_ctrl: RtwpCombatController = null
 
@@ -44,12 +43,19 @@ var _quick_drawer: PanelContainer
 var _drawer_vbox: VBoxContainer
 
 var _slot_widgets: Dictionary = {} # slot_code -> {btn, icon, key_lbl, cd_lbl, border_panel, skill_id}
+var _attunement_wrap: PanelContainer
 var _attunement_fill: ColorRect
 var _attunement_lbl: Label
 
 var _top_right_zone_lbl: Label
 var _stones_lbl: Label
 var _minimap_canvas: Control
+var _mm_roads: Array[PackedVector2Array] = []
+var _mm_buildings: Array[Rect2] = []
+var _mm_steles: Array[Vector2] = []
+var _mm_portals: Array[Vector2] = []
+var _mm_npcs: Array[BattleActor] = []
+
 var _interact_prompt_box: PanelContainer
 var _interact_prompt_lbl: Label
 
@@ -61,7 +67,7 @@ var _fade_alpha: float = 1.0
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	UIThemeBuilder.bind_full_rect(self)
 	theme = UIThemeBuilder.get_global_theme()
 
 	_build_top_boss_bar()
@@ -88,18 +94,53 @@ func bind_combat_controller(ctrl: RtwpCombatController) -> void:
 	refresh_static_bindings()
 
 
+func set_minimap_zone_geometry(
+	roads: Array[PackedVector2Array],
+	buildings: Array[Rect2],
+	steles: Array[Vector2],
+	portals: Array[Vector2],
+	npcs: Array[BattleActor]
+) -> void:
+	_mm_roads = roads
+	_mm_buildings = buildings
+	_mm_steles = steles
+	_mm_portals = portals
+	_mm_npcs = npcs
+	if _minimap_canvas != null:
+		_minimap_canvas.queue_redraw()
+
+
 func set_box_selection_visual(active: bool, rect: Rect2) -> void:
 	_is_box_selecting = active
 	_box_select_rect = rect
 	queue_redraw()
 
 
-func set_interact_prompt(prompt_text: String) -> void:
+func set_interact_prompt(prompt_text: String, screen_anchor: Vector2 = Vector2(-1.0, -1.0)) -> void:
 	if prompt_text == "":
 		_interact_prompt_box.visible = false
+		return
+	_interact_prompt_lbl.text = "  " + prompt_text + "  "
+	_interact_prompt_box.visible = true
+	var vp_size: Vector2 = get_viewport_rect().size
+	var box_w: float = maxf(230.0, _interact_prompt_box.get_combined_minimum_size().x)
+	var box_h: float = 40.0
+	if screen_anchor.x >= 0.0 and screen_anchor.y >= 0.0:
+		var px: float = clampf(screen_anchor.x - box_w * 0.5, 24.0, maxf(24.0, vp_size.x - box_w - 24.0))
+		var py: float = clampf(screen_anchor.y - box_h - 14.0, 28.0, maxf(28.0, vp_size.y - 210.0))
+		_interact_prompt_box.anchor_left = 0.0
+		_interact_prompt_box.anchor_right = 0.0
+		_interact_prompt_box.offset_left = px
+		_interact_prompt_box.offset_right = px + box_w
+		_interact_prompt_box.offset_top = py
+		_interact_prompt_box.offset_bottom = py + box_h
 	else:
-		_interact_prompt_lbl.text = prompt_text
-		_interact_prompt_box.visible = true
+		_interact_prompt_box.anchor_left = 0.5
+		_interact_prompt_box.anchor_right = 0.5
+		_interact_prompt_box.offset_left = -box_w * 0.5
+		_interact_prompt_box.offset_right = box_w * 0.5
+		_interact_prompt_box.offset_top = 720.0
+		_interact_prompt_box.offset_bottom = 760.0
 
 
 func is_quick_drawer_open() -> bool:
@@ -222,22 +263,18 @@ func _build_top_right_cluster() -> void:
 
 	var menu_row2: HBoxContainer = HBoxContainer.new()
 	menu_row2.alignment = BoxContainer.ALIGNMENT_CENTER
-	menu_row2.add_theme_constant_override("separation", 6)
+	menu_row2.add_theme_constant_override("separation", 10)
 	vb.add_child(menu_row2)
 
-	var stealth_btn: Button = _make_compact_btn("敛息符")
-	stealth_btn.pressed.connect(func() -> void: stealth_talisman_clicked.emit())
-	menu_row2.add_child(stealth_btn)
-
-	var map_btn: Button = _make_compact_btn("舆图(M)")
+	var map_btn: Button = _make_compact_btn("青岚舆图(M)")
 	map_btn.pressed.connect(func() -> void: open_map_requested.emit())
 	menu_row2.add_child(map_btn)
 
-	var save_btn: Button = _make_compact_btn("存卷")
+	var save_btn: Button = _make_compact_btn("留存道卷")
 	save_btn.pressed.connect(func() -> void: open_save_modal_requested.emit())
 	menu_row2.add_child(save_btn)
 
-	var set_btn: Button = _make_compact_btn("设置")
+	var set_btn: Button = _make_compact_btn("器物设置")
 	set_btn.pressed.connect(func() -> void: open_settings_requested.emit())
 	menu_row2.add_child(set_btn)
 
@@ -296,9 +333,9 @@ func _build_party_frames() -> void:
 	_party_box.anchor_top = 1.0
 	_party_box.anchor_bottom = 1.0
 	_party_box.offset_left = 20.0
-	_party_box.offset_right = 318.0
+	_party_box.offset_right = 324.0
 	_party_box.offset_top = -420.0
-	_party_box.offset_bottom = -24.0
+	_party_box.offset_bottom = -16.0
 	_party_box.alignment = BoxContainer.ALIGNMENT_END
 	_party_box.add_theme_constant_override("separation", 8)
 	add_child(_party_box)
@@ -306,8 +343,8 @@ func _build_party_frames() -> void:
 	for i: int in range(4):
 		var slot_num: int = i + 1
 		var card: PanelContainer = PanelContainer.new()
-		card.custom_minimum_size = Vector2(292.0, 86.0)
-		card.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.11, 0.10, 0.09, 0.92), UIThemeBuilder.COL_BRONZE_DIM, 2, 5))
+		card.custom_minimum_size = Vector2(298.0, 90.0)
+		card.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.11, 0.10, 0.09, 0.96), UIThemeBuilder.COL_BRONZE_GOLD, 2, 5))
 		_party_box.add_child(card)
 
 		var cvb: VBoxContainer = VBoxContainer.new()
@@ -394,8 +431,8 @@ func _build_bottom_action_bar() -> void:
 
 	# 左上方迷你灵宠控制条（Ctrl+1 / Ctrl+2）
 	_pet_bar = PanelContainer.new()
-	_pet_bar.position = Vector2(12.0, 0.0)
-	_pet_bar.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.12, 0.11, 0.10, 0.92), UIThemeBuilder.COL_BRONZE_DIM, 1, 4))
+	_pet_bar.position = Vector2(12.0, 4.0)
+	_pet_bar.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.12, 0.11, 0.10, 0.94), UIThemeBuilder.COL_BRONZE_DIM, 1, 4))
 	_pet_bar.visible = false
 	_bottom_cluster.add_child(_pet_bar)
 
@@ -426,18 +463,19 @@ func _build_bottom_action_bar() -> void:
 	)
 	pet_hb.add_child(_pet_sk2_btn)
 
-	# 右上方同调气机青莲槽
-	var att_wrap: PanelContainer = PanelContainer.new()
-	att_wrap.position = Vector2(610.0, 2.0)
-	att_wrap.custom_minimum_size = Vector2(368.0, 34.0)
-	att_wrap.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.11, 0.10, 0.09, 0.92), UIThemeBuilder.COL_BRONZE_DIM, 1, 4))
-	_bottom_cluster.add_child(att_wrap)
+	# 正上方居中同调气机青莲槽（仅在战斗中或拥有同调气机时展开显示，脱战零气机时干净收纳！）
+	_attunement_wrap = PanelContainer.new()
+	_attunement_wrap.position = Vector2(310.0, 4.0)
+	_attunement_wrap.custom_minimum_size = Vector2(368.0, 34.0)
+	_attunement_wrap.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.11, 0.10, 0.09, 0.94), UIThemeBuilder.COL_BRONZE_DIM, 1, 4))
+	_attunement_wrap.visible = false
+	_bottom_cluster.add_child(_attunement_wrap)
 
 	var att_bar: Control = _make_bar_row(356.0, 24.0, Color(0.08, 0.14, 0.12, 0.95))
 	_attunement_fill = att_bar.get_child(0) as ColorRect
 	_attunement_fill.color = UIThemeBuilder.COL_JADE_GREEN
 	_attunement_lbl = att_bar.get_child(1) as Label
-	att_wrap.add_child(att_bar)
+	_attunement_wrap.add_child(att_bar)
 
 	# 主乌木镶青铜技能栏底座
 	var main_bar: PanelContainer = PanelContainer.new()
@@ -730,10 +768,10 @@ func _process(delta: float) -> void:
 			(" [瘴×%d]" % pa.miasma_stacks) if pa.miasma_stacks > 0 else ""
 		]
 
-	# 2. 脱战满 5 秒且气血 >90% 时呼吸半透隐退（悬停或开战瞬间恢复 1.0）
+	# 2. 脱战保持高对比清晰度（最低 0.92，彻底杜绝发灰模糊），悬停或交战时 1.0
 	var target_alpha: float = 1.0
 	if not combat_ctrl.in_combat and combat_ctrl.out_of_combat_sec >= 5.0 and all_healthy and not _hud_hovered and not _quick_drawer.visible:
-		target_alpha = 0.34
+		target_alpha = 0.92
 	_fade_alpha = move_toward(_fade_alpha, target_alpha, delta * 2.2)
 	_party_box.modulate.a = _fade_alpha
 	_bottom_cluster.modulate.a = _fade_alpha
@@ -759,10 +797,12 @@ func _process(delta: float) -> void:
 		var sb: StyleBoxFlat = w["stylebox"] as StyleBoxFlat
 
 		if code == "5" or code == "6":
-			var p_rem: float = combat_ctrl.pill_cooldown_timer
+			var p_idef: Dictionary = DataDB.get_any_item_or_equip(sk_id)
+			var is_talisman: bool = (str(p_idef.get("category", "")) == "talisman")
+			var p_rem: float = 0.0 if is_talisman else combat_ctrl.pill_cooldown_timer
 			cd_ov.visible = p_rem > 0.05
 			cd_l.text = ("%.0fs" % p_rem) if p_rem > 0.05 else ""
-			sb.border_color = UIThemeBuilder.COL_BRONZE_DIM
+			sb.border_color = Color("#74E0B8") if (is_talisman and combat_ctrl.stealth_timer > 0.0) else UIThemeBuilder.COL_BRONZE_DIM
 			continue
 		if sk_id == "" or code == "Z":
 			cd_ov.visible = false
@@ -790,14 +830,16 @@ func _process(delta: float) -> void:
 		else:
 			sb.border_color = UIThemeBuilder.COL_BRONZE_DIM
 
-	# 同调气机槽刷新
-	var att_r: float = clampf(combat_ctrl.team_attunement / RtwpSimStep.MAX_ATTUNEMENT, 0.0, 1.0)
-	_attunement_fill.size.x = 352.0 * att_r
-	_attunement_lbl.text = "%s: %d / 100%s" % [
-		tr("TERM_ATTUNEMENT"),
-		int(floor(combat_ctrl.team_attunement)),
-		" 【可按 G 放合击！】" if combat_ctrl.team_attunement >= 100.0 and CampaignState.unlocked_bond_ultimates.has("ult_qinglian_sword") else ""
-	]
+	# 同调气机槽刷新（脱战且气机为 0 时干净隐藏，入战或积攒气机后展开）
+	_attunement_wrap.visible = combat_ctrl.in_combat or combat_ctrl.team_attunement >= 0.5
+	if _attunement_wrap.visible:
+		var att_r: float = clampf(combat_ctrl.team_attunement / RtwpSimStep.MAX_ATTUNEMENT, 0.0, 1.0)
+		_attunement_fill.size.x = 352.0 * att_r
+		_attunement_lbl.text = "%s: %d / 100%s" % [
+			tr("TERM_ATTUNEMENT"),
+			int(floor(combat_ctrl.team_attunement)),
+			" 【可按 G 放合击！】" if combat_ctrl.team_attunement >= 100.0 and CampaignState.unlocked_bond_ultimates.has("ult_qinglian_sword") else ""
+		]
 
 	# 4. 顶部首领大框刷新
 	if _tracked_boss != null and is_instance_valid(_tracked_boss) and _tracked_boss.alive:
@@ -842,22 +884,77 @@ func _process(delta: float) -> void:
 
 func _draw_minimap() -> void:
 	var rect: Rect2 = Rect2(Vector2.ZERO, _minimap_canvas.size)
-	_minimap_canvas.draw_rect(rect, Color(0.08, 0.09, 0.09, 0.92), true)
-	_minimap_canvas.draw_rect(rect, UIThemeBuilder.COL_BRONZE_DIM, false, 1.5)
+	# 宋明青灰绢本水墨底色 + 细暗格经纬
+	_minimap_canvas.draw_rect(rect, Color(0.14, 0.17, 0.16, 0.96), true)
+	for gx: int in range(1, 4):
+		var lx: float = rect.size.x * float(gx) * 0.25
+		_minimap_canvas.draw_line(Vector2(lx, 2.0), Vector2(lx, rect.size.y - 2.0), Color(0.24, 0.28, 0.26, 0.32), 1.0)
+	_minimap_canvas.draw_line(Vector2(2.0, rect.size.y * 0.5), Vector2(rect.size.x - 2.0, rect.size.y * 0.5), Color(0.24, 0.28, 0.26, 0.32), 1.0)
+
 	if combat_ctrl == null:
+		_minimap_canvas.draw_rect(rect, UIThemeBuilder.COL_BRONZE_DIM, false, 1.5)
 		return
 
 	var scale_x: float = rect.size.x / 2400.0
 	var scale_y: float = rect.size.y / 1400.0
 
+	# 1. 道路与庭院石板轮廓
+	for rpoly: PackedVector2Array in _mm_roads:
+		if rpoly.size() >= 3:
+			var scaled_pts: PackedVector2Array = PackedVector2Array()
+			for pt: Vector2 in rpoly:
+				scaled_pts.append(Vector2(pt.x * scale_x, pt.y * scale_y))
+			_minimap_canvas.draw_colored_polygon(scaled_pts, Color(0.36, 0.39, 0.37, 0.78))
+
+	# 2. 重点亭台屋宇轮廓
+	for brect: Rect2 in _mm_buildings:
+		var srect: Rect2 = Rect2(
+			Vector2(brect.position.x * scale_x, brect.position.y * scale_y),
+			Vector2(maxf(8.0, brect.size.x * scale_x), maxf(6.0, brect.size.y * scale_y))
+		)
+		_minimap_canvas.draw_rect(srect, Color(0.54, 0.45, 0.34, 0.85), true)
+		_minimap_canvas.draw_rect(srect, Color(0.82, 0.68, 0.44, 0.85), false, 1.0)
+
+	# 3. 过图出口路标（错金三角印）
+	for p_pt: Vector2 in _mm_portals:
+		var mp: Vector2 = Vector2(clampf(p_pt.x * scale_x, 6.0, rect.size.x - 6.0), clampf(p_pt.y * scale_y, 6.0, rect.size.y - 6.0))
+		_minimap_canvas.draw_rect(Rect2(mp - Vector2(4.0, 4.0), Vector2(8.0, 8.0)), UIThemeBuilder.COL_BRONZE_GOLD, true)
+
+	# 4. 引灵石碑（青玉菱形）
+	for st_pt: Vector2 in _mm_steles:
+		var sp: Vector2 = Vector2(st_pt.x * scale_x, st_pt.y * scale_y)
+		var d_pts: PackedVector2Array = PackedVector2Array([
+			sp + Vector2(0.0, -5.0),
+			sp + Vector2(5.0, 0.0),
+			sp + Vector2(0.0, 5.0),
+			sp + Vector2(-5.0, 0.0),
+		])
+		_minimap_canvas.draw_colored_polygon(d_pts, Color("#62E0B8"))
+
+	# 5. 友好 NPC（暖琥珀圆点）
+	for npc: BattleActor in _mm_npcs:
+		if is_instance_valid(npc):
+			var np_pt: Vector2 = Vector2(npc.position.x * scale_x, npc.position.y * scale_y)
+			_minimap_canvas.draw_circle(np_pt, 3.2, Color("#E8C06E"))
+
+	# 6. 敌群（朱砂红点）
 	for ea: BattleActor in combat_ctrl.enemy_actors:
 		if is_instance_valid(ea) and ea.alive:
 			var ep: Vector2 = Vector2(clampf(ea.position.x * scale_x, 4.0, rect.size.x - 4.0), clampf(ea.position.y * scale_y, 4.0, rect.size.y - 4.0))
-			_minimap_canvas.draw_circle(ep, 4.5 if ea.is_boss else 3.0, UIThemeBuilder.COL_CINNABAR_RED)
+			_minimap_canvas.draw_circle(ep, 4.8 if ea.is_boss else 3.2, UIThemeBuilder.COL_CINNABAR_RED)
+
+	# 7. 当前镜头视野淡金框 + 主控角色翠玉主标
+	if combat_ctrl.world_camera != null:
+		var cam_c: Vector2 = combat_ctrl.world_camera.get_screen_center_position()
+		var vp_sz: Vector2 = Vector2(1920.0 * scale_x, 1080.0 * scale_y)
+		var cam_r: Rect2 = Rect2(Vector2(cam_c.x * scale_x, cam_c.y * scale_y) - vp_sz * 0.5, vp_sz)
+		_minimap_canvas.draw_rect(cam_r.intersection(rect), Color(0.84, 0.68, 0.42, 0.34), false, 1.0)
 
 	var ppos: Vector2 = combat_ctrl.get_controlled_actor_pos()
 	var pp: Vector2 = Vector2(clampf(ppos.x * scale_x, 5.0, rect.size.x - 5.0), clampf(ppos.y * scale_y, 5.0, rect.size.y - 5.0))
-	_minimap_canvas.draw_circle(pp, 4.5, Color("#7CF0C2"))
+	_minimap_canvas.draw_circle(pp, 5.2, Color(0.10, 0.16, 0.14, 0.95))
+	_minimap_canvas.draw_circle(pp, 4.0, Color("#8AF6CC"))
+	_minimap_canvas.draw_rect(rect, UIThemeBuilder.COL_BRONZE_GOLD, false, 1.5)
 
 
 func _draw() -> void:

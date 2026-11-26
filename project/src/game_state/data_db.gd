@@ -21,15 +21,25 @@ var cg_gallery: Dictionary = {}
 var dialogues: Dictionary = {}
 
 var is_loaded: bool = false
+var font_regular: Font = null
+var font_bold: Font = null
 
 
 func _ready() -> void:
 	load_all()
 
 
+func _exit_tree() -> void:
+	font_regular = null
+	font_bold = null
+	UIThemeBuilder.clear_cached_fonts()
+
+
 func load_all() -> void:
 	if is_loaded:
 		return
+	font_regular = UIThemeBuilder.get_regular_font()
+	font_bold = UIThemeBuilder.get_bold_font()
 	_register_csv_translations("res://locales/zh_CN.csv")
 	TranslationServer.set_locale("zh_CN")
 

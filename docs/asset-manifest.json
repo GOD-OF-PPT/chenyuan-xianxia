@@ -723,6 +723,26 @@
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     },
     {
+      "path": "project/assets/sprites/npc_elder_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_town_npcs_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1344x1792",
+      "sha256": "e48d23b6f456d92c9a4b79fe307f0f794c338c2935cc29f7b6ccd87a6ada9eaa",
+      "creation_method": "generate_image (char_ref_town_npcs) + tools/build_polish_assets.py articulated 8x6 keyframe sheet | Spec: 35-deg Song-Ming Gongbi Town Elder woodcutter (npc_elder)",
+      "generated_date": "2026-11-26",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/sprites/npc_steward_zhou_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_town_npcs_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1344x1792",
+      "sha256": "169e58cbba2c929c4f8fb029a9e3d1baaf0c10d8504458c2eb4f038a736f5b12",
+      "creation_method": "generate_image (char_ref_town_npcs) + tools/build_polish_assets.py articulated 8x6 keyframe sheet | Spec: 35-deg Song-Ming Gongbi Pharmacy Steward Zhou (npc_steward_zhou)",
+      "generated_date": "2026-11-26",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
       "path": "project/assets/sprites/pei_zhao_sheet.png",
       "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
       "category": "sprite_sheet",
@@ -1397,10 +1417,10 @@
       "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
       "category": "world_prop",
       "dimensions": "73x95",
-      "sha256": "2f9af376bb90925501701369ba5b38d3e329ba2333638338c98444f112c48800",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi interactive prop (prop_spirit_herb_node.png)",
+      "sha256": "18e38778d62f8ed4402f5f81df35b5e9c8ef3768da83e7944101595cdc39a7f9",
+      "creation_method": "Song-Ming malachite saturation clamp, bright rim defringing & grounded 35-deg contact shadow | Spec: Harmonized spirit herb node",
       "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_stele_dim.png",
@@ -1484,13 +1504,13 @@
     },
     {
       "path": "project/assets/world/tex_moss_earth.png",
-      "source_path": "assets_src/world/terrain_moss_mountain_raw.jpg",
-      "category": "terrain",
-      "dimensions": "512x512",
-      "sha256": "72fa58ad4be0c635a5ab8407d37f10ac0f512f60095a45a8ad352fcb367d134f",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (512x512 4-quadrant cosine wrap-around seamless blend + Song-Ming mineral LUT.) | Prompt: 35-degree seamless Song-Ming mineral terrain (tex_moss_earth.png)",
+      "source_path": "assets_src/world/terrain_moss_natural_raw.jpg",
+      "category": "world_terrain",
+      "dimensions": "1024x1024",
+      "sha256": "2d9af1c09d37d00f27f801e1ebc2f202be031726887260a03e162104a4e509e9",
+      "creation_method": "generate_image (terrain_moss_natural) + 1024x1024 cosine wrap-around seamless blend & low-contrast Song-Ming mineral wash clamp | Spec: Seamless mossy mountain earth without grid repetition",
       "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     }
   ]
 }
