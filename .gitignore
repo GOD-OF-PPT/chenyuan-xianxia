@@ -1,0 +1,19 @@
+# Godot 4+ cache & local editor metadata
+project/.godot/
+*.translation
+.DS_Store
+Thumbs.db
+
+# Exported build artifacts (generated locally, never track user personal saves/credentials)
+builds/
+*.pck
+*.wasm
+user_saves/
+*.save
+*.bak
+*.tmp
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/

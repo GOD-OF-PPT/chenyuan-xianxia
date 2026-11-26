@@ -1,0 +1,503 @@
+keys,zh_CN
+GAME_TITLE,尘缘问道
+GAME_SUBTITLE,山雨欲来 · 第一章青岚境垂直切片
+UI_BTN_NEW_GAME,初入凡尘（新开局）
+UI_BTN_CONTINUE,再续前缘（继续）
+UI_BTN_LOAD_GAME,读取旧卷
+UI_BTN_SETTINGS,器物设置
+UI_BTN_CREDITS,制作手记
+UI_BTN_QUIT,归隐退场
+UI_BTN_CONFIRM,允准确认
+UI_BTN_CANCEL,暂且作罢
+UI_BTN_CLOSE,合卷收匣 (Esc)
+UI_BTN_ENTER_CONTINUE,Enter / 点击对话栏 继续
+UI_DIFFICULTY_ASK_HEART,问心（剧情体验）
+UI_DIFFICULTY_CULTIVATION,修行（标准推荐）
+UI_DIFFICULTY_TRIBULATION,渡劫（硬核苦修）
+TERM_SPIRIT_STONE,灵石
+TERM_HP,气血
+TERM_MP,真元
+TERM_ATTUNEMENT,同调气机
+TERM_WARD,护体灵罡
+TERM_THREAT,杀意
+ZONE_NAME_TINGYU_TOWN,青岚境 · 听雨镇与药庐外院
+ZONE_NAME_QINGLAN_PASS,青岚境 · 风雨山道与破庙
+ZONE_NAME_CANGMU_CAVE,青岚境 · 苍木灵枢古窟
+HUD_TACTICAL_PAUSE,【战术凝时】已冻结时间 · 左键框选队员 / 右键地面指路 / 预排技能
+HUD_STEALTH_ACTIVE,【敛息潜行】灵气已敛 · 妖物警戒骤降
+HUD_PREEMPTIVE_BUFF,【先机破袭】急速+15% · 首击破罡+50%
+HUD_TAB_CASKET_1,修行·兵甲 (C)
+HUD_TAB_CASKET_2,道途·奇门 (N)
+HUD_TAB_CASKET_3,行囊·剑匣 (B)
+HUD_TAB_CASKET_5,问道手札 (J)
+HUD_SAVE_BTN,留存道卷
+HUD_MAP_BTN,青岚舆图 (M)
+HUD_SETTINGS_BTN,设置
+ELEM_METAL,金
+ELEM_WOOD,木
+ELEM_WATER,水
+ELEM_FIRE,火
+ELEM_EARTH,土
+ELEM_NONE,凡锋
+SYN_WOOD_FIRE,【木生火 · 燎原】范围爆燃传染！
+SYN_FIRE_EARTH,【火生土 · 熔岩】裂地迟滞·镇岳岩盾！
+SYN_EARTH_METAL,【土生金 · 淬锋】破甲必暴·双倍削罡！
+SYN_METAL_WATER,【金生水 · 凝渊】玄冰溅射·迟滞回元！
+SYN_WATER_WOOD,【水生木 · 回春】灵雾济世·驱瘴回血！
+BOND_TIER_1,一阶 · 萍水
+BOND_TIER_2,二阶 · 同行
+BOND_TIER_3,三阶 · 莫逆
+BOND_TIER_4,四阶 · 知音
+BOND_TIER_5,五阶 · 生死同契
+REP_TIER_0,素昧
+REP_TIER_1,友善（九五折）
+REP_TIER_2,敬重（九二折）
+REP_TIER_3,崇敬（八八折）
+REP_TIER_4,生死同盟（八五折）
+UI_FORM_MAJOR_ADV,阵法大克（伤+10% / 承伤-10%）
+UI_FORM_MAJOR_DIS,阵法被大克（伤-10% / 承伤+10%）
+UI_FORM_MINOR_ADV,阵法小克（伤+5% / 承伤-5%）
+UI_FORM_MINOR_DIS,阵法被小克（伤-5% / 承伤+5%）
+UI_FORM_NEUTRAL,阵势均敌
+UI_BREW_FLAWLESS,炉开丹鸣！炼出【无瑕丹纹极品】，永久点亮该丹方一键速炼！
+UI_BREW_STANDARD,火候平稳，炼出标准成品灵丹。
+UI_BREW_BURNT,火烈焦枯，化作【焦黑废丹】（可置入断玉剑匣提纯化宝）。
+UI_BREAKTHROUGH_FLAWLESS,【天道无瑕道基】全五维永久+8%！
+UI_BREAKTHROUGH_SOLID,【地道稳固道基】真元凝实破境！
+UI_BREAKTHROUGH_CRACKED,【裂脉强渡】强冲破关，折损二十载寿元！
+UI_BREAKTHROUGH_FAIL,气机逆乱，破境未成。
+NOTIFY_ITEM_GAINED,收入行囊
+NOTIFY_STONES_GAINED,灵石入袋
+NOTIFY_FORMATION_UNLOCKED,参透奇门阵图
+NOTIFY_PET_CONTRACTED,缔结灵兽血契
+NOTIFY_SWORD_BOX_READY,【断玉剑匣】提纯圆满
+NOTIFY_SWORD_BOX_READY_DESC,匣内混沌气机已将废材淬炼成宝，可开匣取用
+NOTIFY_JOURNAL_UPDATED,《问道手札》添注新篇
+NOTIFY_BOND_UP,同道羁绊升华
+NOTIFY_BOND_ULT_UNLOCKED,习得双人羁绊合击
+NOTIFY_REP_GAINED,宗门声望变动
+NOTIFY_INK_SEAL,道心烙印 · 因果水墨签
+NOTIFY_SAVE_OK,道卷留存妥当
+MSG_NO_ITEM,行囊中已无此物
+MSG_POUCH_OPENED,解开染血储物袋，搜出灵石、丹方与一枚药庐暗记玉牌！
+MSG_CANNOT_USE_HERE,此物须在对应炉鼎或战阵中施用
+MSG_SAVE_SANDBOX_BLOCKED,演武沙盒与正式存档物理隔离，不写入道卷
+MSG_SAVE_COMBAT_BLOCKED,斗法交锋正酣，不可原地覆写存档
+MSG_SAVE_PUZZLE_BLOCKED,禁制运转中途，不可原地覆写存档
+ERR_SAVE_WRITE_TITLE,【系统危机】道卷落盘受阻
+ERR_SAVE_WRITE_BODY,无法写入存档目录，原存档文件已完整保留未动。
+ERR_SAVE_VERIFY_FAIL,临时存档校验未过，已中止替换以保护原存档。
+ERR_SAVE_RENAME_FAIL,原子重命名受阻，原存档或备份文件完整保留。
+ERR_SAVE_CORRUPT_TITLE,【存档守护】检测到道卷校验异常
+ERR_SAVE_CORRUPT_BODY,该槽位存档已被外部改动或损毁。遵循零覆盖铁律，原损坏文件已完整保留，绝不静默重置！您可尝试加载自动备份（.bak）。
+RECAP_TIP_GENERAL,破局锦囊：善用【Space 战术凝时】框选队友分散走位，并以沈清禾悬停施法稳住前排血线。
+RECAP_TIP_INTERRUPT,破局锦囊：敌方琥珀金读条【%s】可被 `Q` 键（剑指封喉/惊鸿剑指）秒断并封脉 3 秒！
+RECAP_TIP_DODGE_TELEGRAPH,破局锦囊：首领暗红危招【%s】不可常规打断，请按 `Space` 凝时框选队员走出朱砂预警圈！
+RECAP_TIP_SWITCH_DIZAI,破局锦囊：高压首领战建议按 `N` 或 `Z` 切换【地载阵】，令 2 号玄武位获 25% 减伤与 +80% 杀意稳拉背向！
+RECAP_TIP_USE_STUNT,破局锦囊：灵佩蓝字特技【%s】尚未使用，满气机时可瞬发救场或重创护罡！
+RECAP_TIP_USE_PILL,破局锦囊：快捷栏 `5/6` 槽尚存瞬发灵丹，危急时服用不占全局调息（GCD）！
+REALM_MORTAL,凡人境
+REALM_MORTAL_SUB,未入道 · 感气
+REALM_MORTAL_DESC,肉体凡胎，经脉漏灵如筛，唯仗凡铁剑术与怀中古匣求存。
+REALM_QI_1,炼气一层
+REALM_QI_1_SUB,炼气初窥
+REALM_QI_1_DESC,借断玉剑匣调和同道四象气机，首引天地五灵入驻丹田。
+REALM_QI_2,炼气二层
+REALM_QI_2_SUB,炼气中期
+REALM_QI_2_DESC,混元真气贯通十二正经，神识初凝，可驾驭更深奇门剑诀。
+REALM_QI_3,炼气圆满
+REALM_QI_3_SUB,炼气大圆满
+REALM_QI_3_DESC,气满丹田迫近筑基天堑，须筹备筑基灵丹与护脉阵盘方可叩关。
+REALM_FOUNDATION_1,筑基初期
+REALM_FOUNDATION_1_SUB,真元化液
+REALM_FOUNDATION_1_DESC,涤尽凡躯浊质，寿元翻倍至二百载，真正踏入修真内门之列。
+CHAR_GU_NAME,顾长青
+CHAR_GU_TITLE,寒门执匣客 · 太初混沌凡脉
+CHAR_GU_BIO,青岚山野寒门孤儿。十年前故村遭妖祸，仙门高修验出其“漏灵废体”冷漠弃救。怀揣绝密古宝【断玉剑匣】步步藏拙，外冷内韧，立誓仙不渡凡我自叩天。
+CHAR_SHEN_NAME,沈清禾
+CHAR_SHEN_TITLE,济世药庐 · 亲传医修
+CHAR_SHEN_BIO,清韧如雪莲、温润似药炉的医修少女。察觉顾长青经脉异痛却绝不窥探其隐秘，奉行“大道在生不在仙”，以悬壶仁心守护同道。
+CHAR_PEI_NAME,裴照
+CHAR_PEI_TITLE,青云宗剑阁 · 首座少君
+CHAR_PEI_BIO,天灵根剑道天骄，骄傲磊落、嫉恶如仇。奉师命下山查探青岚腐瘴，破庙一战后与顾长青结下少年知己之谊。
+BOSS_WOLF_KING_NAME,雾隐狼王
+BOSS_WOLF_KING_TITLE,青岚守境苍狼 · 道影侵蚀态
+NPC_ELDER_NAME,听雨镇老樵夫
+NPC_PEDDLER_NAME,游方散修摊主
+NPC_ZHOU_NAME,药庐周执事
+PET_FOX_NAME,青岚火狐
+PET_FOX_TITLE,赤尾通灵幼兽（法系火印宠）
+PET_FOX_DESC,生于青岚赤阳石缝的灵狐幼崽，善吐赤尾灵焰为敌群挂上【真火母印】，引爆木生火燎原连携。
+PET_TURTLE_NAME,玄甲灵龟
+PET_TURTLE_TITLE,寒涧古甲幼兽（忠心护主宠）
+PET_TURTLE_DESC,背负洛书古纹的玄水幼龟，气血敦厚，可开启【忠心护主】替残血主人分担五成致命重创。
+SPEC_GU_A_NAME,混元御剑
+SPEC_GU_A_DESC,中程御使飞剑流转金火水木四气，高频挂靠【五行母印】触发全队相生连携。
+SPEC_GU_B_NAME,斩仙重锋
+SPEC_GU_B_DESC,欺身重剑劈斩，专精厚土与精金高额破罡，并可开启镇岳喝令应急接怪。
+SPEC_SHEN_A_NAME,青囊济世
+SPEC_SHEN_A_DESC,医道正统，兼修瞬发回春、读条大抬、群体润脉与毒瘴驱散，稳守全队生机。
+SPEC_SHEN_B_NAME,枯荣药毒
+SPEC_SHEN_B_DESC,以木系蚀骨荆棘汲取敌方生机反哺队友，兼顾挂木印与持续吸血。
+SPEC_PEI_A_NAME,惊鸿极剑
+SPEC_PEI_A_DESC,青云剑阁正宗点杀剑路，金系2.5倍克制木罡，高频打断与单体暴击登峰造极。
+SPEC_PEI_B_NAME,焚锋烈剑
+SPEC_PEI_B_DESC,引赤阳真火入剑，大范围烈焰剑气横扫群妖，最善引爆【木生火·燎原】。
+ND_GU_A1_NAME,引气御锋
+ND_GU_A1_DESC,仙术强度+5，急速等级+6。
+ND_GU_A2_NAME,四象流转
+ND_GU_A2_DESC,破罡精通+10，真元上限+20。
+ND_GU_A3_NAME,混元剑意
+ND_GU_A3_DESC,全伤害+8%，暴击等级+8。
+ND_GU_B1_NAME,沉岳握剑
+ND_GU_B1_DESC,兵刃强度+5，气血+28，杀意倍率提高。
+ND_GU_B2_NAME,铜皮护脉
+ND_GU_B2_DESC,护甲抗性+10，御守等级+9。
+ND_GU_B3_NAME,断玉碎罡
+ND_GU_B3_DESC,破罡精通+6%，气血+32。
+ND_SHEN_A1_NAME,百草凝露
+ND_SHEN_A1_DESC,治疗强度+8，真元上限+24。
+ND_SHEN_A2_NAME,行针如风
+ND_SHEN_A2_DESC,急速等级+10，治疗效果+8%。
+ND_SHEN_A3_NAME,医者仁心
+ND_SHEN_A3_DESC,御守等级+8，气血上限+25。
+ND_SHEN_B1_NAME,毒经初解
+ND_SHEN_B1_DESC,仙术强度+7，治疗强度+5。
+ND_SHEN_B2_NAME,枯木抽芽
+ND_SHEN_B2_DESC,破罡精通+11，急速等级+6。
+ND_SHEN_B3_NAME,生灭同源
+ND_SHEN_B3_DESC,全伤害+7%，治疗效果+6%。
+ND_PEI_A1_NAME,青云剑骨
+ND_PEI_A1_DESC,兵刃强度+7，暴击等级+8。
+ND_PEI_A2_NAME,裂木断罡
+ND_PEI_A2_DESC,破罡精通+12，玄武位杀意更稳。
+ND_PEI_A3_NAME,一剑惊鸿
+ND_PEI_A3_DESC,暴击率+5%，全伤害+8%。
+ND_PEI_B1_NAME,赤火淬锋
+ND_PEI_B1_DESC,兵刃与仙术强度+5，急速等级+7。
+ND_PEI_B2_NAME,烈焰护体
+ND_PEI_B2_DESC,破罡精通+11，气血上限+28。
+ND_PEI_B3_NAME,焚尽八荒
+ND_PEI_B3_DESC,全伤害+9%，御守等级+7。
+AI_GU_BALANCED,均衡领队
+AI_GU_BALANCED_DESC,兼顾破罡与相生接力，危急时自开剑罡护脉。
+AI_GU_SYNERGY,相生织印
+AI_GU_SYNERGY_DESC,优先根据敌方母印切换生克飞剑引爆连携。
+AI_GU_GUARD,护阵前驱
+AI_GU_GUARD_DESC,积极拦截漏网妖物，分担前排压力。
+AI_SHEN_HEAL,济世优先
+AI_SHEN_HEAL_DESC,队友气血低于65%立即回春，中腐瘴秒驱散。
+AI_SHEN_WOOD,灵木助战
+AI_SHEN_WOOD_DESC,稳血之余积极施放青藤缠挂木印助火剑引爆。
+AI_SHEN_CONSERVE,惜元稳守
+AI_SHEN_CONSERVE_DESC,控蓝省元，仅在队友气血低于50%时读大抬。
+AI_PEI_WARD,破罡断法
+AI_PEI_WARD_DESC,紧盯敌方琥珀金读条秒按打断，全力削减木罡。
+AI_PEI_TANK,死守阵前
+AI_PEI_TANK_DESC,在2号玄武位自动施放青云剑威拉稳群怪杀意。
+AI_PEI_BURST,集火歼灭
+AI_PEI_BURST_DESC,锁定领队当前目标倾泻全部金火爆发剑诀。
+FORM_SCATTER_NAME,普通散阵
+FORM_SCATTER_DESC,未结奇门阵旗时的寻常队列，全属性无额外增减，走位无拘。
+FORM_TIANFU_NAME,天覆阵
+FORM_TIANFU_DESC,奇门速推杀阵：全队伤害大幅提升（阵眼+18%、余位+15%），移速略降8%；大克【地载阵】。
+FORM_DIZAI_NAME,地载阵
+FORM_DIZAI_DESC,奇门攻坚铁桶阵：2号玄武位减伤+25%且杀意倍率+80%，3号位治疗+12%，全员稳如泰山；大克【风扬阵】。
+FORM_FENGYANG_NAME,风扬阵
+FORM_FENGYANG_DESC,奇门疾风阵：大幅提升移速与施法急速，第二章青云境可习得。
+FORM_HUYI_NAME,虎翼阵
+FORM_HUYI_DESC,奇门白虎破罡阵：强化阵眼暴击与削罡倍率，中后期秘境可习得。
+SET_QINGLAN_NAME,青岚行者套
+SET_QINGLAN_2PC,2件：急速等级+10，气血上限+18
+SET_QINGLAN_3PC,3件：破罡精通+12，触发五行相生连携时回复8点真元
+SET_YAOLU_NAME,药庐长生套
+SET_YAOLU_2PC,2件：治疗强度+7，气血上限+20
+SET_YAOLU_3PC,3件：治疗强度+9，过量治疗的50%转化为目标木灵护盾
+SET_QINGYUN_NAME,青云惊鸿套
+SET_QINGYUN_2PC,2件：暴击等级+14，兵刃强度+5
+SET_QINGYUN_3PC,3件：破罡精通+14，成功打断敌方吟唱后5秒内削罡效率+20%
+EQ_QINGLAN_SWORD_NAME,青岚寒铁剑
+EQ_QINGLAN_SWORD_DESC,山野铁匠以寒溪铁砂锻打的佩剑，锋刃虽朴却十分趁手。
+EQ_QINGLAN_ROBE_NAME,听雨青蓑衣
+EQ_QINGLAN_ROBE_DESC,浸过药庐避瘴桐油的轻便青衣，细雨穿林不沾湿寒。
+EQ_QINGLAN_BOOTS_NAME,踏雾绑腿
+EQ_QINGLAN_BOOTS_DESC,猎户与低阶散修常备的麻布护胫，山道疾行轻巧稳健。
+EQ_YAOLU_NEEDLE_NAME,济世百草簪
+EQ_YAOLU_NEEDLE_DESC,沈清禾随身温养的银簪法器，引木水二气渡针救人。
+EQ_YAOLU_ROBE_NAME,素心药香袍
+EQ_YAOLU_ROBE_DESC,济世药庐亲传衣袍，袖口暗绣青莲纹，常年萦绕清冽药香。
+EQ_YAOLU_WRIST_NAME,凝露护腕
+EQ_YAOLU_WRIST_DESC,缀有晨露青玉的护腕，掐诀行针更为迅捷灵动。
+EQ_QINGYUN_BLADE_NAME,青云问心剑
+EQ_QINGYUN_BLADE_DESC,青云宗剑阁赐予首座弟子的玄品寒锋，剑鸣清越专破妖木邪罡。
+EQ_QINGYUN_ROBE_NAME,流云鹤氅
+EQ_QINGYUN_ROBE_DESC,金丝滚边的汉白道袍，内衬护体金蚕丝，水火难侵。
+EQ_QINGYUN_BOOTS_NAME,御风剑履
+EQ_QINGYUN_BOOTS_DESC,镌有轻身符文的剑阁战履，踏石无痕。
+EQ_ANCIENT_BLADE_NAME,苍木斩瘴剑
+EQ_ANCIENT_BLADE_DESC,古窟坐化前辈遗留的玄品古剑，吞吐凌厉剑芒，削罡之力极盛。
+EQ_PENDANT_JINGQING_NAME,古玉清心佩
+EQ_PENDANT_JINGQING_DESC,温润无瑕的古修灵佩。【蓝字特技：晶清玉露】（耗55气机瞬发净化全队毒瘴并回血18%）。
+EQ_PENDANT_POXUE_NAME,裂风虎纹佩
+EQ_PENDANT_POXUE_DESC,暗藏凶悍剑魄的虎纹玉佩。【蓝字特技：破血狂攻】（耗40气机瞬发双连重劈，巨额削罡）。
+TR_BROKEN_JADE_BOX_NAME,断玉剑匣·初醒
+TR_BROKEN_JADE_BOX_DESC,百年前斩门先贤遗留的绝密古匣。外呈暗青斑驳凡铁相，内蕴混元洞天与提纯造化，怀璧其罪切忌外露。
+TR_QINGNANG_BOX_NAME,青囊银针匣
+TR_QINGNANG_BOX_DESC,济世药庐传世医匣，祭出时化百草灵阵涤荡疫瘴。
+TR_JINGHONG_TASSEL_NAME,惊鸿剑穗
+TR_JINGHONG_TASSEL_DESC,青云剑阁掌门亲赐剑穗，催动时引天剑星芒轰碎敌罡。
+ITEM_HUICHUN_NAME,回春散
+ITEM_HUICHUN_DESC,【瞬发救急散】战斗中按5/6键不占GCD瞬回35%气血，并清除经脉暗伤（共享30秒丹毒调息）。
+ITEM_HUICHUN_FLAWLESS_NAME,无瑕回春散
+ITEM_HUICHUN_FLAWLESS_DESC,【丹纹极品】丹香沁脾，瞬发恢复42%气血并清除经脉暗伤。
+ITEM_JUQI_NAME,聚气丸
+ITEM_JUQI_DESC,【战前长效灵丹】脱战服用持续30分钟：全队仙术与飞剑强度+10%，最大气血+8%。
+ITEM_JUQI_FLAWLESS_NAME,无瑕聚气丸
+ITEM_JUQI_FLAWLESS_DESC,【丹纹极品】持续30分钟：全队强度+12%，最大气血+10%，护甲+6%。
+ITEM_QINGMU_PILL_NAME,青木清瘴丹
+ITEM_QINGMU_PILL_DESC,【瞬发解瘴丹】恢复22%气血、驱散腐木疫瘴并免疫毒瘴10秒；亦是救治听雨镇染瘴樵夫的良药。
+ITEM_QINGMU_FLAWLESS_NAME,无瑕青木清瘴丹
+ITEM_QINGMU_FLAWLESS_DESC,【丹纹极品】恢复28%气血，彻底拔除腐瘴并获12秒避瘴清气。
+ITEM_BURNT_PILL_NAME,焦黑废丹
+ITEM_BURNT_PILL_DESC,控火失手炼坏的焦苦药渣。寻常修士弃若敝履，但置入【断玉剑匣】蕴灵槽历战3场即可提纯为无瑕极品丹！
+ITEM_NINGQI_HERB_NAME,凝气草
+ITEM_NINGQI_HERB_DESC,青岚雨林常见的凡品灵草，炼制回春散与聚气丸的基础主材；亦可入剑匣提纯。
+ITEM_QINGMU_LEAF_NAME,青木灵叶
+ITEM_QINGMU_LEAF_DESC,饱含草木清气的碧绿叶片，炼制回春散与清瘴丹的辅药。
+ITEM_CORRUPT_FLOWER_NAME,腐骨幽花
+ITEM_CORRUPT_FLOWER_DESC,生于古窟瘴气深处的奇异毒花，以毒攻毒方可炼成青木清瘴丹；置入剑匣可淬出双份极品清瘴丹。
+ITEM_CHIYANG_FUNGUS_NAME,赤阳火芝
+ITEM_CHIYANG_FUNGUS_DESC,古樟雷击木下伴生的赤红灵芝，药性纯阳，乃炼制聚气丸的核心火引。
+ITEM_WOLF_FANG_NAME,妖狼精魄牙
+ITEM_WOLF_FANG_DESC,狂化山狼凝结灵气的锋利獠牙，坊市药商高价收购之物。
+ITEM_STEALTH_TALISMAN_NAME,敛息符
+ITEM_STEALTH_TALISMAN_DESC,《凡人》散修保命灵符：使用后20秒内收敛全队灵气波动，普通妖物警戒范围缩减70%（出手即破隐）。
+ITEM_MARROW_DEW_NAME,洗髓灵露
+ITEM_MARROW_DEW_DESC,清澈甘冽的灵泉凝露，可在【修行·兵甲】面板随时100%无损重置角色五维潜能加点。
+ITEM_NINGQI_VEIN_PILL_NAME,凝气护脉丹
+ITEM_NINGQI_VEIN_PILL_DESC,济世药庐秘藏的玄品破境宝丹，稳固混元经脉直抵天道无瑕之境。
+ITEM_STALL_SHARD_NAME,蒙尘残铁片
+ITEM_STALL_SHARD_DESC,地摊角落无人问津的锈蚀铁片——靠近时怀中【断玉剑匣】竟泛起微弱温热轻鸣！可入剑匣淬炼还原古宝灵佩。
+ITEM_STALL_BONE_NAME,裂纹兽骨
+ITEM_STALL_BONE_DESC,山中寻常老兽遗骨，灵气早已散尽。
+ITEM_STALL_PAGE_NAME,残缺丹经页
+ITEM_STALL_PAGE_DESC,记述青岚草木控火心得的泛黄残纸，读之颇有裨益。
+ITEM_STALL_BELL_NAME,锈蚀铜铃
+ITEM_STALL_BELL_DESC,沾满泥浆的旧铜铃，摇之沙哑无灵韵。
+ITEM_BLOODIED_POUCH_NAME,染血储物袋
+ITEM_BLOODIED_POUCH_DESC,反杀竹林黑衣劫修搜出的低阶乾坤袋。在【行囊】中点击开启可搜刮其毕生灵石、清瘴丹方与来历密信！
+ITEM_YAOLU_TOKEN_NAME,染血药庐玉牌
+ITEM_YAOLU_TOKEN_DESC,从劫修储物袋翻出的青玉腰牌，背面暗刻济世药庐外院管事“周”字私印——药庐之内竟有勾结劫修私卖疫草的内鬼！
+RECIPE_HUICHUN_NAME,丹方 · 回春散
+RECIPE_HUICHUN_DESC,以凝气草配青木灵叶，文火养气、武火收丹，炼制瞬发回血散。
+RECIPE_JUQI_NAME,丹方 · 聚气丸
+RECIPE_JUQI_DESC,以赤阳火芝催发凝气草药力，炼制战前长效增幅灵丸。
+RECIPE_QINGMU_NAME,丹方 · 青木清瘴丹
+RECIPE_QINGMU_DESC,采腐骨幽花配青木灵叶以毒攻毒，可解苍木腐瘴并救治染疫樵夫。
+SHOP_YAOLU_NAME,济世药庐 · 外院药肆
+SHOP_PEDDLER_NAME,听雨镇 · 散修小地摊
+SK_GU_QINGMING_NAME,青冥剑气
+SK_GU_QINGMING_DESC,催动混元剑气远程破敌，造成金系伤害并附着6秒【金锋母印】。
+SK_GU_FLAME_NAME,流火飞剑
+SK_GU_FLAME_DESC,剑裹丹火轰击目标及周围敌群，附着【真火母印】；若目标带木印则引爆【木生火·燎原】！
+SK_GU_FROST_NAME,寒泉引剑
+SK_GU_FROST_DESC,凝寒泉水意刺敌并减速30%，附着【玄水母印】；可接力金印引爆【金生水·凝渊】。
+SK_GU_GALE_NAME,苍岚旋刃
+SK_GU_GALE_DESC,吟唱1.1秒唤出青岚剑旋切割群敌，造成木系范围伤害并挂【苍木母印】。
+SK_GU_EARTH_NAME,断岳重斩
+SK_GU_EARTH_DESC,沉肩挥剑劈裂地面，造成土系高杀意伤害并附着【厚土母印】。
+SK_GU_METAL_REND_NAME,裂金破罡
+SK_GU_METAL_REND_DESC,凝力直刺护罡死穴，造成巨额金系削罡；接力土印触发【土生金·淬锋】必定暴击！
+SK_GU_SEARING_NAME,焚脉横扫
+SK_GU_SEARING_DESC,横剑扫出炽烈火弧灼伤前方群敌，附着【真火母印】。
+SK_GU_MOUNTAIN_NAME,镇岳剑势
+SK_GU_MOUNTAIN_DESC,剑插大地凝成厚土护盾并减伤20%，稳固自身阵脚。
+SK_GU_INTERRUPT_NAME,剑指封喉
+SK_GU_INTERRUPT_DESC,【不占GCD·打断】疾步剑指截断敌方琥珀金读条，令其陷入3秒【破功封脉】并重创护罡！
+SK_GU_GUARD_NAME,剑罡护脉
+SK_GU_GUARD_DESC,【不占GCD·保命】瞬发凝起混元剑罡护盾、小幅回血并减伤25%持续5秒。
+SK_GU_TAUNT_NAME,镇岳喝令
+SK_GU_TAUNT_DESC,【不占GCD·嘲讽】断喝震慑目标强制攻击自身4秒，同时获得护盾与22%减伤。
+SK_GU_BOX_ULT_NAME,断玉混元引
+SK_GU_BOX_ULT_DESC,【本命古宝绝技】暗启断玉剑匣一线剑魄，对大范围敌群倾泻混元剑雨、狂削85点护罡并积攒20点同调气机！
+SK_SHEN_REJUV_NAME,青木回春
+SK_SHEN_REJUV_DESC,【支持悬停施法】瞬发渡入温润木气恢复友方气血，并附加6秒持续回春。
+SK_SHEN_RAIN_NAME,悬壶甘霖
+SK_SHEN_RAIN_DESC,【支持悬停施法】吟唱1.35秒降下甘霖大额恢复单人生命，并驱散1层毒瘴负面状态。
+SK_SHEN_WAVE_NAME,玄泉润脉
+SK_SHEN_WAVE_DESC,吟唱1.5秒引清泉涤荡全队，恢复全体队友气血并净化腐瘴。
+SK_SHEN_VINE_NAME,青藤缠缚
+SK_SHEN_VINE_DESC,唤药庐灵藤缠绕敌群减速35%，造成木系伤害并附着6秒【苍木母印】（配合火剑引爆燎原！）。
+SK_SHEN_WITHER_NAME,枯荣毒针
+SK_SHEN_WITHER_DESC,飞针渡入枯荣草木气，持续腐蚀目标并将伤害的45%转化为气血最低队友生命。
+SK_SHEN_BRIAR_NAME,蚀骨荆棘
+SK_SHEN_BRIAR_DESC,吟唱1.2秒催生大片毒荆棘，造成范围木伤并为全队吸血回春。
+SK_SHEN_DEW_NAME,玄水寒露
+SK_SHEN_DEW_DESC,凝寒露击敌附着【玄水母印】，接力木技即可绽放【水生木·回春】灵雾！
+SK_SHEN_INTERRUPT_NAME,银针截脉
+SK_SHEN_INTERRUPT_DESC,【不占GCD·远程打断】飞针封穴远程截断敌方琥珀金吟唱读条！
+SK_SHEN_AEGIS_NAME,青莲护心
+SK_SHEN_AEGIS_DESC,为全队张开青莲药气护盾、恢复生命并净化全员毒瘴。
+SK_SHEN_BLOOM_NAME,枯木逢春
+SK_SHEN_BLOOM_DESC,引动生灭气机瞬发抬升全队血线并驱散异常。
+SK_SHEN_ULT_NAME,药灵百草阵
+SK_SHEN_ULT_DESC,【古宝绝技】祭出青囊银针匣化作百草生机域，全队大额回血、持续回春并+15同调气机！
+SK_PEI_THRUST_NAME,惊鸿一剑
+SK_PEI_THRUST_DESC,青云剑阁起手快剑，造成凌厉金系伤害（2.5倍克制木罡！）并挂【金锋母印】。
+SK_PEI_FLURRY_NAME,流光追影
+SK_PEI_FLURRY_DESC,剑光如电连刺要害，造成高额金系单体伤害与强力破罡。
+SK_PEI_SUN_NAME,烈阳剑芒
+SK_PEI_SUN_DESC,剑引烈日真火劈出赤芒，范围火伤并挂【真火母印】，完美引爆沈清禾【木生火·燎原】！
+SK_PEI_PIERCE_NAME,破空剑意
+SK_PEI_PIERCE_DESC,蓄剑1.15秒化作白虹贯日，重创单体并轰碎62点护体灵罡！
+SK_PEI_BLAZE_NAME,焚锋斩
+SK_PEI_BLAZE_DESC,火附剑锋迅猛斜斩，造成火系伤害并附着【真火母印】。
+SK_PEI_WHIRL_NAME,赤焰回风
+SK_PEI_WHIRL_DESC,旋身挥洒赤焰剑圈灼伤周围群敌，引爆木印清场利器。
+SK_PEI_ARRAY_NAME,燎原剑阵
+SK_PEI_ARRAY_DESC,吟唱1.25秒布下烈火剑阵，造成高额范围火伤与持续灼烧。
+SK_PEI_INTERRUPT_NAME,惊鸿剑指
+SK_PEI_INTERRUPT_DESC,【不占GCD·打断】青云绝学瞬步截脉，打断琥珀金读条令其封脉3秒并重削护罡！
+SK_PEI_TAUNT_NAME,青云剑威
+SK_PEI_TAUNT_DESC,【不占GCD·嘲讽】横剑震慑强拉敌人仇恨攻击自身5秒，获护盾与25%减伤。
+SK_PEI_MANTLE_NAME,烈火护身
+SK_PEI_MANTLE_DESC,【不占GCD】真火凝衣获得护盾与20%减伤。
+SK_PEI_ULT_NAME,天剑坠星
+SK_PEI_ULT_DESC,【灵宝绝技】催动惊鸿剑穗引天外金芒轰击群妖，狂削95点护罡并+20同调气机！
+SKILL_NAME_ULT_QINGLIAN,青莲引剑
+SKILL_DESC_ULT_QINGLIAN,【双人羁绊合击·耗100气机】顾长青与沈清禾气脉交融，剑匣青锋携百草青莲横扫全场，重创群妖护罡并为全队回血凝盾！
+STUNT_JINGQING_NAME,晶清玉露
+STUNT_JINGQING_DESC,【古宝蓝字特技·耗55气机】瞬发涤净全队一切毒瘴减速负面状态，并恢复18%最大气血！
+STUNT_POXUE_NAME,破血狂攻
+STUNT_POXUE_DESC,【古宝蓝字特技·耗40气机】瞬发对目标狂劈两记重锋，造成高额伤害与双倍破罡！
+SK_PET_FOX_1_NAME,赤尾灵焰
+SK_PET_FOX_1_DESC,【Ctrl+1 灵宠绝技】青岚火狐喷吐赤焰灼烧敌群，挂【真火母印】或引爆木印！
+SK_PET_FOX_2_NAME,灵狐幻步
+SK_PET_FOX_2_DESC,【Ctrl+2 灵宠绝技】灵狐轻鸣鼓舞全队，6秒内全员急速+14%并+12同调气机。
+SK_PET_TURTLE_1_NAME,忠心护主
+SK_PET_TURTLE_1_DESC,【Ctrl+1 灵宠绝技】玄甲灵龟张开洛书水幕，8秒内替受创队友分担50%伤害并附加护盾！
+SK_PET_TURTLE_2_NAME,玄水吐息
+SK_PET_TURTLE_2_DESC,【Ctrl+2 灵宠绝技】喷涌寒涧灵泉冲击敌人挂【玄水母印】，同时微幅滋润全队。
+SK_ENEMY_MIASMA_BOLT,腐瘴毒咒
+SK_ENEMY_ROGUE_STRIKE,夺命冷锋
+SK_ENEMY_GOLEM_SLAM,苍木裂地砸
+SK_BOSS_ROAR_NAME,腐木咆哮
+SK_BOSS_CLEAVE_NAME,裂爪扑咬
+ENEMY_ROT_WOLF_NAME,腐爪妖狼
+ENEMY_WOLF_PUP_NAME,腐木幼狼
+ENEMY_MIASMA_SHAMAN_NAME,瘴林毒巫
+ENEMY_ROGUE_NAME,黑衣劫修
+ENEMY_WOOD_GOLEM_NAME,守窟木傀
+QUEST_MAIN_CH01_TITLE,第一章 · 山雨欲来风满楼
+QUEST_MAIN_STAGE_1,秋雨寒湿入骨，前往听雨镇【济世药庐外院】寻购温脉灵草并打探腐瘴源头。
+QUEST_MAIN_STAGE_2,与医修沈清禾结伴出镇北上，穿过风雨山道查探【青岚破庙】异变。
+QUEST_MAIN_STAGE_3,破庙石台之下暗藏地脉通道，与沈清禾、裴照结阵深入【苍木灵枢古窟】。
+QUEST_MAIN_STAGE_4,破开古窟火木水禁制，登临灵枢祭坛迎战被道影侵蚀的守境灵兽【雾隐狼王】。
+QUEST_MAIN_STAGE_5,直面狼王临终托付的苍木灵髓，在执道破境与悬壶救镇之间作出决断。
+QUEST_MAIN_STAGE_DONE,青岚风波暂平，裴照先行回返青云山门，邀你携清禾共赴云岚城问剑求道。
+QUEST_SIDE_SPY_TITLE,红尘奇遇 · 财露招劫与药庐暗桩
+QUEST_SPY_STAGE_1,在地摊淘得古剑残片引来觊觎，出镇过山道竹林时须提防暗处窥伺的黑衣劫修。
+QUEST_SPY_STAGE_2,从劫修储物袋搜出刻有“周”字私印的染血药庐玉牌，速回听雨镇药庐质问周执事！
+QUEST_SPY_DONE_EXEC,已当场执剑诛除私卖疫草的周执事，获赠古玉清心佩，药庐上下凛然肃清。
+QUEST_SPY_DONE_MERCY,已将周执事交由药庐长老审讯顺藤摸瓜查出黑市买主，获赠古玉清心佩与深厚敬重。
+QUEST_SIDE_PET_TITLE,红尘奇遇 · 山道救兽契灵宠
+QUEST_PET_STAGE_1,风雨山道古樟下似有幼兽哀鸣，上前查探或可施药相救。
+QUEST_PET_DONE,已救下受瘴灵兽并缔结血契，战中可通过 Ctrl+1/2 号令灵宠协同斗法。
+CLUE_MIASMA_TITLE,听雨镇腐瘴见闻
+CLUE_MIASMA_BODY,连日紫黑色秋雨自青岚后山飘落，镇中樵夫凡沾雨露者皆经脉生斑、寒热交迫。寻常汤药仅能延缓，病根必在山巅破庙地脉深处。
+CLUE_BOX_TITLE,断玉剑匣 · 怀璧藏拙戒律
+CLUE_BOX_BODY,此匣随我自故村死地而出，既可吸纳驳杂废丹淬炼成宝，又能在同道四象气机流转时抚平我漏灵之痛。然修真界弱肉强食，未有自保之力前，绝不可令外人窥见匣中乾坤。
+CLUE_TRIO_TITLE,破庙三才初成阵
+CLUE_TRIO_BODY,青云剑阁裴照虽言辞锋利，剑下却光明磊落。三人以奇门【地载阵】与【天覆阵】气脉相连，竟助我冲破感气桎梏正式踏入炼气一层！
+CLUE_SHARD_TITLE,散修地摊的微热铁片
+CLUE_SHARD_BODY,那游方摊主将古修残片当废铁叫卖，唯我怀中剑匣生出温热共鸣。只是方才付灵石时，茶寮角落似有两道阴冷目光盯上了我的行囊……
+CLUE_SPY_TOKEN_TITLE,劫修袋中的药庐玉牌
+CLUE_SPY_TOKEN_BODY,竹林伏击我的黑衣劫修储物袋里，竟藏着济世药庐周执事的私印玉牌与腐骨幽花账册——原来有人趁疫瘴大发横财，暗中倒卖毒草换取筑基灵石！
+CLUE_STELE_CH01_TITLE,苍木古窟坐化遗刻
+CLUE_STELE_CH01_BODY,古窟石壁残刻：“九霄非赐福之门，实乃抽髓之渊……吾辈断门非绝后世，只叹残枢坠地，苍木泣血。”百年前天门崩裂，莫非并非魔修渎神？
+CLUE_CLIFF_TITLE,山道断崖云端石匣
+CLUE_CLIFF_BODY,青岚山道东侧绝壁孤松之巅隐约可见一尊古修石匣，凡胎轻功绝难企及。待日后修成【金丹期·御剑飞行】，当重返此崖一探。
+FACTION_QINGYUN_NAME,青云宗
+FACTION_QINGYUN_DESC,驻青云境的正统仙门魁首，门规森严、极重灵根出身，与百年前天门旧事牵连极深。
+FACTION_YAOLU_NAME,济世药庐
+FACTION_YAOLU_DESC,驻青岚境的入世医修一脉，不问资质高低，专研灵丹抑瘴救世，乃沈清禾师门。
+FACTION_ZHAOYING_NAME,照影守碑人
+FACTION_ZHAOYING_DESC,隐于照影寒潭的古老护道史官，默默守护着百年前斩门先贤的历史残碑。
+FACTION_CHIYUAN_NAME,赤渊散修盟
+FACTION_CHIYUAN_DESC,大漠红砂黑市中的自由散修商盟，重契约与实利，不讲迂腐门规。
+FACTION_JIANXU_NAME,剑墟铸剑盟
+FACTION_JIANXU_DESC,世代守炉断剑古冢的炼器遗族，坚信凡铁千锤亦可斩仙。
+SEAL_ABSORB_NAME,朱砂签 ·【纳髓入匣】
+SEAL_ABSORB_POEM,仙路崎岖骨作梯，宁教孤锋破障迷。一团苍髓归匣底，不向凡尘借羽衣。
+SEAL_SCATTER_NAME,朱砂签 ·【一念化雨】
+SEAL_SCATTER_POEM,忍将逆血换春霖，散尽青华济病林。纵使仙途迟半步，人间烟火亦道心。
+SEAL_YAOLU_JUSTICE_NAME,朱砂签 ·【明镜涤尘】
+SEAL_YAOLU_JUSTICE_POEM,悬壶岂容蠹虫生，冷锋照破夜行人。
+CG_CH01_TEMPLE_TITLE,第一卷绘卷 · 破庙剑鸣会少年
+CG_CH01_TEMPLE_CAPTION,秋雨如注夜，少年手按微鸣古剑匣独立残殿，直面群狼幽瞳与破空而落的青云剑光。
+DLG_OPEN_01,秋雨夹着腐叶腥气，刚入听雨镇地界，经脉便又如细针攒刺般漏散内息。
+DLG_OPEN_02,幸而怀中【断玉剑匣】尚有一丝温热护住心脉……此物干系性命，断不可在人前显露半分。
+DLG_OPEN_03,先去镇中【济世药庐外院】寻几味温脉灵草，再探一探这漫山紫瘴究竟从何而起。
+DLG_TEA_01,唉，客官也是来求药的？昨夜后山紫瘴又浓了三分，两个进山采药的后生抬回来时浑身发乌喽！
+DLG_TEA_02,老人家，这腐瘴是从何时起意？镇北山上的古庙近日可有异动？
+DLG_TEA_03,就这半月！每逢雨夜，青岚破庙方向便传来闷雷似的狼啸，连药庐的沈姑娘熬了三天三夜药汤也压不住啊……
+DLG_SHEN_01,这位兄台请留步。你袖口微颤、呼吸外散，可是冒雨穿过山谷时染了寒瘴？
+DLG_SHEN_02,……多谢姑娘挂怀，旧疾罢了，不劳费心。在下顾长青，特来药肆购置凝气草。
+DLG_SHEN_03,我是药庐弟子沈清禾。兄台莫怪，你体内气机虽散若漏卮，心脉深处却有一股极韧的混元生机护着——真是奇异。
+DLG_SHEN_04,实不相瞒，镇中病患已无灵草可用，腐瘴源头就在北面【青岚破庙】。清禾正欲上山采解瘴主药，不知顾兄可愿同行照应？
+DLG_SHEN_05,既同赴破庙查探地脉，路上妖物便由顾某执剑开道。沈姑娘只需在后方安心施术即可。
+DLG_PEDDLER_01,瞧一瞧看一看咧！古修洞府刚刨出来的老物件，买定离手，全凭眼力仙缘！
+DLG_PEDDLER_02,（……怀中【断玉剑匣】竟对那块蒙尘残铁片微微发烫！面上不动声色，看看能否低价拿下。）
+DLG_TEMPLE_01,——闪开！区区毫无灵根的凡夫与弱质医修，也敢闯腐瘴妖狼巢穴？还不速退下山！
+DLG_TEMPLE_02,这位青云宗的道友，剑气虽利，未免太小瞧天下散修。狼群已合围破庙，退路早断，不如省些口舌并肩破敌！
+DLG_TEMPLE_03,裴少君！腐爪群狼正受地底邪气驱使，单凭一人独剑恐难护周全，我以药庐三才气脉助二位结【地载阵】！
+DLG_TEMPLE_04,哼，倒有几分胆色！在下青云剑阁裴照——我站玄武前锋接住头狼杀意，你们看准木罡破绽跟上剑诀！
+DLG_TEMPLE_AFTER_01,痛快！顾兄明明测无灵根，方才剑气流转竟能引动我金火剑意相生，当真怪哉！
+DLG_TEMPLE_AFTER_02,侥幸借阵势余韵罢了。（方才三才气脉交汇瞬间，【断玉剑匣】悄然替我冲开了炼气一层关隘！）
+DLG_TEMPLE_AFTER_03,二位请看，破庙残碑下有一道通往【苍木灵枢古窟】的石阶，浓郁紫瘴正是从地底灵枢渗出！
+DLG_BEAST_01,顾兄快看！古樟树根下蜷着两只被瘴毒灼伤的通灵幼兽，再晚片刻只怕灵智便要溃散了。
+DLG_BEAST_02,万物有灵，既遇上便救一把。不过我如今神识初凝，灵兽袋仅容缔结一兽同行助战——
+CHOICE_PET_FOX,契约【青岚火狐】（远程火印法宠 · 善引爆木生火燎原）
+CHOICE_PET_FOX_DESC,火狐幼崽灵动迅捷，Ctrl+1【赤尾灵焰】可大范围挂真火母印，Ctrl+2 提升全队急速。
+CHOICE_PET_TURTLE,契约【玄甲灵龟】（高血护主血宠 · 善分担致命重伤）
+CHOICE_PET_TURTLE_DESC,玄龟幼崽沉稳厚重，Ctrl+1【忠心护主】可替受创队友分担50%伤害，攻坚首领极稳。
+DLG_ROGUE_01,嘿嘿，小子眼力倒毒，竟从老道摊上淘走了带古剑魄的残铁！识相的把行囊和储物袋全留下，饶你们全尸！
+DLG_ROGUE_02,果然财不露白亦免不了恶犬扑食。裴兄、清禾——既然他们自己送上门，那两个储物袋顾某便却之不恭了！
+DLG_ZHOU_01,周执事，这枚沾血的私印玉牌与腐骨幽花账册，是从竹林截杀我们的黑衣劫修袋中搜出——你还有何话说？
+DLG_ZHOU_02,饶命、饶命啊！我卡在炼气圆满二十年寿元将近，不攒够灵石买筑基丹便是一抔黄土！我只是卖了几篓毒草，没想害镇民性命啊！
+DLG_ZHOU_03,为一己筑基私欲，便勾结劫修致使全镇樵夫染瘴垂危……顾兄，此獠当如何发落？
+CHOICE_ZHOU_EXEC,当场执剑诛恶（肃清门户 · 得120灵石与【古玉清心佩】）
+CHOICE_ZHOU_EXEC_DESC,修真丛林以血还血，绝不留反咬祸根；药庐长老感念除害赠予玄品蓝字灵佩。
+CHOICE_ZHOU_INVESTIGATE,押交长老审讯幕后买主（追索真相 · 沈清禾羁绊提升 + 得【古玉清心佩】）
+CHOICE_ZHOU_INVESTIGATE_DESC,揪出暗中收购腐瘴灵草的神秘结社线索，药庐声望大幅提升并获赠玄品蓝字灵佩。
+DLG_NIGHT1_01,夜深露重，顾兄把这碗温好的护脉汤趁热喝了吧。白日破阵时，你强忍经脉刺痛瞒过了裴少君，却瞒不过医修望气。
+DLG_NIGHT1_02,……多谢。十年前山村遭妖祸，青云宗高修路过云端，只因测灵石在我手中黯淡无光，便拂袖而去，任全村化作焦土。
+DLG_NIGHT1_03,从那夜起我便发誓：仙门不渡无根凡人，我顾长青便自己走出一条通天仙路！哪怕经脉寸裂，亦绝不回头。
+DLG_NIGHT1_04,清禾不求飞升长生，只愿身边同道平安顺遂。往后你经脉若再逆痛，有我一味青莲药气替你护着。
+DLG_NIGHT2_01,自幼师尊便教导：百年前魔修震碎天门致灵脉枯竭。可今日亲见古窟禁制，分明是上古正道先贤亲手封死灵枢……师门究竟瞒了什么？
+DLG_NIGHT2_02,天道与仙门的话，我向来只信亲眼所见。裴兄若想查清真相，先活着斩破眼前这头失控的守境狼王再说。
+DLG_NIGHT2_03,哈哈，说得好！明日祭坛一战，我这柄青云问心剑定替你劈开一切迷障！
+DLG_NIGHT3_01,前方祭坛木灵狂暴至极，狼王必有深厚【木灵护罡】护体，且吼声震魂摄魄，切记留好打断剑指与解瘴灵丹。
+DLG_NIGHT3_02,嗯，先服下这枚无瑕聚气丸稳固气海，调好【地载阵】阵位，我们一鼓作气拔除邪祟！
+DLG_REMAINS_01,这具古修遗骸盘坐百年而不朽，膝前断剑竟与我匣中气息隐隐同源……看石壁刻字，百年前天门竟是抽干九州地脉的虹吸大阵？！
+DLG_REMAINS_02,原来先贤并非乱道逆徒，而是以身斩门救世……这柄遗留的【苍木斩瘴剑】似在等待后来人执掌。
+DLG_BOSS_INTRO_01,嗷呜——！！（苍狼眉心一枚漆黑【天门道影】残屑剧烈搏动，暗紫腐瘴化作护体木罡席卷祭坛！）
+DLG_BOSS_INTRO_02,好强的木灵护罡！顾兄，用金火相克招式猛削它护罡，见到琥珀金读条立刻按 `Q` 截断！
+DLG_BOSS_INTRO_03,结阵迎敌！小心地面朱砂扑咬预警，随时凝时调度，莫让幼狼冲散清禾阵脚！
+DLG_MARROW_01,呜……多谢诸位斩碎吾眉心天门邪屑……吾大限已至，唯余这一团本源【苍木灵髓】，托付少年……
+DLG_MARROW_02,这团灵髓生机纯粹至极！若引回镇口化作灵雨，听雨镇数十名重度染瘴的樵夫孩童顷刻便能痊愈除根！
+DLG_MARROW_03,顾兄，你身具漏灵废脉，若错过这团无主天地灵髓纳入古器强冲经脉，日后赴青云测灵怕是步步受制……你自己决断！
+CHOICE_MARROW_ABSORB,【纳髓入匣 · 强辟仙脉】（当场冲开炼气二层 · 永久获锋芒破罡词条）
+CHOICE_MARROW_ABSORB_DESC,大道争锋不容妇人之仁！以断玉剑匣吞噬灵髓直破炼气二层（裴照认可↑，烙印【纳髓入匣】，镇中重病者留病根）。
+CHOICE_MARROW_SCATTER,【散髓化雨 · 悬壶济镇】（化灵雨救活全镇疫民 · 药庐赠护脉丹稳破炼气二层）
+CHOICE_MARROW_SCATTER_DESC,忍受经脉逆痛散髓化雨救活全镇百姓，获济世药庐长老厚赠【凝气护脉丹】凝练天道无瑕炼气二层（沈清禾羁绊↑↑，烙印【一念化雨】）。
+DLG_EPI_01,青岚腐瘴既靖，我须速归青云山门复命。顾兄、沈姑娘，下月云岚城开山测灵大典，裴某在青云石阶扫榻相候！
+DLG_EPI_02,镇口茶寮与药肆的乡亲都已转危为安。顾兄，待整理妥当行囊与丹药，我们便启程东赴青云境吧。
+DLG_EPI_03,青云宗……十年前弃我故村之地，如今我顾长青终以炼气修士之身踏上门去。九霄天门之谜，才刚刚揭开一角！
+BARK_TOWN_1,这紫雨下了半月，连井水都带着苦涩味……
+BARK_TOWN_2,多亏药庐沈姑娘每日施药，否则咱们樵夫早撑不住了！
+BARK_TOWN_3,听说北边破庙夜里常有绿眼睛的巨狼出没，千万别乱闯！
+BARK_PASS_1,山风腥寒，注意观察妖狼视野逐波引怪！
+BARK_CAVE_1,前方毒棘封路，需借火系剑气焚毁方能通行。
+BARK_CAVE_2,此潭瘴毒浓烈，须以水木清灵之术净化死水。
+BARK_BOSS_P2,雾隐狼王催动道影残屑进入狂暴！当心【腐木咆哮】琥珀金读条，速按 Q 键打断！

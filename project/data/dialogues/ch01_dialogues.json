@@ -1,0 +1,646 @@
+{
+  "dialogues": [
+    {
+      "id": "dlg_ch01_opening_rain",
+      "skippable_on_retry": false,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "guarded",
+          "right_portrait": "",
+          "text_key": "DLG_OPEN_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "",
+          "text_key": "DLG_OPEN_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "",
+          "text_key": "DLG_OPEN_03"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "unlock_clue", "id": "clue_tingyu_miasma" }
+      ]
+    },
+    {
+      "id": "dlg_ch01_tea_gossip",
+      "skippable_on_retry": true,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "NPC_ELDER_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "npc_elder",
+          "right_expr": "solemn",
+          "text_key": "DLG_TEA_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "guarded",
+          "right_portrait": "npc_elder",
+          "right_expr": "solemn",
+          "text_key": "DLG_TEA_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "NPC_ELDER_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "npc_elder",
+          "right_expr": "grief",
+          "text_key": "DLG_TEA_03"
+        }
+      ],
+      "on_finish_actions": []
+    },
+    {
+      "id": "dlg_ch01_meet_shen",
+      "skippable_on_retry": false,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "guarded",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "calm",
+          "text_key": "DLG_SHEN_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "calm",
+          "text_key": "DLG_SHEN_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_SHEN_03"
+        },
+        {
+          "id": "L04",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "solemn",
+          "text_key": "DLG_SHEN_04"
+        },
+        {
+          "id": "L05",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_SHEN_05"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "set_flag", "key": "met_shen_qinghe", "value": true },
+        { "type": "recruit", "char_id": "shen_qinghe", "slot": 3 },
+        { "type": "set_quest_stage", "quest_id": "q_main_ch01", "stage": "stage_go_temple" }
+      ]
+    },
+    {
+      "id": "dlg_ch01_peddler_resonance",
+      "skippable_on_retry": true,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "NPC_PEDDLER_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "npc_peddler",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_PEDDLER_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "guarded",
+          "right_portrait": "npc_peddler",
+          "right_expr": "calm",
+          "text_key": "DLG_PEDDLER_02"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "unlock_clue", "id": "clue_peddler_shard" }
+      ]
+    },
+    {
+      "id": "dlg_ch01_temple_clash",
+      "skippable_on_retry": true,
+      "trigger_cg_id": "cg_ch01_ruined_temple",
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_PEI_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "guarded",
+          "right_portrait": "pei_zhao",
+          "right_expr": "cold",
+          "text_key": "DLG_TEMPLE_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "pei_zhao",
+          "right_expr": "cold",
+          "text_key": "DLG_TEMPLE_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "shen_qinghe",
+          "left_expr": "solemn",
+          "right_portrait": "pei_zhao",
+          "right_expr": "calm",
+          "text_key": "DLG_TEMPLE_03"
+        },
+        {
+          "id": "L04",
+          "speaker_key": "CHAR_PEI_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "pei_zhao",
+          "right_expr": "solemn",
+          "text_key": "DLG_TEMPLE_04"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "set_flag", "key": "temple_cg_played", "value": true },
+        { "type": "set_flag", "key": "met_pei_zhao", "value": true },
+        { "type": "recruit", "char_id": "pei_zhao", "slot": 2 },
+        { "type": "unlock_formation", "id": "tianfu", "auto_equip": false },
+        { "type": "unlock_formation", "id": "dizai", "auto_equip": true },
+        { "type": "spawn_temple_pack" }
+      ]
+    },
+    {
+      "id": "dlg_ch01_temple_aftermath",
+      "skippable_on_retry": false,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_PEI_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "pei_zhao",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_TEMPLE_AFTER_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "guarded",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_TEMPLE_AFTER_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "solemn",
+          "text_key": "DLG_TEMPLE_AFTER_03"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "advance_realm", "char_id": "gu_changqing", "realm_id": "qi_refining_1", "grade": "flawless" },
+        { "type": "unlock_clue", "id": "clue_temple_trio" },
+        { "type": "set_quest_stage", "quest_id": "q_main_ch01", "stage": "stage_enter_cave" }
+      ]
+    },
+    {
+      "id": "dlg_ch01_rescue_beast",
+      "skippable_on_retry": false,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "grief",
+          "text_key": "DLG_BEAST_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "calm",
+          "text_key": "DLG_BEAST_02"
+        }
+      ],
+      "choices": [
+        {
+          "label_key": "CHOICE_PET_FOX",
+          "desc_key": "CHOICE_PET_FOX_DESC",
+          "actions": [
+            { "type": "contract_pet", "pet_id": "pet_fire_fox" },
+            { "type": "set_quest_stage", "quest_id": "q_side_spirit_pet", "stage": "completed" }
+          ]
+        },
+        {
+          "label_key": "CHOICE_PET_TURTLE",
+          "desc_key": "CHOICE_PET_TURTLE_DESC",
+          "actions": [
+            { "type": "contract_pet", "pet_id": "pet_spirit_turtle" },
+            { "type": "set_quest_stage", "quest_id": "q_side_spirit_pet", "stage": "completed" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dlg_ch01_rogue_ambush",
+      "skippable_on_retry": true,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "ENEMY_ROGUE_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "npc_peddler",
+          "right_expr": "cold",
+          "text_key": "DLG_ROGUE_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "pei_zhao",
+          "right_expr": "cold",
+          "text_key": "DLG_ROGUE_02"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "spawn_rogue_ambush" }
+      ]
+    },
+    {
+      "id": "dlg_ch01_confront_zhou",
+      "skippable_on_retry": false,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "npc_steward_zhou",
+          "right_expr": "guarded",
+          "text_key": "DLG_ZHOU_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "NPC_ZHOU_NAME",
+          "left_portrait": "shen_qinghe",
+          "left_expr": "grief",
+          "right_portrait": "npc_steward_zhou",
+          "right_expr": "grief",
+          "text_key": "DLG_ZHOU_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "shen_qinghe",
+          "left_expr": "solemn",
+          "right_portrait": "gu_changqing",
+          "right_expr": "cold",
+          "text_key": "DLG_ZHOU_03"
+        }
+      ],
+      "choices": [
+        {
+          "label_key": "CHOICE_ZHOU_EXEC",
+          "desc_key": "CHOICE_ZHOU_EXEC_DESC",
+          "actions": [
+            { "type": "set_flag", "key": "yaolu_spy_resolved", "value": true },
+            { "type": "set_quest_stage", "quest_id": "q_side_yaolu_spy", "stage": "completed_execute" },
+            { "type": "add_stones", "amount": 120 },
+            { "type": "add_item", "id": "eq_pendant_jingqing", "count": 1 },
+            { "type": "add_rep", "faction_id": "jishi_pharmacy", "amount": 350 },
+            { "type": "stamp_seal", "seal_id": "seal_yaolu_justice", "axis": "lone_peak" }
+          ]
+        },
+        {
+          "label_key": "CHOICE_ZHOU_INVESTIGATE",
+          "desc_key": "CHOICE_ZHOU_INVESTIGATE_DESC",
+          "actions": [
+            { "type": "set_flag", "key": "yaolu_spy_resolved", "value": true },
+            { "type": "set_quest_stage", "quest_id": "q_side_yaolu_spy", "stage": "completed_mercy" },
+            { "type": "add_stones", "amount": 80 },
+            { "type": "add_item", "id": "eq_pendant_jingqing", "count": 1 },
+            { "type": "add_rep", "faction_id": "jishi_pharmacy", "amount": 550 },
+            { "type": "add_bond", "char_id": "shen_qinghe", "amount": 1 },
+            { "type": "stamp_seal", "seal_id": "seal_yaolu_justice", "axis": "seek_truth" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dlg_night_talk_1",
+      "skippable_on_retry": true,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_NIGHT1_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "grief",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "solemn",
+          "text_key": "DLG_NIGHT1_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "grief",
+          "text_key": "DLG_NIGHT1_03"
+        },
+        {
+          "id": "L04",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_NIGHT1_04"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "mark_night_talk", "id": "night_talk_1" },
+        { "type": "add_bond", "char_id": "shen_qinghe", "amount": 1 }
+      ]
+    },
+    {
+      "id": "dlg_night_talk_2",
+      "skippable_on_retry": true,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_PEI_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "pei_zhao",
+          "right_expr": "solemn",
+          "text_key": "DLG_NIGHT2_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "pei_zhao",
+          "right_expr": "calm",
+          "text_key": "DLG_NIGHT2_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_PEI_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "pei_zhao",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_NIGHT2_03"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "mark_night_talk", "id": "night_talk_2" },
+        { "type": "add_bond", "char_id": "pei_zhao", "amount": 1 }
+      ]
+    },
+    {
+      "id": "dlg_night_talk_3",
+      "skippable_on_retry": true,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "shen_qinghe",
+          "left_expr": "solemn",
+          "right_portrait": "pei_zhao",
+          "right_expr": "calm",
+          "text_key": "DLG_NIGHT3_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_NIGHT3_02"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "mark_night_talk", "id": "night_talk_3" },
+        { "type": "add_item", "id": "item_juqi_pellet_flawless", "count": 1 }
+      ]
+    },
+    {
+      "id": "dlg_ch01_ancient_remains",
+      "skippable_on_retry": true,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "solemn",
+          "right_portrait": "pei_zhao",
+          "right_expr": "solemn",
+          "text_key": "DLG_REMAINS_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "guarded",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "solemn",
+          "text_key": "DLG_REMAINS_02"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "unlock_clue", "id": "clue_ancient_stele_ch01" },
+        { "type": "add_item", "id": "eq_ancient_wood_blade", "count": 1 }
+      ]
+    },
+    {
+      "id": "dlg_ch01_wolf_king_intro",
+      "skippable_on_retry": true,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "BOSS_WOLF_KING_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "mist_wolf_king",
+          "right_expr": "bloodied",
+          "text_key": "DLG_BOSS_INTRO_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_PEI_NAME",
+          "left_portrait": "pei_zhao",
+          "left_expr": "cold",
+          "right_portrait": "mist_wolf_king",
+          "right_expr": "bloodied",
+          "text_key": "DLG_BOSS_INTRO_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "cold",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "solemn",
+          "text_key": "DLG_BOSS_INTRO_03"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "engage_boss_wolf_king" }
+      ]
+    },
+    {
+      "id": "dlg_ch01_marrow_choice",
+      "skippable_on_retry": false,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "BOSS_WOLF_KING_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "solemn",
+          "right_portrait": "mist_wolf_king",
+          "right_expr": "grief",
+          "text_key": "DLG_MARROW_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "shen_qinghe",
+          "left_expr": "grief",
+          "right_portrait": "pei_zhao",
+          "right_expr": "solemn",
+          "text_key": "DLG_MARROW_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_PEI_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "guarded",
+          "right_portrait": "pei_zhao",
+          "right_expr": "cold",
+          "text_key": "DLG_MARROW_03"
+        }
+      ],
+      "choices": [
+        {
+          "label_key": "CHOICE_MARROW_ABSORB",
+          "desc_key": "CHOICE_MARROW_ABSORB_DESC",
+          "actions": [
+            { "type": "set_flag", "key": "marrow_choice", "value": "absorb" },
+            { "type": "stamp_seal", "seal_id": "seal_absorb_marrow", "axis": "lone_peak" },
+            { "type": "add_bond", "char_id": "pei_zhao", "amount": 1 },
+            { "type": "add_rep", "faction_id": "qingyun_sect", "amount": 300 },
+            { "type": "advance_realm", "char_id": "gu_changqing", "realm_id": "qi_refining_2", "grade": "flawless" },
+            { "type": "advance_realm", "char_id": "shen_qinghe", "realm_id": "qi_refining_2", "grade": "solid" },
+            { "type": "play_dialogue", "id": "dlg_ch01_epilogue" }
+          ]
+        },
+        {
+          "label_key": "CHOICE_MARROW_SCATTER",
+          "desc_key": "CHOICE_MARROW_SCATTER_DESC",
+          "actions": [
+            { "type": "set_flag", "key": "marrow_choice", "value": "scatter" },
+            { "type": "stamp_seal", "seal_id": "seal_scatter_rain", "axis": "mortal_mercy" },
+            { "type": "add_bond", "char_id": "shen_qinghe", "amount": 1 },
+            { "type": "add_rep", "faction_id": "jishi_pharmacy", "amount": 800 },
+            { "type": "add_item", "id": "item_ningqi_vein_pill", "count": 1 },
+            { "type": "advance_realm", "char_id": "gu_changqing", "realm_id": "qi_refining_2", "grade": "flawless" },
+            { "type": "advance_realm", "char_id": "shen_qinghe", "realm_id": "qi_refining_2", "grade": "flawless" },
+            { "type": "play_dialogue", "id": "dlg_ch01_epilogue" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dlg_ch01_epilogue",
+      "skippable_on_retry": false,
+      "lines": [
+        {
+          "id": "L01",
+          "speaker_key": "CHAR_PEI_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "pei_zhao",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_EPI_01"
+        },
+        {
+          "id": "L02",
+          "speaker_key": "CHAR_SHEN_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "calm",
+          "right_portrait": "shen_qinghe",
+          "right_expr": "smile_faint",
+          "text_key": "DLG_EPI_02"
+        },
+        {
+          "id": "L03",
+          "speaker_key": "CHAR_GU_NAME",
+          "left_portrait": "gu_changqing",
+          "left_expr": "solemn",
+          "right_portrait": "",
+          "text_key": "DLG_EPI_03"
+        }
+      ],
+      "on_finish_actions": [
+        { "type": "set_flag", "key": "ch01_completed", "value": true },
+        { "type": "set_quest_stage", "quest_id": "q_main_ch01", "stage": "completed" },
+        { "type": "show_chapter_complete_scroll" }
+      ]
+    }
+  ]
+}

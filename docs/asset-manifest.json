@@ -1,0 +1,26 @@
+{
+  "project": "尘缘问道 (Seeking Immortality through Mortal Bonds)",
+  "updated_at": "2026-11-26",
+  "assets": [
+    {
+      "path": "project/assets/fonts/NotoSerifCJKsc-Regular.otf",
+      "source_path": "assets_src/fonts/NotoSerifCJK-OFL-1.1-LICENSE.txt",
+      "category": "font",
+      "dimensions": "n/a",
+      "sha256": "945be2b2de0588fdb6a2a31d42f7df8b16ef3a429f6f5df0d628bb967ca166f5",
+      "creation_method": "Subsetted from Google/Adobe NotoSerifCJK-Regular.ttc (fontNumber=2 SC, 10,078 codepoints) via fontTools.",
+      "generated_date": "2026-11-26",
+      "license": "SIL Open Font License 1.1 (https://openfontlicense.org/)"
+    },
+    {
+      "path": "project/assets/fonts/NotoSerifCJKsc-Bold.otf",
+      "source_path": "assets_src/fonts/NotoSerifCJK-OFL-1.1-LICENSE.txt",
+      "category": "font",
+      "dimensions": "n/a",
+      "sha256": "3beecd4a0d45cea7bc5ad1ac33fdb5ce5e8725d4e568bb542b0a4880c4531487",
+      "creation_method": "Subsetted from Google/Adobe NotoSerifCJK-Bold.ttc (fontNumber=2 SC, 10,078 codepoints) via fontTools.",
+      "generated_date": "2026-11-26",
+      "license": "SIL Open Font License 1.1 (https://openfontlicense.org/)"
+    }
+  ]
+}

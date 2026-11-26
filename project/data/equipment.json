@@ -1,0 +1,221 @@
+{
+  "sets": [
+    {
+      "id": "set_qinglan_walker",
+      "name_key": "SET_QINGLAN_NAME",
+      "desc_2pc_key": "SET_QINGLAN_2PC",
+      "desc_3pc_key": "SET_QINGLAN_3PC",
+      "bonus_2pc": { "haste_rating": 10.0, "hp": 18.0 },
+      "bonus_3pc": { "mastery_rating": 12.0, "effect_tag": "synergy_restore_mp_8" }
+    },
+    {
+      "id": "set_yaolu_longevity",
+      "name_key": "SET_YAOLU_NAME",
+      "desc_2pc_key": "SET_YAOLU_2PC",
+      "desc_3pc_key": "SET_YAOLU_3PC",
+      "bonus_2pc": { "heal_power": 7.0, "hp": 20.0 },
+      "bonus_3pc": { "heal_power": 9.0, "effect_tag": "overheal_wood_shield_50" }
+    },
+    {
+      "id": "set_qingyun_swift",
+      "name_key": "SET_QINGYUN_NAME",
+      "desc_2pc_key": "SET_QINGYUN_2PC",
+      "desc_3pc_key": "SET_QINGYUN_3PC",
+      "bonus_2pc": { "crit_rating": 14.0, "phys_power": 5.0 },
+      "bonus_3pc": { "mastery_rating": 14.0, "effect_tag": "interrupt_ward_buff_20" }
+    }
+  ],
+  "equipment": [
+    {
+      "id": "eq_qinglan_iron_sword",
+      "name_key": "EQ_QINGLAN_SWORD_NAME",
+      "desc_key": "EQ_QINGLAN_SWORD_DESC",
+      "slot": "weapon",
+      "grade": "mortal",
+      "set_id": "set_qinglan_walker",
+      "buy_price": 65,
+      "sell_price": 22,
+      "attack_interval": 1.75,
+      "attack_range_px": 135.0,
+      "stats": { "phys_power": 6.0, "spell_power": 5.0, "haste_rating": 4.0 },
+      "icon": "res://assets/ui/icons/eq_sword_iron.png"
+    },
+    {
+      "id": "eq_qinglan_rain_robe",
+      "name_key": "EQ_QINGLAN_ROBE_NAME",
+      "desc_key": "EQ_QINGLAN_ROBE_DESC",
+      "slot": "robe",
+      "grade": "spirit",
+      "set_id": "set_qinglan_walker",
+      "buy_price": 75,
+      "sell_price": 26,
+      "stats": { "hp": 28.0, "defense": 8.0, "vers_rating": 5.0 },
+      "icon": "res://assets/ui/icons/eq_robe_rain.png"
+    },
+    {
+      "id": "eq_qinglan_mist_boots",
+      "name_key": "EQ_QINGLAN_BOOTS_NAME",
+      "desc_key": "EQ_QINGLAN_BOOTS_DESC",
+      "slot": "boots",
+      "grade": "spirit",
+      "set_id": "set_qinglan_walker",
+      "buy_price": 70,
+      "sell_price": 24,
+      "stats": { "hp": 14.0, "haste_rating": 6.0, "move_speed_pct": 0.04 },
+      "icon": "res://assets/ui/icons/eq_boots_mist.png"
+    },
+    {
+      "id": "eq_yaolu_silver_needle",
+      "name_key": "EQ_YAOLU_NEEDLE_NAME",
+      "desc_key": "EQ_YAOLU_NEEDLE_DESC",
+      "slot": "weapon",
+      "grade": "spirit",
+      "set_id": "set_yaolu_longevity",
+      "buy_price": 80,
+      "sell_price": 28,
+      "attack_interval": 1.85,
+      "attack_range_px": 380.0,
+      "stats": { "spell_power": 6.0, "heal_power": 9.0, "haste_rating": 5.0 },
+      "icon": "res://assets/ui/icons/eq_needle_silver.png"
+    },
+    {
+      "id": "eq_yaolu_linen_robe",
+      "name_key": "EQ_YAOLU_ROBE_NAME",
+      "desc_key": "EQ_YAOLU_ROBE_DESC",
+      "slot": "robe",
+      "grade": "spirit",
+      "set_id": "set_yaolu_longevity",
+      "buy_price": 78,
+      "sell_price": 27,
+      "stats": { "hp": 26.0, "mp": 24.0, "defense": 7.0, "heal_power": 5.0 },
+      "icon": "res://assets/ui/icons/eq_robe_herb.png"
+    },
+    {
+      "id": "eq_yaolu_dew_wrist",
+      "name_key": "EQ_YAOLU_WRIST_NAME",
+      "desc_key": "EQ_YAOLU_WRIST_DESC",
+      "slot": "boots",
+      "grade": "mystic",
+      "set_id": "set_yaolu_longevity",
+      "buy_price": 95,
+      "sell_price": 33,
+      "stats": { "hp": 18.0, "mp": 18.0, "haste_rating": 8.0, "move_speed_pct": 0.03 },
+      "icon": "res://assets/ui/icons/eq_wrist_dew.png"
+    },
+    {
+      "id": "eq_qingyun_frost_blade",
+      "name_key": "EQ_QINGYUN_BLADE_NAME",
+      "desc_key": "EQ_QINGYUN_BLADE_DESC",
+      "slot": "weapon",
+      "grade": "mystic",
+      "set_id": "set_qingyun_swift",
+      "buy_price": 110,
+      "sell_price": 38,
+      "attack_interval": 1.60,
+      "attack_range_px": 140.0,
+      "stats": { "phys_power": 11.0, "crit_rating": 9.0, "mastery_rating": 6.0 },
+      "icon": "res://assets/ui/icons/eq_sword_qingyun.png"
+    },
+    {
+      "id": "eq_qingyun_cloud_robe",
+      "name_key": "EQ_QINGYUN_ROBE_NAME",
+      "desc_key": "EQ_QINGYUN_ROBE_DESC",
+      "slot": "robe",
+      "grade": "mystic",
+      "set_id": "set_qingyun_swift",
+      "buy_price": 105,
+      "sell_price": 36,
+      "stats": { "hp": 36.0, "defense": 12.0, "vers_rating": 8.0 },
+      "icon": "res://assets/ui/icons/eq_robe_cloud.png"
+    },
+    {
+      "id": "eq_qingyun_wind_boots",
+      "name_key": "EQ_QINGYUN_BOOTS_NAME",
+      "desc_key": "EQ_QINGYUN_BOOTS_DESC",
+      "slot": "boots",
+      "grade": "mystic",
+      "set_id": "set_qingyun_swift",
+      "buy_price": 95,
+      "sell_price": 33,
+      "stats": { "hp": 18.0, "crit_rating": 7.0, "move_speed_pct": 0.05 },
+      "icon": "res://assets/ui/icons/eq_boots_wind.png"
+    },
+    {
+      "id": "eq_ancient_wood_blade",
+      "name_key": "EQ_ANCIENT_BLADE_NAME",
+      "desc_key": "EQ_ANCIENT_BLADE_DESC",
+      "slot": "weapon",
+      "grade": "mystic",
+      "set_id": "set_qinglan_walker",
+      "buy_price": 135,
+      "sell_price": 47,
+      "attack_interval": 1.65,
+      "attack_range_px": 260.0,
+      "stats": { "phys_power": 10.0, "spell_power": 10.0, "mastery_rating": 11.0, "crit_rating": 6.0 },
+      "icon": "res://assets/ui/icons/eq_sword_ancient.png"
+    },
+    {
+      "id": "eq_pendant_jingqing",
+      "name_key": "EQ_PENDANT_JINGQING_NAME",
+      "desc_key": "EQ_PENDANT_JINGQING_DESC",
+      "slot": "pendant",
+      "grade": "mystic",
+      "blue_stunt_id": "stunt_jingqing_jade",
+      "buy_price": 150,
+      "sell_price": 52,
+      "stats": { "hp": 24.0, "mp": 22.0, "heal_power": 6.0, "vers_rating": 7.0 },
+      "icon": "res://assets/ui/icons/eq_pendant_jade.png"
+    },
+    {
+      "id": "eq_pendant_poxue",
+      "name_key": "EQ_PENDANT_POXUE_NAME",
+      "desc_key": "EQ_PENDANT_POXUE_DESC",
+      "slot": "pendant",
+      "grade": "mystic",
+      "blue_stunt_id": "stunt_poxue_assault",
+      "buy_price": 150,
+      "sell_price": 52,
+      "stats": { "hp": 20.0, "phys_power": 6.0, "crit_rating": 8.0, "mastery_rating": 8.0 },
+      "icon": "res://assets/ui/icons/eq_pendant_tiger.png"
+    },
+    {
+      "id": "tr_broken_jade_box_1",
+      "name_key": "TR_BROKEN_JADE_BOX_NAME",
+      "desc_key": "TR_BROKEN_JADE_BOX_DESC",
+      "slot": "treasure",
+      "grade": "earth",
+      "allowed_characters": ["gu_changqing"],
+      "treasure_skill_id": "sk_gu_sword_box_burst",
+      "buy_price": 0,
+      "sell_price": 0,
+      "stats": { "hp": 22.0, "mp": 20.0, "phys_power": 4.0, "spell_power": 4.0, "mastery_rating": 6.0 },
+      "icon": "res://assets/ui/icons/tr_sword_box.png"
+    },
+    {
+      "id": "tr_qingnang_box",
+      "name_key": "TR_QINGNANG_BOX_NAME",
+      "desc_key": "TR_QINGNANG_BOX_DESC",
+      "slot": "treasure",
+      "grade": "mystic",
+      "allowed_characters": ["shen_qinghe"],
+      "treasure_skill_id": "sk_shen_herb_field",
+      "buy_price": 0,
+      "sell_price": 0,
+      "stats": { "hp": 20.0, "mp": 28.0, "heal_power": 8.0, "haste_rating": 5.0 },
+      "icon": "res://assets/ui/icons/tr_qingnang.png"
+    },
+    {
+      "id": "tr_jinghong_tassel",
+      "name_key": "TR_JINGHONG_TASSEL_NAME",
+      "desc_key": "TR_JINGHONG_TASSEL_DESC",
+      "slot": "treasure",
+      "grade": "mystic",
+      "allowed_characters": ["pei_zhao"],
+      "treasure_skill_id": "sk_pei_starfall_sword",
+      "buy_price": 0,
+      "sell_price": 0,
+      "stats": { "hp": 24.0, "phys_power": 7.0, "crit_rating": 8.0, "vers_rating": 6.0 },
+      "icon": "res://assets/ui/icons/tr_tassel.png"
+    }
+  ]
+}
