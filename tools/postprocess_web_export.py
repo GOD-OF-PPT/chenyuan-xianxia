@@ -203,7 +203,7 @@ body {
 
 	async function fetchOneChunk(part, preferGz) {
 		const useGz = preferGz && typeof DecompressionStream !== 'undefined' && part.gz_size < part.size * 0.75;
-		const url = useGz ? (part.url + '.gz') : part.url;
+		const url = (useGz ? (part.url + '.gz') : part.url) + '?b=__BUILD_TAG__';
 		for (let attempt = 1; attempt <= 4; attempt++) {
 			try {
 				const resp = await origFetch(url);
@@ -278,7 +278,7 @@ body {
 	};
 })();
 		</script>
-		<script src="index.js"></script>
+		<script src="index.js?b=__BUILD_TAG__"></script>
 		<script>
 async function probeIndexedDBAvailable() {
 	if (!window.__IDB_GETTER_OK__) return false;
@@ -462,16 +462,19 @@ def main() -> None:
     with open(os.path.join(WEB_DIR, "chunk_manifest.json"), "w", encoding="utf-8") as mf:
         json.dump(manifest, mf)
 
+    import hashlib
+    pck_hash = hashlib.sha256(open(os.path.join(WEB_DIR, "index.pck"), "rb").read()).hexdigest()[:8]
     total_chunks = sum(len(v["parts"]) for v in manifest.values())
     html_out = (
         HTML_TEMPLATE.replace("__TOTAL_CHUNKS__", str(total_chunks))
         .replace("__PCK_SIZE__", str(manifest["index.pck"]["total_size"]))
         .replace("__WASM_SIZE__", str(manifest["index.wasm"]["total_size"]))
+        .replace("__BUILD_TAG__", pck_hash)
     )
     with open(os.path.join(WEB_DIR, "index.html"), "w", encoding="utf-8") as hf:
         hf.write(html_out)
 
-    print(f"Web post-process complete: {total_chunks} chunks generated & sandbox-safe index.html written.")
+    print(f"Web post-process complete: {total_chunks} chunks (build={pck_hash}) generated & sandbox-safe index.html written.")
 
 
 if __name__ == "__main__":
