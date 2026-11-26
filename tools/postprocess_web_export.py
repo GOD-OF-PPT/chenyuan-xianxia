@@ -313,21 +313,86 @@ async function probeIndexedDBAvailable() {
 	});
 }
 
+async function probeWasmCspAllowed() {
+	try {
+		const minimalWasm = new Uint8Array([0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00]);
+		await WebAssembly.compile(minimalWasm);
+		return { ok: true, err: null };
+	} catch (err) {
+		return { ok: false, err };
+	}
+}
+
 (async function bootChenyuan() {
 	const statusOverlay = document.getElementById('status');
 	const statusNotice = document.getElementById('status-notice');
+	const statusBarBg = document.getElementById('status-bar-bg');
+	const statusDetail = document.getElementById('status-detail');
+
+	function showCspOpenInBrowserGuide() {
+		if (statusBarBg) statusBarBg.style.display = 'none';
+		if (statusDetail) statusDetail.textContent = '检测到当前内置预览小窗限制了 WebAssembly 引擎运行';
+		if (statusNotice) {
+			statusNotice.style.display = 'block';
+			statusNotice.style.backgroundColor = '#1F1B17';
+			statusNotice.innerHTML = '';
+
+			const p1 = document.createElement('div');
+			p1.style.fontSize = '17px';
+			p1.style.color = '#F4ECE1';
+			p1.style.marginBottom = '12px';
+			p1.textContent = '编辑器内嵌预览沙盒默认未开放 WebAssembly 编译权限（wasm-unsafe-eval），需在独立浏览器标签页中运行：';
+			statusNotice.appendChild(p1);
+
+			if (window.location && /^https?:$/i.test(window.location.protocol)) {
+				const btn = document.createElement('a');
+				btn.href = window.location.href;
+				btn.target = '_blank';
+				btn.rel = 'noopener noreferrer';
+				btn.textContent = '▶ 点击在新浏览器标签页全屏启动《尘缘问道》 ↗';
+				btn.style.display = 'inline-block';
+				btn.style.margin = '6px 0 14px 0';
+				btn.style.padding = '10px 22px';
+				btn.style.background = '#3E7B67';
+				btn.style.border = '1px solid #D6A85A';
+				btn.style.borderRadius = '5px';
+				btn.style.color = '#FFF8EC';
+				btn.style.fontSize = '17px';
+				btn.style.fontWeight = 'bold';
+				btn.style.textDecoration = 'none';
+				statusNotice.appendChild(btn);
+			}
+
+			const p2 = document.createElement('div');
+			p2.style.fontSize = '15px';
+			p2.style.color = '#D6A85A';
+			p2.textContent = '操作提示：请直接点击上方按钮，或点击预览窗右上角工具栏的【在浏览器中打开 / Open in Browser (↗)】图标即可全速畅玩。';
+			statusNotice.appendChild(p2);
+		}
+	}
 
 	function displayFailureNotice(err) {
 		console.error(err);
+		const msg = err && err.message ? err.message : String(err);
+		if (/Content Security Policy|unsafe-eval|WebAssembly/i.test(msg)) {
+			showCspOpenInBrowserGuide();
+			return;
+		}
 		if (statusNotice) {
 			statusNotice.style.display = 'block';
-			statusNotice.textContent = '启动异常：' + (err && err.message ? err.message : String(err));
+			statusNotice.textContent = '启动异常：' + msg;
 		}
 	}
 
 	window.addEventListener('unhandledrejection', (ev) => {
 		displayFailureNotice(ev.reason || 'Unhandled Promise Rejection');
 	});
+
+	const wasmProbe = await probeWasmCspAllowed();
+	if (!wasmProbe.ok) {
+		showCspOpenInBrowserGuide();
+		return;
+	}
 
 	const idbOk = await probeIndexedDBAvailable();
 	const GODOT_CONFIG = {
