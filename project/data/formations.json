@@ -1,0 +1,64 @@
+{
+  "formations": [
+    {
+      "id": "scatter",
+      "name_key": "FORM_SCATTER_NAME",
+      "desc_key": "FORM_SCATTER_DESC",
+      "slice_available": true,
+      "slots": {
+        "slot_1": { "role_title": "青龙阵眼", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 1.0 },
+        "slot_2": { "role_title": "玄武镇岳", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 1.25 },
+        "slot_3": { "role_title": "朱雀灵枢", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 0.9 },
+        "slot_4": { "role_title": "白虎破锐", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 1.0 }
+      }
+    },
+    {
+      "id": "tianfu",
+      "name_key": "FORM_TIANFU_NAME",
+      "desc_key": "FORM_TIANFU_DESC",
+      "slice_available": true,
+      "slots": {
+        "slot_1": { "role_title": "青龙阵眼", "damage_mult": 1.18, "heal_mult": 1.05, "damage_taken_mult": 1.0, "move_speed_mult": 0.92, "threat_mult": 1.0 },
+        "slot_2": { "role_title": "玄武前锋", "damage_mult": 1.15, "heal_mult": 1.0, "damage_taken_mult": 0.96, "move_speed_mult": 0.92, "threat_mult": 1.35 },
+        "slot_3": { "role_title": "朱雀焚灵", "damage_mult": 1.15, "heal_mult": 1.08, "damage_taken_mult": 1.0, "move_speed_mult": 0.92, "threat_mult": 0.85 },
+        "slot_4": { "role_title": "白虎奇袭", "damage_mult": 1.15, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 0.92, "threat_mult": 1.0 }
+      }
+    },
+    {
+      "id": "dizai",
+      "name_key": "FORM_DIZAI_NAME",
+      "desc_key": "FORM_DIZAI_DESC",
+      "slice_available": true,
+      "slots": {
+        "slot_1": { "role_title": "青龙阵眼", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 0.85, "move_speed_mult": 1.0, "threat_mult": 1.0 },
+        "slot_2": { "role_title": "玄武镇岳", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 0.75, "move_speed_mult": 1.0, "threat_mult": 1.80 },
+        "slot_3": { "role_title": "朱雀药灵", "damage_mult": 1.0, "heal_mult": 1.12, "damage_taken_mult": 0.90, "move_speed_mult": 1.0, "threat_mult": 0.80 },
+        "slot_4": { "role_title": "白虎破锐", "damage_mult": 1.08, "heal_mult": 1.0, "damage_taken_mult": 0.90, "move_speed_mult": 1.0, "threat_mult": 1.0 }
+      }
+    },
+    {
+      "id": "fengyang",
+      "name_key": "FORM_FENGYANG_NAME",
+      "desc_key": "FORM_FENGYANG_DESC",
+      "slice_available": false,
+      "slots": {
+        "slot_1": { "role_title": "青龙阵眼", "damage_mult": 1.16, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.10, "threat_mult": 1.0 },
+        "slot_2": { "role_title": "玄武前锋", "damage_mult": 1.10, "heal_mult": 1.0, "damage_taken_mult": 0.95, "move_speed_mult": 1.05, "threat_mult": 1.40 },
+        "slot_3": { "role_title": "朱雀迅法", "damage_mult": 1.06, "heal_mult": 1.06, "damage_taken_mult": 1.0, "move_speed_mult": 1.05, "threat_mult": 0.85, "haste_bonus": 0.15 },
+        "slot_4": { "role_title": "白虎疾锋", "damage_mult": 1.10, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.15, "threat_mult": 1.0, "haste_bonus": 0.12 }
+      }
+    },
+    {
+      "id": "huyi",
+      "name_key": "FORM_HUYI_NAME",
+      "desc_key": "FORM_HUYI_DESC",
+      "slice_available": false,
+      "slots": {
+        "slot_1": { "role_title": "青龙破罡", "damage_mult": 1.08, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 1.0, "crit_bonus": 0.12, "ward_break_bonus": 0.25 },
+        "slot_2": { "role_title": "玄武镇岳", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 0.82, "move_speed_mult": 1.0, "threat_mult": 1.60 },
+        "slot_3": { "role_title": "朱雀护脉", "damage_mult": 1.0, "heal_mult": 1.15, "damage_taken_mult": 0.95, "move_speed_mult": 1.0, "threat_mult": 0.85 },
+        "slot_4": { "role_title": "白虎极锋", "damage_mult": 1.18, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 1.0 }
+      }
+    }
+  ]
+}

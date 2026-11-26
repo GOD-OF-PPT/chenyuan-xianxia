@@ -1,0 +1,119 @@
+{
+  "quests": [
+    {
+      "id": "q_main_ch01",
+      "volume": "main",
+      "title_key": "QUEST_MAIN_CH01_TITLE",
+      "stages": {
+        "stage_seek_medicine": "QUEST_MAIN_STAGE_1",
+        "stage_go_temple": "QUEST_MAIN_STAGE_2",
+        "stage_enter_cave": "QUEST_MAIN_STAGE_3",
+        "stage_wolf_altar": "QUEST_MAIN_STAGE_4",
+        "stage_marrow_choice": "QUEST_MAIN_STAGE_5",
+        "completed": "QUEST_MAIN_STAGE_DONE"
+      },
+      "map_hint_zone": "cangmu_cave",
+      "map_hint_radius": 220.0
+    },
+    {
+      "id": "q_side_yaolu_spy",
+      "volume": "side",
+      "title_key": "QUEST_SIDE_SPY_TITLE",
+      "stages": {
+        "stage_ambush_clue": "QUEST_SPY_STAGE_1",
+        "stage_confront_zhou": "QUEST_SPY_STAGE_2",
+        "completed_execute": "QUEST_SPY_DONE_EXEC",
+        "completed_mercy": "QUEST_SPY_DONE_MERCY"
+      },
+      "map_hint_zone": "tingyu_town",
+      "map_hint_radius": 180.0
+    },
+    {
+      "id": "q_side_spirit_pet",
+      "volume": "side",
+      "title_key": "QUEST_SIDE_PET_TITLE",
+      "stages": {
+        "stage_rescue_beast": "QUEST_PET_STAGE_1",
+        "completed": "QUEST_PET_DONE"
+      },
+      "map_hint_zone": "qinglan_pass",
+      "map_hint_radius": 160.0
+    }
+  ],
+  "journal_entries": [
+    {
+      "id": "clue_tingyu_miasma",
+      "volume": "main",
+      "title_key": "CLUE_MIASMA_TITLE",
+      "body_key": "CLUE_MIASMA_BODY"
+    },
+    {
+      "id": "clue_sword_box_secret",
+      "volume": "relic",
+      "title_key": "CLUE_BOX_TITLE",
+      "body_key": "CLUE_BOX_BODY"
+    },
+    {
+      "id": "clue_temple_trio",
+      "volume": "main",
+      "title_key": "CLUE_TRIO_TITLE",
+      "body_key": "CLUE_TRIO_BODY"
+    },
+    {
+      "id": "clue_peddler_shard",
+      "volume": "side",
+      "title_key": "CLUE_SHARD_TITLE",
+      "body_key": "CLUE_SHARD_BODY"
+    },
+    {
+      "id": "clue_yaolu_spy_token",
+      "volume": "side",
+      "title_key": "CLUE_SPY_TOKEN_TITLE",
+      "body_key": "CLUE_SPY_TOKEN_BODY"
+    },
+    {
+      "id": "clue_ancient_stele_ch01",
+      "volume": "relic",
+      "title_key": "CLUE_STELE_CH01_TITLE",
+      "body_key": "CLUE_STELE_CH01_BODY"
+    },
+    {
+      "id": "clue_golden_core_cliff",
+      "volume": "lore",
+      "title_key": "CLUE_CLIFF_TITLE",
+      "body_key": "CLUE_CLIFF_BODY"
+    }
+  ],
+  "factions": [
+    { "id": "qingyun_sect", "name_key": "FACTION_QINGYUN_NAME", "desc_key": "FACTION_QINGYUN_DESC" },
+    { "id": "jishi_pharmacy", "name_key": "FACTION_YAOLU_NAME", "desc_key": "FACTION_YAOLU_DESC" },
+    { "id": "zhaoying_keepers", "name_key": "FACTION_ZHAOYING_NAME", "desc_key": "FACTION_ZHAOYING_DESC" },
+    { "id": "chiyuan_league", "name_key": "FACTION_CHIYUAN_NAME", "desc_key": "FACTION_CHIYUAN_DESC" },
+    { "id": "jianxu_forge", "name_key": "FACTION_JIANXU_NAME", "desc_key": "FACTION_JIANXU_DESC" }
+  ],
+  "ink_seals": [
+    {
+      "id": "seal_absorb_marrow",
+      "name_key": "SEAL_ABSORB_NAME",
+      "poem_key": "SEAL_ABSORB_POEM"
+    },
+    {
+      "id": "seal_scatter_rain",
+      "name_key": "SEAL_SCATTER_NAME",
+      "poem_key": "SEAL_SCATTER_POEM"
+    },
+    {
+      "id": "seal_yaolu_justice",
+      "name_key": "SEAL_YAOLU_JUSTICE_NAME",
+      "poem_key": "SEAL_YAOLU_JUSTICE_POEM"
+    }
+  ],
+  "cg_gallery": [
+    {
+      "id": "cg_ch01_ruined_temple",
+      "title_key": "CG_CH01_TEMPLE_TITLE",
+      "caption_key": "CG_CH01_TEMPLE_CAPTION",
+      "scene_id": "ruined_temple_rain"
+    }
+  ]
+}

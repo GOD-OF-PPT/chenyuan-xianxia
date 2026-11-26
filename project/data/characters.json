@@ -1,0 +1,251 @@
+{
+  "characters": [
+    {
+      "id": "gu_changqing",
+      "name_key": "CHAR_GU_NAME",
+      "title_key": "CHAR_GU_TITLE",
+      "bio_key": "CHAR_GU_BIO",
+      "elements": ["metal", "fire", "water", "wood", "earth"],
+      "preferred_role": "core",
+      "base_five_stats": { "con": 7, "spi": 7, "str": 7, "end": 6, "agi": 7 },
+      "hp_offset": 0.0,
+      "mp_offset": 0.0,
+      "power_offset": 1.0,
+      "def_offset": 0.0,
+      "default_attack_interval": 1.75,
+      "default_attack_range_px": 145.0,
+      "base_move_speed_px": 220.0,
+      "default_treasure_skill": "sk_gu_sword_box_burst",
+      "portrait_id": "gu_changqing",
+      "sprite_id": "gu_changqing",
+      "starter_equipment": {
+        "weapon": "eq_qinglan_iron_sword",
+        "robe": "eq_qinglan_rain_robe",
+        "boots": "eq_qinglan_mist_boots",
+        "pendant": "",
+        "treasure": "tr_broken_jade_box_1"
+      },
+      "ai_presets": [
+        { "id": "balanced_lead", "name_key": "AI_GU_BALANCED", "desc_key": "AI_GU_BALANCED_DESC" },
+        { "id": "synergy_weaver", "name_key": "AI_GU_SYNERGY", "desc_key": "AI_GU_SYNERGY_DESC" },
+        { "id": "guard_vanguard", "name_key": "AI_GU_GUARD", "desc_key": "AI_GU_GUARD_DESC" }
+      ],
+      "specializations": {
+        "spec_a": {
+          "id": "gu_hunyuan_sword",
+          "name_key": "SPEC_GU_A_NAME",
+          "desc_key": "SPEC_GU_A_DESC",
+          "skill_bar": {
+            "1": "sk_gu_qingming_qi",
+            "2": "sk_gu_flame_sword",
+            "3": "sk_gu_frost_stream",
+            "4": "sk_gu_gale_blades",
+            "Q": "sk_gu_throat_seal",
+            "E": "sk_gu_ward_guard",
+            "R": "sk_gu_sword_box_burst"
+          },
+          "nodes": [
+            { "id": "nd_gu_a1", "tier": 1, "name_key": "ND_GU_A1_NAME", "desc_key": "ND_GU_A1_DESC", "bonuses": { "spell_power": 5.0, "haste_rating": 6.0 } },
+            { "id": "nd_gu_a2", "tier": 2, "name_key": "ND_GU_A2_NAME", "desc_key": "ND_GU_A2_DESC", "bonuses": { "mastery_rating": 10.0, "flat_mp": 20.0 } },
+            { "id": "nd_gu_a3", "tier": 3, "name_key": "ND_GU_A3_NAME", "desc_key": "ND_GU_A3_DESC", "bonuses": { "damage_pct": 0.08, "crit_rating": 8.0 } }
+          ]
+        },
+        "spec_b": {
+          "id": "gu_heavy_edge",
+          "name_key": "SPEC_GU_B_NAME",
+          "desc_key": "SPEC_GU_B_DESC",
+          "skill_bar": {
+            "1": "sk_gu_earth_cleave",
+            "2": "sk_gu_metal_rend",
+            "3": "sk_gu_searing_sweep",
+            "4": "sk_gu_mountain_stance",
+            "Q": "sk_gu_throat_seal",
+            "E": "sk_gu_taunt_decree",
+            "R": "sk_gu_sword_box_burst"
+          },
+          "nodes": [
+            { "id": "nd_gu_b1", "tier": 1, "name_key": "ND_GU_B1_NAME", "desc_key": "ND_GU_B1_DESC", "bonuses": { "phys_power": 5.0, "flat_hp": 28.0, "stance_threat_mult": 0.45 } },
+            { "id": "nd_gu_b2", "tier": 2, "name_key": "ND_GU_B2_NAME", "desc_key": "ND_GU_B2_DESC", "bonuses": { "defense": 10.0, "vers_rating": 9.0 } },
+            { "id": "nd_gu_b3", "tier": 3, "name_key": "ND_GU_B3_NAME", "desc_key": "ND_GU_B3_DESC", "bonuses": { "flat_mastery_pct": 0.06, "flat_hp": 32.0 } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "shen_qinghe",
+      "name_key": "CHAR_SHEN_NAME",
+      "title_key": "CHAR_SHEN_TITLE",
+      "bio_key": "CHAR_SHEN_BIO",
+      "elements": ["wood", "water"],
+      "preferred_role": "healer",
+      "base_five_stats": { "con": 6, "spi": 9, "str": 4, "end": 6, "agi": 6 },
+      "hp_offset": -8.0,
+      "mp_offset": 28.0,
+      "power_offset": 0.0,
+      "def_offset": -2.0,
+      "default_attack_interval": 1.85,
+      "default_attack_range_px": 380.0,
+      "base_move_speed_px": 212.0,
+      "default_treasure_skill": "sk_shen_herb_field",
+      "portrait_id": "shen_qinghe",
+      "sprite_id": "shen_qinghe",
+      "starter_equipment": {
+        "weapon": "eq_yaolu_silver_needle",
+        "robe": "eq_yaolu_linen_robe",
+        "boots": "eq_yaolu_dew_wrist",
+        "pendant": "",
+        "treasure": "tr_qingnang_box"
+      },
+      "ai_presets": [
+        { "id": "mercy_healer", "name_key": "AI_SHEN_HEAL", "desc_key": "AI_SHEN_HEAL_DESC" },
+        { "id": "wood_weaver", "name_key": "AI_SHEN_WOOD", "desc_key": "AI_SHEN_WOOD_DESC" },
+        { "id": "conserve_mana", "name_key": "AI_SHEN_CONSERVE", "desc_key": "AI_SHEN_CONSERVE_DESC" }
+      ],
+      "specializations": {
+        "spec_a": {
+          "id": "shen_qingnang_mercy",
+          "name_key": "SPEC_SHEN_A_NAME",
+          "desc_key": "SPEC_SHEN_A_DESC",
+          "skill_bar": {
+            "1": "sk_shen_rejuvenate",
+            "2": "sk_shen_sweet_rain",
+            "3": "sk_shen_spring_wave",
+            "4": "sk_shen_vine_bind",
+            "Q": "sk_shen_needle_seal",
+            "E": "sk_shen_lotus_aegis",
+            "R": "sk_shen_herb_field"
+          },
+          "nodes": [
+            { "id": "nd_shen_a1", "tier": 1, "name_key": "ND_SHEN_A1_NAME", "desc_key": "ND_SHEN_A1_DESC", "bonuses": { "heal_power": 8.0, "flat_mp": 24.0 } },
+            { "id": "nd_shen_a2", "tier": 2, "name_key": "ND_SHEN_A2_NAME", "desc_key": "ND_SHEN_A2_DESC", "bonuses": { "haste_rating": 10.0, "heal_pct": 0.08 } },
+            { "id": "nd_shen_a3", "tier": 3, "name_key": "ND_SHEN_A3_NAME", "desc_key": "ND_SHEN_A3_DESC", "bonuses": { "vers_rating": 8.0, "flat_hp": 25.0 } }
+          ]
+        },
+        "spec_b": {
+          "id": "shen_wither_bloom",
+          "name_key": "SPEC_SHEN_B_NAME",
+          "desc_key": "SPEC_SHEN_B_DESC",
+          "skill_bar": {
+            "1": "sk_shen_wither_thorn",
+            "2": "sk_shen_leech_briar",
+            "3": "sk_shen_rejuvenate",
+            "4": "sk_shen_frost_dew",
+            "Q": "sk_shen_needle_seal",
+            "E": "sk_shen_bloom_burst",
+            "R": "sk_shen_herb_field"
+          },
+          "nodes": [
+            { "id": "nd_shen_b1", "tier": 1, "name_key": "ND_SHEN_B1_NAME", "desc_key": "ND_SHEN_B1_DESC", "bonuses": { "spell_power": 7.0, "heal_power": 5.0 } },
+            { "id": "nd_shen_b2", "tier": 2, "name_key": "ND_SHEN_B2_NAME", "desc_key": "ND_SHEN_B2_DESC", "bonuses": { "mastery_rating": 11.0, "haste_rating": 6.0 } },
+            { "id": "nd_shen_b3", "tier": 3, "name_key": "ND_SHEN_B3_NAME", "desc_key": "ND_SHEN_B3_DESC", "bonuses": { "damage_pct": 0.07, "heal_pct": 0.06 } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pei_zhao",
+      "name_key": "CHAR_PEI_NAME",
+      "title_key": "CHAR_PEI_TITLE",
+      "bio_key": "CHAR_PEI_BIO",
+      "elements": ["metal", "fire"],
+      "preferred_role": "vanguard_dps",
+      "base_five_stats": { "con": 8, "spi": 5, "str": 9, "end": 8, "agi": 8 },
+      "hp_offset": 18.0,
+      "mp_offset": -5.0,
+      "power_offset": 3.0,
+      "def_offset": 5.0,
+      "default_attack_interval": 1.60,
+      "default_attack_range_px": 140.0,
+      "base_move_speed_px": 226.0,
+      "default_treasure_skill": "sk_pei_starfall_sword",
+      "portrait_id": "pei_zhao",
+      "sprite_id": "pei_zhao",
+      "starter_equipment": {
+        "weapon": "eq_qingyun_frost_blade",
+        "robe": "eq_qingyun_cloud_robe",
+        "boots": "eq_qingyun_wind_boots",
+        "pendant": "",
+        "treasure": "tr_jinghong_tassel"
+      },
+      "ai_presets": [
+        { "id": "ward_breaker", "name_key": "AI_PEI_WARD", "desc_key": "AI_PEI_WARD_DESC" },
+        { "id": "tank_anchor", "name_key": "AI_PEI_TANK", "desc_key": "AI_PEI_TANK_DESC" },
+        { "id": "burst_focus", "name_key": "AI_PEI_BURST", "desc_key": "AI_PEI_BURST_DESC" }
+      ],
+      "specializations": {
+        "spec_a": {
+          "id": "pei_jinghong_edge",
+          "name_key": "SPEC_PEI_A_NAME",
+          "desc_key": "SPEC_PEI_A_DESC",
+          "skill_bar": {
+            "1": "sk_pei_jinghong_thrust",
+            "2": "sk_pei_flash_flurry",
+            "3": "sk_pei_sun_flare",
+            "4": "sk_pei_sky_pierce",
+            "Q": "sk_pei_sword_interrupt",
+            "E": "sk_pei_qingyun_challenge",
+            "R": "sk_pei_starfall_sword"
+          },
+          "nodes": [
+            { "id": "nd_pei_a1", "tier": 1, "name_key": "ND_PEI_A1_NAME", "desc_key": "ND_PEI_A1_DESC", "bonuses": { "phys_power": 7.0, "crit_rating": 8.0 } },
+            { "id": "nd_pei_a2", "tier": 2, "name_key": "ND_PEI_A2_NAME", "desc_key": "ND_PEI_A2_DESC", "bonuses": { "mastery_rating": 12.0, "stance_threat_mult": 0.35 } },
+            { "id": "nd_pei_a3", "tier": 3, "name_key": "ND_PEI_A3_NAME", "desc_key": "ND_PEI_A3_DESC", "bonuses": { "flat_crit_pct": 0.05, "damage_pct": 0.08 } }
+          ]
+        },
+        "spec_b": {
+          "id": "pei_blazing_blade",
+          "name_key": "SPEC_PEI_B_NAME",
+          "desc_key": "SPEC_PEI_B_DESC",
+          "skill_bar": {
+            "1": "sk_pei_blaze_slash",
+            "2": "sk_pei_crimson_whirl",
+            "3": "sk_pei_jinghong_thrust",
+            "4": "sk_pei_prairie_array",
+            "Q": "sk_pei_sword_interrupt",
+            "E": "sk_pei_flame_mantle",
+            "R": "sk_pei_starfall_sword"
+          },
+          "nodes": [
+            { "id": "nd_pei_b1", "tier": 1, "name_key": "ND_PEI_B1_NAME", "desc_key": "ND_PEI_B1_DESC", "bonuses": { "phys_power": 5.0, "spell_power": 5.0, "haste_rating": 7.0 } },
+            { "id": "nd_pei_b2", "tier": 2, "name_key": "ND_PEI_B2_NAME", "desc_key": "ND_PEI_B2_DESC", "bonuses": { "mastery_rating": 11.0, "flat_hp": 28.0 } },
+            { "id": "nd_pei_b3", "tier": 3, "name_key": "ND_PEI_B3_NAME", "desc_key": "ND_PEI_B3_DESC", "bonuses": { "damage_pct": 0.09, "vers_rating": 7.0 } }
+          ]
+        }
+      }
+    }
+  ],
+  "pets": [
+    {
+      "id": "pet_fire_fox",
+      "name_key": "PET_FOX_NAME",
+      "title_key": "PET_FOX_TITLE",
+      "desc_key": "PET_FOX_DESC",
+      "element": "fire",
+      "sprite_id": "pet_fire_fox",
+      "base_hp": 155,
+      "base_power": 22.0,
+      "attack_interval": 1.65,
+      "attack_range_px": 320.0,
+      "move_speed_px": 235.0,
+      "aptitudes": { "atk": 0.95, "mag": 1.28, "vit": 0.98, "spd": 1.24 },
+      "skill_1": "sk_pet_fox_flame",
+      "skill_2": "sk_pet_fox_haste"
+    },
+    {
+      "id": "pet_spirit_turtle",
+      "name_key": "PET_TURTLE_NAME",
+      "title_key": "PET_TURTLE_TITLE",
+      "desc_key": "PET_TURTLE_DESC",
+      "element": "water",
+      "sprite_id": "pet_spirit_turtle",
+      "base_hp": 295,
+      "base_power": 15.0,
+      "attack_interval": 2.00,
+      "attack_range_px": 130.0,
+      "move_speed_px": 195.0,
+      "aptitudes": { "atk": 0.92, "mag": 1.05, "vit": 1.34, "spd": 0.90 },
+      "skill_1": "sk_pet_turtle_guard",
+      "skill_2": "sk_pet_turtle_mist"
+    }
+  ]
+}

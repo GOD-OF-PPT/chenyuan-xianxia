@@ -1,0 +1,74 @@
+{
+  "realms": [
+    {
+      "id": "mortal",
+      "stage_order": 0,
+      "sub_realm_total_index": 0,
+      "name_key": "REALM_MORTAL",
+      "sub_name_key": "REALM_MORTAL_SUB",
+      "k_realm": 20.0,
+      "base_hp": 105.0,
+      "base_mp": 55.0,
+      "base_power": 12.0,
+      "base_defense": 14.0,
+      "lifespan_max": 80,
+      "desc_key": "REALM_MORTAL_DESC"
+    },
+    {
+      "id": "qi_refining_1",
+      "stage_order": 1,
+      "sub_realm_total_index": 1,
+      "name_key": "REALM_QI_1",
+      "sub_name_key": "REALM_QI_1_SUB",
+      "k_realm": 30.0,
+      "base_hp": 155.0,
+      "base_mp": 105.0,
+      "base_power": 19.0,
+      "base_defense": 22.0,
+      "lifespan_max": 120,
+      "desc_key": "REALM_QI_1_DESC"
+    },
+    {
+      "id": "qi_refining_2",
+      "stage_order": 1,
+      "sub_realm_total_index": 2,
+      "name_key": "REALM_QI_2",
+      "sub_name_key": "REALM_QI_2_SUB",
+      "k_realm": 42.0,
+      "base_hp": 215.0,
+      "base_mp": 150.0,
+      "base_power": 28.0,
+      "base_defense": 30.0,
+      "lifespan_max": 120,
+      "desc_key": "REALM_QI_2_DESC"
+    },
+    {
+      "id": "qi_refining_3",
+      "stage_order": 1,
+      "sub_realm_total_index": 3,
+      "name_key": "REALM_QI_3",
+      "sub_name_key": "REALM_QI_3_SUB",
+      "k_realm": 54.0,
+      "base_hp": 285.0,
+      "base_mp": 195.0,
+      "base_power": 38.0,
+      "base_defense": 40.0,
+      "lifespan_max": 120,
+      "desc_key": "REALM_QI_3_DESC"
+    },
+    {
+      "id": "foundation_1",
+      "stage_order": 2,
+      "sub_realm_total_index": 4,
+      "name_key": "REALM_FOUNDATION_1",
+      "sub_name_key": "REALM_FOUNDATION_1_SUB",
+      "k_realm": 75.0,
+      "base_hp": 430.0,
+      "base_mp": 280.0,
+      "base_power": 56.0,
+      "base_defense": 62.0,
+      "lifespan_max": 200,
+      "desc_key": "REALM_FOUNDATION_1_DESC"
+    }
+  ]
+}

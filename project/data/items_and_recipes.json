@@ -1,0 +1,330 @@
+{
+  "items": [
+    {
+      "id": "item_huichun_powder",
+      "name_key": "ITEM_HUICHUN_NAME",
+      "desc_key": "ITEM_HUICHUN_DESC",
+      "category": "instant_pill",
+      "grade": "mortal",
+      "buy_price": 32,
+      "sell_price": 11,
+      "heal_hp_pct": 0.35,
+      "cleanse_meridian_bruise": true,
+      "icon": "res://assets/ui/icons/pill_huichun.png"
+    },
+    {
+      "id": "item_huichun_powder_flawless",
+      "name_key": "ITEM_HUICHUN_FLAWLESS_NAME",
+      "desc_key": "ITEM_HUICHUN_FLAWLESS_DESC",
+      "category": "instant_pill",
+      "grade": "spirit",
+      "buy_price": 40,
+      "sell_price": 13,
+      "heal_hp_pct": 0.42,
+      "cleanse_meridian_bruise": true,
+      "icon": "res://assets/ui/icons/pill_huichun.png"
+    },
+    {
+      "id": "item_juqi_pellet",
+      "name_key": "ITEM_JUQI_NAME",
+      "desc_key": "ITEM_JUQI_DESC",
+      "category": "elixir",
+      "grade": "spirit",
+      "buy_price": 48,
+      "sell_price": 16,
+      "duration_sec": 1800.0,
+      "power_pct": 0.10,
+      "max_hp_pct": 0.08,
+      "defense_pct": 0.05,
+      "icon": "res://assets/ui/icons/pill_juqi.png"
+    },
+    {
+      "id": "item_juqi_pellet_flawless",
+      "name_key": "ITEM_JUQI_FLAWLESS_NAME",
+      "desc_key": "ITEM_JUQI_FLAWLESS_DESC",
+      "category": "elixir",
+      "grade": "mystic",
+      "buy_price": 58,
+      "sell_price": 19,
+      "duration_sec": 1800.0,
+      "power_pct": 0.12,
+      "max_hp_pct": 0.10,
+      "defense_pct": 0.06,
+      "icon": "res://assets/ui/icons/pill_juqi.png"
+    },
+    {
+      "id": "item_qingmu_pill",
+      "name_key": "ITEM_QINGMU_PILL_NAME",
+      "desc_key": "ITEM_QINGMU_PILL_DESC",
+      "category": "instant_pill",
+      "grade": "spirit",
+      "buy_price": 46,
+      "sell_price": 15,
+      "heal_hp_pct": 0.22,
+      "cleanse_miasma": true,
+      "miasma_immune_sec": 10.0,
+      "cleanse_meridian_bruise": true,
+      "icon": "res://assets/ui/icons/pill_qingmu.png"
+    },
+    {
+      "id": "item_qingmu_pill_flawless",
+      "name_key": "ITEM_QINGMU_FLAWLESS_NAME",
+      "desc_key": "ITEM_QINGMU_FLAWLESS_DESC",
+      "category": "instant_pill",
+      "grade": "mystic",
+      "buy_price": 56,
+      "sell_price": 18,
+      "heal_hp_pct": 0.28,
+      "cleanse_miasma": true,
+      "miasma_immune_sec": 12.0,
+      "cleanse_meridian_bruise": true,
+      "icon": "res://assets/ui/icons/pill_qingmu.png"
+    },
+    {
+      "id": "item_burnt_pill",
+      "name_key": "ITEM_BURNT_PILL_NAME",
+      "desc_key": "ITEM_BURNT_PILL_DESC",
+      "category": "material",
+      "grade": "mortal",
+      "buy_price": 8,
+      "sell_price": 2,
+      "purify_into_item_id": "item_huichun_powder_flawless",
+      "purify_into_count": 1,
+      "icon": "res://assets/ui/icons/pill_burnt.png"
+    },
+    {
+      "id": "item_ningqi_herb",
+      "name_key": "ITEM_NINGQI_HERB_NAME",
+      "desc_key": "ITEM_NINGQI_HERB_DESC",
+      "category": "material",
+      "grade": "mortal",
+      "buy_price": 24,
+      "sell_price": 8,
+      "purify_into_item_id": "item_juqi_pellet_flawless",
+      "purify_into_count": 1,
+      "icon": "res://assets/ui/icons/herb_ningqi.png"
+    },
+    {
+      "id": "item_qingmu_leaf",
+      "name_key": "ITEM_QINGMU_LEAF_NAME",
+      "desc_key": "ITEM_QINGMU_LEAF_DESC",
+      "category": "material",
+      "grade": "mortal",
+      "buy_price": 26,
+      "sell_price": 9,
+      "icon": "res://assets/ui/icons/herb_qingmu.png"
+    },
+    {
+      "id": "item_corrupt_flower",
+      "name_key": "ITEM_CORRUPT_FLOWER_NAME",
+      "desc_key": "ITEM_CORRUPT_FLOWER_DESC",
+      "category": "material",
+      "grade": "spirit",
+      "buy_price": 38,
+      "sell_price": 13,
+      "purify_into_item_id": "item_qingmu_pill_flawless",
+      "purify_into_count": 2,
+      "icon": "res://assets/ui/icons/herb_corrupt.png"
+    },
+    {
+      "id": "item_chiyang_fungus",
+      "name_key": "ITEM_CHIYANG_FUNGUS_NAME",
+      "desc_key": "ITEM_CHIYANG_FUNGUS_DESC",
+      "category": "material",
+      "grade": "spirit",
+      "buy_price": 36,
+      "sell_price": 12,
+      "icon": "res://assets/ui/icons/herb_chiyang.png"
+    },
+    {
+      "id": "item_wolf_fang_core",
+      "name_key": "ITEM_WOLF_FANG_NAME",
+      "desc_key": "ITEM_WOLF_FANG_DESC",
+      "category": "material",
+      "grade": "spirit",
+      "buy_price": 45,
+      "sell_price": 15,
+      "icon": "res://assets/ui/icons/mat_wolf_core.png"
+    },
+    {
+      "id": "item_stealth_talisman",
+      "name_key": "ITEM_STEALTH_TALISMAN_NAME",
+      "desc_key": "ITEM_STEALTH_TALISMAN_DESC",
+      "category": "talisman",
+      "grade": "spirit",
+      "buy_price": 35,
+      "sell_price": 12,
+      "stealth_duration_sec": 20.0,
+      "aggro_radius_mult": 0.30,
+      "icon": "res://assets/ui/icons/item_talisman_stealth.png"
+    },
+    {
+      "id": "item_marrow_dew",
+      "name_key": "ITEM_MARROW_DEW_NAME",
+      "desc_key": "ITEM_MARROW_DEW_DESC",
+      "category": "special",
+      "grade": "spirit",
+      "buy_price": 45,
+      "sell_price": 15,
+      "icon": "res://assets/ui/icons/item_dew.png"
+    },
+    {
+      "id": "item_ningqi_vein_pill",
+      "name_key": "ITEM_NINGQI_VEIN_PILL_NAME",
+      "desc_key": "ITEM_NINGQI_VEIN_PILL_DESC",
+      "category": "breakthrough",
+      "grade": "mystic",
+      "buy_price": 180,
+      "sell_price": 60,
+      "icon": "res://assets/ui/icons/pill_breakthrough.png"
+    },
+    {
+      "id": "item_stall_sword_shard",
+      "name_key": "ITEM_STALL_SHARD_NAME",
+      "desc_key": "ITEM_STALL_SHARD_DESC",
+      "category": "curio",
+      "grade": "earth",
+      "sword_box_resonance": true,
+      "buy_price": 60,
+      "sell_price": 21,
+      "purify_into_item_id": "eq_pendant_poxue",
+      "purify_into_count": 1,
+      "icon": "res://assets/ui/icons/item_sword_shard.png"
+    },
+    {
+      "id": "item_stall_cracked_bone",
+      "name_key": "ITEM_STALL_BONE_NAME",
+      "desc_key": "ITEM_STALL_BONE_DESC",
+      "category": "curio",
+      "grade": "mortal",
+      "sword_box_resonance": false,
+      "buy_price": 24,
+      "sell_price": 8,
+      "icon": "res://assets/ui/icons/mat_wolf_core.png"
+    },
+    {
+      "id": "item_stall_torn_page",
+      "name_key": "ITEM_STALL_PAGE_NAME",
+      "desc_key": "ITEM_STALL_PAGE_DESC",
+      "category": "curio",
+      "grade": "spirit",
+      "sword_box_resonance": false,
+      "buy_price": 38,
+      "sell_price": 13,
+      "icon": "res://assets/ui/icons/item_scroll_page.png"
+    },
+    {
+      "id": "item_stall_rusted_bell",
+      "name_key": "ITEM_STALL_BELL_NAME",
+      "desc_key": "ITEM_STALL_BELL_DESC",
+      "category": "curio",
+      "grade": "mortal",
+      "sword_box_resonance": false,
+      "buy_price": 28,
+      "sell_price": 9,
+      "icon": "res://assets/ui/icons/tr_tassel.png"
+    },
+    {
+      "id": "item_bloodied_pouch",
+      "name_key": "ITEM_BLOODIED_POUCH_NAME",
+      "desc_key": "ITEM_BLOODIED_POUCH_DESC",
+      "category": "storage_pouch",
+      "grade": "mystic",
+      "buy_price": 120,
+      "sell_price": 42,
+      "grant_stones": 110,
+      "grant_items": [
+        { "id": "item_yaolu_jade_token", "count": 1 },
+        { "id": "item_stealth_talisman", "count": 2 },
+        { "id": "item_corrupt_flower", "count": 2 }
+      ],
+      "grant_clue": "clue_yaolu_spy_token",
+      "grant_recipe": "recipe_qingmu_pill",
+      "icon": "res://assets/ui/icons/item_pouch.png"
+    },
+    {
+      "id": "item_yaolu_jade_token",
+      "name_key": "ITEM_YAOLU_TOKEN_NAME",
+      "desc_key": "ITEM_YAOLU_TOKEN_DESC",
+      "category": "quest",
+      "grade": "mystic",
+      "buy_price": 10,
+      "sell_price": 3,
+      "icon": "res://assets/ui/icons/eq_pendant_jade.png"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "recipe_huichun_powder",
+      "name_key": "RECIPE_HUICHUN_NAME",
+      "desc_key": "RECIPE_HUICHUN_DESC",
+      "element": "wood",
+      "output_item_id": "item_huichun_powder",
+      "flawless_item_id": "item_huichun_powder_flawless",
+      "burnt_item_id": "item_burnt_pill",
+      "fire_targets": [0.32, 0.68, 0.42],
+      "ingredients": [
+        { "item_id": "item_ningqi_herb", "count": 1 },
+        { "item_id": "item_qingmu_leaf", "count": 1 }
+      ]
+    },
+    {
+      "id": "recipe_juqi_pellet",
+      "name_key": "RECIPE_JUQI_NAME",
+      "desc_key": "RECIPE_JUQI_DESC",
+      "element": "fire",
+      "output_item_id": "item_juqi_pellet",
+      "flawless_item_id": "item_juqi_pellet_flawless",
+      "burnt_item_id": "item_burnt_pill",
+      "fire_targets": [0.72, 0.45, 0.78],
+      "ingredients": [
+        { "item_id": "item_ningqi_herb", "count": 1 },
+        { "item_id": "item_chiyang_fungus", "count": 1 }
+      ]
+    },
+    {
+      "id": "recipe_qingmu_pill",
+      "name_key": "RECIPE_QINGMU_NAME",
+      "desc_key": "RECIPE_QINGMU_DESC",
+      "element": "wood",
+      "output_item_id": "item_qingmu_pill",
+      "flawless_item_id": "item_qingmu_pill_flawless",
+      "burnt_item_id": "item_burnt_pill",
+      "fire_targets": [0.28, 0.55, 0.35],
+      "ingredients": [
+        { "item_id": "item_qingmu_leaf", "count": 1 },
+        { "item_id": "item_corrupt_flower", "count": 1 }
+      ]
+    }
+  ],
+  "shops": [
+    {
+      "id": "shop_yaolu_pharmacy",
+      "name_key": "SHOP_YAOLU_NAME",
+      "faction_id": "jishi_pharmacy",
+      "is_peddler_stall": false,
+      "stock": [
+        "item_huichun_powder",
+        "item_ningqi_herb",
+        "item_qingmu_leaf",
+        "item_chiyang_fungus",
+        "item_stealth_talisman",
+        "item_marrow_dew",
+        "eq_qinglan_rain_robe",
+        "eq_yaolu_linen_robe"
+      ]
+    },
+    {
+      "id": "shop_tingyu_peddler",
+      "name_key": "SHOP_PEDDLER_NAME",
+      "faction_id": "",
+      "is_peddler_stall": true,
+      "stock": [
+        "item_stall_cracked_bone",
+        "item_stall_sword_shard",
+        "item_stall_torn_page",
+        "item_stall_rusted_bell"
+      ]
+    }
+  ]
+}
