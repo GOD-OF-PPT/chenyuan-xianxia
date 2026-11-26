@@ -40,22 +40,27 @@ var _rebind_status_lbl: Label = null
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	UIThemeBuilder.bind_full_rect(self)
 	visible = false
 	theme = UIThemeBuilder.get_global_theme()
 
 	_backdrop = ColorRect.new()
-	_backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_backdrop.color = Color(0.05, 0.04, 0.04, 0.80)
 	add_child(_backdrop)
+	UIThemeBuilder.bind_full_rect(_backdrop)
 
 	var center: CenterContainer = CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	UIThemeBuilder.bind_full_rect(center)
 
 	_card = PanelContainer.new()
-	_card.custom_minimum_size = Vector2(1180.0, 740.0)
-	_card.add_theme_stylebox_override("panel", UIThemeBuilder.make_xuan_paper_box(Color("#6E5233"), 3))
+	_card.custom_minimum_size = Vector2(1220.0, 680.0)
+	var card_sb: StyleBoxFlat = UIThemeBuilder.make_xuan_paper_box(Color("#6E5233"), 3)
+	card_sb.content_margin_left = 28.0
+	card_sb.content_margin_right = 28.0
+	card_sb.content_margin_top = 20.0
+	card_sb.content_margin_bottom = 22.0
+	_card.add_theme_stylebox_override("panel", card_sb)
 	center.add_child(_card)
 
 	_card_vbox = VBoxContainer.new()
@@ -336,30 +341,30 @@ func _consume_recipe_ingredients(rdef: Dictionary) -> bool:
 	return true
 
 
-## ==================== 2. 药肆商店与散修小地摊（含断玉剑匣微光感应与二次确认） ====================
+## ==================== 2. 药肆商店与散修小地摊（含掌眼鉴宝与二次确认） ====================
 func open_shop_modal(shop_id: String, confirm_item_id: String = "") -> void:
-	_open_base("shop", Vector2(1180.0, 720.0))
+	_open_base("shop", Vector2(1280.0, 690.0))
 	var sdef: Dictionary = DataDB.get_shop(shop_id)
 	var is_peddler: bool = bool(sdef.get("is_peddler_stall", false))
 	var fac_id: String = str(sdef.get("faction_id", ""))
 	var rep_pts: int = int(CampaignState.faction_reputation.get(fac_id, 0)) if fac_id != "" else 0
 
-	_add_header("【%s】持有灵石：%d" % [DataDB.loc(str(sdef.get("name_key", shop_id))), CampaignState.spirit_stones])
+	_add_header("【%s】随身灵石：%d 枚" % [DataDB.loc(str(sdef.get("name_key", shop_id))), CampaignState.spirit_stones])
 
-	if is_peddler:
-		var resonance_box: PanelContainer = PanelContainer.new()
-		resonance_box.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.09, 0.16, 0.14, 0.95), UIThemeBuilder.COL_JADE_GREEN, 2, 5))
-		_card_vbox.add_child(resonance_box)
-		var rlbl: Label = Label.new()
-		rlbl.text = "  ❖ 【断玉剑匣隐秘共鸣】靠近摊角某件蒙尘器物时，怀中古匣泛起一丝极轻微的温热墨绿微光……  "
-		rlbl.add_theme_font_size_override("font_size", 18)
-		rlbl.add_theme_color_override("font_color", Color("#8EE5C0"))
-		resonance_box.add_child(rlbl)
-		if audio_director != null and confirm_item_id == "":
-			audio_director.play_sfx("sfx_sword_box_hum", AudioDirector.TIER_B, true)
+	var intro_box: PanelContainer = PanelContainer.new()
+	intro_box.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.15, 0.13, 0.11, 0.94), UIThemeBuilder.COL_BRONZE_DIM, 1, 5))
+	_card_vbox.add_child(intro_box)
+	var intro_lbl: Label = Label.new()
+	intro_lbl.text = (
+		"  ◆ 山野散修席地摆摊，旧物真赝混杂。可将鼠标移至器物上逐件掌眼端详，留心器物灵韵……  "
+		if is_peddler
+		else "  ◆ 济世药庐外院药肆，专售青岚灵草、丹药与避瘴灵符；同道声望深厚者可获药资减免。  "
+	)
+	intro_lbl.add_theme_font_size_override("font_size", 17)
+	intro_lbl.add_theme_color_override("font_color", Color("#E6DCC8"))
+	intro_box.add_child(intro_lbl)
 
 	if confirm_item_id != "":
-		# 高价值灵石支出二次确认防误触框（21-ui-ux-spec.md 第 7 节）
 		var c_idef: Dictionary = DataDB.get_any_item_or_equip(confirm_item_id)
 		var c_price: int = EconomyRules.compute_buy_price(int(c_idef.get("buy_price", 50)), rep_pts)
 		var cpanel: PanelContainer = PanelContainer.new()
@@ -390,52 +395,129 @@ func open_shop_modal(shop_id: String, confirm_item_id: String = "") -> void:
 	cols.add_theme_constant_override("separation", 18)
 	_card_vbox.add_child(cols)
 
-	# 左栏：购入货架
+	# 底部【掌眼端详 · 器物铭鉴】详情栏（消除面板下半截留白，承载含蓄鉴宝体验）
+	var inspect_panel: PanelContainer = PanelContainer.new()
+	inspect_panel.custom_minimum_size = Vector2(1060.0, 108.0)
+	inspect_panel.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.12, 0.11, 0.10, 0.97), UIThemeBuilder.COL_BRONZE_GOLD, 2, 6))
+	_card_vbox.add_child(inspect_panel)
+
+	var inspect_hb: HBoxContainer = HBoxContainer.new()
+	inspect_hb.add_theme_constant_override("separation", 16)
+	inspect_panel.add_child(inspect_hb)
+
+	var inspect_icon_frame: PanelContainer = _make_icon_slot("", 64.0)
+	inspect_hb.add_child(inspect_icon_frame)
+	var inspect_icon_rect: TextureRect = inspect_icon_frame.get_child(0) as TextureRect
+
+	var inspect_vb: VBoxContainer = VBoxContainer.new()
+	inspect_vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	inspect_vb.alignment = BoxContainer.ALIGNMENT_CENTER
+	inspect_vb.add_theme_constant_override("separation", 4)
+	inspect_hb.add_child(inspect_vb)
+
+	var inspect_title: Label = Label.new()
+	inspect_title.add_theme_font_size_override("font_size", 19)
+	inspect_title.add_theme_color_override("font_color", UIThemeBuilder.COL_BRONZE_GOLD)
+	inspect_vb.add_child(inspect_title)
+
+	var inspect_desc: Label = Label.new()
+	inspect_desc.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+	inspect_desc.add_theme_font_size_override("font_size", 16)
+	inspect_desc.add_theme_color_override("font_color", UIThemeBuilder.COL_XUAN_WARM)
+	inspect_vb.add_child(inspect_desc)
+
+	var inspect_sense: Label = Label.new()
+	inspect_sense.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+	inspect_sense.add_theme_font_size_override("font_size", 16)
+	inspect_vb.add_child(inspect_sense)
+
+	var last_hum_id: Array[String] = [""]
+	var update_inspector: Callable = func(target_id: String) -> void:
+		var tdef: Dictionary = DataDB.get_any_item_or_equip(target_id)
+		if tdef.is_empty():
+			return
+		var icon_p: String = str(tdef.get("icon", ""))
+		inspect_icon_rect.texture = (load(icon_p) as Texture2D) if (icon_p != "" and ResourceLoader.exists(icon_p)) else null
+		var have_n: int = CampaignState.get_item_count(target_id)
+		inspect_title.text = "【%s】  ·  行囊现存：%d" % [DataDB.loc(str(tdef.get("name_key", target_id))), have_n]
+		inspect_desc.text = DataDB.loc(str(tdef.get("desc_key", "")))
+		if is_peddler and str(tdef.get("category", "")) == "curio":
+			if bool(tdef.get("sword_box_resonance", false)):
+				inspect_sense.text = "❖ 掌眼细观：指尖掠过铁锈断口的一瞬，背上【断玉剑匣】似隔着衣衫传来一丝极微弱的温热颤鸣……"
+				inspect_sense.add_theme_color_override("font_color", Color("#8FE3C0"))
+				if audio_director != null and last_hum_id[0] != target_id:
+					last_hum_id[0] = target_id
+					audio_director.play_sfx("sfx_sword_box_hum", AudioDirector.TIER_B, true)
+			else:
+				last_hum_id[0] = target_id
+				inspect_sense.text = "· 掌眼细观：器表灵气早已涣散驳杂，怀中剑匣亦毫无动静，多半只是寻常山野旧物。"
+				inspect_sense.add_theme_color_override("font_color", Color("#9E9589"))
+		else:
+			inspect_sense.text = ""
+
+	# 左栏：购入货架（统一乌木错金条目卡 + 48x48 工笔图标，绝不剧透绿框）
+	var left_col: VBoxContainer = VBoxContainer.new()
+	left_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left_col.add_theme_constant_override("separation", 8)
+	cols.add_child(left_col)
+	left_col.add_child(_ink_lbl("◆ 摊席旧物（悬停掌眼鉴宝）：" if is_peddler else "◆ 药庐丹草陈列：", 19, Color("#5A3320")))
+
 	var buy_scroll: ScrollContainer = ScrollContainer.new()
-	buy_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cols.add_child(buy_scroll)
+	buy_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	left_col.add_child(buy_scroll)
 	var buy_v: VBoxContainer = VBoxContainer.new()
 	buy_v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	buy_v.add_theme_constant_override("separation", 8)
 	buy_scroll.add_child(buy_v)
 
-	buy_v.add_child(_ink_lbl("◆ 坊肆陈列（声望阶位享自动优待）：", 19, Color("#5A3320")))
+	var first_inspect_id: String = ""
 	for raw_sid: Variant in (sdef.get("stock", []) as Array):
 		var sid: String = str(raw_sid)
 		if sid == "item_stall_sword_shard" and bool(CampaignState.world_flags.get("peddler_gem_bought", false)):
 			continue
+		if first_inspect_id == "":
+			first_inspect_id = sid
 		var idef: Dictionary = DataDB.get_any_item_or_equip(sid)
 		var price: int = EconomyRules.compute_buy_price(int(idef.get("buy_price", 30)), rep_pts)
-		var has_glow: bool = bool(idef.get("sword_box_resonance", false))
+		var owned_cnt: int = CampaignState.get_item_count(sid)
 
 		var row_p: PanelContainer = PanelContainer.new()
-		row_p.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(
-			Color(0.11, 0.17, 0.15, 0.96) if has_glow else Color(0.14, 0.13, 0.12, 0.95),
-			UIThemeBuilder.COL_JADE_GREEN if has_glow else UIThemeBuilder.COL_BRONZE_DIM,
-			2 if has_glow else 1, 5
-		))
+		row_p.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.14, 0.13, 0.12, 0.96), UIThemeBuilder.COL_BRONZE_DIM, 1, 5))
+		row_p.mouse_entered.connect(func() -> void: update_inspector.call(sid))
+		row_p.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed:
+				update_inspector.call(sid)
+		)
 		buy_v.add_child(row_p)
 
 		var rhb: HBoxContainer = HBoxContainer.new()
-		rhb.add_theme_constant_override("separation", 10)
+		rhb.mouse_filter = Control.MOUSE_FILTER_PASS
+		rhb.add_theme_constant_override("separation", 12)
 		row_p.add_child(rhb)
+
+		rhb.add_child(_make_icon_slot(str(idef.get("icon", "")), 48.0))
 
 		var ilbl: Label = Label.new()
 		ilbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		ilbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		ilbl.text = "%s【%s】· %d 灵石\n%s" % [
-			"❖ [剑匣微热] " if has_glow else "",
-			DataDB.loc(str(idef.get("name_key", sid))), price,
+		ilbl.custom_minimum_size = Vector2(455.0, 0.0)
+		ilbl.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+		var owned_tag: String = ("  [已有×%d]" % owned_cnt) if owned_cnt > 0 else ""
+		ilbl.text = "【%s】· %d 灵石%s\n%s" % [
+			DataDB.loc(str(idef.get("name_key", sid))),
+			price,
+			owned_tag,
 			DataDB.loc(str(idef.get("desc_key", "")))
 		]
 		ilbl.add_theme_font_size_override("font_size", 16)
-		ilbl.add_theme_color_override("font_color", Color("#9EE5C6") if has_glow else UIThemeBuilder.COL_XUAN_WARM)
+		ilbl.add_theme_color_override("font_color", UIThemeBuilder.COL_XUAN_WARM)
 		rhb.add_child(ilbl)
 
 		var buy_b: Button = Button.new()
 		buy_b.text = "购入"
 		buy_b.focus_mode = Control.FOCUS_NONE
+		buy_b.custom_minimum_size = Vector2(78.0, 40.0)
 		buy_b.disabled = CampaignState.spirit_stones < price
+		buy_b.mouse_entered.connect(func() -> void: update_inspector.call(sid))
 		buy_b.pressed.connect(func() -> void:
 			if price >= 60:
 				open_shop_modal(shop_id, sid)
@@ -444,39 +526,93 @@ func open_shop_modal(shop_id: String, confirm_item_id: String = "") -> void:
 		)
 		rhb.add_child(buy_b)
 
-	# 右栏：出售多余妖材与成丹换取灵石
+	# 右栏：行囊寻常丹草寄售（同样带 48x48 工笔图标与乌木底卡，自动过滤锁护珍品）
+	var right_col: VBoxContainer = VBoxContainer.new()
+	right_col.custom_minimum_size = Vector2(465.0, 340.0)
+	right_col.add_theme_constant_override("separation", 8)
+	cols.add_child(right_col)
+	right_col.add_child(_ink_lbl("◆ 行囊寄售（坊市折价收兑寻常丹草）：", 19, Color("#5A3320")))
+
 	var sell_scroll: ScrollContainer = ScrollContainer.new()
-	sell_scroll.custom_minimum_size = Vector2(440.0, 520.0)
-	cols.add_child(sell_scroll)
+	sell_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right_col.add_child(sell_scroll)
 	var sell_v: VBoxContainer = VBoxContainer.new()
 	sell_v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sell_v.add_theme_constant_override("separation", 8)
 	sell_scroll.add_child(sell_v)
 
-	sell_v.add_child(_ink_lbl("◆ 出售行囊妖材与灵丹（严守 35% 收购防套利）：", 19, Color("#5A3320")))
+	var sellable_shown: int = 0
 	for entry: Dictionary in CampaignState.inventory:
 		var iid: String = str(entry.get("id", ""))
 		var cnt: int = int(entry.get("count", 0))
 		var idef2: Dictionary = DataDB.get_any_item_or_equip(iid)
-		if str(idef2.get("category", "")) == "quest" or str(idef2.get("category", "")) == "storage_pouch":
+		if bool(idef2.get("unsellable", false)):
+			continue
+		var cat2: String = str(idef2.get("category", ""))
+		if cat2 == "quest" or cat2 == "storage_pouch":
 			continue
 		var s_price: int = EconomyRules.compute_sell_price(int(idef2.get("buy_price", 20)), int(idef2.get("sell_price", -1)))
 		if s_price <= 0 or int(idef2.get("buy_price", 0)) <= 0:
 			continue
+		sellable_shown += 1
+
+		var s_card: PanelContainer = PanelContainer.new()
+		s_card.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.15, 0.14, 0.12, 0.94), UIThemeBuilder.COL_BRONZE_DIM, 1, 5))
+		s_card.mouse_entered.connect(func() -> void: update_inspector.call(iid))
+		sell_v.add_child(s_card)
+
 		var shb: HBoxContainer = HBoxContainer.new()
-		sell_v.add_child(shb)
-		var slbl: Label = _ink_lbl("%s ×%d（售 +%d 灵石）" % [DataDB.loc(str(idef2.get("name_key", iid))), cnt, s_price], 16, UIThemeBuilder.COL_INK_DARK)
+		shb.add_theme_constant_override("separation", 10)
+		s_card.add_child(shb)
+
+		shb.add_child(_make_icon_slot(str(idef2.get("icon", "")), 44.0))
+
+		var slbl: Label = Label.new()
 		slbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		slbl.text = "%s ×%d\n收兑价：+%d 灵石" % [DataDB.loc(str(idef2.get("name_key", iid))), cnt, s_price]
+		slbl.add_theme_font_size_override("font_size", 16)
+		slbl.add_theme_color_override("font_color", UIThemeBuilder.COL_XUAN_WARM)
 		shb.add_child(slbl)
+
 		var sb_btn: Button = Button.new()
-		sb_btn.text = "出售 1"
+		sb_btn.text = "售出 1"
 		sb_btn.focus_mode = Control.FOCUS_NONE
+		sb_btn.custom_minimum_size = Vector2(82.0, 38.0)
+		sb_btn.mouse_entered.connect(func() -> void: update_inspector.call(iid))
 		sb_btn.pressed.connect(func() -> void:
 			if CampaignState.remove_item(iid, 1):
 				CampaignState.add_spirit_stones(s_price, true)
 				open_shop_modal(shop_id, "")
 		)
 		shb.add_child(sb_btn)
+
+	if sellable_shown == 0:
+		sell_v.add_child(_ink_lbl("（行囊中暂无可寄售的寻常灵草丹散）", 16, Color("#5F5346")))
+	right_col.add_child(_ink_lbl("注：奇物、洗髓灵露与秘藏信物已自动锁护，免遭误售。", 16, Color("#4D4236")))
+
+	if first_inspect_id != "":
+		update_inspector.call(first_inspect_id)
+
+
+func _make_icon_slot(icon_path: String, box_px: float) -> PanelContainer:
+	var frame: PanelContainer = PanelContainer.new()
+	frame.custom_minimum_size = Vector2(box_px, box_px)
+	var sb: StyleBoxFlat = UIThemeBuilder.make_ebony_box(Color(0.09, 0.08, 0.08, 0.98), UIThemeBuilder.COL_BRONZE_DIM, 1, 4)
+	sb.content_margin_left = 3.0
+	sb.content_margin_right = 3.0
+	sb.content_margin_top = 3.0
+	sb.content_margin_bottom = 3.0
+	frame.add_theme_stylebox_override("panel", sb)
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var tr_icon: TextureRect = TextureRect.new()
+	tr_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if icon_path != "" and ResourceLoader.exists(icon_path):
+		tr_icon.texture = load(icon_path) as Texture2D
+	frame.add_child(tr_icon)
+	return frame
 
 
 func _execute_shop_purchase(shop_id: String, item_id: String, price: int) -> void:

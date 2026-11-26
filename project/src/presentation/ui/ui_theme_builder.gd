@@ -25,13 +25,61 @@ const COL_EARTH_AMBER: Color = Color("#B58942")
 const COL_MIASMA_PURPLE: Color = Color("#5A3352")
 const COL_BLUE_STUNT: Color = Color("#4F9BD9")
 
+static var _cached_regular_font: Font = null
+static var _cached_bold_font: Font = null
+
+
+static func get_regular_font() -> Font:
+	if _cached_regular_font == null and ResourceLoader.exists("res://assets/fonts/NotoSerifCJKsc-Regular.otf"):
+		_cached_regular_font = load("res://assets/fonts/NotoSerifCJKsc-Regular.otf") as Font
+	if _cached_regular_font != null:
+		return _cached_regular_font
+	return ThemeDB.fallback_font
+
+
+static func get_bold_font() -> Font:
+	if _cached_bold_font == null and ResourceLoader.exists("res://assets/fonts/NotoSerifCJKsc-Bold.otf"):
+		_cached_bold_font = load("res://assets/fonts/NotoSerifCJKsc-Bold.otf") as Font
+	if _cached_bold_font != null:
+		return _cached_bold_font
+	return get_regular_font()
+
+
+static func clear_cached_fonts() -> void:
+	_cached_regular_font = null
+	_cached_bold_font = null
+
+
+static func bind_full_rect(ctrl: Control) -> void:
+	var vp: Viewport = ctrl.get_viewport()
+	var target_sz: Vector2 = vp.get_visible_rect().size if vp != null else Vector2(1920.0, 1080.0)
+	if target_sz.x < 100.0 or target_sz.y < 100.0:
+		target_sz = Vector2(1920.0, 1080.0)
+
+	if ctrl.get_parent() is Control:
+		ctrl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		ctrl.size = (ctrl.get_parent() as Control).size
+	else:
+		ctrl.anchor_left = 0.0
+		ctrl.anchor_top = 0.0
+		ctrl.anchor_right = 0.0
+		ctrl.anchor_bottom = 0.0
+		ctrl.position = Vector2.ZERO
+		ctrl.custom_minimum_size = target_sz
+		ctrl.size = target_sz
+		if vp != null:
+			vp.size_changed.connect(func() -> void:
+				if is_instance_valid(ctrl) and ctrl.is_inside_tree():
+					var nsz: Vector2 = ctrl.get_viewport_rect().size
+					ctrl.custom_minimum_size = nsz
+					ctrl.size = nsz
+			)
+
+
 static func get_global_theme() -> Theme:
 	var th: Theme = Theme.new()
 	th.default_font_size = FS_BODY
-	if ResourceLoader.exists("res://assets/fonts/NotoSerifCJKsc-Regular.otf"):
-		var reg_font: Font = load("res://assets/fonts/NotoSerifCJKsc-Regular.otf") as Font
-		if reg_font != null:
-			th.default_font = reg_font
+	th.default_font = get_regular_font()
 
 	var btn_normal: StyleBoxFlat = make_ebony_box(Color(0.14, 0.12, 0.11, 0.94), COL_BRONZE_DIM, 2, 4)
 	btn_normal.content_margin_left = 16.0
@@ -77,12 +125,6 @@ static func get_global_theme() -> Theme:
 	th.set_stylebox("panel", "PanelContainer", panel_sb)
 
 	return th
-
-
-static func get_bold_font() -> Font:
-	if ResourceLoader.exists("res://assets/fonts/NotoSerifCJKsc-Bold.otf"):
-		return load("res://assets/fonts/NotoSerifCJKsc-Bold.otf") as Font
-	return null
 
 
 static func make_ebony_box(bg: Color, border: Color, border_w: int = 2, radius: int = 4) -> StyleBoxFlat:

@@ -10,7 +10,6 @@ signal spirit_stones_changed(new_amount: int)
 signal formation_changed(formation_id: String)
 signal sword_box_updated()
 signal journal_updated()
-signal zone_transition_requested(zone_id: String, spawn_tag: String)
 
 const BOND_TIER_KEYS: Array[String] = [
 	"BOND_TIER_1",
@@ -130,12 +129,10 @@ func start_new_campaign(selected_difficulty: String = "cultivation") -> void:
 		{"id": "item_huichun_powder", "count": 3},
 		{"id": "item_ningqi_herb", "count": 3},
 		{"id": "item_qingmu_leaf", "count": 2},
-		{"id": "item_burnt_pill", "count": 1},
 		{"id": "item_stealth_talisman", "count": 2},
-		{"id": "item_marrow_dew", "count": 1},
 	]
 	quick_pill_5_id = "item_huichun_powder"
-	quick_pill_6_id = "item_qingmu_pill"
+	quick_pill_6_id = "item_stealth_talisman"
 	active_elixir = {}
 
 	unlocked_recipes = ["recipe_huichun_powder", "recipe_juqi_pellet"]

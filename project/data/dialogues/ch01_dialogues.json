@@ -146,9 +146,7 @@
           "text_key": "DLG_PEDDLER_02"
         }
       ],
-      "on_finish_actions": [
-        { "type": "unlock_clue", "id": "clue_peddler_shard" }
-      ]
+      "on_finish_actions": []
     },
     {
       "id": "dlg_ch01_temple_clash",

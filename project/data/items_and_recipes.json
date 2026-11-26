@@ -86,6 +86,7 @@
       "desc_key": "ITEM_BURNT_PILL_DESC",
       "category": "material",
       "grade": "mortal",
+      "unsellable": true,
       "buy_price": 8,
       "sell_price": 2,
       "purify_into_item_id": "item_huichun_powder_flawless",
@@ -164,6 +165,7 @@
       "desc_key": "ITEM_MARROW_DEW_DESC",
       "category": "special",
       "grade": "spirit",
+      "unsellable": true,
       "buy_price": 45,
       "sell_price": 15,
       "icon": "res://assets/ui/icons/item_dew.png"
@@ -174,6 +176,7 @@
       "desc_key": "ITEM_NINGQI_VEIN_PILL_DESC",
       "category": "breakthrough",
       "grade": "mystic",
+      "unsellable": true,
       "buy_price": 180,
       "sell_price": 60,
       "icon": "res://assets/ui/icons/pill_breakthrough.png"
@@ -184,6 +187,7 @@
       "desc_key": "ITEM_STALL_SHARD_DESC",
       "category": "curio",
       "grade": "earth",
+      "unsellable": true,
       "sword_box_resonance": true,
       "buy_price": 60,
       "sell_price": 21,
@@ -230,6 +234,7 @@
       "desc_key": "ITEM_BLOODIED_POUCH_DESC",
       "category": "storage_pouch",
       "grade": "mystic",
+      "unsellable": true,
       "buy_price": 120,
       "sell_price": 42,
       "grant_stones": 110,
@@ -248,6 +253,7 @@
       "desc_key": "ITEM_YAOLU_TOKEN_DESC",
       "category": "quest",
       "grade": "mystic",
+      "unsellable": true,
       "buy_price": 10,
       "sell_price": 3,
       "icon": "res://assets/ui/icons/eq_pendant_jade.png"

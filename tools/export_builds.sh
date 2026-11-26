@@ -16,6 +16,7 @@ echo "==> [2/4] Exporting Web WASM build (builds/web/index.html)..."
 rm -rf "$ROOT_DIR/builds/web"
 mkdir -p "$ROOT_DIR/builds/web"
 "$GODOT_BIN" --headless --path "$ROOT_DIR/project" --export-release "Web" "$ROOT_DIR/builds/web/index.html"
+python3 "$ROOT_DIR/tools/postprocess_web_export.py"
 
 echo "==> [3/4] Exporting Linux x86_64 standalone build (builds/linux/chenyuan-xianxia.x86_64)..."
 rm -rf "$ROOT_DIR/builds/linux"

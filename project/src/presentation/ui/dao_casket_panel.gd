@@ -22,14 +22,14 @@ var _content_root: MarginContainer
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	UIThemeBuilder.bind_full_rect(self)
 	color = Color(0.05, 0.04, 0.04, 0.80)
 	visible = false
 	theme = UIThemeBuilder.get_global_theme()
 
 	var center: CenterContainer = CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	UIThemeBuilder.bind_full_rect(center)
 
 	var frame: PanelContainer = PanelContainer.new()
 	frame.custom_minimum_size = Vector2(1620.0, 910.0)
@@ -655,10 +655,10 @@ func _build_tab_inventory_and_sword_box() -> void:
 				)
 				dv.add_child(use_b)
 
-			if icat == "instant_pill":
+			if icat == "instant_pill" or icat == "talisman":
 				for qslot: String in ["5", "6"]:
 					var bind_b: Button = Button.new()
-					bind_b.text = "装入战斗快捷丹槽 [%s]" % qslot
+					bind_b.text = "装入快捷丹符槽 [%s]" % qslot
 					bind_b.focus_mode = Control.FOCUS_NONE
 					bind_b.pressed.connect(func() -> void:
 						if qslot == "5":

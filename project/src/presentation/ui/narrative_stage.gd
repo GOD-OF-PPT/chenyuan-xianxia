@@ -41,7 +41,7 @@ var _portrait_cache: Dictionary = {}
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	UIThemeBuilder.bind_full_rect(self)
 	visible = false
 	theme = UIThemeBuilder.get_global_theme()
 
@@ -54,9 +54,9 @@ func _ready() -> void:
 
 func _build_stage_dimmer_and_portraits() -> void:
 	_stage_dimmer = ColorRect.new()
-	_stage_dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_stage_dimmer.color = Color(0.05, 0.05, 0.05, 0.56)
 	add_child(_stage_dimmer)
+	UIThemeBuilder.bind_full_rect(_stage_dimmer)
 
 	# 左右 1024x1280 高清工笔半身立绘位
 	_left_portrait = TextureRect.new()

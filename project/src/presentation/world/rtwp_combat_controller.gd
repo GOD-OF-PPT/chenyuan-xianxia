@@ -1898,12 +1898,15 @@ func _apply_ally_heal(uid: String, actor: BattleActor, heal_amount: int, cleanse
 
 func _use_instant_combat_pill(cid: String, pill_id: String) -> void:
 	if pill_id == "" or CampaignState.get_item_count(pill_id) <= 0:
-		NotifyHub.push_combat_banner("快捷丹药槽已空！", "warn", "none")
+		NotifyHub.push_combat_banner("快捷丹符槽已空！", "warn", "none")
+		return
+	var idef: Dictionary = DataDB.get_any_item_or_equip(pill_id)
+	if str(idef.get("category", "")) == "talisman":
+		activate_stealth_talisman()
 		return
 	if pill_cooldown_timer > 0.0:
 		NotifyHub.push_combat_banner("丹毒调息中（剩余 %.1fs）" % pill_cooldown_timer, "warn", "wood")
 		return
-	var idef: Dictionary = DataDB.get_any_item_or_equip(pill_id)
 	if str(idef.get("category", "")) != "instant_pill":
 		return
 	var target_id: String = hovered_ally_id if hovered_ally_id != "" else cid
