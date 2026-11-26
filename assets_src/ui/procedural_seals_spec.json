@@ -1,0 +1,19 @@
+{
+  "seals": [
+    "sk_earth_cleave.png",
+    "sk_interrupt_seal.png",
+    "sk_taunt_bell.png",
+    "mat_wolf_core.png",
+    "item_scroll_page.png",
+    "seal_metal.png",
+    "seal_wood.png",
+    "seal_water.png",
+    "seal_fire.png",
+    "seal_earth.png"
+  ],
+  "cursors": [
+    "cursor_jade_pin.png",
+    "cursor_bronze_sword.png",
+    "cursor_spirit_hand.png"
+  ]
+}

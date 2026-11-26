@@ -1,0 +1,198 @@
+[
+  {
+    "path": "project/assets/audio/bgm/bgm_title_wendao.ogg",
+    "source_path": "assets_src/audio/bgm_title_wendao.mid",
+    "category": "bgm",
+    "prompt": "Leitmotif A 《问道凡尘》 (Guqin/Koto + Dongxiao/Shakuhachi + Bronze Chimes + Low Strings, 72 BPM)",
+    "refinement": "FluidSynth MIT FluidR3_GM.sf2 acoustic sample rendering + EBU R128 -14.5 LUFS mastering."
+  },
+  {
+    "path": "project/assets/audio/bgm/bgm_qinglan_calm.ogg",
+    "source_path": "assets_src/audio/bgm_qinglan_calm.mid",
+    "category": "bgm_stem",
+    "prompt": "Qinglan Dual-Stem Layer A 《青岚烟雨·静》 (96.0 BPM exact 40.0s loop, Dizi + Guzheng)",
+    "refinement": "Sample-locked 96 BPM stem rendering + -15.0 LUFS normalization."
+  },
+  {
+    "path": "project/assets/audio/bgm/bgm_qinglan_combat.ogg",
+    "source_path": "assets_src/audio/bgm_qinglan_combat.mid",
+    "category": "bgm_stem",
+    "prompt": "Qinglan Dual-Stem Layer B 《青岚烟雨·战》 (96.0 BPM exact 40.0s loop, Pipa lunzhi + Tanggu war drums)",
+    "refinement": "Sample-locked 96 BPM combat stem aligned to Layer A + -14.0 LUFS normalization."
+  },
+  {
+    "path": "project/assets/audio/bgm/bgm_night_qinglian.ogg",
+    "source_path": "assets_src/audio/bgm_night_qinglian.mid",
+    "category": "bgm",
+    "prompt": "Leitmotif B 《青莲听雨》 campfire & pharmacy gentle melody (68 BPM)",
+    "refinement": "FluidSynth acoustic rendering + -15.5 LUFS warm mastering."
+  },
+  {
+    "path": "project/assets/audio/bgm/bgm_boss_wolf_king.ogg",
+    "source_path": "assets_src/audio/bgm_boss_wolf_king.mid",
+    "category": "bgm",
+    "prompt": "Chapter 1 Boss Theme 《腐木狼啸》 (132 BPM Pipa + Erhu + Bianzhong + Tanggu)",
+    "refinement": "FluidSynth multi-instrument rendering + -13.8 LUFS mastering."
+  },
+  {
+    "path": "project/assets/audio/bgm/amb_qinglan_rain.ogg",
+    "source_path": "assets_src/audio/amb_qinglan_rain.wav",
+    "category": "ambience",
+    "prompt": "Qinglan autumn rain & eaves droplets seamless ambience loop",
+    "refinement": "Bandpass acoustic rain synthesis + droplet Foley + crossfaded seamless loop."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_boss_cast_chime.ogg",
+    "source_path": "assets_src/audio/sfx_boss_cast_chime.wav",
+    "category": "sfx",
+    "prompt": "Tier S Boss Amber-Gold cast bronze Bianzhong warning chime",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -1.2 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_interrupt_shatter.ogg",
+    "source_path": "assets_src/audio/sfx_interrupt_shatter.wav",
+    "category": "sfx",
+    "prompt": "Tier S crisp meridian-seal interrupt shatter",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -1.2 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_ward_break_thunder.ogg",
+    "source_path": "assets_src/audio/sfx_ward_break_thunder.wav",
+    "category": "sfx",
+    "prompt": "Tier S Five-Element Ward break thunder & jade shatter",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -1.2 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_bond_ult_qinglian.ogg",
+    "source_path": "assets_src/audio/sfx_bond_ult_qinglian.wav",
+    "category": "sfx",
+    "prompt": "Tier S Dual Bond Ultimate 【青莲引剑】 harmonic sword-lotus resonance",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -1.2 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_elem_metal.ogg",
+    "source_path": "assets_src/audio/sfx_elem_metal.wav",
+    "category": "sfx",
+    "prompt": "Tier A Metal dragon-blade ring",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_elem_wood.ogg",
+    "source_path": "assets_src/audio/sfx_elem_wood.wav",
+    "category": "sfx",
+    "prompt": "Tier A Wood vine & wind burst",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_elem_water.ogg",
+    "source_path": "assets_src/audio/sfx_elem_water.wav",
+    "category": "sfx",
+    "prompt": "Tier A Water frost-spring surge",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_elem_fire.ogg",
+    "source_path": "assets_src/audio/sfx_elem_fire.wav",
+    "category": "sfx",
+    "prompt": "Tier A Fire cinnabar ignition roar",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_elem_earth.ogg",
+    "source_path": "assets_src/audio/sfx_elem_earth.wav",
+    "category": "sfx",
+    "prompt": "Tier A Earth boulder cleave impact",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_synergy_burst.ogg",
+    "source_path": "assets_src/audio/sfx_synergy_burst.wav",
+    "category": "sfx",
+    "prompt": "Tier A Five-Element Synergy detonation",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -2.5 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_heal_chime.ogg",
+    "source_path": "assets_src/audio/sfx_heal_chime.wav",
+    "category": "sfx",
+    "prompt": "Tier A Herbal jade heal chime",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -3.5 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_pill_drink.ogg",
+    "source_path": "assets_src/audio/sfx_pill_drink.wav",
+    "category": "sfx",
+    "prompt": "Tier A Instant pill uncork & qi breath",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -3.5 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_auto_slash.ogg",
+    "source_path": "assets_src/audio/sfx_auto_slash.wav",
+    "category": "sfx",
+    "prompt": "Tier C subdued blade swing auto-attack",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -13.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_pause_enter.ogg",
+    "source_path": "assets_src/audio/sfx_pause_enter.wav",
+    "category": "sfx",
+    "prompt": "Tactical Pause ink-water submerge",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -6.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_pause_exit.ogg",
+    "source_path": "assets_src/audio/sfx_pause_exit.wav",
+    "category": "sfx",
+    "prompt": "Tactical Pause clear water ripple resume",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -6.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_sword_box_hum.ogg",
+    "source_path": "assets_src/audio/sfx_sword_box_hum.wav",
+    "category": "sfx",
+    "prompt": "Broken Jade Sword Box warm jade resonance hum",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -6.5 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_alchemy_fire.ogg",
+    "source_path": "assets_src/audio/sfx_alchemy_fire.wav",
+    "category": "sfx",
+    "prompt": "Alchemy furnace fire adjustment whoosh",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -7.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_alchemy_success.ogg",
+    "source_path": "assets_src/audio/sfx_alchemy_success.wav",
+    "category": "sfx",
+    "prompt": "Alchemy cauldron flawless pill chime",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -4.5 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_stele_activate.ogg",
+    "source_path": "assets_src/audio/sfx_stele_activate.wav",
+    "category": "sfx",
+    "prompt": "Wayfinding Stele stone-jade harmonic activation",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -5.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_ui_page_turn.ogg",
+    "source_path": "assets_src/audio/sfx_ui_page_turn.wav",
+    "category": "sfx",
+    "prompt": "Aged Xuan-paper codex page turn",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -8.5 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_ui_jade_click.ogg",
+    "source_path": "assets_src/audio/sfx_ui_jade_click.wav",
+    "category": "sfx",
+    "prompt": "Matte jade tile button click",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -9.0 dBFS peak."
+  },
+  {
+    "path": "project/assets/audio/sfx/sfx_ui_seal_stamp.ogg",
+    "source_path": "assets_src/audio/sfx_ui_seal_stamp.wav",
+    "category": "sfx",
+    "prompt": "Cinnabar stone ink-seal stamp thud",
+    "refinement": "Modal acoustic resonator & filtered Foley synthesis mastered at -5.0 dBFS peak."
+  }
+]

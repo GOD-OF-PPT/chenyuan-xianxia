@@ -1,0 +1,73 @@
+{
+  "actor_id": "shen_qinghe",
+  "cell_w": 224,
+  "cell_h": 224,
+  "foot_y": 202,
+  "cols": 6,
+  "rows": {
+    "idle_se": {
+      "row": 0,
+      "frames": 4,
+      "fps": 6.0,
+      "loop": true
+    },
+    "idle_ne": {
+      "row": 1,
+      "frames": 4,
+      "fps": 6.0,
+      "loop": true
+    },
+    "run_se": {
+      "row": 2,
+      "frames": 6,
+      "fps": 10.0,
+      "loop": true
+    },
+    "run_ne": {
+      "row": 3,
+      "frames": 6,
+      "fps": 10.0,
+      "loop": true
+    },
+    "attack_1": {
+      "row": 4,
+      "frames": 5,
+      "fps": 11.0,
+      "loop": false
+    },
+    "attack_2": {
+      "row": 5,
+      "frames": 5,
+      "fps": 11.0,
+      "loop": false
+    },
+    "cast_loop": {
+      "row": 6,
+      "start_col": 0,
+      "frames": 3,
+      "fps": 7.0,
+      "loop": true
+    },
+    "cast_release": {
+      "row": 6,
+      "start_col": 3,
+      "frames": 3,
+      "fps": 10.0,
+      "loop": false
+    },
+    "hit": {
+      "row": 7,
+      "start_col": 0,
+      "frames": 2,
+      "fps": 9.0,
+      "loop": false
+    },
+    "down": {
+      "row": 7,
+      "start_col": 2,
+      "frames": 2,
+      "fps": 4.0,
+      "loop": false
+    }
+  }
+}
