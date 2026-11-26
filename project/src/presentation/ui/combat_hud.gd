@@ -102,6 +102,10 @@ func set_interact_prompt(prompt_text: String) -> void:
 		_interact_prompt_box.visible = true
 
 
+func is_quick_drawer_open() -> bool:
+	return _quick_drawer != null and _quick_drawer.visible
+
+
 func toggle_quick_drawer() -> void:
 	_quick_drawer.visible = not _quick_drawer.visible
 	if _quick_drawer.visible:
@@ -154,12 +158,9 @@ func _build_top_boss_bar() -> void:
 
 
 func _make_bar_row(w: float, h: float, bg_c: Color) -> Control:
-	var wrap: Control = Control.new()
-	wrap.custom_minimum_size = Vector2(w, h)
 	var bg: ColorRect = ColorRect.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.custom_minimum_size = Vector2(w, h)
 	bg.color = bg_c
-	wrap.add_child(bg)
 
 	var fill: ColorRect = ColorRect.new()
 	fill.position = Vector2(2.0, 2.0)
@@ -173,9 +174,6 @@ func _make_bar_row(w: float, h: float, bg_c: Color) -> Control:
 	lbl.add_theme_font_size_override("font_size", UIThemeBuilder.FS_MIN)
 	bg.add_child(lbl)
 
-	# Return bg which holds [fill, lbl]
-	wrap.remove_child(bg)
-	bg.custom_minimum_size = Vector2(w, h)
 	return bg
 
 

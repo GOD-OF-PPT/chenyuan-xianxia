@@ -42,6 +42,20 @@ func _ready() -> void:
 	_init_sfx_pool(TIER_C, 3, "Combat_SFX_Bus")
 
 
+func _exit_tree() -> void:
+	for p: AudioStreamPlayer in [_stem_calm, _stem_combat, _bgm_special, _amb_player]:
+		if p != null:
+			p.stop()
+			p.stream = null
+	for raw_pool: Variant in _sfx_pools.values():
+		for raw_sp: Variant in (raw_pool as Array):
+			var sp: AudioStreamPlayer = raw_sp as AudioStreamPlayer
+			if sp != null:
+				sp.stop()
+				sp.stream = null
+	_streams_cache.clear()
+
+
 func _make_player(bus_name: String) -> AudioStreamPlayer:
 	var p: AudioStreamPlayer = AudioStreamPlayer.new()
 	p.bus = bus_name if AudioServer.get_bus_index(bus_name) >= 0 else "Master"
@@ -204,16 +218,12 @@ func _get_looping_ogg(res_path: String) -> AudioStream:
 
 
 func _get_ogg(res_path: String, make_loop: bool) -> AudioStream:
-	var cache_key: String = "%s|%s" % [res_path, "L" if make_loop else "S"]
-	if _streams_cache.has(cache_key):
-		return _streams_cache[cache_key] as AudioStream
+	if _streams_cache.has(res_path):
+		return _streams_cache[res_path] as AudioStream
 	if not ResourceLoader.exists(res_path):
 		return null
 	var loaded: AudioStream = load(res_path) as AudioStream
 	if loaded is AudioStreamOggVorbis:
-		var copy_ogg: AudioStreamOggVorbis = (loaded as AudioStreamOggVorbis).duplicate() as AudioStreamOggVorbis
-		copy_ogg.loop = make_loop
-		_streams_cache[cache_key] = copy_ogg
-		return copy_ogg
-	_streams_cache[cache_key] = loaded
+		(loaded as AudioStreamOggVorbis).loop = make_loop
+	_streams_cache[res_path] = loaded
 	return loaded
