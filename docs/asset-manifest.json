@@ -3,14 +3,334 @@
   "updated_at": "2026-11-26",
   "assets": [
     {
-      "path": "project/assets/fonts/NotoSerifCJKsc-Regular.otf",
-      "source_path": "assets_src/fonts/NotoSerifCJK-OFL-1.1-LICENSE.txt",
-      "category": "font",
+      "path": "project/assets/audio/bgm/amb_qinglan_rain.ogg",
+      "source_path": "assets_src/audio/amb_qinglan_rain.wav",
+      "category": "ambience",
       "dimensions": "n/a",
-      "sha256": "945be2b2de0588fdb6a2a31d42f7df8b16ef3a429f6f5df0d628bb967ca166f5",
-      "creation_method": "Subsetted from Google/Adobe NotoSerifCJK-Regular.ttc (fontNumber=2 SC, 10,078 codepoints) via fontTools.",
+      "sha256": "7461be8ec2115508896cbf76d3d230345e2fd0c007c71f39be721c9d47f65887",
+      "creation_method": "tools/build_step2_audio.py (Bandpass acoustic rain synthesis + droplet Foley + crossfaded seamless loop.) | Spec: Qinglan autumn rain & eaves droplets seamless ambience loop",
       "generated_date": "2026-11-26",
-      "license": "SIL Open Font License 1.1 (https://openfontlicense.org/)"
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/bgm/bgm_boss_wolf_king.ogg",
+      "source_path": "assets_src/audio/bgm_boss_wolf_king.mid",
+      "category": "bgm",
+      "dimensions": "n/a",
+      "sha256": "c7c427696e2fef97f560723a7f05aeddf00aadd6910d1a1fcd1cbcaae42323ea",
+      "creation_method": "tools/build_step2_audio.py (FluidSynth multi-instrument rendering + -13.8 LUFS mastering.) | Spec: Chapter 1 Boss Theme 《腐木狼啸》 (132 BPM Pipa + Erhu + Bianzhong + Tanggu)",
+      "generated_date": "2026-11-26",
+      "license": "Original Score rendered via FluidSynth with FluidR3_GM.sf2 (MIT License) + EBU R128 Mastering"
+    },
+    {
+      "path": "project/assets/audio/bgm/bgm_night_qinglian.ogg",
+      "source_path": "assets_src/audio/bgm_night_qinglian.mid",
+      "category": "bgm",
+      "dimensions": "n/a",
+      "sha256": "15e7b0008d5821fbed98d26fd535fa544318d5878c38d53303bf0e1cfb577e00",
+      "creation_method": "tools/build_step2_audio.py (FluidSynth acoustic rendering + -15.5 LUFS warm mastering.) | Spec: Leitmotif B 《青莲听雨》 campfire & pharmacy gentle melody (68 BPM)",
+      "generated_date": "2026-11-26",
+      "license": "Original Score rendered via FluidSynth with FluidR3_GM.sf2 (MIT License) + EBU R128 Mastering"
+    },
+    {
+      "path": "project/assets/audio/bgm/bgm_qinglan_calm.ogg",
+      "source_path": "assets_src/audio/bgm_qinglan_calm.mid",
+      "category": "bgm_stem",
+      "dimensions": "n/a",
+      "sha256": "5bf98d70ef1ff328e242b4d2584d95cc2b0a9cf39da59e4fd35f11d55ab1290f",
+      "creation_method": "tools/build_step2_audio.py (Sample-locked 96 BPM stem rendering + -15.0 LUFS normalization.) | Spec: Qinglan Dual-Stem Layer A 《青岚烟雨·静》 (96.0 BPM exact 40.0s loop, Dizi + Guzheng)",
+      "generated_date": "2026-11-26",
+      "license": "Original Score rendered via FluidSynth with FluidR3_GM.sf2 (MIT License) + EBU R128 Mastering"
+    },
+    {
+      "path": "project/assets/audio/bgm/bgm_qinglan_combat.ogg",
+      "source_path": "assets_src/audio/bgm_qinglan_combat.mid",
+      "category": "bgm_stem",
+      "dimensions": "n/a",
+      "sha256": "4235d5c9dacba0a720e37de121bdaf9b79419216beb3575901e68262a6aaa15e",
+      "creation_method": "tools/build_step2_audio.py (Sample-locked 96 BPM combat stem aligned to Layer A + -14.0 LUFS normalization.) | Spec: Qinglan Dual-Stem Layer B 《青岚烟雨·战》 (96.0 BPM exact 40.0s loop, Pipa lunzhi + Tanggu war drums)",
+      "generated_date": "2026-11-26",
+      "license": "Original Score rendered via FluidSynth with FluidR3_GM.sf2 (MIT License) + EBU R128 Mastering"
+    },
+    {
+      "path": "project/assets/audio/bgm/bgm_title_wendao.ogg",
+      "source_path": "assets_src/audio/bgm_title_wendao.mid",
+      "category": "bgm",
+      "dimensions": "n/a",
+      "sha256": "da2348f4d87fc65442fa6f91f55bd4f532eb76b85f5ad3be22ebd0f551400d30",
+      "creation_method": "tools/build_step2_audio.py (FluidSynth MIT FluidR3_GM.sf2 acoustic sample rendering + EBU R128 -14.5 LUFS mastering.) | Spec: Leitmotif A 《问道凡尘》 (Guqin/Koto + Dongxiao/Shakuhachi + Bronze Chimes + Low Strings, 72 BPM)",
+      "generated_date": "2026-11-26",
+      "license": "Original Score rendered via FluidSynth with FluidR3_GM.sf2 (MIT License) + EBU R128 Mastering"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_alchemy_fire.ogg",
+      "source_path": "assets_src/audio/sfx_alchemy_fire.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "38e468a359865ff388d198551ffa9bbb18629e0e51f018ddfbd3d96a49f45efe",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -7.0 dBFS peak.) | Spec: Alchemy furnace fire adjustment whoosh",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_alchemy_success.ogg",
+      "source_path": "assets_src/audio/sfx_alchemy_success.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "082d7c4647deb66578d340690903956bf94c0d580100641e88adcf49bc13706e",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -4.5 dBFS peak.) | Spec: Alchemy cauldron flawless pill chime",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_auto_slash.ogg",
+      "source_path": "assets_src/audio/sfx_auto_slash.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "05b45b9331f5a494e6ad7e60aaad1f1aaeb50f9b7a05d5528c0d1a12b61103bb",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -13.0 dBFS peak.) | Spec: Tier C subdued blade swing auto-attack",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_bond_ult_qinglian.ogg",
+      "source_path": "assets_src/audio/sfx_bond_ult_qinglian.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "c5cfecee2669ead0b163e576d1de384a84ce4759d66f67e0bfa87e42dcc91130",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -1.2 dBFS peak.) | Spec: Tier S Dual Bond Ultimate 【青莲引剑】 harmonic sword-lotus resonance",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_boss_cast_chime.ogg",
+      "source_path": "assets_src/audio/sfx_boss_cast_chime.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "50a621f4be0b5dc75e689807d966ace02331af7e6c4112cf2c6f689a0585e941",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -1.2 dBFS peak.) | Spec: Tier S Boss Amber-Gold cast bronze Bianzhong warning chime",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_elem_earth.ogg",
+      "source_path": "assets_src/audio/sfx_elem_earth.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "2f9c6b29ee009010c823fa55567dd20f49095599232e77852b45743de3c09661",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak.) | Spec: Tier A Earth boulder cleave impact",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_elem_fire.ogg",
+      "source_path": "assets_src/audio/sfx_elem_fire.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "d7d850b679c7664aeda3220bb4dbf8dfeafde44f25f0303c1025b84683626de1",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak.) | Spec: Tier A Fire cinnabar ignition roar",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_elem_metal.ogg",
+      "source_path": "assets_src/audio/sfx_elem_metal.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "15dbc324b46292f9d0b4728525eb94241d47a4acecfcdf59dad1e5d6793d551a",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak.) | Spec: Tier A Metal dragon-blade ring",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_elem_water.ogg",
+      "source_path": "assets_src/audio/sfx_elem_water.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "b5ea32ae69624144cd2a5d4e4622db23b02b78c98818823b0c732e22d2f1573b",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak.) | Spec: Tier A Water frost-spring surge",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_elem_wood.ogg",
+      "source_path": "assets_src/audio/sfx_elem_wood.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "ac4be111e4c29b698ce8644f3cd5afb51154c3aead23380f09e375f2de328944",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -3.0 dBFS peak.) | Spec: Tier A Wood vine & wind burst",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_heal_chime.ogg",
+      "source_path": "assets_src/audio/sfx_heal_chime.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "c269032b4173efe286e30d9d2857368aced725bfc1a70aca28beede50c2e47d9",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -3.5 dBFS peak.) | Spec: Tier A Herbal jade heal chime",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_interrupt_shatter.ogg",
+      "source_path": "assets_src/audio/sfx_interrupt_shatter.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "09e69e7f87337a72d11fa5f45771ebf808741a92050a8806bd1d1f37fec5f2f7",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -1.2 dBFS peak.) | Spec: Tier S crisp meridian-seal interrupt shatter",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_pause_enter.ogg",
+      "source_path": "assets_src/audio/sfx_pause_enter.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "41416eba61cde2a2529e8adf8d64402b42c3685cd49102dffeecfd08d42ad8b1",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -6.0 dBFS peak.) | Spec: Tactical Pause ink-water submerge",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_pause_exit.ogg",
+      "source_path": "assets_src/audio/sfx_pause_exit.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "954ae1b0eae1da408ab49daee63ff4f75f10962eba4fcb32f6678e866f9188cb",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -6.0 dBFS peak.) | Spec: Tactical Pause clear water ripple resume",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_pill_drink.ogg",
+      "source_path": "assets_src/audio/sfx_pill_drink.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "f689a1eae402a152cc7a33556e36cd0c13f2b7c77f01e77bb8ebc46b056d2775",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -3.5 dBFS peak.) | Spec: Tier A Instant pill uncork & qi breath",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_stele_activate.ogg",
+      "source_path": "assets_src/audio/sfx_stele_activate.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "3e90823d9a1aa3db9da0de6386d430ea83e840868aa55cee2f8925cf0511a43f",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -5.0 dBFS peak.) | Spec: Wayfinding Stele stone-jade harmonic activation",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_sword_box_hum.ogg",
+      "source_path": "assets_src/audio/sfx_sword_box_hum.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "7d4622941d938b9d09bb49e2666eec82f349d476e12bcfd55d757d0025c4933f",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -6.5 dBFS peak.) | Spec: Broken Jade Sword Box warm jade resonance hum",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_synergy_burst.ogg",
+      "source_path": "assets_src/audio/sfx_synergy_burst.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "6c47e30b0d6e55e04c8a9606fe61cbaa7abe9ec9c7dab4d8a639a180be2d3177",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -2.5 dBFS peak.) | Spec: Tier A Five-Element Synergy detonation",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_ui_jade_click.ogg",
+      "source_path": "assets_src/audio/sfx_ui_jade_click.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "632d200391782912c7a6a3b20f1cfd9f2711da34755fd00ad6cc1435390fc675",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -9.0 dBFS peak.) | Spec: Matte jade tile button click",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_ui_page_turn.ogg",
+      "source_path": "assets_src/audio/sfx_ui_page_turn.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "7f37371d824194198257591362e2a074493b88316089f507f40e6d11c99ba312",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -8.5 dBFS peak.) | Spec: Aged Xuan-paper codex page turn",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_ui_seal_stamp.ogg",
+      "source_path": "assets_src/audio/sfx_ui_seal_stamp.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "bdd3cbb28d86047e5ca59ae1d33c4f797ec85de098231cb4a5fd600fe8b40fb9",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -5.0 dBFS peak.) | Spec: Cinnabar stone ink-seal stamp thud",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/audio/sfx/sfx_ward_break_thunder.ogg",
+      "source_path": "assets_src/audio/sfx_ward_break_thunder.wav",
+      "category": "sfx",
+      "dimensions": "n/a",
+      "sha256": "1783d663c4cddb54ce27a5b173f2f97c4ddbb75bd5cd9511c61ff36dce22e3a5",
+      "creation_method": "tools/build_step2_audio.py (Modal acoustic resonator & filtered Foley synthesis mastered at -1.2 dBFS peak.) | Spec: Tier S Five-Element Ward break thunder & jade shatter",
+      "generated_date": "2026-11-26",
+      "license": "Original Procedural Acoustic Foley Synthesis (CC0 / First-Party Commercial)"
+    },
+    {
+      "path": "project/assets/cg/cg_ch01_layer0_sky.png",
+      "source_path": "assets_src/cg/cg_ch01_ruined_temple_raw.jpg",
+      "category": "cg_layer",
+      "dimensions": "1920x1080",
+      "sha256": "584b7a648bac602ff4444d941a0f12b2a8e0f8fa57832f03b36f01d286aefa20",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (4-layer parallax separation, Song-Ming LUT, additive rain/jade-aura compositing.) | Prompt: Ruined Temple opening dynamic CG (Layer 0 far storm sky)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/cg/cg_ch01_layer1_temple.png",
+      "source_path": "assets_src/cg/cg_ch01_ruined_temple_raw.jpg",
+      "category": "cg_layer",
+      "dimensions": "1920x1080",
+      "sha256": "df9649ae7e6d4309c225cc680b941ce6bb4092bffe28142fb2b3280926e4e5bf",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (4-layer parallax separation, Song-Ming LUT, additive rain/jade-aura compositing.) | Prompt: Ruined Temple opening dynamic CG (Layer 1 ruined temple & wolves)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/cg/cg_ch01_layer2_aura.png",
+      "source_path": "assets_src/cg/cg_ch01_ruined_temple_raw.jpg",
+      "category": "cg_layer",
+      "dimensions": "1920x1080",
+      "sha256": "24a4874c615fbd14f98dae0296e4889175cae6e705d6d47b87ee715d6da26c95",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (4-layer parallax separation, Song-Ming LUT, additive rain/jade-aura compositing.) | Prompt: Ruined Temple opening dynamic CG (Layer 2 Broken Jade Sword Box emerald resonance)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/cg/cg_ch01_layer3_rain_sword.png",
+      "source_path": "assets_src/cg/cg_ch01_ruined_temple_raw.jpg",
+      "category": "cg_layer",
+      "dimensions": "1920x1080",
+      "sha256": "145040b5775f19786c34f513a22263aa53840547cf7e277a758363590907fe52",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (4-layer parallax separation, Song-Ming LUT, additive rain/jade-aura compositing.) | Prompt: Ruined Temple opening dynamic CG (Layer 3 foreground rain & descending Qingyun sword beam)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/cg/title_qianli_jiangshan.png",
+      "source_path": "assets_src/cg/title_key_art_raw.jpg",
+      "category": "cg",
+      "dimensions": "1920x1080",
+      "sha256": "58b963edbb7c23316cd0ed34cd432dd3229f44052a862fa282fbff15c594efd2",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (1920x1080 Lanczos resize and Song-Ming mineral LUT color calibration.) | Prompt: Qianli Jiangshan blue-green mineral landscape title background with shattered Heaven's Gate",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     },
     {
       "path": "project/assets/fonts/NotoSerifCJKsc-Bold.otf",
@@ -21,6 +341,1156 @@
       "creation_method": "Subsetted from Google/Adobe NotoSerifCJK-Bold.ttc (fontNumber=2 SC, 10,078 codepoints) via fontTools.",
       "generated_date": "2026-11-26",
       "license": "SIL Open Font License 1.1 (https://openfontlicense.org/)"
+    },
+    {
+      "path": "project/assets/fonts/NotoSerifCJKsc-Regular.otf",
+      "source_path": "assets_src/fonts/NotoSerifCJK-OFL-1.1-LICENSE.txt",
+      "category": "font",
+      "dimensions": "n/a",
+      "sha256": "945be2b2de0588fdb6a2a31d42f7df8b16ef3a429f6f5df0d628bb967ca166f5",
+      "creation_method": "Subsetted from Google/Adobe NotoSerifCJK-Regular.ttc (fontNumber=2 SC, 10,078 codepoints) via fontTools.",
+      "generated_date": "2026-11-26",
+      "license": "SIL Open Font License 1.1 (https://openfontlicense.org/)"
+    },
+    {
+      "path": "project/assets/portraits/gu_changqing_bloodied.png",
+      "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "cb21f006acee139a2aff2073ca8337de960f84f729fcf96f4032deb6cc246256",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of gu_changqing (bloodied)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/gu_changqing_calm.png",
+      "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "7b37bd42bdd910cd6d5e30bcf3a20437d99cff1654c6286d221c4042c55f8dda",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of gu_changqing (calm)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/gu_changqing_cold.png",
+      "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "41ca443255cfe5229e4104934a0ccebd561c5b549bb976ec654c87d4e4ea6d3b",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of gu_changqing (cold)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/gu_changqing_grief.png",
+      "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "eddfbe9bb261f041b847e4189f1807d151e14fb335480a879440d175cf5ef459",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of gu_changqing (grief)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/gu_changqing_guarded.png",
+      "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "eb79b433528991e86a1495f4eea8e71f1cf1b13ba05f1ce766c0198f4c398d00",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of gu_changqing (guarded)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/gu_changqing_smile_faint.png",
+      "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "e452a39af44bff842702fadf09a917895cb03e70321d03acf22184846e8b8c62",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of gu_changqing (smile_faint)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/gu_changqing_solemn.png",
+      "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "eb79b433528991e86a1495f4eea8e71f1cf1b13ba05f1ce766c0198f4c398d00",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of gu_changqing (solemn)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/mist_wolf_king_bloodied.png",
+      "source_path": "assets_src/portraits/mist_wolf_king_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "aae7ccd1c21a414c70fd135252b7c43fee44a1e062be9ca8821766bd7229d7cc",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of mist_wolf_king (bloodied)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/mist_wolf_king_calm.png",
+      "source_path": "assets_src/portraits/mist_wolf_king_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "367a749c0cdf44003fdf85a0484fe8ce66165b03450bf90c259e6ff88040420d",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of mist_wolf_king (calm)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/mist_wolf_king_grief.png",
+      "source_path": "assets_src/portraits/mist_wolf_king_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "59cc3bd901764acb0eb8a7ae17ed2542232185238201472c46419ce6677020d7",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of mist_wolf_king (grief)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_elder_calm.png",
+      "source_path": "assets_src/portraits/npc_elder_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "07f65a03c01ebde3368ec2b82bcff58de1da8a4b23fa267e7b857a0f411722be",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_elder (calm)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_elder_grief.png",
+      "source_path": "assets_src/portraits/npc_elder_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "842f0d887e1a72ba491124efeac360504e5a5c40d9d3bad37fd933dcf4ca529c",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_elder (grief)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_elder_solemn.png",
+      "source_path": "assets_src/portraits/npc_elder_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "bf76c1d3806345c4b51727af5ab1373719d6d569e0e1572685e3c55e52f1ed46",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_elder (solemn)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_peddler_calm.png",
+      "source_path": "assets_src/portraits/npc_peddler_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "09bf414daefcfe09243e495de59844302a2e91c4a16c0c20af8640af491197a2",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_peddler (calm)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_peddler_cold.png",
+      "source_path": "assets_src/portraits/npc_peddler_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "2c27e74a90710b49a82953506ed9d3aabdde7156d9821815d91b48c7fc2c29fe",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_peddler (cold)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_peddler_smile_faint.png",
+      "source_path": "assets_src/portraits/npc_peddler_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "877dea8f4808892cda8fe88c12636e4bb80a92e4a3f8212d8b3c7d4cbbbbfba0",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_peddler (smile_faint)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_steward_zhou_calm.png",
+      "source_path": "assets_src/portraits/npc_steward_zhou_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "44fd44fb42ed7c403b624a17953536eba915821750ec41005f21bffe9c6b0406",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_steward_zhou (calm)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_steward_zhou_grief.png",
+      "source_path": "assets_src/portraits/npc_steward_zhou_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "00d8969aec6da13bfd467e7234c31ddc90abbb31f11cf5ff4a413afa72001d58",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_steward_zhou (grief)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/npc_steward_zhou_guarded.png",
+      "source_path": "assets_src/portraits/npc_steward_zhou_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "300b3ed7548d1d180af2ef4fb744540aa7870b0c8e8041d4cbd1c4c2d2ce50b7",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of npc_steward_zhou (guarded)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/pei_zhao_bloodied.png",
+      "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "04864f5eb2cd2c1f4eb526281981df05b9254cc018c7f3feac613e7f997c704b",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of pei_zhao (bloodied)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/pei_zhao_calm.png",
+      "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "ff8809f4bfbd4bfd125e487076e2d318413e5d5d759cf19f6ef2dc4ca741b7ed",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of pei_zhao (calm)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/pei_zhao_cold.png",
+      "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "e9443fb7c1ad8ecfe50da637f2e40c866aa027e45a721dc2664d25a612c18f35",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of pei_zhao (cold)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/pei_zhao_grief.png",
+      "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "0e61897ee19ebcf521ec54ec59f6a788cb1583acc1e75b775f25d59918b7e23e",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of pei_zhao (grief)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/pei_zhao_smile_faint.png",
+      "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "9a53d74fcf4726ea6a2e29db5ea054b0bdd260027078b7685ef4eed60febc134",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of pei_zhao (smile_faint)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/pei_zhao_solemn.png",
+      "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "7c4b7d9c89c845f5eadb7a3cdd4690ca5ddeb70562a44b2dc74a84bd25a63af7",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of pei_zhao (solemn)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/shen_qinghe_bloodied.png",
+      "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "1ce7a48714e9173e139f65caeeec24953dcbacc1ec2aec3b7d73e865a6d58e69",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of shen_qinghe (bloodied)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/shen_qinghe_calm.png",
+      "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "6622456c4aa1f60d9dd40223b83d7e810d0501d1498c28e98e721d11208dda83",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of shen_qinghe (calm)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/shen_qinghe_cold.png",
+      "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "42b283bb72596f56b69044dd2b558cd60425cfa4002878386d76448b44691372",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of shen_qinghe (cold)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/shen_qinghe_grief.png",
+      "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "b9d5b60a56be6c6b47f6b8f10927bce6c77ee0e57f1add932ce9faa3bac440f0",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of shen_qinghe (grief)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/shen_qinghe_smile_faint.png",
+      "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "c49ba14a7fed2eb14cc449339f45b1624fc5fe88b5ebc74c52566cecdcfc2acd",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of shen_qinghe (smile_faint)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/portraits/shen_qinghe_solemn.png",
+      "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+      "category": "portrait",
+      "dimensions": "1024x1280",
+      "sha256": "5f49a73f736258ae42205cefadab2e51128ea75b77f4fe393542e6d1a91c445c",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading.) | Prompt: Song-Ming Gongbi waist-up portrait of shen_qinghe (solemn)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/boss_mist_wolf_king_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "2304x2560",
+      "sha256": "2a560d9f5680e5b21f38c56e5beb2d3bbac0ff127f59dc531964a4c9ff1360ea",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (boss_mist_wolf_king)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/enemy_miasma_shaman_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1248x1792",
+      "sha256": "848947e0ec9c716f1b696bb6d5f01ea7d2cb9ec5aea63cb95fd5904f2d76170f",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_miasma_shaman)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/enemy_rogue_cultivator_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1344x1792",
+      "sha256": "e28e7a756b339a306a84eb2f0bc766401ba195af4f92360fd6ce4663d25e6ee5",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_rogue_cultivator)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/enemy_rot_wolf_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1248x1536",
+      "sha256": "bde4d1c3cb7c8894f7a3ff0b7b94ed89c7d45c8dc70b82c0b00bc42698732a2d",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_rot_wolf)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/enemy_wood_golem_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1536x2048",
+      "sha256": "4bcb1ba77dd70c4013bdee9cbef87e6f002ebc3de534dd3c8e6736fbb25a5b45",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_wood_golem)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/gu_changqing_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1344x1792",
+      "sha256": "cd3fedc6eb5fbfd8d5a560944ac6391cca38a4acd3f82ae56d645acab7e3aa38",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT.) | Prompt: 35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (gu_changqing)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/pei_zhao_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1344x1792",
+      "sha256": "c9f1c12375291b4e27b978851c7c389f29a775ec7fc0dc9aef6e49add8be8b98",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT.) | Prompt: 35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (pei_zhao)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/pet_fire_fox_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1056x1408",
+      "sha256": "50e0fcb3f394c3ec739b6157d45942ce64910e95931a85af4410d4fdece2d4ab",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT.) | Prompt: 35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (pet_fire_fox)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/pet_spirit_turtle_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1056x1408",
+      "sha256": "f3f0cbb107c8785d8d196efcd2b609054f6ca73d062d20a7bb56048bda57693a",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT.) | Prompt: 35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (pet_spirit_turtle)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/sprites/shen_qinghe_sheet.png",
+      "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1344x1792",
+      "sha256": "36e10d2dd2e6cd9e75ecc6d1232a522072d921011b04d6b216187c1dce714503",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT.) | Prompt: 35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (shen_qinghe)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/cursors/cursor_bronze_sword.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_cursor",
+      "dimensions": "32x32",
+      "sha256": "4a37d87375f087cc51919430786308d364be2a4c0cdaf2717033305f11d8fb3c",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (32x32 crisp RGBA pointer with top-left hotspot.) | Prompt: Classical PC mouse cursor (cursor_bronze_sword.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/cursors/cursor_jade_pin.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_cursor",
+      "dimensions": "32x32",
+      "sha256": "ef3764375907a7b95bea342518dec7f26af5149268878ca1870fdfee66c7e008",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (32x32 crisp RGBA pointer with top-left hotspot.) | Prompt: Classical PC mouse cursor (cursor_jade_pin.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/cursors/cursor_spirit_hand.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_cursor",
+      "dimensions": "32x32",
+      "sha256": "0598b50c0a1cb63ad23a7c3f13e854a30231c937b88586e5c7b1ae8a7ac8661f",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (32x32 crisp RGBA pointer with top-left hotspot.) | Prompt: Classical PC mouse cursor (cursor_spirit_hand.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_boots_mist.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "73978acd1d2c245021bb1dc6c77ccf4362e36504bced207c10e55d830d19f789",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_boots_mist.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_boots_wind.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "ccb75984f3ba74bb011ff4f464172e0d4fdb79e4ee76fff1ec4dd28e676c0f43",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_boots_wind.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_needle_silver.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "e2a41a2bf4dbf40ea2be0f7e12b97eba8a56d3f33eebcdde1937ebd105472697",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_needle_silver.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_pendant_jade.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "723bad6438968bd7f3be3f7fb5342d03d0384ff7c3fe7277dcfe43865dab6367",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_pendant_jade.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_pendant_tiger.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "2c1504a231e16d617a00dc9a07f3d1f6376574cfb44ef1e1c63810a585ebcf69",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_pendant_tiger.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_robe_cloud.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "2e52ea5804648485b99e9c9f9a5a1f4c16017b9df84d0507bac4a7343e343636",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_robe_cloud.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_robe_herb.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "892f67173a89bf0daefc9d8fa462bbcd49ad38394fb3ab43b620adff22b28ef6",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_robe_herb.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_robe_rain.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "63123e8729e79ff42d533112ae9f76a530a6336d98a0abdfeb0ec96ddb900efe",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_robe_rain.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_sword_ancient.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "2004d7e2c46f31fa863c87f87c5acaf08196147f3a1ca92694320c5b97dfd090",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_sword_ancient.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_sword_iron.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "c31cffcdf8b6efc8bb7df64ce27b5710a8391a3c95879c3938cd26602cc2667c",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_sword_iron.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_sword_qingyun.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "6a803d914f3bdc8dd86adc4fe87c43b1f8f3808d7dc347fa70ffc61e26885a9e",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_sword_qingyun.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/eq_wrist_dew.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "1f9deb05972681d7dc72f18a776c441524a2e90f21b9a8aab2bcfd88779c882b",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi equipment icon (eq_wrist_dew.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/herb_chiyang.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "26bfe5375cc7da990ef972f917db36c5493fdc6b6f64737e7218fa3b56cd8d47",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (herb_chiyang.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/herb_corrupt.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "06f6422d3e607252b71dabc78612984d81c55e31c07f9e92d2a6112a268b0dee",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (herb_corrupt.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/herb_ningqi.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "0c96518906eb83ae675a76ea93e2df176597871c2d49a789c1ef50da030a62ac",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (herb_ningqi.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/herb_qingmu.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "55aa67d8c9684e9c1eb6d0a377f505a87edf2eab0021d992c4b352e01b967b77",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (herb_qingmu.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/item_dew.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "e56879865941eca2062850ab53b88d28d045051422799644ac46a639747d62cd",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (item_dew.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/item_pouch.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "55309ceef5d9469ecda78978365fffde4b0918daaeea9a9828c440272213eaa9",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (item_pouch.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/item_scroll_page.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "b87b619a934335e16f4c4d20c2f03e6c796c3e0b68ed85e52a2cafd62c3c695e",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (item_scroll_page.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/item_sword_shard.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "0c3ab15a4bdb85296a237a19005e47474bc4fbf06fdd734ae1c1ad31250f5aaa",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (item_sword_shard.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/item_talisman_stealth.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "a5947584e3c5b6a505b2cc839eafa0a4d9e41cadefa67da226cd72797c6f8350",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (item_talisman_stealth.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/mat_wolf_core.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "e3fb043062e6272788e0053804adf682dbb77cf222230e78f94cb6689e76ad4d",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (mat_wolf_core.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/pill_breakthrough.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "6eb1a84cfbf029d09a187efa14ffbd736c1be34c78e27e6ac69f9ea20491fabe",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (pill_breakthrough.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/pill_burnt.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "67cfcb2d1a43839da8bf560682fcc437c10047d8224adc4ccda1ce1e1e709738",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (pill_burnt.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/pill_huichun.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "467644a83a452eca8c8a5921d9f19d7c6896753a2d821162fdab589ea1d0fdd3",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (pill_huichun.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/pill_juqi.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "c90407f174fd4736b86c061a28b11659664c349dc2299ec9f71435c2f56c345d",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (pill_juqi.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/pill_qingmu.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "0939a78fb0094fea161232a21108d58a71d022fe4f6668e4915e42e3c163d418",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (pill_qingmu.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/seal_earth.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "2161834fbff7a7a31a586bcd37a6cc56b78ff0a7946f2cd63e5665298f48729e",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (seal_earth.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/seal_fire.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "ca506fa3908d3e2ffc73d4b83b0ea94ac7a0534cf0567c4fb3550a76c9cb2911",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (seal_fire.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/seal_metal.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "3dae5324b6a069b380f8f20e3d9e7ace488ec4141997dc8b1ddf165628bd93b1",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (seal_metal.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/seal_water.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "b8886032d09889b81515ad17f871011dc6c6e62e44ec0b4ecc1256dd7a47613c",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (seal_water.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/seal_wood.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "2a731bf367c61b17835e2cd330457b4952ab76190d68e3a145c35779b06efa31",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (seal_wood.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_bond_qinglian.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "cfc7c51ec4d0aa9e4e0fce196b6edb876339f57c10903148bae887edf9e1b2e2",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (sk_bond_qinglian.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_earth_cleave.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "5ee423ea16688014d5ce72852dc4fb4ea374ebb765fa14bcb43d28399158788f",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (sk_earth_cleave.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_fire_blade.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "046e41ba77a589a4daefb121c10e775935b094d4132475ac994fd06c44cdff53",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (sk_fire_blade.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_interrupt_seal.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "e3e4145daecafb31b4122b1fa084e930d1a5643254dec1fa1cea2273188607b2",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (sk_interrupt_seal.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_lotus_shield.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "2a2fa703715447a82b98c0d7046d2b14902fdec801be9d569b9b3c5ddc668cad",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (sk_lotus_shield.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_metal_sword.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "378eecec5c32e4f1198be71effc0e0655064a660749a8f1baa6506cc94daa848",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (sk_metal_sword.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_sweet_rain.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "f102383a85b5b10e71aacb9eadea8f3f205d86d6a32d3166ee21cdeb2aa5e6bb",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (sk_sweet_rain.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_taunt_bell.png",
+      "source_path": "assets_src/ui/procedural_seals_spec.json",
+      "category": "ui_seal_badge",
+      "dimensions": "96x96",
+      "sha256": "a95951790aa2628cb8d0ad88b6957e7475c8d93986e387472be32711ba456286",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (sk_taunt_bell.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_water_stream.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "91335dd6f1b70bc0f86ddeef8f145336a379141f64eb4b1598d3cf9ac133f3d6",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (sk_water_stream.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_wood_gale.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "8aadca39ce19ebd2400f357956d4a43639fda91d4418121caa01b390ab0e9e01",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (sk_wood_gale.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/sk_wood_heal.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "6023341d41fc3b0ce26fb51ed8bca4e0687b54c7120bff1ce6765d792aa14094",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (sk_wood_heal.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/tr_qingnang.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "fc826788e491388428914ea6772c5f6499bcb77b038cf4f557482d2768456c58",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (tr_qingnang.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/tr_sword_box.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "90c93d25d635729cef5278b87df92aa5f4b970b9e488d7681f9765b013e32ad4",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (tr_sword_box.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/tr_tassel.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "9a53cae3865dea3e43da3637b38e03674e96f2af48245173ce7215624ca8547a",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (tr_tassel.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/masters/master_a_tingyu_town.png",
+      "source_path": "assets_src/masters/master_a_tingyu_town_raw.jpg",
+      "category": "master_plate",
+      "dimensions": "1920x1080",
+      "sha256": "67218e5e91101c086f21c0020e6e621e2a24aa96a2c941a69c57b06fc019b3e1",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement.) | Prompt: Master Plate A: Tingyu Town 35-deg rain street & Jishi Pharmacy Y-Sort",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/masters/master_b_cangmu_rtwp.png",
+      "source_path": "assets_src/masters/master_b_cangmu_rtwp_raw.jpg",
+      "category": "master_plate",
+      "dimensions": "1920x1080",
+      "sha256": "c5c3865071f55c594b259b82b128830be4e9ec4eefe09cdeb77e1fca16bbce7d",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement.) | Prompt: Master Plate B: Cangmu Cave seamless RTwP Boss HUD & Cinnabar telegraph",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/masters/master_c_temple_stage.png",
+      "source_path": "assets_src/masters/master_c_temple_stage_raw.jpg",
+      "category": "master_plate",
+      "dimensions": "1920x1080",
+      "sha256": "ca4b95340cd397eabfbf2dbae0a3e9618b1768e56fd14d7dd8fc1331476a56e8",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement.) | Prompt: Master Plate C: Ruined Temple Gongbi portrait dialogue stage",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/masters/master_d_dao_casket.png",
+      "source_path": "assets_src/masters/master_d_dao_casket_raw.jpg",
+      "category": "master_plate",
+      "dimensions": "1920x1080",
+      "sha256": "091a0087ec534f16abe95b5459e1d2b8e69e0177c644ad67881524f02ea58028",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement.) | Prompt: Master Plate D: Wanxiang Dao Casket 5-slot & meridian UI",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_alchemy_furnace.png",
+      "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "139x155",
+      "sha256": "874d03caf68242f91ce0f6a193b618eb7f1f1063237c1e6caa535e4d167fce24",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi interactive prop (prop_alchemy_furnace.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_ancient_remains.png",
+      "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "124x165",
+      "sha256": "0964e1ba48168486f093ad97079cc4adbdcc1f00d9b02889ba413f813f8af373",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi dungeon prop (prop_ancient_remains.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_bamboo_cluster.png",
+      "source_path": "assets_src/world/prop_sheet_foliage_raw.jpg",
+      "category": "world_ysort_foliage",
+      "dimensions": "178x290",
+      "sha256": "70e80bb297331e6053db63ada7051597bca25fa95320321bf81f3b5f22cf522e",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi foliage/structure (prop_bamboo_cluster.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_camphor_tree.png",
+      "source_path": "assets_src/world/prop_sheet_foliage_raw.jpg",
+      "category": "world_ysort_foliage",
+      "dimensions": "340x340",
+      "sha256": "59ac5fb7cc94f8a7009a8d82d77b59c796a40627143a7bf2bedb57d214f4cc5b",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi foliage/structure (prop_camphor_tree.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_cave_arch_gate.png",
+      "source_path": "assets_src/world/prop_sheet_foliage_raw.jpg",
+      "category": "world_ysort_foliage",
+      "dimensions": "214x270",
+      "sha256": "92e4f92adf1c7a09398ae51b60a394731edd0295f255efcab7e459571ba6b9a4",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi foliage/structure (prop_cave_arch_gate.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_cliff_rock.png",
+      "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "202x210",
+      "sha256": "ec4542ef3f556a3633b3c446aade0eb98638c7d0c4e2d8e92938cb85559b003e",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi dungeon prop (prop_cliff_rock.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_miasma_pool.png",
+      "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "223x170",
+      "sha256": "58ae2621150d43f6bc8c12443333631a7f658f84c64873fc02ca0bb7a7d400d3",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi dungeon prop (prop_miasma_pool.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_miasma_pool_clean.png",
+      "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "223x170",
+      "sha256": "d322b79bb057dff2f2a3101ebd1ebd4b58ba0b95745f909a48b71a17f9b9f808",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Chromatic shift from miasma plum to mineral celadon-jade water.) | Prompt: Purified clear spring pool after Water-Element barrier solved",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_peddler_stall.png",
+      "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "274x145",
+      "sha256": "d591bbd676a9978d1b64e8f9757f54ae84446f00ad815a1cdf77fe84819d4515",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi interactive prop (prop_peddler_stall.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_ruined_temple.png",
+      "source_path": "assets_src/world/prop_sheet_buildings_raw.jpg",
+      "category": "world_ysort_building",
+      "dimensions": "367x380",
+      "sha256": "d6256a113d264a167e8bce8a27c20c1f6e02c66d7ffd24825a08651c25c1e032",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, ink defringe, Y-Sort bottom baseline calibration & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi building (prop_ruined_temple.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_spirit_herb_node.png",
+      "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "73x95",
+      "sha256": "2f9af376bb90925501701369ba5b38d3e329ba2333638338c98444f112c48800",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi interactive prop (prop_spirit_herb_node.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_stele_dim.png",
+      "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "121x175",
+      "sha256": "2f3921b5a26dc1a878dc50bf92fc7ab44508c190dee5e52439c0886b919b82ef",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Desaturated stone state derived from prop_stele_lit.) | Prompt: Unlit Wayfinding Stele stone tablet",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_stele_lit.png",
+      "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "121x175",
+      "sha256": "1af6fd2e3b56b532d15696b1eb740a89f7c9e4cc96849c775438ca2731b106ad",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi interactive prop (prop_stele_lit.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_tea_pavilion.png",
+      "source_path": "assets_src/world/prop_sheet_buildings_raw.jpg",
+      "category": "world_ysort_building",
+      "dimensions": "323x310",
+      "sha256": "f7721917b71d1b41fbd57c9de85e37ed6b790ee26689c498319cc1e8b9292baa",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, ink defringe, Y-Sort bottom baseline calibration & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi building (prop_tea_pavilion.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_treasure_chest.png",
+      "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "105x105",
+      "sha256": "c96e6ff1a45e77521ca10a9a6f5ddf90de6a41bdee01393dca415147b221aeb8",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi interactive prop (prop_treasure_chest.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_vine_barrier.png",
+      "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "225x135",
+      "sha256": "e4f4b97fa77134b012090c3f43eaa361a54f756538a5b67657a4c50a37df8c0d",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi interactive prop (prop_vine_barrier.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_yaolu_hall.png",
+      "source_path": "assets_src/world/prop_sheet_buildings_raw.jpg",
+      "category": "world_ysort_building",
+      "dimensions": "377x360",
+      "sha256": "dbbf50ed885c77e206d0416a38f1b5a028dbb0d29baa98f394759e619193b047",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, ink defringe, Y-Sort bottom baseline calibration & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi building (prop_yaolu_hall.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/tex_bluestone_wet.png",
+      "source_path": "assets_src/world/terrain_bluestone_seamless_raw.jpg",
+      "category": "terrain",
+      "dimensions": "512x512",
+      "sha256": "a8b469dc97fd8e4de6c9419f99b7dd3a3b625d762f72166ac2c86665fa8f7d9a",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (512x512 4-quadrant cosine wrap-around seamless blend + Song-Ming mineral LUT.) | Prompt: 35-degree seamless Song-Ming mineral terrain (tex_bluestone_wet.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/tex_cave_flagstone.png",
+      "source_path": "assets_src/world/terrain_cave_stone_raw.jpg",
+      "category": "terrain",
+      "dimensions": "512x512",
+      "sha256": "163209c5bd2dff63ee56b7f7f058fa791427dde70c57d009d45637cb84bd79e7",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (512x512 4-quadrant cosine wrap-around seamless blend + Song-Ming mineral LUT.) | Prompt: 35-degree seamless Song-Ming mineral terrain (tex_cave_flagstone.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/tex_moss_earth.png",
+      "source_path": "assets_src/world/terrain_moss_mountain_raw.jpg",
+      "category": "terrain",
+      "dimensions": "512x512",
+      "sha256": "72fa58ad4be0c635a5ab8407d37f10ac0f512f60095a45a8ad352fcb367d134f",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (512x512 4-quadrant cosine wrap-around seamless blend + Song-Ming mineral LUT.) | Prompt: 35-degree seamless Song-Ming mineral terrain (tex_moss_earth.png)",
+      "generated_date": "2026-11-26",
+      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     }
   ]
 }

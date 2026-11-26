@@ -1,0 +1,835 @@
+[
+  {
+    "path": "project/assets/ui/masters/master_a_tingyu_town.png",
+    "source_path": "assets_src/masters/master_a_tingyu_town_raw.jpg",
+    "category": "master_plate",
+    "prompt": "Master Plate A: Tingyu Town 35-deg rain street & Jishi Pharmacy Y-Sort",
+    "refinement": "1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement."
+  },
+  {
+    "path": "project/assets/ui/masters/master_b_cangmu_rtwp.png",
+    "source_path": "assets_src/masters/master_b_cangmu_rtwp_raw.jpg",
+    "category": "master_plate",
+    "prompt": "Master Plate B: Cangmu Cave seamless RTwP Boss HUD & Cinnabar telegraph",
+    "refinement": "1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement."
+  },
+  {
+    "path": "project/assets/ui/masters/master_c_temple_stage.png",
+    "source_path": "assets_src/masters/master_c_temple_stage_raw.jpg",
+    "category": "master_plate",
+    "prompt": "Master Plate C: Ruined Temple Gongbi portrait dialogue stage",
+    "refinement": "1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement."
+  },
+  {
+    "path": "project/assets/ui/masters/master_d_dao_casket.png",
+    "source_path": "assets_src/masters/master_d_dao_casket_raw.jpg",
+    "category": "master_plate",
+    "prompt": "Master Plate D: Wanxiang Dao Casket 5-slot & meridian UI",
+    "refinement": "1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement."
+  },
+  {
+    "path": "project/assets/portraits/gu_changqing_calm.png",
+    "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of gu_changqing (calm)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/gu_changqing_guarded.png",
+    "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of gu_changqing (guarded)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/gu_changqing_solemn.png",
+    "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of gu_changqing (solemn)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/gu_changqing_cold.png",
+    "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of gu_changqing (cold)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/gu_changqing_smile_faint.png",
+    "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of gu_changqing (smile_faint)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/gu_changqing_grief.png",
+    "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of gu_changqing (grief)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/gu_changqing_bloodied.png",
+    "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of gu_changqing (bloodied)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/shen_qinghe_calm.png",
+    "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of shen_qinghe (calm)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/shen_qinghe_solemn.png",
+    "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of shen_qinghe (solemn)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/shen_qinghe_cold.png",
+    "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of shen_qinghe (cold)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/shen_qinghe_smile_faint.png",
+    "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of shen_qinghe (smile_faint)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/shen_qinghe_grief.png",
+    "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of shen_qinghe (grief)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/shen_qinghe_bloodied.png",
+    "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of shen_qinghe (bloodied)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/pei_zhao_calm.png",
+    "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of pei_zhao (calm)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/pei_zhao_solemn.png",
+    "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of pei_zhao (solemn)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/pei_zhao_cold.png",
+    "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of pei_zhao (cold)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/pei_zhao_smile_faint.png",
+    "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of pei_zhao (smile_faint)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/pei_zhao_grief.png",
+    "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of pei_zhao (grief)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/pei_zhao_bloodied.png",
+    "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of pei_zhao (bloodied)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/mist_wolf_king_calm.png",
+    "source_path": "assets_src/portraits/mist_wolf_king_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of mist_wolf_king (calm)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/mist_wolf_king_grief.png",
+    "source_path": "assets_src/portraits/mist_wolf_king_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of mist_wolf_king (grief)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/mist_wolf_king_bloodied.png",
+    "source_path": "assets_src/portraits/mist_wolf_king_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of mist_wolf_king (bloodied)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_elder_calm.png",
+    "source_path": "assets_src/portraits/npc_elder_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_elder (calm)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_elder_solemn.png",
+    "source_path": "assets_src/portraits/npc_elder_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_elder (solemn)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_elder_grief.png",
+    "source_path": "assets_src/portraits/npc_elder_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_elder (grief)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_peddler_calm.png",
+    "source_path": "assets_src/portraits/npc_peddler_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_peddler (calm)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_peddler_smile_faint.png",
+    "source_path": "assets_src/portraits/npc_peddler_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_peddler (smile_faint)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_peddler_cold.png",
+    "source_path": "assets_src/portraits/npc_peddler_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_peddler (cold)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_steward_zhou_calm.png",
+    "source_path": "assets_src/portraits/npc_steward_zhou_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_steward_zhou (calm)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_steward_zhou_guarded.png",
+    "source_path": "assets_src/portraits/npc_steward_zhou_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_steward_zhou (guarded)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/portraits/npc_steward_zhou_grief.png",
+    "source_path": "assets_src/portraits/npc_steward_zhou_raw.jpg",
+    "category": "portrait",
+    "prompt": "Song-Ming Gongbi waist-up portrait of npc_steward_zhou (grief)",
+    "refinement": "Border-connected flood-fill alpha matting, ink defringing, 1024x1280 bottom alignment, Song-Ming LUT & expression grading."
+  },
+  {
+    "path": "project/assets/cg/title_qianli_jiangshan.png",
+    "source_path": "assets_src/cg/title_key_art_raw.jpg",
+    "category": "cg",
+    "prompt": "Qianli Jiangshan blue-green mineral landscape title background with shattered Heaven's Gate",
+    "refinement": "1920x1080 Lanczos resize and Song-Ming mineral LUT color calibration."
+  },
+  {
+    "path": "project/assets/cg/cg_ch01_layer0_sky.png",
+    "source_path": "assets_src/cg/cg_ch01_ruined_temple_raw.jpg",
+    "category": "cg_layer",
+    "prompt": "Ruined Temple opening dynamic CG (Layer 0 far storm sky)",
+    "refinement": "4-layer parallax separation, Song-Ming LUT, additive rain/jade-aura compositing."
+  },
+  {
+    "path": "project/assets/cg/cg_ch01_layer1_temple.png",
+    "source_path": "assets_src/cg/cg_ch01_ruined_temple_raw.jpg",
+    "category": "cg_layer",
+    "prompt": "Ruined Temple opening dynamic CG (Layer 1 ruined temple & wolves)",
+    "refinement": "4-layer parallax separation, Song-Ming LUT, additive rain/jade-aura compositing."
+  },
+  {
+    "path": "project/assets/cg/cg_ch01_layer2_aura.png",
+    "source_path": "assets_src/cg/cg_ch01_ruined_temple_raw.jpg",
+    "category": "cg_layer",
+    "prompt": "Ruined Temple opening dynamic CG (Layer 2 Broken Jade Sword Box emerald resonance)",
+    "refinement": "4-layer parallax separation, Song-Ming LUT, additive rain/jade-aura compositing."
+  },
+  {
+    "path": "project/assets/cg/cg_ch01_layer3_rain_sword.png",
+    "source_path": "assets_src/cg/cg_ch01_ruined_temple_raw.jpg",
+    "category": "cg_layer",
+    "prompt": "Ruined Temple opening dynamic CG (Layer 3 foreground rain & descending Qingyun sword beam)",
+    "refinement": "4-layer parallax separation, Song-Ming LUT, additive rain/jade-aura compositing."
+  },
+  {
+    "path": "project/assets/world/tex_bluestone_wet.png",
+    "source_path": "assets_src/world/terrain_bluestone_seamless_raw.jpg",
+    "category": "terrain",
+    "prompt": "35-degree seamless Song-Ming mineral terrain (tex_bluestone_wet.png)",
+    "refinement": "512x512 4-quadrant cosine wrap-around seamless blend + Song-Ming mineral LUT."
+  },
+  {
+    "path": "project/assets/world/tex_moss_earth.png",
+    "source_path": "assets_src/world/terrain_moss_mountain_raw.jpg",
+    "category": "terrain",
+    "prompt": "35-degree seamless Song-Ming mineral terrain (tex_moss_earth.png)",
+    "refinement": "512x512 4-quadrant cosine wrap-around seamless blend + Song-Ming mineral LUT."
+  },
+  {
+    "path": "project/assets/world/tex_cave_flagstone.png",
+    "source_path": "assets_src/world/terrain_cave_stone_raw.jpg",
+    "category": "terrain",
+    "prompt": "35-degree seamless Song-Ming mineral terrain (tex_cave_flagstone.png)",
+    "refinement": "512x512 4-quadrant cosine wrap-around seamless blend + Song-Ming mineral LUT."
+  },
+  {
+    "path": "project/assets/world/prop_yaolu_hall.png",
+    "source_path": "assets_src/world/prop_sheet_buildings_raw.jpg",
+    "category": "world_ysort_building",
+    "prompt": "35-degree Song-Ming Gongbi building (prop_yaolu_hall.png)",
+    "refinement": "Alpha cutout, ink defringe, Y-Sort bottom baseline calibration & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_tea_pavilion.png",
+    "source_path": "assets_src/world/prop_sheet_buildings_raw.jpg",
+    "category": "world_ysort_building",
+    "prompt": "35-degree Song-Ming Gongbi building (prop_tea_pavilion.png)",
+    "refinement": "Alpha cutout, ink defringe, Y-Sort bottom baseline calibration & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_ruined_temple.png",
+    "source_path": "assets_src/world/prop_sheet_buildings_raw.jpg",
+    "category": "world_ysort_building",
+    "prompt": "35-degree Song-Ming Gongbi building (prop_ruined_temple.png)",
+    "refinement": "Alpha cutout, ink defringe, Y-Sort bottom baseline calibration & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_camphor_tree.png",
+    "source_path": "assets_src/world/prop_sheet_foliage_raw.jpg",
+    "category": "world_ysort_foliage",
+    "prompt": "35-degree Song-Ming Gongbi foliage/structure (prop_camphor_tree.png)",
+    "refinement": "Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_bamboo_cluster.png",
+    "source_path": "assets_src/world/prop_sheet_foliage_raw.jpg",
+    "category": "world_ysort_foliage",
+    "prompt": "35-degree Song-Ming Gongbi foliage/structure (prop_bamboo_cluster.png)",
+    "refinement": "Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_cave_arch_gate.png",
+    "source_path": "assets_src/world/prop_sheet_foliage_raw.jpg",
+    "category": "world_ysort_foliage",
+    "prompt": "35-degree Song-Ming Gongbi foliage/structure (prop_cave_arch_gate.png)",
+    "refinement": "Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_stele_lit.png",
+    "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi interactive prop (prop_stele_lit.png)",
+    "refinement": "Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_stele_dim.png",
+    "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+    "category": "world_prop",
+    "prompt": "Unlit Wayfinding Stele stone tablet",
+    "refinement": "Desaturated stone state derived from prop_stele_lit."
+  },
+  {
+    "path": "project/assets/world/prop_alchemy_furnace.png",
+    "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi interactive prop (prop_alchemy_furnace.png)",
+    "refinement": "Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_peddler_stall.png",
+    "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi interactive prop (prop_peddler_stall.png)",
+    "refinement": "Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_vine_barrier.png",
+    "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi interactive prop (prop_vine_barrier.png)",
+    "refinement": "Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_treasure_chest.png",
+    "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi interactive prop (prop_treasure_chest.png)",
+    "refinement": "Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_spirit_herb_node.png",
+    "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi interactive prop (prop_spirit_herb_node.png)",
+    "refinement": "Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_miasma_pool.png",
+    "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi dungeon prop (prop_miasma_pool.png)",
+    "refinement": "Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_miasma_pool_clean.png",
+    "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
+    "category": "world_prop",
+    "prompt": "Purified clear spring pool after Water-Element barrier solved",
+    "refinement": "Chromatic shift from miasma plum to mineral celadon-jade water."
+  },
+  {
+    "path": "project/assets/world/prop_ancient_remains.png",
+    "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi dungeon prop (prop_ancient_remains.png)",
+    "refinement": "Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/world/prop_cliff_rock.png",
+    "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
+    "category": "world_prop",
+    "prompt": "35-degree Song-Ming Gongbi dungeon prop (prop_cliff_rock.png)",
+    "refinement": "Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/gu_changqing_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (gu_changqing)",
+    "refinement": "Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/shen_qinghe_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (shen_qinghe)",
+    "refinement": "Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/pei_zhao_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (pei_zhao)",
+    "refinement": "Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/pet_fire_fox_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (pet_fire_fox)",
+    "refinement": "Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/pet_spirit_turtle_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (pet_spirit_turtle)",
+    "refinement": "Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/enemy_rot_wolf_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_rot_wolf)",
+    "refinement": "RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/enemy_miasma_shaman_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_miasma_shaman)",
+    "refinement": "RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/enemy_rogue_cultivator_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_rogue_cultivator)",
+    "refinement": "RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/enemy_wood_golem_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_wood_golem)",
+    "refinement": "RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/sprites/boss_mist_wolf_king_sheet.png",
+    "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+    "category": "sprite_sheet",
+    "prompt": "35-degree Song-Ming Gongbi enemy/boss keyframe sheet (boss_mist_wolf_king)",
+    "refinement": "RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_sword_iron.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_sword_iron.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_robe_rain.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_robe_rain.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_boots_mist.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_boots_mist.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_needle_silver.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_needle_silver.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_robe_herb.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_robe_herb.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_wrist_dew.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_wrist_dew.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_sword_qingyun.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_sword_qingyun.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_robe_cloud.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_robe_cloud.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_boots_wind.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_boots_wind.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_sword_ancient.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_sword_ancient.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_pendant_jade.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_pendant_jade.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/eq_pendant_tiger.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi equipment icon (eq_pendant_tiger.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/tr_sword_box.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (tr_sword_box.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/pill_huichun.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (pill_huichun.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/pill_juqi.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (pill_juqi.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/pill_burnt.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (pill_burnt.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/herb_ningqi.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (herb_ningqi.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/herb_corrupt.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (herb_corrupt.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/herb_chiyang.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (herb_chiyang.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/item_talisman_stealth.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (item_talisman_stealth.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/item_pouch.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (item_pouch.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_fire_blade.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (sk_fire_blade.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_water_stream.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (sk_water_stream.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_bond_qinglian.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Song-Ming Gongbi item/skill icon (sk_bond_qinglian.png)",
+    "refinement": "96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_metal_sword.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (sk_metal_sword.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/herb_qingmu.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (herb_qingmu.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_wood_gale.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (sk_wood_gale.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/pill_qingmu.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (pill_qingmu.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/pill_breakthrough.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (pill_breakthrough.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/item_dew.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (item_dew.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/item_sword_shard.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (item_sword_shard.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/tr_qingnang.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (tr_qingnang.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/tr_tassel.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (tr_tassel.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_wood_heal.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (sk_wood_heal.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_sweet_rain.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (sk_sweet_rain.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_lotus_shield.png",
+    "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+    "category": "ui_icon",
+    "prompt": "Derived Song-Ming Gongbi icon (sk_lotus_shield.png)",
+    "refinement": "Mineral hue tinting & bronze bevel framing."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_earth_cleave.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (sk_earth_cleave.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_interrupt_seal.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (sk_interrupt_seal.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/sk_taunt_bell.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (sk_taunt_bell.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/mat_wolf_core.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (mat_wolf_core.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/item_scroll_page.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (item_scroll_page.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/seal_metal.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (seal_metal.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/seal_wood.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (seal_wood.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/seal_water.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (seal_water.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/seal_fire.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (seal_fire.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/icons/seal_earth.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_seal_badge",
+    "prompt": "Calligraphic Five-Element / tactical seal badge (seal_earth.png)",
+    "refinement": "Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph."
+  },
+  {
+    "path": "project/assets/ui/cursors/cursor_jade_pin.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_cursor",
+    "prompt": "Classical PC mouse cursor (cursor_jade_pin.png)",
+    "refinement": "32x32 crisp RGBA pointer with top-left hotspot."
+  },
+  {
+    "path": "project/assets/ui/cursors/cursor_bronze_sword.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_cursor",
+    "prompt": "Classical PC mouse cursor (cursor_bronze_sword.png)",
+    "refinement": "32x32 crisp RGBA pointer with top-left hotspot."
+  },
+  {
+    "path": "project/assets/ui/cursors/cursor_spirit_hand.png",
+    "source_path": "assets_src/ui/procedural_seals_spec.json",
+    "category": "ui_cursor",
+    "prompt": "Classical PC mouse cursor (cursor_spirit_hand.png)",
+    "refinement": "32x32 crisp RGBA pointer with top-left hotspot."
+  }
+]
