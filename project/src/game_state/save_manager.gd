@@ -362,8 +362,7 @@ func _apply_audio_buses() -> void:
 
 
 func _ensure_save_dir() -> void:
-	var abs_dir: String = ProjectSettings.globalize_path(SAVE_DIR)
-	DirAccess.make_dir_recursive_absolute(abs_dir)
+	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 
 
 func _canonical_json(val: Variant) -> String:

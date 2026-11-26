@@ -1,17 +1,3 @@
 [remap]
 
-importer="csv_translation"
-type="Translation"
-uid="uid://dnwmedtvgcvp4"
-
-[deps]
-
-files=["res://locales/zh_CN.zh_CN.translation"]
-
-source_file="res://locales/zh_CN.csv"
-dest_files=["res://locales/zh_CN.zh_CN.translation"]
-
-[params]
-
-compress=true
-delimiter=0
+importer="keep"
