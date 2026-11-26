@@ -710,6 +710,10 @@ func _is_line_of_sight_blocked(a: Vector2, b: Vector2) -> bool:
 	return false
 
 
+func engage_enemy_group(group_id: String, initial_target_id: String, is_preemptive_pull: bool) -> void:
+	_engage_enemy_group(group_id, initial_target_id, is_preemptive_pull)
+
+
 func _engage_enemy_group(group_id: String, initial_target_id: String, is_preemptive_pull: bool) -> void:
 	var newly_entered: bool = not in_combat
 	var boss_found: BattleActor = null

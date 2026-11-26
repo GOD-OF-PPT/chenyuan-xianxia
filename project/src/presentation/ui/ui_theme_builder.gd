@@ -25,13 +25,7 @@ const COL_EARTH_AMBER: Color = Color("#B58942")
 const COL_MIASMA_PURPLE: Color = Color("#5A3352")
 const COL_BLUE_STUNT: Color = Color("#4F9BD9")
 
-static var _cached_theme: Theme = null
-static var _bold_font: Font = null
-
-
 static func get_global_theme() -> Theme:
-	if _cached_theme != null:
-		return _cached_theme
 	var th: Theme = Theme.new()
 	th.default_font_size = FS_BODY
 	if ResourceLoader.exists("res://assets/fonts/NotoSerifCJKsc-Regular.otf"):
@@ -82,14 +76,13 @@ static func get_global_theme() -> Theme:
 	var panel_sb: StyleBoxFlat = make_ebony_box(Color(0.11, 0.10, 0.09, 0.95), COL_BRONZE_DIM, 2, 6)
 	th.set_stylebox("panel", "PanelContainer", panel_sb)
 
-	_cached_theme = th
 	return th
 
 
 static func get_bold_font() -> Font:
-	if _bold_font == null and ResourceLoader.exists("res://assets/fonts/NotoSerifCJKsc-Bold.otf"):
-		_bold_font = load("res://assets/fonts/NotoSerifCJKsc-Bold.otf") as Font
-	return _bold_font
+	if ResourceLoader.exists("res://assets/fonts/NotoSerifCJKsc-Bold.otf"):
+		return load("res://assets/fonts/NotoSerifCJKsc-Bold.otf") as Font
+	return null
 
 
 static func make_ebony_box(bg: Color, border: Color, border_w: int = 2, radius: int = 4) -> StyleBoxFlat:
