@@ -1,0 +1,42 @@
+{
+  "generator": "tools/build_polish_r1_assets.py",
+  "generated_date": "2026-11-27",
+  "supersampling": "2x SDF + Sobel (+0.7071*(gx+gy)) outward-normal top-left bevel relief + Lanczos",
+  "frames": [
+    {
+      "file": "hud_avatar_frame.png",
+      "size": "128x128",
+      "desc": "Double-rimmed gilt-bronze & ebony F1-F3 portrait frame with Ruyi corners"
+    },
+    {
+      "file": "hud_action_bar_bg.png",
+      "size": "512x128",
+      "desc": "Carved #292620 ebony & gilt-bronze bottom action bar pedestal"
+    },
+    {
+      "file": "hud_bar_wing_l.png",
+      "size": "220x108",
+      "desc": "Left cascading Song-Ming Ruyi cloud-scroll ebony-gilt wing"
+    },
+    {
+      "file": "hud_bar_wing_r.png",
+      "size": "220x108",
+      "desc": "Right cascading Song-Ming Ruyi cloud-scroll ebony-gilt wing (mask mirrored before top-left lighting)"
+    },
+    {
+      "file": "hud_formation_plaque.png",
+      "size": "340x46",
+      "desc": "Stepped raised ebony-gilt Qimen formation plaque with cloud ears"
+    },
+    {
+      "file": "hud_slot_frame.png",
+      "size": "96x96",
+      "desc": "Recessed dark-ebony & bronze skill slot frame with celadon-jade corner inlays"
+    },
+    {
+      "file": "hud_boss_plaque_bg.png",
+      "size": "640x164",
+      "desc": "Top-center #181513 ebony & gilt-bronze Boss plaque frame"
+    }
+  ]
+}

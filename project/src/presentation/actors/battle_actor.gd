@@ -74,7 +74,23 @@ var _bark_timer: float = 0.0
 var _bark_duration: float = 3.5
 var _pulse_clock: float = 0.0
 
-static var _seal_textures: Dictionary = {}
+var _seal_textures: Dictionary = {}
+var _hit_flash_shader: Shader = null
+
+var _hit_flash_mat: ShaderMaterial = null
+var _hit_flash_timer: float = 0.0
+var _hit_flash_duration: float = 0.12
+var _hit_flash_peak: float = 0.0
+
+
+func _ready() -> void:
+	if not SaveManager.settings_changed.is_connected(_on_comfort_settings_changed):
+		SaveManager.settings_changed.connect(_on_comfort_settings_changed)
+
+
+func _on_comfort_settings_changed() -> void:
+	if SaveManager.reduced_motion:
+		clear_hit_flash()
 
 
 func setup_actor(
@@ -90,12 +106,17 @@ func setup_actor(
 	sprite_id = p_sprite_id
 	home_pos = position
 	_death_dissolve = 0.0
+	_hit_flash_timer = 0.0
+	_hit_flash_peak = 0.0
 	visible = true
 
+	if not SaveManager.settings_changed.is_connected(_on_comfort_settings_changed):
+		SaveManager.settings_changed.connect(_on_comfort_settings_changed)
 	if _sprite == null:
 		_sprite = Sprite2D.new()
 		_sprite.centered = false
 		add_child(_sprite)
+	_ensure_hit_flash_material()
 	if _overlay_canvas == null:
 		_overlay_canvas = Node2D.new()
 		_overlay_canvas.z_index = 6
@@ -127,7 +148,7 @@ func _load_sprite_sheet(sid: String) -> void:
 	_sprite.offset = Vector2(-float(_cell_w) * 0.5, -float(_foot_y))
 
 
-static func _ensure_seal_icons() -> void:
+func _ensure_seal_icons() -> void:
 	if not _seal_textures.is_empty():
 		return
 	for elem: String in ["metal", "wood", "water", "fire", "earth"]:
@@ -146,6 +167,50 @@ func play_action_anim(anim_name: String, duration_sec: float = 0.42) -> void:
 	_one_shot_remaining = duration_sec
 	_anim_timer = 0.0
 	_apply_current_frame()
+
+
+func _ensure_hit_flash_material() -> void:
+	if _sprite == null:
+		return
+	if _hit_flash_shader == null and ResourceLoader.exists("res://src/presentation/shaders/actor_hit_flash.gdshader"):
+		_hit_flash_shader = load("res://src/presentation/shaders/actor_hit_flash.gdshader") as Shader
+	if _hit_flash_mat == null and _hit_flash_shader != null:
+		_hit_flash_mat = ShaderMaterial.new()
+		_hit_flash_mat.resource_local_to_scene = true
+		_hit_flash_mat.shader = _hit_flash_shader
+		_sprite.material = _hit_flash_mat
+	if _hit_flash_mat != null:
+		_hit_flash_mat.set_shader_parameter("hit_flash", 0.0)
+
+
+func clear_hit_flash() -> void:
+	_hit_flash_timer = 0.0
+	_hit_flash_duration = 0.0
+	_hit_flash_peak = 0.0
+	if _hit_flash_mat != null:
+		_hit_flash_mat.set_shader_parameter("hit_flash", 0.0)
+
+
+func trigger_hit_flash(duration: float = 0.12, intensity: float = 1.0) -> void:
+	if SaveManager.reduced_motion or duration <= 0.0 or intensity <= 0.0:
+		clear_hit_flash()
+		return
+	var dur: float = maxf(0.03, duration)
+	var pk: float = clampf(intensity, 0.0, 1.0)
+	var cur_val: float = _compute_hit_flash_value()
+	if pk >= cur_val or _hit_flash_timer <= 0.0:
+		_hit_flash_duration = dur
+		_hit_flash_timer = dur
+		_hit_flash_peak = pk
+	if _hit_flash_mat != null:
+		_hit_flash_mat.set_shader_parameter("hit_flash", _compute_hit_flash_value())
+
+
+func _compute_hit_flash_value() -> float:
+	if _hit_flash_timer <= 0.0 or SaveManager.reduced_motion:
+		return 0.0
+	var ratio: float = clampf(_hit_flash_timer / maxf(0.001, _hit_flash_duration), 0.0, 1.0)
+	return clampf(_hit_flash_peak * ratio * ratio, 0.0, 1.0)
 
 
 func show_world_bark(text: String, duration_sec: float = 3.5) -> void:
@@ -172,6 +237,12 @@ func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void
 	_pulse_clock += ui_delta
 	if _bark_timer > 0.0:
 		_bark_timer = maxf(0.0, _bark_timer - ui_delta)
+	if SaveManager.reduced_motion:
+		_hit_flash_timer = 0.0
+	elif _hit_flash_timer > 0.0:
+		_hit_flash_timer = maxf(0.0, _hit_flash_timer - ui_delta)
+	if _hit_flash_mat != null:
+		_hit_flash_mat.set_shader_parameter("hit_flash", _compute_hit_flash_value())
 
 	# 敌方战败倾倒与 1.15s 化瘴归墟消散（即使已脱离战斗亦以 ui_delta 走完消散，彻底清除站街死怪！）
 	if not alive and faction == "enemy":
@@ -263,6 +334,69 @@ func get_hit_rect_local() -> Rect2:
 
 func contains_world_point(world_pt: Vector2) -> bool:
 	return get_hit_rect_local().has_point(to_local(world_pt))
+
+
+func get_vfx_origin_world(slot: String = "weapon") -> Vector2:
+	var sc: Vector2 = _sprite.scale if _sprite != null else Vector2.ONE
+	var sign_x: float = -1.0 if facing_dir.x < -0.08 else 1.0
+	var use_back: bool = facing_dir.y < -0.22
+	var lookup_key: String = _anim_state
+	if _anim_state == "idle":
+		lookup_key = "idle_ne" if use_back else "idle_se"
+	elif _anim_state == "run":
+		lookup_key = "run_ne" if use_back else "run_se"
+
+	# 1. Optional M2 per-animation-state anchor: {"state_anchors": {"attack_1": {"weapon": [56, -88]}}}
+	var state_anchors_raw: Variant = _sheet_meta.get("state_anchors", null)
+	if state_anchors_raw is Dictionary:
+		var sa_dict: Dictionary = state_anchors_raw as Dictionary
+		var st_entry_raw: Variant = sa_dict.get(lookup_key, null)
+		if st_entry_raw is Dictionary:
+			var parsed_st: Vector2 = _parse_anchor_offset((st_entry_raw as Dictionary).get(slot, null), Vector2.INF)
+			if parsed_st.is_finite():
+				return global_position + Vector2(parsed_st.x * sign_x * sc.x, parsed_st.y * sc.y)
+
+	# 2. Optional actor-level anchor in *_sheet.json: {"anchors": {"weapon": [52, -84], "hand": [38, -92]}}
+	var anchors_raw: Variant = _sheet_meta.get("anchors", null)
+	if anchors_raw is Dictionary:
+		var parsed_a: Vector2 = _parse_anchor_offset((anchors_raw as Dictionary).get(slot, null), Vector2.INF)
+		if parsed_a.is_finite():
+			return global_position + Vector2(parsed_a.x * sign_x * sc.x, parsed_a.y * sc.y)
+
+	# 3. Clean M1 proportional fallbacks relative to FeetOrigin (0, 0)
+	var h: float = maxf(64.0, float(_head_top_px))
+	var dir_n: Vector2 = facing_dir.normalized() if facing_dir.length_squared() > 0.001 else Vector2(0.894, 0.447)
+	var local_off: Vector2 = Vector2.ZERO
+	match slot:
+		"feet", "ground":
+			local_off = Vector2.ZERO
+		"chest", "body", "center", "hit":
+			local_off = Vector2(0.0, -h * 0.52 * sc.y)
+		"head":
+			local_off = Vector2(0.0, -h * 0.88 * sc.y)
+		"overhead":
+			local_off = Vector2(0.0, -h * sc.y - 14.0)
+		"hand", "cast":
+			local_off = Vector2(sign_x * h * 0.24 * sc.x, -h * 0.56 * sc.y) + dir_n * (8.0 * sc.x)
+		"mouth", "roar":
+			var reach_m: float = 92.0 if is_boss else 42.0
+			local_off = Vector2(dir_n.x * reach_m * sc.x, -h * (0.56 if is_boss else 0.62) * sc.y + dir_n.y * 14.0 * sc.y)
+		_:
+			var reach_w: float = 78.0 if is_boss else (h * 0.32)
+			local_off = Vector2(sign_x * reach_w * sc.x, -h * 0.50 * sc.y) + dir_n * (10.0 * sc.x)
+	return global_position + local_off
+
+
+func _parse_anchor_offset(raw_val: Variant, fallback: Vector2) -> Vector2:
+	if raw_val is Array:
+		var arr: Array = raw_val as Array
+		if arr.size() >= 2:
+			return Vector2(float(arr[0]), float(arr[1]))
+	elif raw_val is Dictionary:
+		var d: Dictionary = raw_val as Dictionary
+		if d.has("x") and d.has("y"):
+			return Vector2(float(d["x"]), float(d["y"]))
+	return fallback
 
 
 func _draw() -> void:

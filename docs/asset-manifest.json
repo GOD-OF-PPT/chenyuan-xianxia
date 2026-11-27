@@ -1,6 +1,6 @@
 {
   "project": "尘缘问道 (Seeking Immortality through Mortal Bonds)",
-  "updated_at": "2026-11-26",
+  "updated_at": "2026-11-27",
   "assets": [
     {
       "path": "project/assets/audio/bgm/amb_qinglan_rain.ogg",
@@ -823,6 +823,106 @@
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     },
     {
+      "path": "project/assets/ui/frames/hud_action_bar_bg.png",
+      "source_path": "assets_src/ui/r1_hud_frames_source.png",
+      "category": "ui_frame",
+      "dimensions": "512x128",
+      "sha256": "c5f3b8d460f6fe0b0c7efb822d568e00f221d3edfe5ac1074f9d4ec8e40addf4",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Carved #292620 ebony & gilt-bronze bottom action bar pedestal",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/hud_avatar_frame.png",
+      "source_path": "assets_src/ui/r1_hud_frames_source.png",
+      "category": "ui_frame",
+      "dimensions": "128x128",
+      "sha256": "49881a66e8b4a0a16669335e61550d065c9c7344bd5f937c6d772ef22cc5fad8",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Double-rimmed gilt-bronze & ebony F1-F3 portrait frame with Ruyi corners",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/hud_bar_wing_l.png",
+      "source_path": "assets_src/ui/r1_hud_frames_source.png",
+      "category": "ui_frame",
+      "dimensions": "220x108",
+      "sha256": "4e1cc82f4e166be2bcb9c2ba5aba6435a4c19cc241b72c7ba79d8a7f3b12f351",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Left cascading Song-Ming Ruyi cloud-scroll ebony-gilt wing",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/hud_bar_wing_r.png",
+      "source_path": "assets_src/ui/r1_hud_frames_source.png",
+      "category": "ui_frame",
+      "dimensions": "220x108",
+      "sha256": "86d90245a42facc8852ca142bc00a303bb3a8d537ea7b0a978283970f4f3c96a",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Right cascading Song-Ming Ruyi cloud-scroll ebony-gilt wing (mask mirrored before top-left lighting)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/hud_boss_plaque_bg.png",
+      "source_path": "assets_src/ui/r1_hud_frames_source.png",
+      "category": "ui_frame",
+      "dimensions": "640x164",
+      "sha256": "1c9758da8b5a8590ec99e540893f52193d5a44f5c04bb40e425d3b6165061e96",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Top-center #181513 ebony & gilt-bronze Boss plaque frame",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/hud_formation_plaque.png",
+      "source_path": "assets_src/ui/r1_hud_frames_source.png",
+      "category": "ui_frame",
+      "dimensions": "340x46",
+      "sha256": "f07932396ec617c70f00f501700be1cf1ea3d6f37e67718fb66a72fcdb064d65",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Stepped raised ebony-gilt Qimen formation plaque with cloud ears",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/hud_slot_frame.png",
+      "source_path": "assets_src/ui/r1_hud_frames_source.png",
+      "category": "ui_frame",
+      "dimensions": "96x96",
+      "sha256": "cdc179ebe746433c0508a2f8ee9dc79dedaae9eeb2888d6266bc325240023b6e",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Recessed dark-ebony & bronze skill slot frame with celadon-jade corner inlays",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/avatar_gu_changqing.png",
+      "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "128x128",
+      "sha256": "407b95cbdeb128cf163be5f5036044712e60d406dac3f378c46a91f038e2d6b7",
+      "creation_method": "tools/build_polish_r1_assets.py (Collar-safe exterior flood-fill cutout from assets_src/portraits/gu_changqing_raw.jpg crop (218, 42, 658, 482), #221F1D ink defringe, Song-Ming mineral LUT & warm sage-ochre silk Gongbi backing) | Spec: F1-F3 party card square bust portrait (gu_changqing)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/avatar_pei_zhao.png",
+      "source_path": "assets_src/portraits/pei_zhao_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "128x128",
+      "sha256": "dd0ace07571c01c0f70448843258fdcd8a9bf3432714e18c1510e69e138b2a8d",
+      "creation_method": "tools/build_polish_r1_assets.py (Collar-safe exterior flood-fill cutout from assets_src/portraits/pei_zhao_raw.jpg crop (258, 46, 722, 510), #221F1D ink defringe, Song-Ming mineral LUT & warm sage-ochre silk Gongbi backing) | Spec: F1-F3 party card square bust portrait (pei_zhao)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/avatar_shen_qinghe.png",
+      "source_path": "assets_src/portraits/shen_qinghe_raw.jpg",
+      "category": "ui_icon",
+      "dimensions": "128x128",
+      "sha256": "dfe6f0929748b8a2612f76981a48c6c9abcded9f704cfd3ad6c6f38cb41f8927",
+      "creation_method": "tools/build_polish_r1_assets.py (Collar-safe exterior flood-fill cutout from assets_src/portraits/shen_qinghe_raw.jpg crop (254, 84, 682, 512), #221F1D ink defringe, Song-Ming mineral LUT & warm sage-ochre silk Gongbi backing) | Spec: F1-F3 party card square bust portrait (shen_qinghe)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
       "path": "project/assets/ui/icons/eq_boots_mist.png",
       "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
       "category": "ui_icon",
@@ -1321,6 +1421,146 @@
       "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (1920x1080 Lanczos resize, Song-Ming mineral color LUT grading, manual NotoSerifCJKsc Chinese UI typography replacement.) | Prompt: Master Plate D: Wanxiang Dao Casket 5-slot & meridian UI",
       "generated_date": "2026-11-26",
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/vfx/vfx_bagua_telegraph.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "512x512",
+      "sha256": "c4231aedd7015ab8df315680cceef3e5a44a115ec166f8481f4233e48c001423",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: 1:1 square canonical 8-trigram Qian-Kun cinnabar Bagua floor array (foreshortened 2.27:1 in world)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_claw_marks_cone.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "256x256",
+      "sha256": "cb8f2c7bd0c1696485eac4a33d4b9d8fb9c045f8158af535a2b27a41d5d54970",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Three curved feral cinnabar claw-rake danger marks for ground_cone telegraphs",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_flying_sword_qi.png",
+      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "category": "vfx",
+      "dimensions": "256x96",
+      "sha256": "76b5451f8190fba6223267d03c8c3ecaf3035df1f89f1d8a53c7a75c82601cf5",
+      "creation_method": "tools/build_polish_r1_assets.py (Hybrid extraction from assets_src/ui/ui_icon_sheet_equips_raw.jpg + +X projectile orientation, Song-Ming mineral qi envelope & sumi-ink feibai refinement) | Spec: Horizontal (+X right) Qingyun flying sword with ice-cyan qi & sumi-ink feibai wisps",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_particle_ink_drop.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "64x64",
+      "sha256": "801ce3f9051376edac70b1b50b9d4c565633dfbc86325e6bbb1d5ea6673920ab",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Organic calligraphic sumi-spatter droplet particle",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_particle_jade_mote.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "64x64",
+      "sha256": "7fc47c31acb0bc017c7bb95fa2f4ae93dedde2f7b064ea1f29ef2cb03d80e424",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Soft luminous lotus-dew spirit mote particle",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_particle_petal_leaf.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "64x64",
+      "sha256": "52c3aa1274d8e2230bb628521953a3673b93b90b8accdaa373a443db55fec760",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Stylized celadon lotus-petal / bamboo-leaf particle",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_particle_rock_shard.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "64x64",
+      "sha256": "382607cb24f374f45f6eb8f4b3b7f9f8d778973c4bc24c58c19205b7baff3f9f",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Faceted mineral crag / metallic sword-shard particle",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_particle_spark.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "64x64",
+      "sha256": "0761f7193adf92279104876d965b785345ad25bc0bf76e9123ea85def3b2a7ef",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: 4-point tapered diamond spirit spark particle",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_shockwave_ink_ring.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "256x256",
+      "sha256": "04f51736de04a932c8b7a4bc9dab0783dbb3ea9d3bf8a9407c80166ef3bc2981",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Calligraphic dry-brush variable-width shockwave ring (foreshortened in world)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_silver_needle.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "160x56",
+      "sha256": "0324b696bd7316811ea2af0c74c64b3c6d49c41c05f7d08ba83ecebdd8cd46e2",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Horizontal (+X right) Song-Ming medicinal silver acupuncture needle with coiled filigree handle & celadon meridian silk aura",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_slash_fire_arc.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "320x256",
+      "sha256": "7aa7c9a01e6375d4cbf3b7bda17a72bb85eb6729df8789d4d51e3bbe64bbd814",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Blazing +X Song-Ming mineral-fire crescent (UV.y 0->1 sweep): ivory-gold core + cinnabar flame tongues",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_slash_ink_arc.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "320x256",
+      "sha256": "9df62e35b60329e339a2d9cb3b115569b55512d200c7dca06bb299a026085dd1",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Calligraphic +X sword crescent (UV.y 0->1 sweep): cyan razor rim + dry-brush sumi-ink feibai",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_sword_trail_ribbon.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "256x64",
+      "sha256": "c9d1baa890fb3d6872dad877938188be04f994bcbe6a8583481b9982682da44e",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Stretchable white-cyan sword trail ribbon with longitudinal sumi-ink feibai bristles",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/vfx/vfx_wood_qi_ribbon.png",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "category": "vfx",
+      "dimensions": "256x256",
+      "sha256": "ae620265a9e35f3ed8489d63b2a8f030a6728955b23aac2c39543b5051359081",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Swirling S-curve celadon & stone-green wood-qi silk ribbon with dew motes",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_alchemy_furnace.png",
