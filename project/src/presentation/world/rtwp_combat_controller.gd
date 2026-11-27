@@ -32,11 +32,21 @@ var team_attunement: float = 0.0
 var preemptive_buff_timer: float = 0.0
 var stealth_timer: float = 0.0
 var pill_cooldown_timer: float = 0.0
+var pill_cooldown_total: float = RtwpSimStep.PILL_TOXICITY_COOLDOWN_SEC
 var formation_switch_cd: float = 0.0
+var formation_switch_cd_total: float = FormationRules.FORMATION_SWITCH_COOLDOWN_SEC
 var party_haste_buff_timer: float = 0.0
 var party_haste_buff_val: float = 0.0
 var loyal_guard_timer: float = 0.0
 var loyal_guard_share: float = 0.50
+
+var _hitstop_timer: float = 0.0
+var _minor_hitstop_cd: float = 0.0
+var _shake_timer: float = 0.0
+var _shake_duration: float = 0.18
+var _shake_amplitude: float = 0.0
+var _shake_impulse_dir: Vector2 = Vector2.ZERO
+var _shake_phase: float = 0.0
 
 ## 交互选中与悬停指向
 var locked_enemy_id: String = ""
@@ -53,6 +63,79 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _ready() -> void:
 	_rng.randomize()
+	SaveManager.settings_changed.connect(_on_comfort_settings_changed)
+
+
+func _process(delta: float) -> void:
+	if InputRouter.current_mode != InputRouter.MODE_WORLD_COMBAT:
+		if _shake_timer > 0.0 or (world_camera != null and world_camera.offset != Vector2.ZERO):
+			_step_camera_shake(delta)
+
+
+func _on_comfort_settings_changed() -> void:
+	if SaveManager.reduced_motion or SaveManager.screen_shake_pct <= 0.001:
+		_hitstop_timer = 0.0
+		_shake_timer = 0.0
+		_shake_amplitude = 0.0
+		if world_camera != null:
+			world_camera.offset = Vector2.ZERO
+
+
+func trigger_hitstop(duration_sec: float, is_major: bool = true) -> void:
+	if duration_sec <= 0.0 or SaveManager.reduced_motion or SaveManager.screen_shake_pct <= 0.001:
+		return
+	if not is_major and _minor_hitstop_cd > 0.0:
+		return
+	var comfort_scale: float = lerpf(0.65, 1.0, clampf(SaveManager.screen_shake_pct / 0.40, 0.0, 1.0))
+	var eff_dur: float = duration_sec * comfort_scale
+	_hitstop_timer = maxf(_hitstop_timer, eff_dur)
+	if not is_major:
+		_minor_hitstop_cd = 0.16
+
+
+func trigger_camera_shake(amplitude_px: float, duration_sec: float = 0.18, impulse_dir: Vector2 = Vector2.ZERO) -> void:
+	if SaveManager.reduced_motion or SaveManager.screen_shake_pct <= 0.001 or world_camera == null:
+		_shake_timer = 0.0
+		_shake_amplitude = 0.0
+		if world_camera != null:
+			world_camera.offset = Vector2.ZERO
+		return
+	var eff_amp: float = clampf(amplitude_px, 0.0, 16.0) * clampf(SaveManager.screen_shake_pct, 0.0, 1.0)
+	if eff_amp <= 0.05:
+		return
+	var cur_amp: float = 0.0
+	if _shake_timer > 0.0 and _shake_duration > 0.001:
+		var r: float = clampf(_shake_timer / _shake_duration, 0.0, 1.0)
+		cur_amp = _shake_amplitude * r * r
+	if eff_amp >= cur_amp or _shake_timer <= 0.0:
+		_shake_amplitude = eff_amp
+		_shake_duration = maxf(0.06, duration_sec)
+		_shake_timer = _shake_duration
+		_shake_impulse_dir = impulse_dir.normalized() if impulse_dir.length_squared() > 0.001 else Vector2.ZERO
+
+
+func _step_camera_shake(ui_delta: float) -> void:
+	if world_camera == null:
+		return
+	if SaveManager.reduced_motion or SaveManager.screen_shake_pct <= 0.001:
+		_shake_timer = 0.0
+		_shake_amplitude = 0.0
+		world_camera.offset = Vector2.ZERO
+		return
+	if _shake_timer <= 0.0:
+		if world_camera.offset != Vector2.ZERO:
+			world_camera.offset = world_camera.offset.move_toward(Vector2.ZERO, ui_delta * 60.0)
+		return
+	_shake_timer = maxf(0.0, _shake_timer - ui_delta)
+	_shake_phase += ui_delta * 46.0
+	if _shake_timer <= 0.0:
+		world_camera.offset = Vector2.ZERO
+		return
+	var ratio: float = clampf(_shake_timer / maxf(0.001, _shake_duration), 0.0, 1.0)
+	var env: float = ratio * ratio
+	var osc: Vector2 = Vector2(sin(_shake_phase * 1.13), cos(_shake_phase * 1.47 + 0.6))
+	var kick: Vector2 = _shake_impulse_dir * sin(ratio * PI) * 0.55
+	world_camera.offset = (osc * 0.75 + kick) * (_shake_amplitude * env)
 
 
 func reset_for_zone(p_ysort: Node2D, p_ground_vfx: CombatVfxOverlay, p_sky_vfx: CombatVfxOverlay, p_cam: Camera2D, p_audio: AudioDirector) -> void:
@@ -61,6 +144,18 @@ func reset_for_zone(p_ysort: Node2D, p_ground_vfx: CombatVfxOverlay, p_sky_vfx: 
 	sky_vfx = p_sky_vfx
 	world_camera = p_cam
 	audio_director = p_audio
+
+	if ground_vfx != null:
+		ground_vfx.clear_all_fx()
+	if sky_vfx != null:
+		sky_vfx.clear_all_fx()
+
+	_hitstop_timer = 0.0
+	_minor_hitstop_cd = 0.0
+	_shake_timer = 0.0
+	_shake_amplitude = 0.0
+	if world_camera != null:
+		world_camera.offset = Vector2.ZERO
 
 	in_combat = false
 	tactical_paused = false
@@ -199,6 +294,7 @@ func sync_pet_actor(spawn_pos: Vector2) -> void:
 		"threat_mult": 1.35 if pid == "pet_spirit_turtle" else 0.75,
 		"is_tank_role": pid == "pet_spirit_turtle",
 		"cooldowns": {},
+		"cooldown_totals": {},
 		"shield": 0.0,
 	}
 
@@ -274,6 +370,7 @@ func spawn_enemy_unit(enemy_def_id: String, pos: Vector2, group_id: String, patr
 		"taunt_target_id": "",
 		"taunt_timer": 0.0,
 		"cooldowns": {},
+		"cooldown_totals": {},
 		"casting": false,
 		"cast_skill_id": "",
 		"cast_progress": 0.0,
@@ -291,8 +388,11 @@ func _init_party_unit_state(cid: String, actor: BattleActor, mstate: Dictionary,
 		"faction": "party",
 		"actor": actor,
 		"gcd_timer": 0.0,
+		"gcd_total": StatLedger.BASE_GCD_SEC,
 		"attack_timer": 0.25,
+		"aa_flip": false,
 		"cooldowns": {},
+		"cooldown_totals": {},
 		"casting": false,
 		"cast_skill_id": "",
 		"cast_target_id": "",
@@ -364,10 +464,16 @@ func toggle_tactical_pause() -> void:
 
 func switch_controlled_party_slot(slot_num: int, center_camera: bool = false) -> void:
 	var idx: int = clampi(slot_num - 1, 0, 3)
+	var resolved_slot: int = slot_num
 	var cid: String = CampaignState.formation_slots[idx]
 	if cid == "" or not party_actors.has(cid):
+		var packed: Array[int] = get_occupied_formation_slots()
+		if idx < packed.size():
+			resolved_slot = packed[idx]
+			cid = CampaignState.formation_slots[resolved_slot - 1]
+	if cid == "" or not party_actors.has(cid):
 		return
-	CampaignState.controlled_slot = slot_num
+	CampaignState.controlled_slot = resolved_slot
 	for k_var: Variant in party_actors.keys():
 		var k: String = str(k_var)
 		var pa: BattleActor = party_actors[k] as BattleActor
@@ -375,6 +481,15 @@ func switch_controlled_party_slot(slot_num: int, center_camera: bool = false) ->
 	if center_camera and world_camera != null:
 		world_camera.position = (party_actors[cid] as BattleActor).position
 	combat_hud_dirty.emit()
+
+
+func get_occupied_formation_slots() -> Array[int]:
+	var out: Array[int] = []
+	for i: int in range(CampaignState.formation_slots.size()):
+		var cid: String = CampaignState.formation_slots[i]
+		if cid != "" and party_actors.has(cid):
+			out.append(i + 1)
+	return out
 
 
 func cycle_tab_enemy_target() -> void:
@@ -531,6 +646,7 @@ func try_switch_formation(new_formation_id: String) -> bool:
 	sync_party_roster_in_place()
 	if in_combat:
 		formation_switch_cd = FormationRules.FORMATION_SWITCH_COOLDOWN_SEC
+		formation_switch_cd_total = FormationRules.FORMATION_SWITCH_COOLDOWN_SEC
 	if audio_director != null:
 		audio_director.play_sfx("sfx_stele_activate", AudioDirector.TIER_A)
 	var fdef: Dictionary = DataDB.get_formation(new_formation_id)
@@ -541,17 +657,27 @@ func try_switch_formation(new_formation_id: String) -> bool:
 ## ==================== 主步进入口（由世界场景每物理帧调用） ====================
 func step_world_and_combat(raw_delta: float, zone_bounds: Rect2) -> void:
 	var ui_delta: float = raw_delta
-	var combat_delta: float = 0.0 if tactical_paused else raw_delta
+	if SaveManager.reduced_motion or SaveManager.screen_shake_pct <= 0.001:
+		_hitstop_timer = 0.0
+	if _minor_hitstop_cd > 0.0:
+		_minor_hitstop_cd = maxf(0.0, _minor_hitstop_cd - ui_delta)
+
+	var in_hitstop: bool = _hitstop_timer > 0.0
+	if _hitstop_timer > 0.0:
+		_hitstop_timer = maxf(0.0, _hitstop_timer - ui_delta)
+
+	var combat_delta: float = 0.0 if (tactical_paused or in_hitstop) else raw_delta
+	_step_camera_shake(ui_delta)
 
 	if stealth_timer > 0.0 and combat_delta > 0.0:
 		stealth_timer = maxf(0.0, stealth_timer - combat_delta)
 
-	# 1. 更新当前主控角色 WASD 走位（仅在非凝时态实时推进；凝时态由右键路径线预览）
+	# 1. 更新当前主控角色 WASD 走位（仅在非凝时态与非顿帧态实时推进；凝时态由右键路径线预览）
 	var ctrl_actor: BattleActor = get_controlled_actor()
 	var move_vec: Vector2 = InputRouter.get_movement_vector()
 	var ctrl_moving_wasd: bool = false
 
-	if not tactical_paused and ctrl_actor != null and ctrl_actor.alive and move_vec.length_squared() > 0.001:
+	if not tactical_paused and not in_hitstop and ctrl_actor != null and ctrl_actor.alive and move_vec.length_squared() > 0.001:
 		ctrl_moving_wasd = true
 		ctrl_actor.has_move_waypoint = false
 		var ctrl_u: Dictionary = unit_states.get(ctrl_actor.actor_id, {}) as Dictionary
@@ -574,8 +700,8 @@ func step_world_and_combat(raw_delta: float, zone_bounds: Rect2) -> void:
 		_step_enemy_units(combat_delta, zone_bounds)
 		_check_combat_resolution()
 
-	# 3. 同步地面危招阵纹与凝时走位预览线（即使 Space 凝时也 60fps 实时刷新！）
-	_refresh_vfx_overlays(combat_delta)
+	# 3. 同步地面危招阵纹与凝时走位预览线（即使 Space 凝时也 60fps 实时刷新，同时把粒子锁定为 0.0！）
+	_refresh_vfx_overlays(combat_delta, ui_delta)
 
 	# 4. 步进所有实体关键帧与头顶姓名板显示
 	for cid_var: Variant in party_actors.keys():
@@ -806,11 +932,13 @@ func _step_party_units(dt: float, ctrl_moving_wasd: bool, zone_bounds: Rect2) ->
 		u["miasma_immune_timer"] = maxf(0.0, float(u.get("miasma_immune_timer", 0.0)) - dt)
 
 		var cds: Dictionary = u.get("cooldowns", {}) as Dictionary
+		var cd_tots: Dictionary = u.get("cooldown_totals", {}) as Dictionary
 		for sk_k_var: Variant in cds.keys():
 			var sk_k: String = str(sk_k_var)
 			var rem_cd: float = float(cds[sk_k]) - dt
 			if rem_cd <= 0.0:
 				cds.erase(sk_k)
+				cd_tots.erase(sk_k)
 			else:
 				cds[sk_k] = rem_cd
 
@@ -995,11 +1123,13 @@ func _step_pet_unit(dt: float, zone_bounds: Rect2) -> void:
 	var pu: Dictionary = unit_states[pet_actor.actor_id] as Dictionary
 	pu["attack_timer"] = maxf(0.0, float(pu.get("attack_timer", 0.0)) - dt)
 	var cds: Dictionary = pu.get("cooldowns", {}) as Dictionary
+	var p_cd_tots: Dictionary = pu.get("cooldown_totals", {}) as Dictionary
 	for k_var: Variant in cds.keys():
 		var k: String = str(k_var)
 		var rem: float = float(cds[k]) - dt
 		if rem <= 0.0:
 			cds.erase(k)
+			p_cd_tots.erase(k)
 		else:
 			cds[k] = rem
 
@@ -1039,6 +1169,11 @@ func _step_pet_unit(dt: float, zone_bounds: Rect2) -> void:
 		pet_actor.set_facing(target_e.position - pet_actor.position)
 		pet_actor.play_action_anim("attack_1", 0.35)
 		var pdef: Dictionary = DataDB.get_pet(str(pu.get("pet_def_id", "")))
+		if sky_vfx != null:
+			if str(pu.get("pet_def_id", "")) == "pet_fire_fox":
+				sky_vfx.spawn_element_bolt(pet_actor.get_vfx_origin_world("mouth"), target_e.get_vfx_origin_world("chest"), "fire", 0.19)
+			else:
+				sky_vfx.spawn_slash_arc(pet_actor.get_vfx_origin_world("mouth"), target_e.position - pet_actor.position, "water_frost", 78.0, 0.24, false)
 		_deal_damage_to_enemy(pet_actor.actor_id, pet_actor.position, target_e, float(pu.get("power", 18.0)), 1.0, str(pdef.get("element", "none")), 14.0, 0.08, 1.5, false, 0.0, 1.0, 1.0, false, float(pu.get("threat_mult", 1.0)), 0.0, "")
 
 
@@ -1072,7 +1207,7 @@ func _step_enemy_units(dt: float, zone_bounds: Rect2) -> void:
 			eu["dot_timer"] = maxf(0.0, prev_d - dt)
 			if int(floor(prev_d)) != int(floor(float(eu["dot_timer"]))):
 				var tick_d: int = maxi(2, int(round(float(eu.get("dot_dps", 6.0)))))
-				_apply_direct_enemy_hp_loss(eu, ea, tick_d, "wood")
+				_apply_direct_enemy_hp_loss(eu, ea, tick_d, "wood", false, "", true)
 				var leech: float = float(eu.get("dot_leech_pct", 0.0))
 				if leech > 0.0:
 					_heal_lowest_party_member(maxi(2, int(round(float(tick_d) * leech))))
@@ -1187,6 +1322,12 @@ func _step_enemy_units(dt: float, zone_bounds: Rect2) -> void:
 			eu["attack_timer"] = float(eu.get("attack_interval", 1.85))
 			ea.set_facing(tgt_actor.position - ea.position)
 			ea.play_action_anim("attack_1", 0.38)
+			if sky_vfx != null:
+				if erange >= 220.0:
+					sky_vfx.spawn_element_bolt(ea.get_vfx_origin_world("cast"), tgt_actor.get_vfx_origin_world("chest"), "miasma", 0.22)
+				else:
+					var e_style: String = "ink_cyan" if str(eu.get("enemy_def_id", "")) == "rogue_cultivator" else "feral_claw"
+					sky_vfx.spawn_slash_arc(ea.get_vfx_origin_world("weapon"), tgt_actor.position - ea.position, e_style, 142.0 if ea.is_boss else 84.0, 0.24, false)
 			var raw_hit: int = maxi(4, int(round(float(eu.get("power", 16.0)))))
 			_apply_damage_to_ally(tgt_id, tgt_actor, raw_hit, ea.display_name, "利爪重击", str((eu.get("edef", {}) as Dictionary).get("element", "none")), false, false)
 
@@ -1195,7 +1336,10 @@ func _start_enemy_cast(eu: Dictionary, ea: BattleActor, sk_id: String, sdef: Dic
 	var ctime: float = maxf(1.2, float(sdef.get("cast_time_sec", 2.0)))
 	var intr: bool = bool(sdef.get("interruptible", true))
 	var ecds: Dictionary = eu.get("cooldowns", {}) as Dictionary
-	ecds[sk_id] = float(sdef.get("cooldown_sec", 9.0))
+	var ecd_tots: Dictionary = eu.get("cooldown_totals", {}) as Dictionary
+	var c_cd: float = float(sdef.get("cooldown_sec", 9.0))
+	ecds[sk_id] = c_cd
+	ecd_tots[sk_id] = c_cd
 
 	eu["casting"] = true
 	eu["cast_skill_id"] = sk_id
@@ -1211,6 +1355,10 @@ func _start_enemy_cast(eu: Dictionary, ea: BattleActor, sk_id: String, sdef: Dic
 	ea.cast_progress = 0.0
 	ea.cast_duration = ctime
 	ea.cast_interruptible = intr
+
+	if sky_vfx != null:
+		var c_elem: String = "metal" if str(eu.get("enemy_def_id", "")) == "rogue_cultivator" else "miasma"
+		sky_vfx.spawn_qi_ribbon(ea, ea.get_vfx_origin_world("cast"), c_elem, 1.25 if ea.is_boss else 0.88, minf(ctime, 0.85))
 
 	if intr and audio_director != null:
 		# Tier S 青铜古钟危招警报，闭眼也能听出按 Q 打断时机！
@@ -1235,7 +1383,10 @@ func _resolve_enemy_cast_finish(eu: Dictionary, ea: BattleActor) -> void:
 		var orig: Vector2 = eu.get("cast_origin", ea.position) as Vector2
 		var rad: float = float(sdef.get("telegraph_radius_px", 135.0))
 		if sky_vfx != null:
-			sky_vfx.spawn_ring_burst(orig, rad, UIThemeBuilder.COL_CINNABAR_RED, 0.45)
+			sky_vfx.spawn_shockwave_ring(orig, rad, UIThemeBuilder.COL_CINNABAR_RED, 0.46)
+			sky_vfx.spawn_particle_burst(orig, "syn_fire_earth", 20)
+		trigger_hitstop(0.080 if ea.is_boss else 0.060, true)
+		trigger_camera_shake(10.0 if ea.is_boss else 7.5, 0.24, Vector2(0.0, 1.0))
 		for ally: BattleActor in _get_all_living_allies_and_pet():
 			if ally.position.distance_to(orig) <= rad:
 				_apply_damage_to_ally(ally.actor_id, ally, raw_dmg, ea.display_name, sname, elem, intr, true, add_miasma)
@@ -1246,7 +1397,10 @@ func _resolve_enemy_cast_finish(eu: Dictionary, ea: BattleActor) -> void:
 		var rad_c: float = float(sdef.get("telegraph_radius_px", 245.0))
 		var half_cos: float = cos(deg_to_rad(float(sdef.get("telegraph_angle_deg", 95.0)) * 0.5))
 		if sky_vfx != null:
-			sky_vfx.spawn_ring_burst(orig_c + cdir * (rad_c * 0.5), rad_c * 0.55, UIThemeBuilder.COL_CINNABAR_RED, 0.45)
+			sky_vfx.spawn_slash_arc(orig_c + Vector2(0.0, -48.0), cdir, "feral_claw", rad_c * 0.85, 0.32, false)
+			sky_vfx.spawn_particle_burst(orig_c + cdir * (rad_c * 0.55), "hit_miasma", 24)
+		trigger_hitstop(0.080 if ea.is_boss else 0.060, true)
+		trigger_camera_shake(10.0 if ea.is_boss else 7.5, 0.26, cdir)
 		for ally2: BattleActor in _get_all_living_allies_and_pet():
 			var delta_v: Vector2 = ally2.position - orig_c
 			if delta_v.length() <= rad_c and (delta_v.length() < 18.0 or cdir.dot(delta_v.normalized()) >= half_cos):
@@ -1254,7 +1408,10 @@ func _resolve_enemy_cast_finish(eu: Dictionary, ea: BattleActor) -> void:
 
 	elif ttype == "party_aoe":
 		if sky_vfx != null:
-			sky_vfx.spawn_ring_burst(ea.position, 280.0, UIThemeBuilder.COL_MIASMA_PURPLE, 0.55)
+			sky_vfx.spawn_shockwave_ring(ea.position, 280.0, UIThemeBuilder.COL_MIASMA_PURPLE, 0.55)
+			sky_vfx.spawn_particle_burst(ea.get_vfx_origin_world("mouth"), "hit_miasma", 30)
+		trigger_hitstop(0.080, true)
+		trigger_camera_shake(9.5, 0.26, Vector2.ZERO)
 		for ally3: BattleActor in _get_all_living_allies_and_pet():
 			_apply_damage_to_ally(ally3.actor_id, ally3, raw_dmg, ea.display_name, sname, elem, intr, false, add_miasma)
 
@@ -1262,17 +1419,24 @@ func _resolve_enemy_cast_finish(eu: Dictionary, ea: BattleActor) -> void:
 		var tgt: BattleActor = _find_ally_or_pet_actor(str(eu.get("target_id", "")))
 		if tgt != null and tgt.alive:
 			if sky_vfx != null:
-				sky_vfx.spawn_beam_slash(ea.position, tgt.position, UIThemeBuilder.get_element_color(elem))
+				if sk_id == "sk_enemy_rogue_ambush":
+					sky_vfx.spawn_slash_arc(ea.get_vfx_origin_world("weapon"), tgt.position - ea.position, "ink_cyan", 118.0, 0.25, false)
+				else:
+					sky_vfx.spawn_element_bolt(ea.get_vfx_origin_world("cast"), tgt.get_vfx_origin_world("chest"), "miasma", 0.20)
 			_apply_damage_to_ally(tgt.actor_id, tgt, raw_dmg, ea.display_name, sname, elem, intr, false, add_miasma)
 
 
 func _perform_party_auto_attack(cid: String, actor: BattleActor, u: Dictionary, tgt_ea: BattleActor) -> void:
 	var sheet: Dictionary = u.get("sheet", {}) as Dictionary
 	u["attack_timer"] = float(sheet.get("attack_interval", 1.75))
+	var flip_aa: bool = not bool(u.get("aa_flip", false))
+	u["aa_flip"] = flip_aa
 	actor.set_facing(tgt_ea.position - actor.position)
-	actor.play_action_anim("attack_1", 0.35)
+	actor.play_action_anim("attack_2" if flip_aa else "attack_1", 0.35)
 	if audio_director != null:
 		audio_director.play_sfx("sfx_auto_slash", AudioDirector.TIER_C)
+
+	_spawn_party_auto_attack_vfx(cid, actor, u, tgt_ea, flip_aa)
 
 	var pwr: float = maxf(float(sheet.get("phys_power", 16.0)), float(sheet.get("spell_power", 14.0)) * 0.85)
 	_deal_damage_to_enemy(
@@ -1281,6 +1445,28 @@ func _perform_party_auto_attack(cid: String, actor: BattleActor, u: Dictionary, 
 		false, 0.0, float(sheet.get("ward_break_mult", 1.0)), float(sheet.get("synergy_dmg_mult", 1.0)),
 		false, float(sheet.get("threat_mult", 1.0)), 0.0, ""
 	)
+
+
+func _spawn_party_auto_attack_vfx(cid: String, actor: BattleActor, u: Dictionary, tgt_ea: BattleActor, flip_aa: bool) -> void:
+	if sky_vfx == null:
+		return
+	var sheet: Dictionary = u.get("sheet", {}) as Dictionary
+	var wpn_pos: Vector2 = actor.get_vfx_origin_world("weapon")
+	var tgt_chest: Vector2 = tgt_ea.get_vfx_origin_world("chest")
+	var dir: Vector2 = tgt_ea.position - actor.position
+	if cid == "shen_qinghe":
+		sky_vfx.spawn_needle_projectile(actor.get_vfx_origin_world("cast"), tgt_chest, "wood", 0.17)
+	elif cid == "pei_zhao":
+		var m_pei: Dictionary = CampaignState.party_members.get("pei_zhao", {}) as Dictionary
+		var is_fire_spec: bool = (str(m_pei.get("active_spec", "spec_a")) == "spec_b")
+		sky_vfx.spawn_slash_arc(wpn_pos, dir, "fire_blade" if is_fire_spec else "metal_gold", 102.0, 0.23, flip_aa)
+		sky_vfx.spawn_particle_burst(tgt_chest, "hit_fire" if is_fire_spec else "hit_metal", 6)
+	else:
+		if float(sheet.get("attack_range_px", 145.0)) >= 190.0:
+			sky_vfx.spawn_sword_projectile(wpn_pos, tgt_chest, "metal", 0.16, 14.0, 0.88, 0.0, true)
+		else:
+			sky_vfx.spawn_slash_arc(wpn_pos, dir, "ink_cyan", 98.0, 0.24, flip_aa)
+			sky_vfx.spawn_particle_burst(tgt_chest, "hit_metal", 6)
 
 
 func _try_execute_party_skill(cid: String, skill_id: String, target_id: String, is_player_input: bool) -> bool:
@@ -1349,7 +1535,9 @@ func _try_execute_party_skill(cid: String, skill_id: String, target_id: String, 
 	var sheet: Dictionary = u.get("sheet", {}) as Dictionary
 	var eff_haste: float = clampf(float(sheet.get("haste_pct", 0.0)) + party_haste_buff_val + (0.15 if preemptive_buff_timer > 0.0 else 0.0), 0.0, 0.45)
 	if uses_gcd:
-		u["gcd_timer"] = maxf(StatLedger.MIN_GCD_SEC, StatLedger.BASE_GCD_SEC / (1.0 + eff_haste))
+		var gcd_dur: float = maxf(StatLedger.MIN_GCD_SEC, StatLedger.BASE_GCD_SEC / (1.0 + eff_haste))
+		u["gcd_timer"] = gcd_dur
+		u["gcd_total"] = gcd_dur
 
 	var base_cast: float = float(sdef.get("cast_time_sec", 0.0))
 	if base_cast > 0.0:
@@ -1364,6 +1552,8 @@ func _try_execute_party_skill(cid: String, skill_id: String, target_id: String, 
 		actor.cast_progress = 0.0
 		actor.cast_duration = actual_cast
 		actor.cast_interruptible = true
+		if sky_vfx != null:
+			sky_vfx.spawn_qi_ribbon(actor, actor.get_vfx_origin_world("cast"), str(sdef.get("element", "wood")), 0.92, minf(actual_cast, 0.95))
 		combat_hud_dirty.emit()
 		return true
 
@@ -1380,9 +1570,11 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 	var sheet: Dictionary = u.get("sheet", {}) as Dictionary
 	var sdef: Dictionary = DataDB.get_skill(skill_id)
 	var cds: Dictionary = u.get("cooldowns", {}) as Dictionary
+	var cd_tots: Dictionary = u.get("cooldown_totals", {}) as Dictionary
 	var cd_sec: float = float(sdef.get("cooldown_sec", 0.0))
 	if cd_sec > 0.0:
 		cds[skill_id] = cd_sec
+		cd_tots[skill_id] = cd_sec
 
 	var elem: String = str(sdef.get("element", "none"))
 	var ttype: String = str(sdef.get("target_type", "enemy"))
@@ -1398,8 +1590,8 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 		if audio_director != null:
 			audio_director.play_sfx("sfx_bond_ult_qinglian", AudioDirector.TIER_S)
 		NotifyHub.push_combat_banner("【双人羁绊合击 · %s】剑莲涤世！" % sname, "ultimate", "wood")
-		if sky_vfx != null:
-			sky_vfx.spawn_ring_burst(actor.position, 260.0, UIThemeBuilder.COL_JADE_GREEN, 0.70)
+		trigger_hitstop(0.085, true)
+		trigger_camera_shake(9.5, 0.28, Vector2.ZERO)
 
 	# 蓝字特技提示
 	if bool(sdef.get("is_blue_stunt", false)):
@@ -1412,6 +1604,10 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 		actor.play_action_anim("cast_release", 0.35)
 		if audio_director != null:
 			audio_director.play_sfx("sfx_heal_chime", sfx_tier)
+		if sky_vfx != null:
+			if ally != actor:
+				sky_vfx.spawn_needle_projectile(actor.get_vfx_origin_world("cast"), ally.get_vfx_origin_world("chest"), elem, 0.14)
+			sky_vfx.spawn_heal_ribbons(ally, elem, 1.35 if skill_id == "sk_shen_sweet_rain" else 1.0)
 		var heal_amt: int = maxi(6, int(round(float(sheet.get("heal_power", 20.0)) * float(sdef.get("heal_coeff", 1.4)))))
 		_apply_ally_heal(ally.actor_id, ally, heal_amt, bool(sdef.get("cleanse_debuff", false)), cid)
 		if float(sdef.get("hot_duration_sec", 0.0)) > 0.0 and unit_states.has(ally.actor_id):
@@ -1446,8 +1642,14 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 			if dr_val > 0.0:
 				tu["dr_buff_pct"] = dr_val
 				tu["dr_buff_timer"] = b_dur
+			if sky_vfx != null:
+				if ttype == "self":
+					sky_vfx.spawn_qi_ribbon(t_ally, t_ally.get_vfx_origin_world("chest"), elem if elem != "none" else "metal", 1.05, 0.65)
+				else:
+					sky_vfx.spawn_heal_ribbons(t_ally, elem if elem != "none" else "wood", 1.0)
 		if sky_vfx != null:
-			sky_vfx.spawn_ring_burst(actor.position, 155.0, UIThemeBuilder.get_element_color(elem), 0.45)
+			var wave_r: float = 230.0 if skill_id == "sk_shen_herb_field" else 175.0
+			sky_vfx.spawn_shockwave_ring(actor.position, wave_r, UIThemeBuilder.get_element_color(elem), 0.48)
 		return
 
 	# ==================== 敌向攻击 / 打断 / 嘲讽 / 范围技 ====================
@@ -1455,6 +1657,7 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 	if main_ea == null or not main_ea.alive:
 		return
 
+	var pre_dash_pos: Vector2 = actor.position
 	if bool(sdef.get("dash_to_melee", false)) and actor.position.distance_to(main_ea.position) > 105.0:
 		actor.position = main_ea.position + (actor.position - main_ea.position).normalized() * 88.0
 
@@ -1475,6 +1678,9 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 		u["shield"] = float(u.get("shield", 0.0)) + float(sheet.get("phys_power", 20.0)) * float(sdef.get("shield_coeff", 1.5))
 		u["dr_buff_pct"] = float(sdef.get("dr_pct", 0.22))
 		u["dr_buff_timer"] = float(sdef.get("buff_duration_sec", 4.5))
+		if sky_vfx != null:
+			sky_vfx.spawn_shockwave_ring(actor.position, 155.0, UIThemeBuilder.get_element_color(elem), 0.44)
+			sky_vfx.spawn_particle_burst(main_ea.get_vfx_origin_world("chest"), "hit_metal", 10)
 		NotifyHub.push_combat_banner("%s【%s】强锁杀意！" % [actor.display_name, sname], "taunt", "earth")
 		if audio_director != null:
 			audio_director.play_element_sfx("earth", sfx_tier)
@@ -1494,6 +1700,11 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 			eu_int["lockout_timer"] = float(int_res.get("lockout_sec", 3.0))
 			main_ea.is_casting = false
 			main_ea.lockout_timer = float(eu_int["lockout_timer"])
+			main_ea.trigger_hit_flash(0.16, 1.0)
+			trigger_hitstop(0.080, true)
+			trigger_camera_shake(7.5, 0.20, (main_ea.position - pre_dash_pos).normalized())
+			if sky_vfx != null:
+				sky_vfx.spawn_particle_burst(main_ea.get_vfx_origin_world("overhead"), "interrupt_shatter", 22)
 			var bonus_wd: float = float(int_res.get("bonus_ward_damage", 0.0))
 			if bonus_wd > 0.0:
 				_apply_ward_damage_only(eu_int, main_ea, bonus_wd)
@@ -1510,16 +1721,14 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 	if not bool(sdef.get("is_bond_ultimate", false)) and audio_director != null:
 		audio_director.play_element_sfx(elem, sfx_tier)
 
+	_spawn_party_skill_vfx(cid, actor, skill_id, sdef, main_ea, pre_dash_pos)
+
 	var aoe_r: float = float(sdef.get("aoe_radius_px", 0.0))
 	var hit_enemies: Array[BattleActor] = [main_ea]
 	if aoe_r > 0.0:
-		if sky_vfx != null:
-			sky_vfx.spawn_ring_burst(main_ea.position, aoe_r, UIThemeBuilder.get_element_color(elem), 0.42)
 		for other_e: BattleActor in enemy_actors:
 			if other_e != main_ea and other_e.alive and other_e.position.distance_to(main_ea.position) <= aoe_r:
 				hit_enemies.append(other_e)
-	elif sky_vfx != null:
-		sky_vfx.spawn_beam_slash(actor.position, main_ea.position, UIThemeBuilder.get_element_color(elem), 0.25)
 
 	var base_pwr: float = maxf(float(sheet.get("phys_power", 18.0)), float(sheet.get("spell_power", 18.0)))
 	var ward_mult_total: float = float(sheet.get("ward_break_mult", 1.0)) * (1.20 if float(u.get("ward_buff_timer", 0.0)) > 0.0 else 1.0)
@@ -1542,10 +1751,107 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 		var p_sh: float = base_pwr * float(sdef.get("party_shield_coeff", 1.0))
 		for ally_u: BattleActor in _get_all_living_allies_and_pet():
 			_apply_ally_heal(ally_u.actor_id, ally_u, p_heal, true, cid)
+			if sky_vfx != null:
+				sky_vfx.spawn_heal_ribbons(ally_u, "wood", 1.15)
 			if p_sh > 0.0 and unit_states.has(ally_u.actor_id):
 				var au2: Dictionary = unit_states[ally_u.actor_id] as Dictionary
 				au2["shield"] = float(au2.get("shield", 0.0)) + p_sh
 				ally_u.shield = float(au2["shield"])
+
+
+func _spawn_party_skill_vfx(
+	cid: String,
+	actor: BattleActor,
+	skill_id: String,
+	sdef: Dictionary,
+	main_ea: BattleActor,
+	pre_dash_pos: Vector2
+) -> void:
+	if sky_vfx == null:
+		return
+	var elem: String = str(sdef.get("element", "metal"))
+	var wpn: Vector2 = actor.get_vfx_origin_world("weapon")
+	var cast_p: Vector2 = actor.get_vfx_origin_world("cast")
+	var tgt_chest: Vector2 = main_ea.get_vfx_origin_world("chest")
+	var dir: Vector2 = main_ea.position - actor.position
+	var aoe_r: float = float(sdef.get("aoe_radius_px", 0.0))
+
+	match skill_id:
+		"ult_qinglian_sword":
+			sky_vfx.spawn_shockwave_ring(main_ea.position, 240.0, UIThemeBuilder.COL_JADE_GREEN, 0.68)
+			for i: int in range(6):
+				var ang: float = -PI * 0.65 + float(i) * (PI * 0.26)
+				var start_p: Vector2 = tgt_chest + Vector2(cos(ang) * 210.0, sin(ang) * 140.0 - 95.0)
+				sky_vfx.spawn_sword_projectile(start_p, tgt_chest, "wood" if i % 2 == 0 else "metal", 0.18, 8.0, 1.12, float(i) * 0.035, i == 5)
+			sky_vfx.spawn_particle_burst(tgt_chest, "bond_qinglian", 36)
+		"sk_gu_sword_box_burst":
+			var elems_5: Array[String] = ["metal", "fire", "water", "wood", "earth"]
+			for i2: int in range(5):
+				var off_v: Vector2 = Vector2(-36.0 + float(i2) * 18.0, -78.0 - float(i2 % 2) * 22.0)
+				sky_vfx.spawn_sword_projectile(actor.position + off_v, tgt_chest, elems_5[i2], 0.17, 26.0, 1.0, float(i2) * 0.035, i2 == 4)
+			sky_vfx.spawn_shockwave_ring(main_ea.position, 175.0, UIThemeBuilder.COL_BRONZE_GOLD, 0.50)
+			sky_vfx.spawn_particle_burst(tgt_chest, "syn_earth_metal", 26)
+		"sk_pei_starfall_sword":
+			for i3: int in range(6):
+				var sx: float = -80.0 + float(i3) * 32.0
+				sky_vfx.spawn_sword_projectile(main_ea.position + Vector2(sx, -310.0), tgt_chest + Vector2(sx * 0.25, 0.0), "metal", 0.16, 4.0, 1.05, float(i3) * 0.03, i3 == 5)
+			sky_vfx.spawn_shockwave_ring(main_ea.position, 155.0, UIThemeBuilder.COL_BRONZE_GOLD, 0.48)
+		"sk_pei_prairie_array":
+			for i4: int in range(4):
+				var fx_x: float = -66.0 + float(i4) * 44.0
+				sky_vfx.spawn_sword_projectile(main_ea.position + Vector2(fx_x, -260.0), tgt_chest, "fire", 0.16, 4.0, 1.02, float(i4) * 0.035, i4 == 3)
+			sky_vfx.spawn_shockwave_ring(main_ea.position, 165.0, UIThemeBuilder.COL_CINNABAR_RED, 0.50)
+			sky_vfx.spawn_particle_burst(tgt_chest, "syn_wood_fire", 26)
+		"sk_gu_gale_blades":
+			for i5: int in range(3):
+				sky_vfx.spawn_sword_projectile(cast_p, tgt_chest, "wood", 0.16, 20.0 - float(i5) * 8.0, 0.92, float(i5) * 0.04, false)
+			sky_vfx.spawn_slash_arc(tgt_chest, dir, "wood_gale", 136.0, 0.28, false)
+			sky_vfx.spawn_slash_arc(tgt_chest, -dir, "wood_gale", 128.0, 0.28, true, 0.05)
+			sky_vfx.spawn_shockwave_ring(main_ea.position, 150.0, UIThemeBuilder.COL_JADE_GREEN, 0.46)
+		"sk_pei_flash_flurry":
+			sky_vfx.spawn_slash_arc(wpn, dir, "metal_gold", 108.0, 0.22, false, 0.0)
+			sky_vfx.spawn_slash_arc(wpn, dir.rotated(0.28), "ink_cyan", 112.0, 0.22, true, 0.05)
+			sky_vfx.spawn_slash_arc(wpn, dir.rotated(-0.24), "metal_gold", 118.0, 0.24, false, 0.10)
+			sky_vfx.spawn_particle_burst(tgt_chest, "hit_metal", 14)
+		"sk_gu_metal_rend":
+			sky_vfx.spawn_slash_arc(wpn, dir, "metal_gold", 114.0, 0.24, false, 0.0)
+			sky_vfx.spawn_slash_arc(wpn, dir, "ink_cyan", 114.0, 0.24, true, 0.05)
+			sky_vfx.spawn_particle_burst(tgt_chest, "hit_metal", 14)
+		"sk_gu_earth_cleave":
+			sky_vfx.spawn_slash_arc(wpn, dir, "earth_heavy", 128.0, 0.28, false)
+			sky_vfx.spawn_shockwave_ring(main_ea.position, 105.0, UIThemeBuilder.COL_EARTH_AMBER, 0.40)
+			sky_vfx.spawn_particle_burst(tgt_chest, "hit_earth", 14)
+		"sk_gu_searing_sweep", "sk_pei_sun_flare", "sk_pei_blaze_slash", "sk_pei_crimson_whirl":
+			sky_vfx.spawn_slash_arc(wpn, dir, "fire_blade", 138.0 if aoe_r > 0.0 else 118.0, 0.28, false)
+			if skill_id == "sk_pei_crimson_whirl":
+				sky_vfx.spawn_slash_arc(wpn, -dir, "fire_blade", 132.0, 0.28, true, 0.04)
+			if aoe_r > 0.0:
+				sky_vfx.spawn_shockwave_ring(main_ea.position, aoe_r, UIThemeBuilder.COL_CINNABAR_RED, 0.44)
+			sky_vfx.spawn_particle_burst(tgt_chest, "hit_fire", 16)
+		"stunt_poxue_assault":
+			sky_vfx.spawn_slash_arc(wpn, dir, "fire_blade", 126.0, 0.25, false, 0.0)
+			sky_vfx.spawn_slash_arc(wpn, dir, "metal_gold", 126.0, 0.25, true, 0.06)
+			sky_vfx.spawn_particle_burst(tgt_chest, "syn_earth_metal", 20)
+		"sk_gu_throat_seal", "sk_pei_sword_interrupt":
+			sky_vfx.spawn_sword_projectile(pre_dash_pos + Vector2(0.0, -52.0), tgt_chest, "metal", 0.11, 4.0, 1.0, 0.0, true)
+		"sk_shen_needle_seal":
+			sky_vfx.spawn_needle_projectile(cast_p, tgt_chest, "metal", 0.10)
+		"sk_shen_vine_bind", "sk_shen_leech_briar":
+			sky_vfx.spawn_needle_projectile(cast_p, tgt_chest, "wood", 0.15)
+			sky_vfx.spawn_qi_ribbon(main_ea, tgt_chest, "wood", 1.05, 0.65)
+			if aoe_r > 0.0:
+				sky_vfx.spawn_shockwave_ring(main_ea.position, aoe_r, UIThemeBuilder.COL_JADE_GREEN, 0.44)
+			sky_vfx.spawn_particle_burst(tgt_chest, "hit_wood", 14)
+		_:
+			if cid == "shen_qinghe":
+				sky_vfx.spawn_needle_projectile(cast_p, tgt_chest, elem, 0.16)
+			elif float(sdef.get("range_px", 165.0)) >= 220.0:
+				sky_vfx.spawn_sword_projectile(cast_p, tgt_chest, elem, 0.17, 16.0, 1.15 if skill_id == "sk_pei_sky_pierce" else 0.96, 0.0, true)
+			else:
+				var st_fb: String = "fire_blade" if elem == "fire" else ("metal_gold" if cid == "pei_zhao" else "ink_cyan")
+				sky_vfx.spawn_slash_arc(wpn, dir, st_fb, 114.0, 0.25, false)
+			if aoe_r > 0.0:
+				sky_vfx.spawn_shockwave_ring(main_ea.position, aoe_r, UIThemeBuilder.get_element_color(elem), 0.42)
 
 
 func _execute_pet_skill(pu: Dictionary, sdef: Dictionary) -> void:
@@ -1553,9 +1859,12 @@ func _execute_pet_skill(pu: Dictionary, sdef: Dictionary) -> void:
 		return
 	var sk_id: String = str(sdef.get("id", ""))
 	var cds: Dictionary = pu.get("cooldowns", {}) as Dictionary
+	var cd_tots: Dictionary = pu.get("cooldown_totals", {}) as Dictionary
 	if cds.has(sk_id):
 		return
-	cds[sk_id] = float(sdef.get("cooldown_sec", 10.0))
+	var p_cd: float = float(sdef.get("cooldown_sec", 10.0))
+	cds[sk_id] = p_cd
+	cd_tots[sk_id] = p_cd
 	var elem: String = str(sdef.get("element", "fire"))
 	var sname: String = DataDB.loc(str(sdef.get("name_key", sk_id)))
 
@@ -1563,6 +1872,10 @@ func _execute_pet_skill(pu: Dictionary, sdef: Dictionary) -> void:
 		party_haste_buff_val = float(sdef.get("party_haste_bonus", 0.14))
 		party_haste_buff_timer = float(sdef.get("buff_duration_sec", 6.0))
 		team_attunement = minf(RtwpSimStep.MAX_ATTUNEMENT, team_attunement + float(sdef.get("attunement_gain", 12.0)))
+		if sky_vfx != null:
+			sky_vfx.spawn_shockwave_ring(pet_actor.position, 145.0, UIThemeBuilder.COL_JADE_GREEN, 0.42)
+			for ally_h: BattleActor in _get_all_living_allies_and_pet():
+				sky_vfx.spawn_qi_ribbon(ally_h, ally_h.get_vfx_origin_world("chest"), "wood", 0.80, 0.55)
 		NotifyHub.push_combat_banner("%s【%s】全队急速 +14%%！" % [pet_actor.display_name, sname], "pet", "wood")
 		if audio_director != null:
 			audio_director.play_element_sfx("wood", AudioDirector.TIER_B)
@@ -1577,6 +1890,10 @@ func _execute_pet_skill(pu: Dictionary, sdef: Dictionary) -> void:
 				var au: Dictionary = unit_states[ally.actor_id] as Dictionary
 				au["shield"] = float(au.get("shield", 0.0)) + sh_val
 				ally.shield = float(au["shield"])
+			if sky_vfx != null:
+				sky_vfx.spawn_qi_ribbon(ally, ally.get_vfx_origin_world("chest"), "water", 0.82, 0.60)
+		if sky_vfx != null:
+			sky_vfx.spawn_shockwave_ring(pet_actor.position, 150.0, UIThemeBuilder.COL_WATER_BLUE, 0.45)
 		NotifyHub.push_combat_banner("%s【%s】替队友分担五成重伤！" % [pet_actor.display_name, sname], "pet", "water")
 		if audio_director != null:
 			audio_director.play_element_sfx("water", AudioDirector.TIER_B)
@@ -1594,7 +1911,9 @@ func _execute_pet_skill(pu: Dictionary, sdef: Dictionary) -> void:
 		audio_director.play_element_sfx(elem, AudioDirector.TIER_B)
 	var aoe_r: float = float(sdef.get("aoe_radius_px", 125.0))
 	if sky_vfx != null:
-		sky_vfx.spawn_ring_burst(tgt_e.position, aoe_r, UIThemeBuilder.get_element_color(elem), 0.42)
+		sky_vfx.spawn_element_bolt(pet_actor.get_vfx_origin_world("mouth"), tgt_e.get_vfx_origin_world("chest"), elem, 0.18)
+		sky_vfx.spawn_shockwave_ring(tgt_e.position, aoe_r, UIThemeBuilder.get_element_color(elem), 0.44)
+		sky_vfx.spawn_particle_burst(tgt_e.get_vfx_origin_world("chest"), "hit_fire" if elem == "fire" else "hit_water", 18)
 	for ea: BattleActor in enemy_actors:
 		if ea.alive and ea.position.distance_to(tgt_e.position) <= aoe_r:
 			_deal_damage_to_enemy(
@@ -1607,6 +1926,8 @@ func _execute_pet_skill(pu: Dictionary, sdef: Dictionary) -> void:
 		var ph: int = int(round(float(pu.get("power", 16.0)) * float(sdef.get("party_heal_coeff", 0.85))))
 		for ally2: BattleActor in _get_all_living_allies_and_pet():
 			_apply_ally_heal(ally2.actor_id, ally2, ph, false)
+			if sky_vfx != null:
+				sky_vfx.spawn_heal_ribbons(ally2, "water", 0.85)
 
 
 func _deal_damage_to_enemy(
@@ -1713,11 +2034,15 @@ func _trigger_enemy_ward_stagger(eu: Dictionary, ea: BattleActor) -> void:
 	eu["stagger_timer"] = RtwpSimStep.STAGGER_DURATION_SEC
 	eu["stun_timer"] = RtwpSimStep.STAGGER_STUN_SEC
 	ea.stagger_timer = RtwpSimStep.STAGGER_DURATION_SEC
+	ea.trigger_hit_flash(0.22 if ea.is_boss else 0.18, 1.0)
+	trigger_hitstop(0.115 if ea.is_boss else 0.085, true)
+	trigger_camera_shake(12.5 if ea.is_boss else 8.5, 0.30 if ea.is_boss else 0.22, Vector2.ZERO)
 	if audio_director != null:
 		audio_director.play_sfx("sfx_ward_break_thunder", AudioDirector.TIER_S)
 	if sky_vfx != null:
-		sky_vfx.spawn_ring_burst(ea.position, 175.0, UIThemeBuilder.COL_BRONZE_GOLD, 0.55)
-	NotifyHub.push_combat_banner("【破罡重创】%s 陷入 6 秒气机破绽（承伤+35%）！" % ea.display_name, "ward_break", "metal")
+		sky_vfx.spawn_shockwave_ring(ea.position, 185.0, UIThemeBuilder.COL_BRONZE_GOLD, 0.55)
+		sky_vfx.spawn_particle_burst(ea.get_vfx_origin_world("chest"), "ward_break", 30)
+	NotifyHub.push_combat_banner("【破罡重创】%s 陷入 6 秒气机破绽（承伤+35%%）！" % ea.display_name, "ward_break", "metal")
 
 
 func _execute_synergy_detonation(attacker_id: String, eu: Dictionary, ea: BattleActor, syn_res: Dictionary) -> void:
@@ -1725,9 +2050,27 @@ func _execute_synergy_detonation(attacker_id: String, eu: Dictionary, ea: Battle
 	var bonus_dmg: int = maxi(8, int(round(float(syn_res.get("bonus_damage", 24.0)))))
 	team_attunement = minf(RtwpSimStep.MAX_ATTUNEMENT, team_attunement + float(syn_res.get("attunement_gain", 15.0)))
 
+	ea.trigger_hit_flash(0.16, 1.0)
+	trigger_hitstop(0.080, true)
+	trigger_camera_shake(8.0, 0.22, Vector2.ZERO)
+
 	if audio_director != null:
 		audio_director.play_sfx("sfx_synergy_burst", AudioDirector.TIER_A)
 	NotifyHub.push_combat_banner(tr(str(syn_res.get("title_key", "SYN_WOOD_FIRE"))), "synergy", syn_id)
+
+	var tank_actor: BattleActor = null
+	for cid_t_var: Variant in party_actors.keys():
+		var cid_t: String = str(cid_t_var)
+		var pu_t: Dictionary = unit_states.get(cid_t, {}) as Dictionary
+		var pa_t: BattleActor = party_actors[cid_t] as BattleActor
+		if pa_t.alive and bool(pu_t.get("is_tank_role", false)):
+			tank_actor = pa_t
+			break
+	if tank_actor == null:
+		tank_actor = get_controlled_actor()
+
+	if sky_vfx != null:
+		sky_vfx.spawn_synergy_burst(ea.position, syn_id, tank_actor, party_actors.get(attacker_id, null) as BattleActor)
 
 	# 青岚行者套 3件套回真元
 	if party_actors.has(attacker_id):
@@ -1739,8 +2082,6 @@ func _execute_synergy_detonation(attacker_id: String, eu: Dictionary, ea: Battle
 
 	match syn_id:
 		"wood_fire":
-			if sky_vfx != null:
-				sky_vfx.spawn_ring_burst(ea.position, 165.0, UIThemeBuilder.COL_CINNABAR_RED, 0.50)
 			for other_e: BattleActor in enemy_actors:
 				if other_e.alive and other_e.position.distance_to(ea.position) <= 165.0:
 					var oeu: Dictionary = unit_states[other_e.actor_id] as Dictionary
@@ -1772,13 +2113,26 @@ func _execute_synergy_detonation(attacker_id: String, eu: Dictionary, ea: Battle
 			_heal_lowest_party_member(int(round(float(heal_v) * 0.75)), true)
 
 
-func _apply_direct_enemy_hp_loss(eu: Dictionary, ea: BattleActor, dmg: int, elem: String, is_crit: bool = false, merge_tag: String = "") -> void:
+func _apply_direct_enemy_hp_loss(
+	eu: Dictionary,
+	ea: BattleActor,
+	dmg: int,
+	elem: String,
+	is_crit: bool = false,
+	merge_tag: String = "",
+	is_dot: bool = false
+) -> void:
 	if not ea.alive or dmg <= 0:
 		return
 	var next_hp: int = maxi(0, int(eu.get("hp", ea.hp)) - dmg)
 	eu["hp"] = next_hp
 	ea.hp = next_hp
-	ea.play_action_anim("hit", 0.20)
+	ea.trigger_hit_flash(0.07 if is_dot else (0.14 if is_crit else 0.11), 0.35 if is_dot else (1.0 if is_crit else 0.82))
+	if is_crit and not is_dot:
+		trigger_hitstop(0.045, false)
+		trigger_camera_shake(4.5, 0.14, Vector2.ZERO)
+	if not is_dot and not bool(eu.get("casting", false)):
+		ea.play_action_anim("hit", 0.20)
 	NotifyHub.push_combat_number(ea.position + Vector2(0.0, -110.0), dmg, false, is_crit, elem, merge_tag)
 
 	if next_hp <= 0:
@@ -1852,7 +2206,12 @@ func _apply_damage_to_ally(
 
 	if hp_loss > 0:
 		actor.hp = maxi(0, actor.hp - hp_loss)
-		actor.play_action_anim("hit", 0.22)
+		var is_miasma_tick: bool = (skill_name == "腐瘴侵脉")
+		actor.trigger_hit_flash(0.08 if is_miasma_tick else 0.12, 0.40 if is_miasma_tick else 0.90)
+		if not is_miasma_tick and not bool(u.get("casting", false)):
+			actor.play_action_anim("hit", 0.22)
+		if was_telegraph and actor.is_controlled:
+			trigger_camera_shake(6.5, 0.18, Vector2.ZERO)
 		NotifyHub.push_combat_number(actor.position + Vector2(0.0, -108.0), hp_loss, false, false, elem)
 		RtwpSimStep.record_damage_event(
 			death_ring_buffer, combat_clock_sec, source_name, skill_name, elem,
@@ -1924,8 +2283,11 @@ func _use_instant_combat_pill(cid: String, pill_id: String) -> void:
 
 	CampaignState.remove_item(pill_id, 1)
 	pill_cooldown_timer = RtwpSimStep.PILL_TOXICITY_COOLDOWN_SEC
+	pill_cooldown_total = RtwpSimStep.PILL_TOXICITY_COOLDOWN_SEC
 	var heal_amt: int = maxi(15, int(round(float(target_actor.max_hp) * float(idef.get("heal_hp_pct", 0.35)))))
 	_apply_ally_heal(target_actor.actor_id, target_actor, heal_amt, bool(idef.get("cleanse_miasma", false)), cid)
+	if sky_vfx != null:
+		sky_vfx.spawn_heal_ribbons(target_actor, "wood", 0.85)
 	var imm: float = float(idef.get("miasma_immune_sec", 0.0))
 	if imm > 0.0 and unit_states.has(target_actor.actor_id):
 		(unit_states[target_actor.actor_id] as Dictionary)["miasma_immune_timer"] = imm
@@ -1950,6 +2312,8 @@ func _check_combat_resolution() -> void:
 	if not any_party_alive:
 		in_combat = false
 		tactical_paused = false
+		_hitstop_timer = 0.0
+		_shake_timer = minf(_shake_timer, 0.10)
 		InputRouter.combat_engaged = false
 		NotifyHub.set_combat_active(false)
 		if audio_director != null:
@@ -1979,6 +2343,8 @@ func _check_combat_resolution() -> void:
 func _finish_combat_victory() -> void:
 	in_combat = false
 	tactical_paused = false
+	_hitstop_timer = 0.0
+	_shake_timer = minf(_shake_timer, 0.10)
 	auto_attack_enabled = false
 	InputRouter.combat_engaged = false
 	NotifyHub.set_combat_active(false)
@@ -2038,7 +2404,7 @@ func _finish_combat_victory() -> void:
 	combat_hud_dirty.emit()
 
 
-func _refresh_vfx_overlays(combat_delta: float) -> void:
+func _refresh_vfx_overlays(combat_delta: float, ui_delta: float = 0.0) -> void:
 	if ground_vfx == null or sky_vfx == null:
 		return
 	ground_vfx.active_telegraphs.clear()
@@ -2053,12 +2419,14 @@ func _refresh_vfx_overlays(combat_delta: float) -> void:
 			var sdef: Dictionary = DataDB.get_skill(str(eu.get("cast_skill_id", "")))
 			var ttype: String = str(sdef.get("target_type", ""))
 			var prog: float = float(eu.get("cast_progress", 0.0)) / maxf(0.1, float(eu.get("cast_duration", 1.0)))
+			var is_intr: bool = bool(eu.get("cast_interruptible", false))
 			if ttype == "ground_circle":
 				ground_vfx.active_telegraphs.append({
 					"type": "circle",
 					"origin": eu.get("cast_origin", ea.position),
 					"radius": float(sdef.get("telegraph_radius_px", 135.0)),
 					"progress": prog,
+					"interruptible": is_intr,
 				})
 			elif ttype == "ground_cone":
 				ground_vfx.active_telegraphs.append({
@@ -2068,6 +2436,16 @@ func _refresh_vfx_overlays(combat_delta: float) -> void:
 					"radius": float(sdef.get("telegraph_radius_px", 245.0)),
 					"angle_deg": float(sdef.get("telegraph_angle_deg", 95.0)),
 					"progress": prog,
+					"interruptible": is_intr,
+				})
+			elif ttype == "party_aoe":
+				var roar_dir: Vector2 = (eu.get("cast_dir", Vector2.LEFT) as Vector2).normalized()
+				ground_vfx.active_telegraphs.append({
+					"type": "circle",
+					"origin": ea.position + roar_dir * (115.0 if ea.is_boss else 0.0),
+					"radius": 215.0 if ea.is_boss else 155.0,
+					"progress": prog,
+					"interruptible": is_intr,
 				})
 
 	for ally: BattleActor in _get_all_living_allies_and_pet():
@@ -2090,8 +2468,8 @@ func _refresh_vfx_overlays(combat_delta: float) -> void:
 					"color": UIThemeBuilder.get_element_color(str(qsdef.get("element", "metal"))),
 				})
 
-	ground_vfx.step_fx(combat_delta)
-	sky_vfx.step_fx(combat_delta)
+	ground_vfx.step_fx(combat_delta, ui_delta)
+	sky_vfx.step_fx(combat_delta, ui_delta)
 
 
 ## ==================== 辅助目标解析与几何碰撞 ====================

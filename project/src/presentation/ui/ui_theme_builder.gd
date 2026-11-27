@@ -184,3 +184,41 @@ static func get_element_dual_badge(elem: String) -> String:
 			return "■土"
 		_:
 			return "·凡"
+
+
+const COL_BOSS_EBONY: Color = Color("#181513")
+const COL_CARVED_EBONY: Color = Color("#292620")
+const COL_HP_VERMILION: Color = Color("#B03A2E")
+const COL_MP_CELADON: Color = Color("#3D7696")
+const COL_CAST_AMBER: Color = Color("#D6A244")
+const COL_CAST_LOCKED: Color = Color("#8E2822")
+const COL_GILT_BRIGHT: Color = Color("#FCE088")
+
+
+static func make_texture_or_ebony_box(
+	tex_path: String,
+	margin_l: int,
+	margin_t: int,
+	margin_r: int,
+	margin_b: int,
+	fallback_bg: Color,
+	fallback_border: Color,
+	border_w: int = 2,
+	radius: int = 5
+) -> StyleBox:
+	if tex_path != "" and ResourceLoader.exists(tex_path):
+		var tex: Texture2D = load(tex_path) as Texture2D
+		if tex != null:
+			var sbt: StyleBoxTexture = StyleBoxTexture.new()
+			sbt.texture = tex
+			sbt.texture_margin_left = float(margin_l)
+			sbt.texture_margin_top = float(margin_t)
+			sbt.texture_margin_right = float(margin_r)
+			sbt.texture_margin_bottom = float(margin_b)
+			sbt.content_margin_left = float(margin_l)
+			sbt.content_margin_top = float(margin_t)
+			sbt.content_margin_right = float(margin_r)
+			sbt.content_margin_bottom = float(margin_b)
+			return sbt
+	return make_ebony_box(fallback_bg, fallback_border, border_w, radius)
+

@@ -1,0 +1,90 @@
+{
+  "generator": "tools/build_polish_r1_assets.py",
+  "generated_date": "2026-11-27",
+  "vfx": [
+    {
+      "file": "vfx_flying_sword_qi.png",
+      "size": "256x96",
+      "source": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "desc": "Horizontal (+X right) Qingyun flying sword with ice-cyan qi & sumi-ink feibai wisps"
+    },
+    {
+      "file": "vfx_silver_needle.png",
+      "size": "160x56",
+      "source": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "desc": "Horizontal (+X right) medicinal silver acupuncture needle with celadon meridian silk aura"
+    },
+    {
+      "file": "vfx_sword_trail_ribbon.png",
+      "size": "256x64",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Stretchable white-cyan sword trail ribbon with longitudinal sumi-ink feibai bristles"
+    },
+    {
+      "file": "vfx_slash_ink_arc.png",
+      "size": "320x256",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Calligraphic +X sword crescent (UV.y 0->1 sweep): cyan razor rim + dry-brush sumi-ink feibai"
+    },
+    {
+      "file": "vfx_slash_fire_arc.png",
+      "size": "320x256",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Blazing +X Song-Ming mineral-fire crescent (UV.y 0->1 sweep): ivory-gold core + cinnabar flame tongues"
+    },
+    {
+      "file": "vfx_wood_qi_ribbon.png",
+      "size": "256x256",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Swirling S-curve celadon & stone-green wood-qi silk ribbon with dew motes"
+    },
+    {
+      "file": "vfx_bagua_telegraph.png",
+      "size": "512x512",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "1:1 square canonical 8-trigram Qian-Kun cinnabar Bagua floor array (foreshortened 2.27:1 in world)"
+    },
+    {
+      "file": "vfx_claw_marks_cone.png",
+      "size": "256x256",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Three curved feral cinnabar claw-rake danger marks for ground_cone telegraphs"
+    },
+    {
+      "file": "vfx_shockwave_ink_ring.png",
+      "size": "256x256",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Calligraphic dry-brush variable-width shockwave ring (foreshortened in world)"
+    },
+    {
+      "file": "vfx_particle_spark.png",
+      "size": "64x64",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "4-point tapered diamond spirit spark particle"
+    },
+    {
+      "file": "vfx_particle_ink_drop.png",
+      "size": "64x64",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Organic calligraphic sumi-spatter droplet particle"
+    },
+    {
+      "file": "vfx_particle_jade_mote.png",
+      "size": "64x64",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Soft luminous lotus-dew spirit mote particle"
+    },
+    {
+      "file": "vfx_particle_rock_shard.png",
+      "size": "64x64",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Faceted mineral crag / metallic sword-shard particle"
+    },
+    {
+      "file": "vfx_particle_petal_leaf.png",
+      "size": "64x64",
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Stylized celadon lotus-petal / bamboo-leaf particle"
+    }
+  ]
+}
