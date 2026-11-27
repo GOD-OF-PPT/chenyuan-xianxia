@@ -67,6 +67,7 @@ var _anim_timer: float = 0.0
 var _one_shot_state: String = ""
 var _one_shot_remaining: float = 0.0
 var _death_dissolve: float = 0.0
+var _visual_root_offset: Vector2 = Vector2.ZERO
 
 ## Tier 1 头顶轻量宣纸气泡
 var _bark_text: String = ""
@@ -105,9 +106,16 @@ func setup_actor(
 	display_name = p_name
 	sprite_id = p_sprite_id
 	home_pos = position
+	_anim_state = "idle"
+	_anim_timer = 0.0
+	_one_shot_state = ""
+	_one_shot_remaining = 0.0
+	_visual_root_offset = Vector2.ZERO
 	_death_dissolve = 0.0
 	_hit_flash_timer = 0.0
 	_hit_flash_peak = 0.0
+	if p_sprite_id == "boss_mist_wolf_king":
+		facing_dir = Vector2(-1.0, 0.35).normalized()
 	visible = true
 
 	if not SaveManager.settings_changed.is_connected(_on_comfort_settings_changed):
@@ -162,9 +170,16 @@ func set_facing(dir: Vector2) -> void:
 		facing_dir = dir.normalized()
 
 
+func is_knocked_down() -> bool:
+	return (not alive) or (is_boss and stagger_timer > 4.0)
+
+
 func play_action_anim(anim_name: String, duration_sec: float = 0.42) -> void:
+	if is_knocked_down():
+		return
 	_one_shot_state = anim_name
 	_one_shot_remaining = duration_sec
+	_anim_state = anim_name
 	_anim_timer = 0.0
 	_apply_current_frame()
 
@@ -234,7 +249,6 @@ func clear_world_bark() -> void:
 
 
 func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void:
-	_pulse_clock += ui_delta
 	if _bark_timer > 0.0:
 		_bark_timer = maxf(0.0, _bark_timer - ui_delta)
 	if SaveManager.reduced_motion:
@@ -268,23 +282,29 @@ func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void
 	if not visible:
 		visible = true
 
-	# 关键帧计时严格绑定 combat_delta（Space 凝时期间 combat_delta == 0，动作完全定格！）
+	# 关键帧与脉冲计时严格绑定 combat_delta（Space 凝时与顿帧期间 combat_delta == 0，100% 像素级定格！）
 	if combat_delta > 0.0:
-		if not alive or (stagger_timer > 0.0 and is_boss and stagger_timer > 4.0):
-			_anim_state = "down"
-			_anim_timer += combat_delta
+		_pulse_clock += combat_delta
+		var next_state: String = "idle"
+		if is_knocked_down():
+			next_state = "down"
 		elif _one_shot_remaining > 0.0:
 			_one_shot_remaining = maxf(0.0, _one_shot_remaining - combat_delta)
-			_anim_state = _one_shot_state
-			_anim_timer += combat_delta
+			if _one_shot_remaining > 0.0:
+				next_state = _one_shot_state
+			elif is_casting:
+				next_state = "cast_loop"
+			elif is_moving:
+				next_state = "run"
 		elif is_casting:
-			_anim_state = "cast_loop"
-			_anim_timer += combat_delta
+			next_state = "cast_loop"
 		elif is_moving:
-			_anim_state = "run"
-			_anim_timer += combat_delta
+			next_state = "run"
+
+		if next_state != _anim_state:
+			_anim_state = next_state
+			_anim_timer = 0.0
 		else:
-			_anim_state = "idle"
 			_anim_timer += combat_delta
 
 	if _sprite != null:
@@ -297,16 +317,26 @@ func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void
 		_overlay_canvas.queue_redraw()
 
 
+func _resolve_effective_lookup_key() -> String:
+	if is_knocked_down():
+		return "down"
+	if _one_shot_remaining > 0.0 and _one_shot_state != "":
+		return _one_shot_state
+	if is_casting and _anim_state != "cast_release":
+		return "cast_loop"
+	var use_back: bool = facing_dir.y < -0.22
+	if _anim_state == "idle":
+		return "idle_ne" if use_back else "idle_se"
+	if _anim_state == "run":
+		return "run_ne" if use_back else "run_se"
+	return _anim_state
+
+
 func _apply_current_frame() -> void:
 	if _sprite == null or _sprite.texture == null:
 		return
 	var rows_dict: Dictionary = _sheet_meta.get("rows", {}) as Dictionary
-	var use_back: bool = facing_dir.y < -0.22
-	var lookup_key: String = _anim_state
-	if _anim_state == "idle":
-		lookup_key = "idle_ne" if use_back else "idle_se"
-	elif _anim_state == "run":
-		lookup_key = "run_ne" if use_back else "run_se"
+	var lookup_key: String = _resolve_effective_lookup_key()
 
 	var rinfo: Dictionary = rows_dict.get(lookup_key, {"row": 0, "frames": 4, "fps": 6.0, "loop": true}) as Dictionary
 	var row_idx: int = int(rinfo.get("row", 0))
@@ -324,11 +354,23 @@ func _apply_current_frame() -> void:
 	var flip: bool = facing_dir.x < -0.08
 	_sprite.flip_h = flip
 
+	var dir_n: Vector2 = facing_dir.normalized() if facing_dir.length_squared() > 0.001 else Vector2(0.894, 0.447)
+	if SaveManager.reduced_motion or not alive or is_knocked_down():
+		_visual_root_offset = Vector2.ZERO
+	elif lookup_key == "attack_1" or lookup_key == "attack_2":
+		var lunge_t: float = sin(clampf(_anim_timer / 0.35, 0.0, 1.0) * PI)
+		_visual_root_offset = dir_n * lunge_t * (12.0 if is_boss else 6.0)
+	elif lookup_key == "hit":
+		_visual_root_offset = -dir_n * 4.0
+	else:
+		_visual_root_offset = Vector2.ZERO
+	_sprite.position = _visual_root_offset
+
 
 func get_hit_rect_local() -> Rect2:
 	var sc: float = _sprite.scale.y if _sprite != null else 1.0
 	var h: float = float(_head_top_px) * sc
-	var w: float = (76.0 if not is_boss else 190.0) * sc
+	var w: float = (88.0 if not is_boss else 390.0) * sc
 	return Rect2(-w * 0.5, -h, w, h)
 
 
@@ -339,29 +381,29 @@ func contains_world_point(world_pt: Vector2) -> bool:
 func get_vfx_origin_world(slot: String = "weapon") -> Vector2:
 	var sc: Vector2 = _sprite.scale if _sprite != null else Vector2.ONE
 	var sign_x: float = -1.0 if facing_dir.x < -0.08 else 1.0
-	var use_back: bool = facing_dir.y < -0.22
-	var lookup_key: String = _anim_state
-	if _anim_state == "idle":
-		lookup_key = "idle_ne" if use_back else "idle_se"
-	elif _anim_state == "run":
-		lookup_key = "run_ne" if use_back else "run_se"
+	var lookup_key: String = _resolve_effective_lookup_key()
+	var eff_slot: String = "mouth" if slot == "roar" else slot
 
-	# 1. Optional M2 per-animation-state anchor: {"state_anchors": {"attack_1": {"weapon": [56, -88]}}}
+	# 1. M2 per-animation-state anchor: {"state_anchors": {"attack_1": {"weapon": [78, -82]}}}
 	var state_anchors_raw: Variant = _sheet_meta.get("state_anchors", null)
 	if state_anchors_raw is Dictionary:
 		var sa_dict: Dictionary = state_anchors_raw as Dictionary
 		var st_entry_raw: Variant = sa_dict.get(lookup_key, null)
 		if st_entry_raw is Dictionary:
-			var parsed_st: Vector2 = _parse_anchor_offset((st_entry_raw as Dictionary).get(slot, null), Vector2.INF)
+			var st_d: Dictionary = st_entry_raw as Dictionary
+			var raw_st: Variant = st_d.get(slot, st_d.get(eff_slot, null))
+			var parsed_st: Vector2 = _parse_anchor_offset(raw_st, Vector2.INF)
 			if parsed_st.is_finite():
-				return global_position + Vector2(parsed_st.x * sign_x * sc.x, parsed_st.y * sc.y)
+				return global_position + _visual_root_offset + Vector2(parsed_st.x * sign_x * sc.x, parsed_st.y * sc.y)
 
-	# 2. Optional actor-level anchor in *_sheet.json: {"anchors": {"weapon": [52, -84], "hand": [38, -92]}}
+	# 2. Actor-level anchor in *_sheet.json: {"anchors": {"weapon": [54, -76], "hand": [36, -88]}}
 	var anchors_raw: Variant = _sheet_meta.get("anchors", null)
 	if anchors_raw is Dictionary:
-		var parsed_a: Vector2 = _parse_anchor_offset((anchors_raw as Dictionary).get(slot, null), Vector2.INF)
+		var anc_d: Dictionary = anchors_raw as Dictionary
+		var raw_a: Variant = anc_d.get(slot, anc_d.get(eff_slot, null))
+		var parsed_a: Vector2 = _parse_anchor_offset(raw_a, Vector2.INF)
 		if parsed_a.is_finite():
-			return global_position + Vector2(parsed_a.x * sign_x * sc.x, parsed_a.y * sc.y)
+			return global_position + _visual_root_offset + Vector2(parsed_a.x * sign_x * sc.x, parsed_a.y * sc.y)
 
 	# 3. Clean M1 proportional fallbacks relative to FeetOrigin (0, 0)
 	var h: float = maxf(64.0, float(_head_top_px))
@@ -384,7 +426,7 @@ func get_vfx_origin_world(slot: String = "weapon") -> Vector2:
 		_:
 			var reach_w: float = 78.0 if is_boss else (h * 0.32)
 			local_off = Vector2(sign_x * reach_w * sc.x, -h * 0.50 * sc.y) + dir_n * (10.0 * sc.x)
-	return global_position + local_off
+	return global_position + _visual_root_offset + local_off
 
 
 func _parse_anchor_offset(raw_val: Variant, fallback: Vector2) -> Vector2:
@@ -400,12 +442,40 @@ func _parse_anchor_offset(raw_val: Variant, fallback: Vector2) -> Vector2:
 
 
 func _draw() -> void:
-	# 脚底选中/锁定奇门光圈（绘于父节点底层，自然处于角色双脚之下；死怪绝不残留锁定红圈！）
+	# 35° 斜向柔化水墨接地阴影（绘于父节点底层，绝不受 actor_hit_flash.gdshader 闪白污染！）
+	var sh_alpha_mult: float = stealth_alpha
+	if not alive and faction == "enemy":
+		if _death_dissolve >= 1.15:
+			return
+		sh_alpha_mult = clampf(1.0 - (_death_dissolve / 1.15), 0.0, 1.0)
+
+	var sc_s: float = _sprite.scale.x if _sprite != null else 1.0
+	var lookup_s: String = _resolve_effective_lookup_key()
+	var sh_rx: float = 34.0
+	var sh_ry: float = 14.5
+	if is_boss:
+		sh_rx = 186.0
+		sh_ry = 68.0
+	elif sprite_id.begins_with("pet_") or sprite_id == "enemy_rot_wolf" or sprite_id == "enemy_wolf_pup":
+		sh_rx = 44.0
+		sh_ry = 17.0
+	else:
+		sh_rx = 42.0 if (lookup_s == "attack_1" or lookup_s == "attack_2" or lookup_s == "down") else 34.0
+		sh_ry = sh_rx * 0.42
+	sh_rx *= sc_s
+	sh_ry *= sc_s
+
+	var sh_center: Vector2 = Vector2(4.0, 2.0) + _visual_root_offset * 0.55
+	_draw_filled_ellipse(sh_center, sh_rx * 1.12, sh_ry * 1.12, Color(0.05, 0.05, 0.05, 0.14 * sh_alpha_mult))
+	_draw_filled_ellipse(sh_center, sh_rx * 0.86, sh_ry * 0.86, Color(0.05, 0.05, 0.05, 0.18 * sh_alpha_mult))
+	_draw_filled_ellipse(sh_center, sh_rx * 0.58, sh_ry * 0.58, Color(0.04, 0.04, 0.04, 0.20 * sh_alpha_mult))
+
+	# 死怪绝不残留锁定红圈！
 	if not alive and faction == "enemy":
 		return
 
-	var ring_rx: float = 34.0 if not is_boss else 84.0
-	var ring_ry: float = 15.0 if not is_boss else 36.0
+	var ring_rx: float = 34.0 if not is_boss else 178.0
+	var ring_ry: float = 15.0 if not is_boss else 70.0
 	if is_controlled:
 		_draw_ellipse(Vector2.ZERO, ring_rx, ring_ry, Color(0.35, 0.82, 0.65, 0.88), 3.0)
 	elif is_box_selected:
@@ -415,6 +485,19 @@ func _draw() -> void:
 		_draw_ellipse(Vector2.ZERO, ring_rx + 4.0, ring_ry + 2.0, Color(0.86, 0.28, 0.22, pulse), 3.0)
 	elif is_hovered:
 		_draw_ellipse(Vector2.ZERO, ring_rx, ring_ry, Color(0.88, 0.74, 0.44, 0.65), 2.0)
+
+
+func _get_current_overhead_top_px() -> float:
+	var top_px: float = float(_head_top_px)
+	var state_anchors_raw: Variant = _sheet_meta.get("state_anchors", null)
+	if state_anchors_raw is Dictionary:
+		var sa_dict: Dictionary = state_anchors_raw as Dictionary
+		var st_raw: Variant = sa_dict.get(_resolve_effective_lookup_key(), null)
+		if st_raw is Dictionary:
+			var ov_vec: Vector2 = _parse_anchor_offset((st_raw as Dictionary).get("overhead", null), Vector2.INF)
+			if ov_vec.is_finite():
+				top_px = maxf(top_px, -ov_vec.y)
+	return top_px
 
 
 func _draw_overhead_ui() -> void:
@@ -439,7 +522,8 @@ func _draw_overhead_ui() -> void:
 		font = ThemeDB.fallback_font
 
 	var sc_y: float = _sprite.scale.y if _sprite != null else 1.0
-	var head_y: float = -float(_head_top_px) * sc_y - 10.0
+	var top_px_cur: float = _get_current_overhead_top_px()
+	var head_y: float = -top_px_cur * sc_y - 10.0
 
 	# 1. NPC 简化名牌与气泡
 	if faction == "npc":
@@ -459,6 +543,30 @@ func _draw_overhead_ui() -> void:
 	var by: float = head_y
 
 	if faction == "enemy":
+		var has_cast_line: bool = (is_casting and cast_duration > 0.0) or lockout_timer > 0.0
+		var stack_below_by: float = bar_h + (11.0 if ward_max > 0.0 else 0.0) + (20.0 if has_cast_line else 0.0)
+		by = -top_px_cur * sc_y - stack_below_by - 8.0
+		var seal_extra_w: float = 82.0 if (mother_seal_element != "" and mother_seal_timer > 0.0) else 8.0
+		var vp_sz: Vector2 = get_viewport_rect().size
+		if vp_sz.x > 200.0:
+			var scr_o: Vector2 = get_global_transform_with_canvas().origin
+			if scr_o.y + by - 25.0 < 16.0:
+				by = 16.0 + 25.0 - scr_o.y
+			# 避让右上角小地图与菜单簇（x >= vp_sz.x - 356, y <= 268；_top_right_cluster 始于 x = 1568）
+			if scr_o.y + by - 25.0 < 268.0 and scr_o.x + bx + bar_w + seal_extra_w > vp_sz.x - 356.0:
+				bx = (vp_sz.x - 356.0) - scr_o.x - bar_w - seal_extra_w
+			# 避让顶中首领铭牌（Rect2(vp_sz.x*0.5 - 322, 0, 644, 198)）
+			var plaque_l: float = vp_sz.x * 0.5 - 322.0
+			var plaque_r: float = vp_sz.x * 0.5 + 322.0
+			if NotifyHub.combat_active and scr_o.y + by - 25.0 < 198.0:
+				if scr_o.x + bx + bar_w + seal_extra_w > plaque_l and scr_o.x + bx - 6.0 < plaque_r:
+					if scr_o.x >= vp_sz.x * 0.5 and (plaque_r + 8.0 + bar_w + seal_extra_w) <= vp_sz.x - 356.0:
+						bx = plaque_r + 8.0 - scr_o.x
+					elif scr_o.x < vp_sz.x * 0.5 and (plaque_l - 8.0 - bar_w - seal_extra_w) >= 16.0:
+						bx = plaque_l - 8.0 - bar_w - seal_extra_w - scr_o.x
+					else:
+						by = 198.0 + 25.0 - scr_o.y
+
 		var border_col: Color = UIThemeBuilder.COL_JADE_GREEN
 		var border_w: float = 2.0
 		if nameplate_threat_state == "amber_warn":
@@ -469,9 +577,9 @@ func _draw_overhead_ui() -> void:
 			border_col = Color(0.92, 0.26, 0.20, flash)
 			border_w = 3.0
 
-		# 名字黑底轻衬 + >=16px 文字，确保在任何亮暗背景下锐利可读
+		# 名字黑底轻衬 + >=16px 文字，始终随 bx 居中对齐
 		var name_w: float = font.get_string_size(display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
-		var name_x: float = -name_w * 0.5
+		var name_x: float = bx + (bar_w - name_w) * 0.5
 		_overlay_canvas.draw_rect(Rect2(name_x - 5.0, by - 23.0, name_w + 10.0, 19.0), Color(0.07, 0.07, 0.06, 0.76), true)
 		_overlay_canvas.draw_string(font, Vector2(name_x, by - 7.0), display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UIThemeBuilder.COL_XUAN_WARM)
 
@@ -585,6 +693,15 @@ func _draw_bark_bubble(font: Font, anchor_y: float) -> void:
 		Color(0.08, 0.06, 0.04, fade),
 		cjk_brk
 	)
+
+
+func _draw_filled_ellipse(center: Vector2, rx: float, ry: float, col: Color) -> void:
+	var pts: PackedVector2Array = PackedVector2Array()
+	var steps: int = 24
+	for i: int in range(steps):
+		var a: float = (TAU * float(i)) / float(steps)
+		pts.append(center + Vector2(cos(a) * rx, sin(a) * ry))
+	draw_colored_polygon(pts, col)
 
 
 func _draw_ellipse(center: Vector2, rx: float, ry: float, col: Color, width: float) -> void:

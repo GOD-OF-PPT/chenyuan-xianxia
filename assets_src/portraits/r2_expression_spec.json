@@ -1,0 +1,147 @@
+{
+  "gu_changqing": {
+    "emotions": [
+      "calm",
+      "guarded",
+      "solemn",
+      "cold",
+      "smile_faint",
+      "grief",
+      "bloodied"
+    ],
+    "face_box": [
+      385,
+      195,
+      196,
+      206
+    ],
+    "min_pairwise_face_rmse": 16.271,
+    "min_pairwise_affine_srmse": 15.984,
+    "min_pair": [
+      "guarded",
+      "cold"
+    ]
+  },
+  "shen_qinghe": {
+    "emotions": [
+      "calm",
+      "guarded",
+      "solemn",
+      "cold",
+      "smile_faint",
+      "grief",
+      "bloodied"
+    ],
+    "face_box": [
+      396,
+      188,
+      186,
+      224
+    ],
+    "min_pairwise_face_rmse": 13.889,
+    "min_pairwise_affine_srmse": 13.607,
+    "min_pair": [
+      "guarded",
+      "cold"
+    ]
+  },
+  "pei_zhao": {
+    "emotions": [
+      "calm",
+      "guarded",
+      "solemn",
+      "cold",
+      "smile_faint",
+      "grief",
+      "bloodied"
+    ],
+    "face_box": [
+      432,
+      240,
+      168,
+      214
+    ],
+    "min_pairwise_face_rmse": 13.241,
+    "min_pairwise_affine_srmse": 13.095,
+    "min_pair": [
+      "cold",
+      "bloodied"
+    ]
+  },
+  "mist_wolf_king": {
+    "emotions": [
+      "calm",
+      "grief",
+      "bloodied"
+    ],
+    "face_box": [
+      240,
+      260,
+      540,
+      600
+    ],
+    "min_pairwise_face_rmse": 15.582,
+    "min_pairwise_affine_srmse": 15.095,
+    "min_pair": [
+      "calm",
+      "grief"
+    ]
+  },
+  "npc_elder": {
+    "emotions": [
+      "calm",
+      "solemn",
+      "grief"
+    ],
+    "face_box": [
+      456,
+      206,
+      186,
+      212
+    ],
+    "min_pairwise_face_rmse": 18.205,
+    "min_pairwise_affine_srmse": 17.703,
+    "min_pair": [
+      "solemn",
+      "grief"
+    ]
+  },
+  "npc_peddler": {
+    "emotions": [
+      "calm",
+      "smile_faint",
+      "cold"
+    ],
+    "face_box": [
+      480,
+      192,
+      174,
+      206
+    ],
+    "min_pairwise_face_rmse": 22.582,
+    "min_pairwise_affine_srmse": 21.508,
+    "min_pair": [
+      "calm",
+      "cold"
+    ]
+  },
+  "npc_steward_zhou": {
+    "emotions": [
+      "calm",
+      "guarded",
+      "grief"
+    ],
+    "face_box": [
+      386,
+      224,
+      166,
+      194
+    ],
+    "min_pairwise_face_rmse": 18.394,
+    "min_pairwise_affine_srmse": 17.665,
+    "min_pair": [
+      "calm",
+      "guarded"
+    ]
+  }
+}

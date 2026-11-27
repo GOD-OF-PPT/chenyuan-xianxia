@@ -1067,7 +1067,7 @@ func _step_party_units(dt: float, ctrl_moving_wasd: bool, zone_bounds: Rect2) ->
 			if auto_attack_enabled and locked_enemy_id != "":
 				var tgt_ea: BattleActor = _find_enemy_actor(locked_enemy_id)
 				if tgt_ea != null and tgt_ea.alive:
-					var atk_rng: float = float(sheet.get("attack_range_px", 145.0))
+					var atk_rng: float = float(sheet.get("attack_range_px", 145.0)) + _get_actor_body_pad(tgt_ea)
 					var dist_e: float = actor.position.distance_to(tgt_ea.position)
 					if dist_e > atk_rng and not ctrl_moving_wasd and not actor.has_move_waypoint:
 						var chase_dir: Vector2 = (tgt_ea.position - actor.position).normalized()
@@ -1148,7 +1148,7 @@ func _run_companion_ai(cid: String, actor: BattleActor, u: Dictionary, dt: float
 			if str(eu_t.get("target_id", "")) != cid:
 				_try_execute_party_skill(cid, e_sk, target_enemy.actor_id, false)
 
-	var atk_range: float = float(sheet.get("attack_range_px", 145.0))
+	var atk_range: float = float(sheet.get("attack_range_px", 145.0)) + _get_actor_body_pad(target_enemy)
 	var dist: float = actor.position.distance_to(target_enemy.position)
 	if dist > atk_range:
 		var dir_c: Vector2 = (target_enemy.position - actor.position).normalized()
@@ -1216,7 +1216,7 @@ func _step_pet_unit(dt: float, zone_bounds: Rect2) -> void:
 	var target_e: BattleActor = _pick_ai_enemy_target(pet_actor.position)
 	if target_e == null:
 		return
-	var rng: float = float(pu.get("attack_range_px", 220.0))
+	var rng: float = float(pu.get("attack_range_px", 220.0)) + _get_actor_body_pad(target_e) * 0.5
 	if pet_actor.position.distance_to(target_e.position) > rng:
 		var cdir: Vector2 = (target_e.position - pet_actor.position).normalized()
 		pet_actor.set_facing(cdir)
@@ -1336,7 +1336,7 @@ func _step_enemy_units(dt: float, zone_bounds: Rect2) -> void:
 			continue
 
 		# 杀意（Threat Table）目标选择与防抖
-		var candidates: Array = _build_ally_threat_candidates(ea.position)
+		var candidates: Array = _build_ally_threat_candidates(ea.position, _get_actor_body_pad(ea))
 		var threat_res: Dictionary = RtwpSimStep.update_threat_and_pick_target(
 			eu.get("threat_table", {}) as Dictionary,
 			str(eu.get("target_id", "")),
@@ -1359,7 +1359,7 @@ func _step_enemy_units(dt: float, zone_bounds: Rect2) -> void:
 				var esk_id: String = str(raw_sk)
 				if not ecds.has(esk_id):
 					var esdef: Dictionary = DataDB.get_skill(esk_id)
-					if ea.position.distance_to(tgt_actor.position) <= float(esdef.get("range_px", 260.0)):
+					if ea.position.distance_to(tgt_actor.position) <= float(esdef.get("range_px", 260.0)) + _get_actor_body_pad(ea):
 						_start_enemy_cast(eu, ea, esk_id, esdef, tgt_actor)
 						break
 			if bool(eu.get("casting", false)):
@@ -1368,7 +1368,7 @@ func _step_enemy_units(dt: float, zone_bounds: Rect2) -> void:
 		# 追击与平砍
 		eu["attack_timer"] = maxf(0.0, float(eu.get("attack_timer", 0.0)) - dt * cast_spd_mult)
 		var dist_t: float = ea.position.distance_to(tgt_actor.position)
-		var erange: float = float(eu.get("attack_range_px", 130.0))
+		var erange: float = float(eu.get("attack_range_px", 130.0)) + _get_actor_body_pad(ea)
 		if dist_t > erange:
 			var move_mult: float = (1.0 - float(eu.get("slow_pct", 0.0))) if float(eu.get("slow_timer", 0.0)) > 0.0 else 1.0
 			var edir: Vector2 = (tgt_actor.position - ea.position).normalized()
@@ -1403,9 +1403,16 @@ func _start_enemy_cast(eu: Dictionary, ea: BattleActor, sk_id: String, sdef: Dic
 	eu["cast_progress"] = 0.0
 	eu["cast_duration"] = ctime
 	eu["cast_interruptible"] = intr
-	eu["cast_origin"] = tgt_actor.position if str(sdef.get("target_type", "")) == "ground_circle" else ea.position
-	eu["cast_dir"] = (tgt_actor.position - ea.position).normalized()
-	ea.set_facing(eu["cast_dir"] as Vector2)
+	var cast_d_norm: Vector2 = (tgt_actor.position - ea.position).normalized()
+	var ttype_c: String = str(sdef.get("target_type", ""))
+	if ttype_c == "ground_circle":
+		eu["cast_origin"] = tgt_actor.position
+	elif ttype_c == "ground_cone" and ea.is_boss:
+		eu["cast_origin"] = ea.position + cast_d_norm * 95.0
+	else:
+		eu["cast_origin"] = ea.position
+	eu["cast_dir"] = cast_d_norm
+	ea.set_facing(cast_d_norm)
 
 	ea.is_casting = true
 	ea.cast_skill_name = DataDB.loc(str(sdef.get("name_key", sk_id)))
@@ -1575,7 +1582,7 @@ func _try_execute_party_skill(cid: String, skill_id: String, target_id: String, 
 			if ea == null or not ea.alive:
 				return false
 			resolved_target = ea.actor_id
-		var max_r: float = float(sdef.get("range_px", 260.0))
+		var max_r: float = float(sdef.get("range_px", 260.0)) + _get_actor_body_pad(ea)
 		if actor.position.distance_to(ea.position) > max_r + 32.0:
 			if is_player_input:
 				# 自动走近射程并入队执行
@@ -1722,8 +1729,9 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 		return
 
 	var pre_dash_pos: Vector2 = actor.position
-	if bool(sdef.get("dash_to_melee", false)) and actor.position.distance_to(main_ea.position) > 105.0:
-		actor.position = main_ea.position + (actor.position - main_ea.position).normalized() * 88.0
+	var dash_pad: float = _get_actor_body_pad(main_ea)
+	if bool(sdef.get("dash_to_melee", false)) and actor.position.distance_to(main_ea.position) > 105.0 + dash_pad:
+		actor.position = main_ea.position + (actor.position - main_ea.position).normalized() * (88.0 + dash_pad)
 
 	actor.set_facing(main_ea.position - actor.position)
 	actor.play_action_anim("attack_2" if float(sdef.get("aoe_radius_px", 0.0)) > 0.0 else "attack_1", 0.40)
@@ -1791,7 +1799,7 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 	var hit_enemies: Array[BattleActor] = [main_ea]
 	if aoe_r > 0.0:
 		for other_e: BattleActor in enemy_actors:
-			if other_e != main_ea and other_e.alive and other_e.position.distance_to(main_ea.position) <= aoe_r:
+			if other_e != main_ea and other_e.alive and other_e.position.distance_to(main_ea.position) <= aoe_r + _get_actor_body_pad(main_ea) + _get_actor_body_pad(other_e):
 				hit_enemies.append(other_e)
 
 	var base_pwr: float = maxf(float(sheet.get("phys_power", 18.0)), float(sheet.get("spell_power", 18.0)))
@@ -2147,7 +2155,7 @@ func _execute_synergy_detonation(attacker_id: String, eu: Dictionary, ea: Battle
 	match syn_id:
 		"wood_fire":
 			for other_e: BattleActor in enemy_actors:
-				if other_e.alive and other_e.position.distance_to(ea.position) <= 165.0:
+				if other_e.alive and other_e.position.distance_to(ea.position) <= 165.0 + _get_actor_body_pad(ea) + _get_actor_body_pad(other_e):
 					var oeu: Dictionary = unit_states[other_e.actor_id] as Dictionary
 					_apply_direct_enemy_hp_loss(oeu, other_e, bonus_dmg, "fire", true, "syn_wf")
 					oeu["dot_timer"] = 4.0
@@ -2506,8 +2514,8 @@ func _refresh_vfx_overlays(combat_delta: float, ui_delta: float = 0.0) -> void:
 				var roar_dir: Vector2 = (eu.get("cast_dir", Vector2.LEFT) as Vector2).normalized()
 				ground_vfx.active_telegraphs.append({
 					"type": "circle",
-					"origin": ea.position + roar_dir * (115.0 if ea.is_boss else 0.0),
-					"radius": 215.0 if ea.is_boss else 155.0,
+					"origin": ea.position + roar_dir * (145.0 if ea.is_boss else 0.0) + (Vector2(0.0, 22.0) if ea.is_boss else Vector2.ZERO),
+					"radius": 222.0 if ea.is_boss else 155.0,
 					"progress": prog,
 					"interruptible": is_intr,
 				})
@@ -2598,8 +2606,13 @@ func _pick_ai_enemy_target(from_pos: Vector2) -> BattleActor:
 	return best
 
 
-func _build_ally_threat_candidates(enemy_pos: Vector2) -> Array:
+func _get_actor_body_pad(a: BattleActor) -> float:
+	return 95.0 if (a != null and a.is_boss) else 0.0
+
+
+func _build_ally_threat_candidates(enemy_pos: Vector2, body_pad: float = 0.0) -> Array:
 	var list: Array = []
+	var melee_r: float = 175.0 + body_pad
 	for cid_var: Variant in party_actors.keys():
 		var cid: String = str(cid_var)
 		var pa: BattleActor = party_actors[cid] as BattleActor
@@ -2607,7 +2620,7 @@ func _build_ally_threat_candidates(enemy_pos: Vector2) -> Array:
 		list.append({
 			"id": cid,
 			"alive": pa.alive,
-			"is_melee_range": enemy_pos.distance_to(pa.position) <= 175.0,
+			"is_melee_range": enemy_pos.distance_to(pa.position) <= melee_r,
 			"is_tank_role": bool(pu.get("is_tank_role", false)),
 		})
 	if pet_actor != null and pet_actor.alive and unit_states.has(pet_actor.actor_id):
@@ -2615,7 +2628,7 @@ func _build_ally_threat_candidates(enemy_pos: Vector2) -> Array:
 		list.append({
 			"id": pet_actor.actor_id,
 			"alive": true,
-			"is_melee_range": enemy_pos.distance_to(pet_actor.position) <= 175.0,
+			"is_melee_range": enemy_pos.distance_to(pet_actor.position) <= melee_r,
 			"is_tank_role": bool(pet_u.get("is_tank_role", false)),
 		})
 	return list
