@@ -357,7 +357,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "c1a3f231989e7a311841e4a3e2275e33e8236d0ad618ff523dc4469672025c58",
+      "sha256": "ccc39c041dd7d65da45b8d7cdcca592a5c194f95c4ff9bfc9e8db91df82802a9",
       "creation_method": "Gemini Image Generation (assets_src/portraits/gu_changqing_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait gu_changqing (bloodied)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -367,7 +367,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "6b6a85124abf6d078d9b05d2e1875d71f3f30f8d081d21f43c0eb9d8f7d3c50d",
+      "sha256": "6237a18432a6a1d316ca1d244349d7fbbcf47bfb5a4e4021880cdf8d33e8781b",
       "creation_method": "Gemini Image Generation (assets_src/portraits/gu_changqing_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait gu_changqing (calm)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -377,7 +377,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "eb91b3826510d83b2c855deb11e276a4494d556cb5907a71390a3a56ba8f052b",
+      "sha256": "d6850004477b88766fbf7c9a5e53c38d9e6a62da81c83520d011eab2bb07ad1b",
       "creation_method": "Gemini Image Generation (assets_src/portraits/gu_changqing_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait gu_changqing (cold)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -387,7 +387,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "8fe5251cb3d1d31ea3747d8a2c348b33626e116701c384b7e898d7c40349a939",
+      "sha256": "89db5a48130ef4c22ce02061a62fc50b1cf451ab98cbce9d81e90f7d45f35704",
       "creation_method": "Gemini Image Generation (assets_src/portraits/gu_changqing_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait gu_changqing (grief)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -397,7 +397,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "b114966b2b8b27fd7d1ae72e60ae3d19f2125219d64e514bb686337ffba90843",
+      "sha256": "a8054a0e091604a3cce25a40fdbd2298120259d8626a4f42ee677d56db032ebb",
       "creation_method": "Gemini Image Generation (assets_src/portraits/gu_changqing_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait gu_changqing (guarded)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -407,7 +407,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "5f82133537ff92dc0378d40b55d03823bfbfcbe27cd632d52f7082cfc40e8a0e",
+      "sha256": "37b3c4e9506326b0e287a89f294fd13b1f11335e87795cb915177323d361f884",
       "creation_method": "Gemini Image Generation (assets_src/portraits/gu_changqing_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait gu_changqing (smile_faint)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -417,7 +417,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "641cc856ffed35a70e8731170af31cf9d02fbe6c501691edadf9a3e096914a96",
+      "sha256": "72dc324de80c1b284262a8d82e66bec3f01eab261bc30c8a753c7e2e2e9efe47",
       "creation_method": "Gemini Image Generation (assets_src/portraits/gu_changqing_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait gu_changqing (solemn)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -427,7 +427,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "2f0fcddb4c1de1e3ffb8f05e2fe8e7a67346000740722be2b4b14fcc21149fd3",
+      "sha256": "a9643da0238b1a2a9ffba21b1dacdead64d0edb5102395f2302070815b6fafac",
       "creation_method": "Gemini Image Generation (assets_src/portraits/mist_wolf_king_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait mist_wolf_king (bloodied)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -437,7 +437,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "31871c2f564323152333a8089453424d723af37ec835029721e32832d649bae6",
+      "sha256": "435e3502b5c454d31111eebd32b8b93e8f67b79d823c5d93b8790bc3049020ae",
       "creation_method": "Gemini Image Generation (assets_src/portraits/mist_wolf_king_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait mist_wolf_king (calm)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -447,7 +447,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "1e4ab635152e482c276896276a1aa53199c7d862451bfc73599c42e0ceed9490",
+      "sha256": "92e6d0a356009a20c77f66597046d1112b8c66caeccdf9b71b9cbce7fdfd4825",
       "creation_method": "Gemini Image Generation (assets_src/portraits/mist_wolf_king_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait mist_wolf_king (grief)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -457,7 +457,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "ba4aaa1a09f6750526dc7269b19c51e0a460743bd4ba0d0f5543bbe162608dc2",
+      "sha256": "6185f233ab770c106b7debde7e743d0d61d208c78cbcb556eb4cb28882b06e21",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_elder_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_elder (calm)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -467,7 +467,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "6cbdbad288885abd2d8eca8a4800d7c250baffc24deba72542c162d6b930845b",
+      "sha256": "7580f7bcd42d145b2d4d58f092bf345e2a6df6a1d7f7075149a2968e7113c9dc",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_elder_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_elder (grief)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -477,7 +477,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "0ab1cb24095da6557730384bb366c1f9bc6bc644bda1106af3d9f26a7c462b54",
+      "sha256": "77e18b53d66b6ee3cadeaa8949b864ff186755ff75e1c6f50ec226b84b872ee3",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_elder_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_elder (solemn)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -487,7 +487,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "c95f0e8ddc2efeba795fe6081b3b121edef2d4dcdaf9bfa912a86aba4b21c231",
+      "sha256": "716264a67848a82d2fec166d4f8360797d525545fcd6969e2f3eba2f91539b90",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_peddler_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_peddler (calm)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -497,7 +497,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "ce110394c5f6aaca5577bb3c6c3d9e3c8d5769e8077bddfef324428bd7dec3ab",
+      "sha256": "c63e82ebd678a37dc32c04ac7b4fe3ed9028cf26c860e4e45a4b2e4f137970d2",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_peddler_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_peddler (cold)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -507,7 +507,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "9f43d6bde2a5fad6964cd6460f5f2b1a06d984652eb7c831d0dbb41c17ad8cb1",
+      "sha256": "ad38fd3621a270365ffb98dbdb82f477277e0a10ae6ab2df4713ec89a6d4e6bd",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_peddler_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_peddler (smile_faint)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -517,7 +517,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "0f20164a06a40faf668286aab73b7823808e6e530f2d71681f3186d4fcc224b9",
+      "sha256": "87afcf93a2497175950be713aee99569528e1702d7945f16e83b3acf72e350a5",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_steward_zhou_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_steward_zhou (calm)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -527,7 +527,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "cc162a6abb5d65b1af621837841e498d3bf49e776f3d2c1df3e59c3a4ed8c74f",
+      "sha256": "77448c7d5a2fbe35fbb8ed0e9d2e84b941095a813c7e6d8dcbcbee14383a73f7",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_steward_zhou_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_steward_zhou (grief)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -537,7 +537,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "26375047ef7b8ee4839f8361f20983d71b7fd32e1c0e395b6b17d7d7bf018571",
+      "sha256": "a9c0a531bf056c4dfce462514928c24f96fd3d3e60cee72b90c3052bd6aeb5fc",
       "creation_method": "Gemini Image Generation (assets_src/portraits/npc_steward_zhou_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait npc_steward_zhou (guarded)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -547,7 +547,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "bfe4c665afa436a90b4af3d816f173ff0da85d162829b986061bfd9aefda23e9",
+      "sha256": "f04c6e2379334f7559d952c0d91266f3af4cf8584687b6e7997c5a5d0b6d2369",
       "creation_method": "Gemini Image Generation (assets_src/portraits/pei_zhao_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait pei_zhao (bloodied)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -557,7 +557,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "ef9f17f48a824aa38e5315af32c8a74fa12c85a021f0de35d7b369fcceae75e2",
+      "sha256": "368e429d5bd4a7f183401b7f57da64145f30c6fd8dcf1f0cc3a4b4622fcfe01c",
       "creation_method": "Gemini Image Generation (assets_src/portraits/pei_zhao_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait pei_zhao (calm)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -567,7 +567,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "adda7d96e8a5c84f2787fb5a97edc3f33b68e581fe15be56127f562ee150b6c2",
+      "sha256": "8ccef1d89dff7002c4db3f2c29b0a4eead7589e0909b9c7185e557915766a370",
       "creation_method": "Gemini Image Generation (assets_src/portraits/pei_zhao_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait pei_zhao (cold)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -577,7 +577,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "9ca285ce6cd38e4c378156c515d61d6a4f04347f88457bb7922c46efc1525ca1",
+      "sha256": "0d30004b5478b8b3871a3ba03623061e58610857be392417dbc36cf969d0a804",
       "creation_method": "Gemini Image Generation (assets_src/portraits/pei_zhao_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait pei_zhao (grief)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -587,7 +587,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "621c542e324aa2da45762661d229ed10249607700d503f11173d3b5bd98e70c7",
+      "sha256": "a2a290dae5d2534ca6ecb0090031a41e8ee8d5d94f054a4590e8a42429d7d695",
       "creation_method": "Gemini Image Generation (assets_src/portraits/pei_zhao_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait pei_zhao (guarded)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -597,7 +597,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "0b33ce95989e855ca4c35da527a2d9ee293f09615363bafce85bda2726585efd",
+      "sha256": "0183a395b3714234d18d753c01b3e6af0b346f23e1da3378f62ba574306e8027",
       "creation_method": "Gemini Image Generation (assets_src/portraits/pei_zhao_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait pei_zhao (smile_faint)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -607,7 +607,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "ed1c1920288cf45f4fe7c27c4431b36bba10b6f41855a664ca00623636945eec",
+      "sha256": "7387c1795b9aae6d8d39803bf86d8535a8d6871070bfb6382f0caaa6eb2d5aa4",
       "creation_method": "Gemini Image Generation (assets_src/portraits/pei_zhao_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait pei_zhao (solemn)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -617,7 +617,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "9af9eddf868499672ad91863438cf7a7733e520a479562fac1875aba6a83dec6",
+      "sha256": "79c42236d3e4d2c2804935f7fa43c73dfd0472f567ba94b504d65d177094ec38",
       "creation_method": "Gemini Image Generation (assets_src/portraits/shen_qinghe_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait shen_qinghe (bloodied)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -627,7 +627,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "ce1ea1bf112de5ad15a41da1108b4cdb96a3bb2be2ba259295cd1398fa8f238a",
+      "sha256": "f18746e21e9d5faba2c484e540301eb918e4939291a109f5f08fdbd2b2faedc8",
       "creation_method": "Gemini Image Generation (assets_src/portraits/shen_qinghe_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait shen_qinghe (calm)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -637,7 +637,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "dd9fdcf644b49fbd4c666bff15ba9a8d1659c2eaf8708754340620601f890263",
+      "sha256": "f98039504b1a6005e087ef57f920fe2505f899bdb631550f6b1067c36cc2c258",
       "creation_method": "Gemini Image Generation (assets_src/portraits/shen_qinghe_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait shen_qinghe (cold)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -647,7 +647,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "e7d35afd9e14de9c1b1f73b47437fd1ffcc1174a1812833c54d6b7e2e97e249c",
+      "sha256": "9323a7ea68f20c6c2d4a1d815a1cff46de314406b976504962af4f1df0297391",
       "creation_method": "Gemini Image Generation (assets_src/portraits/shen_qinghe_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait shen_qinghe (grief)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -657,7 +657,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "dc0a78a456c5ae28fba473632105e9636e3a019e0f85eb1c52a3ac79aab645bf",
+      "sha256": "4f023301608623bc656d3846e2409b4dce56971916a0dd30d0a9c383ed9d9453",
       "creation_method": "Gemini Image Generation (assets_src/portraits/shen_qinghe_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait shen_qinghe (guarded)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -667,7 +667,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "f095eebd5e0dd728da785b4b822499682d3bda9ca1b01759d1972e69609ea141",
+      "sha256": "ed63683ab19be02ef218cd09ae920b625fd75a0019a67dbb5cb45c85e38cdac8",
       "creation_method": "Gemini Image Generation (assets_src/portraits/shen_qinghe_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait shen_qinghe (smile_faint)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -677,7 +677,7 @@
       "source_path": "assets_src/portraits/r2_expression_layers_sheet.png",
       "category": "portrait",
       "dimensions": "1024x1280",
-      "sha256": "8469a3cb3f78569750a53fb5dfa2e6dd8921ca274e933745b3fa0807bea14025",
+      "sha256": "4907cc02bc6a20bb6b62ccfa03671589c94507229a7b3ee7822b88d39d351fdb",
       "creation_method": "Gemini Image Generation (assets_src/portraits/shen_qinghe_raw.jpg) + tools/build_polish_r2_actors.py (Skirt/collar/ear-safe alpha matting, final-canvas-calibrated C^2 Wendland-Gaussian facial articulation & 2x-supersampled Song-Ming Gongbi brow/eyelid/mouth/scuff overpaint) | Spec: 1024x1280 waist-up portrait shen_qinghe (solemn)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -687,7 +687,7 @@
       "source_path": "assets_src/sprites/r2_wolf_king_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "3840x3584",
-      "sha256": "a11dc04060bff7741d977423863af212d437a3e2c2d3621e4da0cc290b05e542",
+      "sha256": "d24b5400293925a7078666f6ab9663b1395944b36085388e2b8ae1d36cf7234d",
       "creation_method": "Gemini Image Generation (assets_src/sprites/r2_wolf_king_side34_raw.png, Song-Ming Gongbi side-3/4 studio turnaround) + tools/build_polish_r2_actors.py (9-part anatomical segmentation, curved Telea socket feathering, 2x-supersampled rotary gallop/lunge/roar/grounded-collapse articulation, Song-Ming mineral LUT) | Spec: Giant side-3/4 Mist Wolf King 640x448 multi-pose combat sheet aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -737,7 +737,7 @@
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "3b1821bab4fc956200ed382426cda60dc1e2893122470f3e785567d9f0591a4c",
+      "sha256": "650c57e58191fd1bc421cead34f5959905f5009cda1b50e04370fb3eb462b91a",
       "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for gu_changqing aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -777,7 +777,7 @@
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "47bdd7fc5867b5cf78cabdcecf29ed8a9fb6d05f6d8d782d5f8b60f77d8563eb",
+      "sha256": "e5fc3c8bd0fa9cf67af8f6c4cc7c6ef29cbe63a164dd269d013c1964fe9462f8",
       "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for pei_zhao aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -807,7 +807,7 @@
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "8685b9590a1e5e6797357a59b5373f8b6a9d97af31c62c210732982eb1fafef5",
+      "sha256": "38c28c05ad7b2235b50a9f74ba3641632a356ea17366ef9bb25a4be0e6dfcf9a",
       "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for shen_qinghe aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"

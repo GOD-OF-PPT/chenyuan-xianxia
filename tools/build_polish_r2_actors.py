@@ -176,18 +176,70 @@ def draw_bezier_ink(
 
 
 def keep_largest_alpha_cc(rgba: np.ndarray, alpha_thresh: int = 12) -> np.ndarray:
-    """Strips any disconnected stray islands/specks from an RGBA part at both alpha_thresh and >16."""
+    """Strips any disconnected stray islands/specks from an RGBA part at alpha >= 41, >= 17, >= alpha_thresh, and >= 1."""
     out = rgba.copy()
-    for thr in (alpha_thresh, 17):
+    for thr in (41, 17, alpha_thresh, 1):
         mask = (out[..., 3] >= thr).astype(np.uint8)
         nl, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
         if nl > 1:
             best_lid = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
             keep = (labels == best_lid)
-            keep_dil = cv2.dilate(keep.astype(np.uint8), np.ones((3, 3), dtype=np.uint8), iterations=1) > 0
-            out[(~keep) & (out[..., 3] >= thr), :] = 0
-            out[~keep_dil, :] = 0
+            if thr == 1:
+                out[~keep, :] = 0
+            else:
+                keep_dil = cv2.dilate(keep.astype(np.uint8), np.ones((3, 3), dtype=np.uint8), iterations=1) > 0
+                out[(~keep) & (out[..., 3] >= thr), :] = 0
+                out[~keep_dil, :] = 0
     return clean_zero_alpha(out)
+
+
+def prune_tiny_alpha_specks(rgba: np.ndarray, max_speck_area: int = 64, alpha_thresh: int = 12) -> np.ndarray:
+    """Prunes tiny disconnected outer dust specks (< max_speck_area) while preserving 100% of solid bodies/props."""
+    out = rgba.copy()
+    for thr in (41, 17, alpha_thresh, 1):
+        mask = (out[..., 3] >= thr).astype(np.uint8)
+        nl, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
+        if nl > 1:
+            keep = np.zeros(mask.shape, dtype=bool)
+            for lid in range(1, nl):
+                if int(stats[lid, cv2.CC_STAT_AREA]) >= max_speck_area:
+                    keep |= (labels == lid)
+            if not np.any(keep):
+                best_lid = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
+                keep = (labels == best_lid)
+            if thr == 1:
+                out[~keep, :] = 0
+            else:
+                keep_dil = cv2.dilate(keep.astype(np.uint8), np.ones((3, 3), dtype=np.uint8), iterations=1) > 0
+                out[(~keep) & (out[..., 3] >= thr), :] = 0
+                out[~keep_dil, :] = 0
+    return clean_zero_alpha(out)
+
+
+def resize_rgba_premultiplied_lanczos(
+    rgba: np.ndarray,
+    dst_w: int,
+    dst_h: int,
+    alpha_cutoff: int = 16,
+) -> np.ndarray:
+    """
+    Resizes an RGBA buffer in premultiplied float32 space via PIL LANCZOS, clamping premultiplied
+    channels to [0, A] so zero unpremultiplied white/neon halo or negative-lobe ringing ever occurs.
+    """
+    src_f = rgba.astype(np.float32)
+    a01 = src_f[..., 3:4] / 255.0
+    pre = np.concatenate([src_f[..., :3] * a01, src_f[..., 3:4]], axis=2)
+    res_ch = [
+        np.asarray(Image.fromarray(pre[..., ch_i], mode="F").resize((dst_w, dst_h), Image.Resampling.LANCZOS), dtype=np.float32)
+        for ch_i in range(4)
+    ]
+    a_res = np.clip(res_ch[3], 0.0, 255.0)
+    pre_rgb = np.stack([np.clip(res_ch[c], 0.0, a_res) for c in range(3)], axis=2)
+    valid = a_res >= float(alpha_cutoff)
+    a_safe = np.maximum(a_res / 255.0, 1e-4)[..., None]
+    rgb_u8 = np.where(valid[..., None], np.clip(np.round(pre_rgb / a_safe), 0.0, 255.0), 0.0).astype(np.uint8)
+    a_u8 = np.where(valid, np.clip(np.round(a_res), float(alpha_cutoff), 255.0), 0.0).astype(np.uint8)
+    return clean_zero_alpha(np.concatenate([rgb_u8, a_u8[..., None]], axis=2))
 
 
 # ==============================================================================
@@ -195,9 +247,10 @@ def keep_largest_alpha_cc(rgba: np.ndarray, alpha_thresh: int = 12) -> np.ndarra
 # ==============================================================================
 def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]]]:
     """
-    Loads `assets_src/sprites/r2_wolf_king_side34_raw.png` (1376x768), extracts crisp alpha,
-    applies Song-Ming mineral LUT aligned to `master_b_cangmu_rtwp.png`, and segments into
-    9 genuine anatomical parts with curved socket feathering and zero detached shards.
+    Loads `assets_src/sprites/r2_wolf_king_side34_raw.png` (1376x768), strips both exterior
+    and enclosed cream studio-background crevices (`pocket_kill`, protecting eye/shard/fangs),
+    defringes fur edges toward dark purple-slate `[32, 26, 38]`, applies Song-Ming mineral LUT,
+    and segments into 9 anatomical parts with full dorsal-neck ruff & rounded ribcage/rump sockets.
     """
     raw_path = os.path.join(REPO_ROOT, "assets_src/sprites/r2_wolf_king_side34_raw.png")
     im = Image.open(raw_path).convert("RGB")
@@ -206,17 +259,53 @@ def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]
 
     bg = np.median(np.concatenate([arr[0], arr[-1], arr[:, 0], arr[:, -1]], axis=0), axis=0)
     diff = np.linalg.norm(arr - bg, axis=2)
-    bg_cand = ((diff < 23.5) & (arr.mean(axis=2) > 195.0)).astype(np.uint8)
+    luma = 0.299 * arr[..., 0] + 0.587 * arr[..., 1] + 0.114 * arr[..., 2]
+    chroma = arr.max(axis=2) - arr.min(axis=2)
+
+    # Protect legitimate bright anatomical features inside the head:
+    # 1. Glowing pale-jade eye sclera (x: 1158..1188, y: 376..402)
+    # 2. Glowing emerald forehead shard (x: 1184..1220, y: 314..368)
+    # 3. Ivory fangs & teeth ROI (x: 1135..1275, y: 420..520) inside the snout/jaw ink contour
+    protect_eye_shard = np.zeros((H, W), dtype=bool)
+    protect_eye_shard[376:402, 1158:1188] = True
+    protect_eye_shard[314:368, 1184:1220] = True
+    protect_fangs = np.zeros((H, W), dtype=bool)
+    protect_fangs[420:520, 1135:1275] = True
+
+    # 1a. Outer studio background: keep strict diff<24.5 inside mouth ROI so exterior air around snout is stripped
+    #     without breaching tooth ink lines, while stripping wider pale halo (luma>184 & chroma<28) everywhere else!
+    bg_cand_strict = ((diff < 24.5) & (luma > 192.0)).astype(np.uint8)
+    bg_cand_wide = ((((diff < 36.0) & (luma > 184.0)) | ((luma > 186.0) & (chroma < 28.0))) & (~protect_eye_shard)).astype(np.uint8)
+    bg_cand = np.where(protect_fangs, bg_cand_strict, bg_cand_wide)
     nl, labels = cv2.connectedComponents(bg_cand, connectivity=8)
     ext = set(labels[0, :]) | set(labels[-1, :]) | set(labels[:, 0]) | set(labels[:, -1])
     ext.discard(0)
-    fg = (~np.isin(labels, list(ext))).astype(np.float32)
+    fg_bool = ~np.isin(labels, list(ext))
 
-    fg_blur = cv2.GaussianBlur(fg, (3, 3), 0.55)
-    alpha = np.clip((fg_blur - 0.12) / 0.82 * 255.0, 0.0, 255.0).astype(np.uint8)
+    # 1b. Interior cream crevice `pocket_kill`: strip all trapped pale studio-background pockets between
+    #     hind legs, rump/tail base, dorsal neck ruff, and jaw while protecting eye, shard, and fangs!
+    protect_all = protect_eye_shard | protect_fangs
+    pocket_kill = fg_bool & (~protect_all) & (((luma > 182.0) & (chroma < 30.0)) | ((diff < 36.0) & (luma > 180.0)))
+    fg_clean = (fg_bool & (~pocket_kill)).astype(np.uint8) * 255
+
+    # Erode 1px on body/fur silhouette (preserving crisp eye & fangs) to shave sub-pixel cream rim
+    kern_er = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    fg_er = cv2.erode(fg_clean, kern_er, iterations=1)
+    fg_er = np.where(protect_all & (fg_clean > 0), 255, fg_er).astype(np.uint8)
+
+    fg_blur = cv2.GaussianBlur(fg_er.astype(np.float32) / 255.0, (3, 3), 0.52)
+    alpha = np.clip((fg_blur - 0.16) / 0.80 * 255.0, 0.0, 255.0).astype(np.uint8)
+    alpha[alpha < 18] = 0
+
+    # Dark purple-slate fur defringing `[32, 26, 38]` across semi-transparent edges AND any residual pale fur rim
     rgb = arr.copy()
-    edge = (alpha > 8) & (alpha < 235)
-    rgb[edge] = rgb[edge] * 0.52 + np.array([28.0, 24.0, 26.0], dtype=np.float32) * 0.48
+    fur_dark = np.array([32.0, 26.0, 38.0], dtype=np.float32)
+    edge_fur = (alpha > 0) & (~protect_all) & ((alpha < 245) | ((luma > 158.0) & (chroma < 30.0)))
+    w_fur = np.where((luma > 165.0) & (chroma < 30.0), 0.78, 0.62)[..., None]
+    rgb = np.where(edge_fur[..., None], rgb * (1.0 - w_fur) + fur_dark * w_fur, rgb)
+    edge_mouth = (alpha > 0) & protect_fangs & (alpha < 225)
+    rgb[edge_mouth] = rgb[edge_mouth] * 0.55 + fur_dark * 0.45
+
     rgba = clean_zero_alpha(np.concatenate([np.clip(rgb, 0, 255).astype(np.uint8), alpha[..., None]], axis=2))
     rgba = apply_song_ming_lut(rgba, sat_scale=0.96, val_scale=0.98)
 
@@ -231,38 +320,39 @@ def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]
     # Curved upper-socket limb & tail masks (no razor-flat straight cut lines at joints!)
     m_tail = poly_mask(sample_bezier_chain([
         [(105, 140), (345, 150)],
-        [(345, 150), (452, 265), (450, 368)],
-        [(450, 368), (442, 435), (370, 508)],
+        [(345, 150), (446, 265), (444, 368)],
+        [(444, 368), (436, 435), (370, 508)],
         [(370, 508), (105, 508)],
-    ], 12), 3.6)
-
-    m_hind_near = poly_mask(sample_bezier_chain([
-        [(378, 442), (425, 396), (485, 398), (528, 452)],
-        [(528, 452), (510, 712)],
-        [(510, 712), (368, 712)],
-    ], 12), 4.2)
-
-    m_hind_far = poly_mask(sample_bezier_chain([
-        [(598, 435), (645, 404), (702, 408), (756, 488)],
-        [(756, 488), (758, 650)],
-        [(758, 650), (594, 650)],
     ], 12), 3.8)
 
+    m_hind_near = poly_mask(sample_bezier_chain([
+        [(378, 442), (425, 398), (485, 400), (528, 452)],
+        [(528, 452), (510, 712)],
+        [(510, 712), (368, 712)],
+    ], 12), 4.4)
+
+    m_hind_far = poly_mask(sample_bezier_chain([
+        [(598, 435), (645, 406), (702, 410), (756, 488)],
+        [(756, 488), (758, 650)],
+        [(758, 650), (594, 650)],
+    ], 12), 4.0)
+
     m_fore_near = poly_mask(sample_bezier_chain([
-        [(776, 422), (830, 392), (898, 396), (974, 535)],
+        [(778, 426), (830, 398), (898, 402), (974, 535)],
         [(974, 535), (984, 748)],
         [(984, 748), (812, 748)],
-        [(812, 748), (770, 520)],
-    ], 12), 4.2)
+        [(812, 748), (746, 540), (748, 466), (778, 426)],
+    ], 14), 4.5)
 
     m_fore_far = poly_mask(sample_bezier_chain([
-        [(984, 486), (1038, 460), (1094, 466), (1248, 625)],
+        [(984, 488), (1038, 462), (1094, 468), (1248, 625)],
         [(1248, 625), (1248, 695)],
         [(1248, 695), (1082, 695)],
         [(1082, 695), (980, 558)],
-    ], 12), 3.8)
+    ], 12), 4.0)
 
-    # Extend m_jaw & m_head past x=1340 so 100% of snout tip & fangs belong to head/jaw (ZERO snout shards in torso_mane!)
+    # Extend m_jaw & m_head past x=1340 AND extend m_head upper neck boundary up to y=110
+    # so 100% of upper dorsal neck ruff & snout/fangs are captured with ZERO dorsal neck V-notches!
     m_jaw = poly_mask(sample_bezier_chain([
         [(1122, 434), (1188, 428), (1275, 462)],
         [(1275, 462), (1270, 526)],
@@ -272,51 +362,72 @@ def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]
     m_shard = poly_mask([(1186, 314), (1216, 314), (1220, 366), (1184, 366)], 1.6)
 
     m_head = poly_mask(sample_bezier_chain([
-        [(1018, 175), (1340, 172)],
-        [(1340, 172), (1340, 494)],
+        [(1012, 110), (1340, 110)],
+        [(1340, 110), (1340, 494)],
         [(1340, 494), (1235, 484), (1186, 446)],
-        [(1186, 446), (1120, 454), (1012, 428)],
-        [(1012, 428), (1004, 345), (1006, 250), (1018, 175)],
-    ], 14), 5.0)
+        [(1186, 446), (1120, 456), (1008, 436)],
+        [(1008, 436), (998, 345), (1002, 225), (1012, 110)],
+    ], 16), 5.5)
 
-    # Softly curved neck exclusion for torso_mane at x~1086 (giving 82px fur-on-fur overlap with m_head at x=1004..1086!)
+    # Curved neck exclusion for torso_mane starting at x~1084, y=108 (72px full-height fur overlap at x=1012..1084!)
     m_head_torso_excl = poly_mask(sample_bezier_chain([
-        [(1072, 152), (1350, 152)],
-        [(1350, 152), (1350, 535)],
-        [(1350, 535), (1068, 535)],
-        [(1068, 535), (1084, 445), (1090, 345), (1084, 238)],
-        [(1084, 238), (1078, 188), (1072, 152)],
-    ], 16), 8.0)
+        [(1082, 108), (1350, 108)],
+        [(1350, 108), (1350, 535)],
+        [(1350, 535), (1072, 535)],
+        [(1072, 535), (1088, 445), (1094, 340), (1088, 215)],
+        [(1088, 215), (1085, 155), (1082, 108)],
+    ], 16), 8.5)
+
+    # Smoothly round the lower pectoral chest tuft transition (`x=965..1065`) when forelegs rear up
+    m_chest_trim = poly_mask(sample_bezier_chain([
+        [(955, 502), (995, 488), (1042, 474), (1085, 462)],
+        [(1085, 462), (1085, 595)],
+        [(1085, 595), (955, 595)],
+    ], 12), 6.0)
 
     detach = (
-        (m_tail > 0.55)
-        | (m_hind_near > 0.55)
-        | (m_hind_far > 0.55)
-        | (m_fore_near > 0.55)
-        | (m_fore_far > 0.55)
-        | (m_head_torso_excl > 0.55)
+        (m_tail > 0.50)
+        | (m_hind_near > 0.50)
+        | (m_hind_far > 0.50)
+        | (m_fore_near > 0.50)
+        | (m_fore_far > 0.50)
+        | (m_head_torso_excl > 0.50)
     )
     torso_rgb = rgba[..., :3].copy()
     torso_a = rgba[..., 3].astype(np.float32) * np.clip(
-        1.0 - np.maximum.reduce([m_tail, m_hind_near, m_hind_far, m_fore_near, m_fore_far, m_head_torso_excl, m_jaw]),
+        1.0 - np.maximum.reduce([m_tail, m_hind_near, m_hind_far, m_fore_near, m_fore_far, m_head_torso_excl, m_jaw, m_chest_trim * 0.85]),
         0.0,
         1.0,
     )
 
-    # Smooth curved interior ribcage/pelvis socket hull — strictly inside natural fur arch (ZERO straight belly/neck shelves!)
+    # Expanded curved anatomical hull bridging rump (`x=404`), upper dorsal neck (`(1042, 116)`),
+    # and rounded ribcage/pectoral/hip sockets (`y=468..484`) so rearing/running has ZERO notches, shelves, or slits!
     hull_pts = sample_bezier_chain([
-        [(438, 348), (475, 225), (660, 148), (908, 76)],
-        [(908, 76), (1008, 96), (1068, 156), (1084, 252)],
-        [(1084, 252), (1088, 342), (1064, 420), (1002, 446)],
-        [(1002, 446), (925, 456), (855, 452), (780, 434)],
-        [(780, 434), (705, 416), (625, 414), (555, 428)],
-        [(555, 428), (495, 440), (452, 422), (438, 348)],
+        [(404, 366), (432, 275), (545, 214), (695, 198)],
+        [(695, 198), (795, 188), (852, 114), (918, 92)],
+        [(918, 92), (988, 96), (1042, 118), (1086, 182)],
+        [(1086, 182), (1094, 285), (1082, 398), (1036, 468)],
+        [(1036, 468), (976, 488), (892, 480), (806, 456)],
+        [(806, 456), (726, 430), (636, 424), (554, 452)],
+        [(554, 452), (492, 470), (424, 444), (404, 366)],
     ], 16)
-    hull_torso = poly_mask(hull_pts, 8.5)
-    socket_fill = ((detach & (rgba[..., 3] > 80)) & (hull_torso > 0.30)).astype(np.uint8) * 255
-    if np.any(socket_fill > 0):
-        torso_rgb = cv2.inpaint(torso_rgb, socket_fill, 9.0, cv2.INPAINT_TELEA)
-        torso_a = np.maximum(torso_a, hull_torso * (rgba[..., 3].astype(np.float32) * 0.94))
+    hull_torso = poly_mask(hull_pts, 7.5)
+
+    # Fill detached limb/neck sockets AND any thin fur notches inside hull_torso with matching dark purple-slate fur
+    need_fill = ((hull_torso > 0.22) & (detach | (torso_a < 180.0))).astype(np.uint8) * 255
+    if np.any(need_fill > 0):
+        # Seed transparent interior pockets with dark purple-slate fur before Telea texture propagation
+        seed_rgb = torso_rgb.copy()
+        empty_in_hull = (rgba[..., 3] < 60) & (hull_torso > 0.15)
+        seed_rgb[empty_in_hull] = np.array([40, 34, 48], dtype=np.uint8)
+        inpainted = cv2.inpaint(seed_rgb, need_fill, 9.0, cv2.INPAINT_TELEA)
+        # Subtle anatomical belly-arch shading along lower ribcage/pelvis curve so reared chest looks 3D & rounded
+        gy_t, _ = np.mgrid[0:H, 0:W].astype(np.float32)
+        belly_shade = np.clip(1.0 - 0.24 * np.clip((gy_t - 415.0) / 70.0, 0.0, 1.0), 0.74, 1.0)[..., None]
+        shaded_fill = np.clip(inpainted.astype(np.float32) * belly_shade, 0.0, 255.0).astype(np.uint8)
+        use_fill = (torso_a < 210.0) & (hull_torso > 0.18)
+        torso_rgb = np.where(use_fill[..., None], shaded_fill, torso_rgb)
+        torso_a = np.maximum(torso_a, hull_torso * 248.0)
     torso_a[torso_a < 18.0] = 0.0
 
     # Head cranium: clip dark_maw strictly to a tight curved upper-palate shadow behind upper teeth (never overhanging air!)
@@ -471,6 +582,63 @@ def render_wolf_king_cell(
     hn_off = (float(pose.get("hn_dx", 0.0)) * 2.0, float(pose.get("hn_dy", 0.0)) * 2.0)
     hf_off = (float(pose.get("hf_dx", 0.0)) * 2.0, float(pose.get("hf_dy", 0.0)) * 2.0)
 
+    jaw_ang = float(pose.get("jaw_ang", 0.0))
+
+    def draw_open_oral_cavity(
+        base_head_pt: tuple[float, float],
+        base_jaw_pt: tuple[float, float],
+        h_ang_d: float,
+        j_open_d: float,
+        sc_h: tuple[float, float] = (1.0, 1.0),
+        shade_m: float = 1.0,
+    ) -> None:
+        """
+        Draws a solid curved dark crimson-umber oral cavity bridging `head_cranium` upper palate
+        and rotated `lower_jaw` whenever `jaw_ang > 3.0`, composited underneath upper/lower fangs.
+        """
+        if j_open_d <= 3.0:
+            return
+        j_tot_rad = math.radians(h_ang_d + j_open_d)
+
+        def jaw_rel(rx: float, ry: float) -> tuple[float, float]:
+            ux = (rx - 1134.0) * bsx * sc_h[0]
+            uy = (ry - 444.0) * bsy * sc_h[1]
+            return (
+                base_jaw_pt[0] + ux * math.cos(j_tot_rad) - uy * math.sin(j_tot_rad),
+                base_jaw_pt[1] + ux * math.sin(j_tot_rad) + uy * math.cos(j_tot_rad),
+            )
+
+        u0 = head_rel(1136.0, 430.0, base_head_pt, h_ang_d, sc_h)
+        u1 = head_rel(1184.0, 435.0, base_head_pt, h_ang_d, sc_h)
+        u2 = head_rel(1224.0, 452.0, base_head_pt, h_ang_d, sc_h)
+        l2 = jaw_rel(1218.0, 484.0)
+        l1 = jaw_rel(1182.0, 475.0)
+        l0 = jaw_rel(1136.0, 454.0)
+        # Concave cheek/throat arch recessed slightly behind front canines so zero maw overhangs air
+        throat_in = (
+            0.5 * (u2[0] + l2[0]) - 0.18 * (u2[0] - u0[0]),
+            0.5 * (u2[1] + l2[1]),
+        )
+
+        maw_im = Image.new("RGBA", (W2, H2), (0, 0, 0, 0))
+        md = ImageDraw.Draw(maw_im)
+        maw_pts = sample_bezier_chain([
+            [u0, u1, u2],
+            [u2, throat_in, l2],
+            [l2, l1, l0],
+            [l0, u0],
+        ], 12)
+        c_outer = (int(44 * shade_m), int(18 * shade_m), int(24 * shade_m), 255)
+        c_inner = (int(74 * shade_m), int(26 * shade_m), int(34 * shade_m), 245)
+        md.polygon(maw_pts, fill=c_outer, outline=(22, 12, 16, 255))
+        # Subtle inner crimson tongue/palate ridge inside deep maw
+        t_pts = sample_bezier_chain([
+            [l0, ((l0[0] + l1[0]) * 0.5, (l0[1] + l1[1]) * 0.5 - 4.0), ((l1[0] + l2[0]) * 0.5, (l1[1] + l2[1]) * 0.5 - 3.0)],
+            [((l1[0] + l2[0]) * 0.5, (l1[1] + l2[1]) * 0.5 - 3.0), l1, l0],
+        ], 10)
+        md.polygon(t_pts, fill=c_inner)
+        alpha_over_np(canvas, np.asarray(maw_im))
+
     if is_down:
         # Grounded quadruped collapse: limbs fold forward/underneath torso_mane along ground plane so 0 cut thigh edges poke above spine!
         place("hind_leg_far", (p_hf[0] + hf_off[0], p_hf[1] + hf_off[1]), float(pose.get("hf_ang", 0.0)), sc_mult=(0.92, 0.88), rgb_m=(0.80, 0.80, 0.85))
@@ -479,18 +647,20 @@ def render_wolf_king_cell(
         place("fore_leg_near", (p_fn[0] + fn_off[0], p_fn[1] + fn_off[1]), float(pose.get("fn_ang", 0.0)), sc_mult=(0.94, 0.88))
         place("tail", p_tail, t_ang + float(pose.get("tail_ang", 0.0)), sc_mult=(0.96, 0.88))
         place("torso_mane", p_spine, t_ang)
-        place("lower_jaw", p_jaw, head_ang + float(pose.get("jaw_ang", 0.0)))
+        draw_open_oral_cavity(p_head, p_jaw, head_ang, jaw_ang)
+        place("lower_jaw", p_jaw, head_ang + jaw_ang)
         place("head_cranium", p_head, head_ang)
         place("forehead_shard", p_shard, head_ang, rgb_m=(0.52, 0.55, 0.54))
     elif not is_ne:
-        # SE front-3/4 layer order: far limbs -> tail -> torso_mane -> near hind -> jaw -> head -> shard -> near fore
+        # SE front-3/4 layer order: far limbs -> tail -> torso_mane -> near hind -> oral_cavity -> jaw -> head -> shard -> near fore
         place("hind_leg_far", (p_hf[0] + hf_off[0], p_hf[1] + hf_off[1]), float(pose.get("hf_ang", 0.0)), rgb_m=(0.84, 0.84, 0.88))
         place("fore_leg_far", (p_ff[0] + ff_off[0], p_ff[1] + ff_off[1]), float(pose.get("ff_ang", 0.0)), rgb_m=(0.86, 0.86, 0.90))
         place("tail", p_tail, t_ang + float(pose.get("tail_ang", 0.0)))
         mane_rgb = (1.0, 1.0 + 0.14 * shard_glow, 1.0 + 0.06 * shard_glow)
         place("torso_mane", p_spine, t_ang, rgb_m=mane_rgb)
         place("hind_leg_near", (p_hn[0] + hn_off[0], p_hn[1] + hn_off[1]), float(pose.get("hn_ang", 0.0)))
-        place("lower_jaw", p_jaw, head_ang + float(pose.get("jaw_ang", 0.0)))
+        draw_open_oral_cavity(p_head, p_jaw, head_ang, jaw_ang)
+        place("lower_jaw", p_jaw, head_ang + jaw_ang)
         place("head_cranium", p_head, head_ang)
         shard_rgb = (1.0 + 0.25 * shard_glow, 1.0 + 0.55 * shard_glow, 1.0 + 0.35 * shard_glow)
         if bool(pose.get("dim_shard", False)):
@@ -498,13 +668,14 @@ def render_wolf_king_cell(
         place("forehead_shard", p_shard, head_ang, rgb_m=shard_rgb)
         place("fore_leg_near", (p_fn[0] + fn_off[0], p_fn[1] + fn_off[1]), float(pose.get("fn_ang", 0.0)), sc_mult=pose.get("fn_scale", (1.0, 1.0)))
     else:
-        # True NE dorsal-3/4 turnaround: include lower_jaw attached to head_cranium underneath feathered dorsal ruff!
+        # True NE dorsal-3/4 turnaround: include lower_jaw + oral cavity attached to head_cranium underneath feathered dorsal ruff!
         ne_head_pt = (p_head[0] - 28.0, p_head[1] - 24.0)
         ne_head_ang = head_ang - 10.0
         ne_head_sc = (0.88, 0.90)
         ne_jaw_pt = head_rel(1134.0, 444.0, ne_head_pt, ne_head_ang, ne_head_sc)
         place("fore_leg_far", (p_ff[0] + ff_off[0] - 18.0, p_ff[1] + ff_off[1] - 24.0), float(pose.get("ff_ang", 0.0)) - 6.0, sc_mult=(0.90, 0.90), rgb_m=(0.76, 0.77, 0.82))
-        place("lower_jaw", ne_jaw_pt, ne_head_ang + float(pose.get("jaw_ang", 0.0)) * 0.65, sc_mult=ne_head_sc, rgb_m=(0.82, 0.82, 0.86))
+        draw_open_oral_cavity(ne_head_pt, ne_jaw_pt, ne_head_ang, jaw_ang * 0.65, ne_head_sc, 0.84)
+        place("lower_jaw", ne_jaw_pt, ne_head_ang + jaw_ang * 0.65, sc_mult=ne_head_sc, rgb_m=(0.82, 0.82, 0.86))
         place("head_cranium", ne_head_pt, ne_head_ang, sc_mult=ne_head_sc, rgb_m=(0.84, 0.84, 0.88))
         place("fore_leg_near", (p_fn[0] + fn_off[0] + 10.0, p_fn[1] + fn_off[1] - 16.0), float(pose.get("fn_ang", 0.0)) - 4.0, sc_mult=(0.94, 0.94), rgb_m=(0.88, 0.88, 0.91))
         place("hind_leg_far", (p_hf[0] + hf_off[0], p_hf[1] + hf_off[1] - 12.0), float(pose.get("hf_ang", 0.0)), rgb_m=(0.84, 0.84, 0.88))
@@ -1272,9 +1443,63 @@ def render_party_hero_cell(
         draw_legs_and_drapery()
         draw_arm(sh_l, l_elb, lh_end, 0.88)
 
+        # 2b. Song-Ming Gongbi inner bodice + high-waisted `襦裙` / under-torso connector from `neck` down past `hip + (0, 8)` (1x)
+        #     so `shen_chest_f` (and Gu/Pei leaning chests) join seamlessly into the waist sash & skirt with 0 midriff gaps!
+        im_bod, dbod = new_layer()
+        ux_t = math.sin(lean_rad)
+        uy_t = -math.cos(lean_rad)
+        nx_t, ny_t = -uy_t, ux_t  # Rightward perpendicular to torso spine
+        top_sp = (neck[0] - ux_t * 8.0, neck[1] - uy_t * 8.0)
+        bot_sp = (hip[0] - ux_t * 16.0, hip[1] - uy_t * 16.0)  # +16px at 2x = +8px below hip at 1x!
+        if is_shen:
+            waist_sp = (hip[0] + ux_t * 18.0, hip[1] + uy_t * 18.0)
+            sash_sp = (hip[0] - ux_t * 4.0, hip[1] - uy_t * 4.0)
+            # Upper silk `交领` inner bodice (`robe_main` + `#1E1A18` ink side contours)
+            bodice_chains = [
+                [(top_sp[0] - nx_t * 21.0, top_sp[1] - ny_t * 21.0), (top_sp[0] + nx_t * 21.0, top_sp[1] + ny_t * 21.0)],
+                [(top_sp[0] + nx_t * 21.0, top_sp[1] + ny_t * 21.0), ((top_sp[0] + waist_sp[0]) * 0.5 + nx_t * 20.5, (top_sp[1] + waist_sp[1]) * 0.5 + ny_t * 20.5), (sash_sp[0] + nx_t * 20.5, sash_sp[1] + ny_t * 20.5)],
+                [(sash_sp[0] + nx_t * 20.5, sash_sp[1] + ny_t * 20.5), (sash_sp[0] - nx_t * 20.5, sash_sp[1] - ny_t * 20.5)],
+                [(sash_sp[0] - nx_t * 20.5, sash_sp[1] - ny_t * 20.5), ((top_sp[0] + waist_sp[0]) * 0.5 - nx_t * 20.5, (top_sp[1] + waist_sp[1]) * 0.5 - ny_t * 20.5), (top_sp[0] - nx_t * 21.0, top_sp[1] - ny_t * 21.0)],
+            ]
+            _draw_curved_panel(dbod, bodice_chains, (*pal["robe_main"], 255), (30, 26, 24, 255), 2.1)
+            # High-waisted `襦裙` celadon-green wrap tucked continuously from `waist_sp` down into `hip + (0, 8)` (1x)
+            ruqun_chains = [
+                [(waist_sp[0] - nx_t * 20.5, waist_sp[1] - ny_t * 20.5), (waist_sp[0] + nx_t * 20.5, waist_sp[1] + ny_t * 20.5)],
+                [(waist_sp[0] + nx_t * 20.5, waist_sp[1] + ny_t * 20.5), (bot_sp[0] + nx_t * 23.5, bot_sp[1] + ny_t * 23.5)],
+                [(bot_sp[0] + nx_t * 23.5, bot_sp[1] + ny_t * 23.5), (bot_sp[0] - nx_t * 23.5, bot_sp[1] - ny_t * 23.5)],
+                [(bot_sp[0] - nx_t * 23.5, bot_sp[1] - ny_t * 23.5), (waist_sp[0] - nx_t * 20.5, waist_sp[1] - ny_t * 20.5)],
+            ]
+            _draw_curved_panel(dbod, ruqun_chains, (*pal["skirt_green"], 255), (30, 26, 24, 255), 2.1)
+            for p_off in (-9.0, 0.0, 9.0):
+                draw_bezier_ink(
+                    dbod,
+                    [(waist_sp[0] + nx_t * p_off, waist_sp[1] + ny_t * p_off + 2.0), (bot_sp[0] + nx_t * (p_off * 1.1), bot_sp[1] + ny_t * (p_off * 1.1) - 2.0)],
+                    (*pal["skirt_sh"], 215),
+                    1.9,
+                    1.4,
+                    8,
+                )
+        else:
+            _draw_tapered_segment(dbod, top_sp, bot_sp, 22.0, 21.0, (*pal["robe_main"], 255), (*pal["robe_hi"], 255), (30, 26, 24, 255))
+        flush_layer(im_bod)
+
         # 3. Grafted Canonical Collared Torso
         tarr, tpiv = rig_data["chest_f"]
         paste_transformed_part(canvas, tarr, tpiv, chest_c, angle_deg=lean_deg, scale_xy=(sc_g * 1.18, sc_g * 1.18))
+
+        # 3b. Unified Song-Ming brocade high-waisted cummerbund (`束腰丝绦`) sealing the bodice-to-ruqun tuck on Shen Qinghe
+        if is_shen:
+            im_sash_f, dsash = new_layer()
+            band_top = (hip[0] + ux_t * 16.0, hip[1] + uy_t * 16.0)
+            band_bot = (hip[0] + ux_t * 1.0, hip[1] + uy_t * 1.0)
+            band_chains = [
+                [(band_top[0] - nx_t * 21.5, band_top[1] - ny_t * 21.5), (band_top[0], band_top[1] + 1.5), (band_top[0] + nx_t * 21.5, band_top[1] + ny_t * 21.5)],
+                [(band_top[0] + nx_t * 21.5, band_top[1] + ny_t * 21.5), (band_bot[0] + nx_t * 23.0, band_bot[1] + ny_t * 23.0)],
+                [(band_bot[0] + nx_t * 23.0, band_bot[1] + ny_t * 23.0), (band_bot[0], band_bot[1] + 1.5), (band_bot[0] - nx_t * 23.0, band_bot[1] - ny_t * 23.0)],
+                [(band_bot[0] - nx_t * 23.0, band_bot[1] - ny_t * 23.0), (band_top[0] - nx_t * 21.5, band_top[1] - ny_t * 21.5)],
+            ]
+            _draw_curved_panel(dsash, band_chains, (*pal["sash"], 255), (30, 26, 24, 255), 1.9)
+            flush_layer(im_sash_f)
 
         # 4. Canonical Front Head
         harr, hpiv = rig_data["head_f"]
@@ -1690,7 +1915,7 @@ PORTRAIT_LANDMARKS: dict[str, dict[str, Any]] = {
 
 
 def extract_clean_portrait_1024x1280(pid: str) -> np.ndarray:
-    """Collar- & skirt-safe alpha matting repair + 1024x1280 bottom-aligned Song-Ming LUT."""
+    """Collar-, skirt-, and ear-safe alpha matting repair + premultiplied float32 LANCZOS 1024x1280 Song-Ming LUT."""
     raw_path = os.path.join(REPO_ROOT, f"assets_src/portraits/{pid}_raw.jpg")
     im = Image.open(raw_path).convert("RGB")
     rgb = np.asarray(im, dtype=np.float32)
@@ -1701,10 +1926,12 @@ def extract_clean_portrait_1024x1280(pid: str) -> np.ndarray:
     diff = np.linalg.norm(rgb - bg_col, axis=2)
     luma = 0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]
     chroma = rgb.max(axis=2) - rgb.min(axis=2)
+    gy_raw = np.arange(H, dtype=np.float32)[:, None]
     tol = 22.0 if pid == "pei_zhao" else 27.0
     if pid == "mist_wolf_king":
-        # Strip pure-white ear halo (#FFFFFF differs from warm cream border by ~42, so include bright low-chroma neutral bg!)
-        bg_cand = (((diff < 32.0) & (luma > 195.0)) | ((luma > 196.0) & (chroma < 28.0))).astype(np.uint8)
+        # Restrict neutral pure-white ear-halo clause ((luma > 196) & (chroma < 28)) strictly to upper ear band (gy_raw < 290)
+        # so the right-nostril miasma smoke wisp is NEVER severed in half!
+        bg_cand = (((diff < 32.0) & (luma > 195.0)) | ((gy_raw < 290.0) & (luma > 196.0) & (chroma < 28.0))).astype(np.uint8)
     else:
         bg_cand = ((diff < tol) & (luma > 205.0)).astype(np.uint8)
 
@@ -1721,7 +1948,7 @@ def extract_clean_portrait_1024x1280(pid: str) -> np.ndarray:
 
     pocket_tol = 30.0 if pid == "gu_changqing" else 25.0
     if pid == "mist_wolf_king":
-        pocket_cand = (((diff < 32.0) & (luma > 192.0)) | ((luma > 194.0) & (chroma < 28.0))).astype(np.uint8)
+        pocket_cand = (((diff < 32.0) & (luma > 192.0)) | ((gy_raw < 290.0) & (luma > 194.0) & (chroma < 28.0))).astype(np.uint8)
     else:
         pocket_cand = ((diff < pocket_tol) & (luma > 200.0)).astype(np.uint8)
     np_l, p_lbl, p_stats, p_cent = cv2.connectedComponentsWithStats(pocket_cand, connectivity=8)
@@ -1755,16 +1982,43 @@ def extract_clean_portrait_1024x1280(pid: str) -> np.ndarray:
     erode_iters = 2 if pid == "mist_wolf_king" else 1
     fg_er = cv2.erode(fg_u8, kern, iterations=erode_iters)
     alpha = cv2.GaussianBlur(fg_er.astype(np.float32), (0, 0), 0.65)
-    alpha_u8 = np.clip(np.round(alpha), 0.0, 255.0).astype(np.uint8)
 
     out_rgb = rgb.copy()
-    edge = (alpha_u8 > 8) & (alpha_u8 < 238)
-    defringe_col = np.array([28.0, 24.0, 28.0] if pid == "mist_wolf_king" else [32.0, 29.0, 27.0], dtype=np.float32)
-    out_rgb[edge] = (0.42 if pid == "mist_wolf_king" else 0.58) * out_rgb[edge] + (0.58 if pid == "mist_wolf_king" else 0.42) * defringe_col
+    if pid == "mist_wolf_king":
+        # Feather translucent outer miasma smoke wisps (`gy_raw >= 290`, bright greenish mist outside dark ink fur)
+        # so smoke tendrils fade softly into dark cave air instead of having hard paper-cutout edges!
+        gx_raw = np.arange(W, dtype=np.float32)[None, :]
+        outer_wisp = (gy_raw >= 290.0) & (luma > 164.0) & ((gx_raw < 205.0) | (gx_raw > 695.0)) & (alpha > 0.0)
+        smoke_a = np.clip((diff - 30.0) / 48.0, 0.0, 1.0) * 235.0
+        smoke_a = cv2.GaussianBlur(smoke_a.astype(np.float32), (0, 0), 1.4)
+        alpha = np.where(outer_wisp, np.minimum(alpha, smoke_a), alpha)
+
+    alpha_u8 = np.clip(np.round(alpha), 0.0, 255.0).astype(np.uint8)
+    # Threshold low-alpha outer fringe (< 16) BEFORE defringing & premultiplied resize!
+    alpha_u8[alpha_u8 < 16] = 0
+
+    edge = (alpha_u8 > 0) & (alpha_u8 < 242)
+    defringe_col = np.array([24.0, 20.0, 24.0] if pid == "mist_wolf_king" else [32.0, 29.0, 27.0], dtype=np.float32)
+    if pid == "mist_wolf_king":
+        gx_raw = np.arange(W, dtype=np.float32)[None, :]
+        outer_wisp_ed = (gy_raw >= 290.0) & (luma > 160.0) & ((gx_raw < 205.0) | (gx_raw > 695.0)) & (alpha_u8 > 0)
+        fur_edge = edge & (~outer_wisp_ed)
+        out_rgb[fur_edge] = 0.34 * out_rgb[fur_edge] + 0.66 * defringe_col
+        # Unmix cream paper wash from translucent miasma smoke tendrils toward misty celadon-jade `[134, 182, 152]`
+        jade_mist = np.array([134.0, 182.0, 152.0], dtype=np.float32)
+        w_mist = np.clip((245.0 - alpha_u8.astype(np.float32)) / 220.0, 0.28, 0.76)[..., None]
+        out_rgb = np.where(outer_wisp_ed[..., None], out_rgb * (1.0 - w_mist) + jade_mist * w_mist, out_rgb)
+        # Ensure upper ear silhouette rim (gy_raw < 290) has zero bright halo remnants even on high-alpha border pixels
+        ear_rim = (gy_raw < 290.0) & (alpha_u8 > 0) & ((alpha_u8 < 252) | (luma > 152.0))
+        ear_bright = ear_rim & (luma > 138.0) & (chroma < 32.0)
+        out_rgb[ear_bright] = 0.20 * out_rgb[ear_bright] + 0.80 * defringe_col
+    else:
+        out_rgb[edge] = 0.56 * out_rgb[edge] + 0.44 * defringe_col
+
     rgba = clean_zero_alpha(np.concatenate([np.clip(out_rgb, 0, 255).astype(np.uint8), alpha_u8[..., None]], axis=2))
     rgba = apply_song_ming_lut(rgba, sat_scale=0.90, val_scale=1.0)
 
-    ys, xs = np.where(rgba[..., 3] > 12)
+    ys, xs = np.where(rgba[..., 3] >= 16)
     x0 = max(0, int(xs.min()) - 12)
     x1 = min(W, int(xs.max()) + 12)
     y0 = max(0, int(ys.min()) - 16)
@@ -1773,12 +2027,25 @@ def extract_clean_portrait_1024x1280(pid: str) -> np.ndarray:
     ch_c, cw_c = cropped.shape[:2]
     scale = min(980.0 / max(1, cw_c), 1222.0 / max(1, ch_c))
     nw, nh = int(round(cw_c * scale)), int(round(ch_c * scale))
-    resized = np.asarray(Image.fromarray(cropped, mode="RGBA").resize((nw, nh), Image.Resampling.LANCZOS))
+    # Premultiplied float32 RGBA LANCZOS resize -> ZERO [255,255,255] or [255,0,255] exterior ringing!
+    resized = resize_rgba_premultiplied_lanczos(cropped, nw, nh, alpha_cutoff=16)
 
     canvas = np.zeros((1280, 1024, 4), dtype=np.uint8)
-    px = (1024 - nw) // 2
-    py = (1280 - nh) if pid != "mist_wolf_king" else (1280 - nh) // 2
+    if pid == "mist_wolf_king":
+        # Align symmetric cranial/pupil axis (`0.5*(le_pup.x+re_pup.x) == 503.5`) rather than asymmetric right miasma wisp
+        _, xs_head = np.where(rgba[:360, :, 3] >= 200)
+        raw_head_cx = 0.5 * (float(xs_head.min()) + float(xs_head.max())) - float(x0)
+        px = max(0, min(1024 - nw, int(round(504.0 - raw_head_cx * scale))))
+        py = (1280 - nh) // 2
+    else:
+        px = (1024 - nw) // 2
+        py = 1280 - nh
     canvas[py : py + nh, px : px + nw] = resized
+
+    if pid == "mist_wolf_king":
+        canvas = keep_largest_alpha_cc(canvas, alpha_thresh=12)
+    else:
+        canvas = prune_tiny_alpha_specks(canvas, max_speck_area=64, alpha_thresh=12)
     return clean_zero_alpha(canvas)
 
 
@@ -1788,12 +2055,19 @@ def assert_portrait_landmarks_on_calm(pid: str, calm_rgba: np.ndarray, lm: dict[
     luma = 0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]
 
     if lm.get("is_lupine", False):
-        # Wolf King: verify le_pup=(390,497), re_pup=(617,493) and zero bright ear fringe!
+        # Wolf King: verify le_pup=(390,497), re_pup=(617,493) hit dark pupil ink, 1 CC, and zero bright ear fringe on BOTH ears!
         assert lm["le_pup"] == (390, 497) and lm["re_pup"] == (617, 493), f"Wolf pupil coords mismatch: {lm['le_pup']}, {lm['re_pup']}"
-        ear_r_sub = calm_rgba[80:240, 760:805]
-        ear_r_luma = luma[80:240, 760:805]
-        white_fringe_px = int(((ear_r_sub[..., 3] > 16) & (ear_r_luma > 165.0)).sum())
-        assert white_fringe_px == 0, f"Wolf upper-right ear white fringe remaining: {white_fringe_px}px"
+        for pk in ("le_pup", "re_pup"):
+            px_w, py_w = lm[pk]
+            pw_luma = float(luma[py_w - 2 : py_w + 3, px_w - 2 : px_w + 3].min())
+            assert pw_luma < 45.0, f"[mist_wolf_king] {pk}=({px_w},{py_w}) missed dark pupil slit: min_luma={pw_luma:.1f}"
+        for ear_name, ex0, ex1 in [("left_ear", 175, 245), ("right_ear", 745, 820)]:
+            ear_sub = calm_rgba[50:260, ex0:ex1]
+            ear_luma = luma[50:260, ex0:ex1]
+            bright_px = int(((ear_sub[..., 3] > 12) & (ear_luma > 160.0)).sum())
+            assert bright_px == 0, f"Wolf {ear_name} bright fringe on calm: {bright_px}px"
+        nl_cc = cv2.connectedComponentsWithStats((calm_rgba[..., 3] > 12).astype(np.uint8), connectivity=8)[0]
+        assert nl_cc == 2, f"Wolf calm must have exactly 1 connected foreground component, got {nl_cc - 1}"
         return
 
     # 1. Pupils (`le_pup`, `re_pup`) MUST sample actual dark iris/pupil ink (`luma < 85`) AND sit strictly below eyebrows!
@@ -1837,9 +2111,16 @@ def apply_local_wendland_warp(
     base_rgba: np.ndarray,
     warps: list[tuple[tuple[float, float], tuple[float, float], tuple[float, float]]],
     roi_box: tuple[int, int, int, int],
+    warp_alpha: bool = False,
 ) -> np.ndarray:
     """
-    Applies compactly-supported C^2 Wendland-Gaussian local displacements strictly inside roi_box.
+    Applies compactly-supported C^2 Wendland-Gaussian local displacements strictly inside roi_box
+    in premultiplied float32 RGBA space (NEVER uint8 INTER_CUBIC, NEVER unpremultiplied background bleed!).
+    - When `warp_alpha=True` (`is_lupine`), all 4 premultiplied channels warp coherently via strictly
+      convex bilinear interpolation near boundaries + monotone-clamped bicubic in opaque interiors,
+      updating alpha cleanly with zero white/neon fringe and zero [0,0,0] black ear-crust!
+    - When `warp_alpha=False` (humanoids), displacements also taper to 0.0 within 12px of exterior
+      silhouette boundaries (`orig_a < 245`).
     """
     if not warps:
         return base_rgba.copy()
@@ -1861,6 +2142,13 @@ def apply_local_wendland_warp(
     by_taper = np.clip(np.minimum(gy, (sh - 1) - gy) / 14.0, 0.0, 1.0)
     box_taper = bx_taper * by_taper
 
+    orig_a_u8 = sub[..., 3].copy()
+    if not warp_alpha:
+        solid = (orig_a_u8 >= 245).astype(np.uint8)
+        if not np.all(solid > 0):
+            dist_in = cv2.distanceTransform(solid, cv2.DIST_L2, 5)
+            box_taper = box_taper * np.clip((dist_in - 2.0) / 10.0, 0.0, 1.0)
+
     for (cx, cy), (dx, dy), (sx, sy) in warps:
         r2 = ((ax - cx) / max(1.0, sx)) ** 2 + ((ay - cy) / max(1.0, sy)) ** 2
         inside = r2 < 9.0
@@ -1872,10 +2160,38 @@ def apply_local_wendland_warp(
 
     map_x = (gx - disp_x).astype(np.float32)
     map_y = (gy - disp_y).astype(np.float32)
-    orig_a = sub[..., 3].copy()
-    warped_rgb = cv2.remap(sub[..., :3], map_x, map_y, interpolation=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
-    sub[..., :3] = np.where((orig_a > 0)[..., None], warped_rgb, 0)
-    sub[..., 3] = orig_a
+
+    a_f = orig_a_u8.astype(np.float32) / 255.0
+    pre_rgb = sub[..., :3].astype(np.float32) * a_f[..., None]
+    pre_4 = np.concatenate([pre_rgb, orig_a_u8[..., None].astype(np.float32)], axis=2)
+
+    # Monotone-clamped float32 remap: crisp INTER_CUBIC bounded by local 3x3 [min, max] envelope (INTER_LINEAR at silhouette edges)
+    k3 = np.ones((3, 3), dtype=np.uint8)
+    pre_min_src = cv2.erode(pre_4, k3, iterations=1)
+    pre_max_src = cv2.dilate(pre_4, k3, iterations=1)
+    w_lin = cv2.remap(pre_4, map_x, map_y, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0.0, 0.0, 0.0, 0.0))
+    w_cub = cv2.remap(pre_4, map_x, map_y, interpolation=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue=(0.0, 0.0, 0.0, 0.0))
+    w_lo = cv2.remap(pre_min_src, map_x, map_y, interpolation=cv2.INTER_NEAREST, borderMode=cv2.BORDER_CONSTANT, borderValue=(0.0, 0.0, 0.0, 0.0))
+    w_hi = cv2.remap(pre_max_src, map_x, map_y, interpolation=cv2.INTER_NEAREST, borderMode=cv2.BORDER_CONSTANT, borderValue=(0.0, 0.0, 0.0, 0.0))
+    w_monotone = np.clip(w_cub, np.minimum(w_lo, w_lin), np.maximum(w_hi, w_lin))
+
+    if warp_alpha:
+        a_w255 = np.clip(w_lin[..., 3], 0.0, 255.0)
+        use_cub = (a_w255 >= 250.0) & (w_lo[..., 3] >= 250.0)
+        pre_rgb_w = np.where(use_cub[..., None], w_monotone[..., :3], w_lin[..., :3])
+        pre_rgb_w = np.clip(pre_rgb_w, 0.0, a_w255[..., None])
+        valid = a_w255 >= 16.0
+        a_safe = np.maximum(a_w255 / 255.0, 1e-4)[..., None]
+        sub[..., :3] = np.where(valid[..., None], np.clip(np.round(pre_rgb_w / a_safe), 0.0, 255.0), 0.0).astype(np.uint8)
+        sub[..., 3] = np.where(valid, np.clip(np.round(a_w255), 16.0, 255.0), 0.0).astype(np.uint8)
+    else:
+        a_w255 = orig_a_u8.astype(np.float32)
+        pre_rgb_w = np.clip(w_monotone[..., :3], 0.0, a_w255[..., None])
+        valid = orig_a_u8 > 0
+        a_safe = np.maximum(a_w255 / 255.0, 1e-4)[..., None]
+        sub[..., :3] = np.where(valid[..., None], np.clip(np.round(pre_rgb_w / a_safe), 0.0, 255.0), 0.0).astype(np.uint8)
+        sub[..., 3] = orig_a_u8
+
     out[y0:y1, x0:x1] = sub
     return clean_zero_alpha(out)
 
@@ -1903,7 +2219,7 @@ def synthesize_portrait_expression(calm_rgba: np.ndarray, pid: str, expr: str) -
                 (lm["m_l"], (-3.0, 8.0), (42.0, 28.0)),
                 (lm["m_r"], (3.0, 8.0), (42.0, 28.0)),
             ]
-            out = apply_local_wendland_warp(calm_rgba, warps, (150, 90, 720, 820))
+            out = apply_local_wendland_warp(calm_rgba, warps, (140, 45, 744, 865), warp_alpha=True)
             ov = Image.new("RGBA", (2048, 2560), (0, 0, 0, 0))
             d = ImageDraw.Draw(ov)
             scx, scy = lm["shard_c"][0] * 2, lm["shard_c"][1] * 2
@@ -1915,10 +2231,10 @@ def synthesize_portrait_expression(calm_rgba: np.ndarray, pid: str, expr: str) -
             for ex_p, ey_p in [lm["le_pup"], lm["re_pup"]]:
                 d2.ellipse((ex_p * 2 - 20, ey_p * 2 - 14, ex_p * 2 + 20, ey_p * 2 + 14), fill=(116, 236, 188, 130))
                 d2.ellipse((ex_p * 2 - 9, ey_p * 2 + 22, ex_p * 2 + 7, ey_p * 2 + 42), fill=(220, 252, 242, 180))
-            ov_1x = np.asarray(ov_blur.resize((1024, 1280), Image.Resampling.LANCZOS)).copy()
-            ov_1x[..., 3] = np.minimum(ov_1x[..., 3], orig_alpha)
+            ov_1x = resize_rgba_premultiplied_lanczos(np.asarray(ov_blur), 1024, 1280, alpha_cutoff=1)
+            ov_1x[..., 3] = np.minimum(ov_1x[..., 3], out[..., 3])
             alpha_over_np(out, ov_1x)
-            return clean_zero_alpha(out)
+            return keep_largest_alpha_cc(clean_zero_alpha(out), alpha_thresh=12)
         else:  # `bloodied` berserk Dao-Shadow corruption
             warps = [
                 (lm["ear_l"], (8.0, -10.0), (54.0, 58.0)),
@@ -1931,7 +2247,7 @@ def synthesize_portrait_expression(calm_rgba: np.ndarray, pid: str, expr: str) -
                 (lm["m_l"], (-5.0, -9.0), (44.0, 30.0)),
                 (lm["m_r"], (5.0, -9.0), (44.0, 30.0)),
             ]
-            out = apply_local_wendland_warp(calm_rgba, warps, (150, 90, 720, 820))
+            out = apply_local_wendland_warp(calm_rgba, warps, (140, 45, 744, 865), warp_alpha=True)
             ov = Image.new("RGBA", (2048, 2560), (0, 0, 0, 0))
             d = ImageDraw.Draw(ov)
             scx, scy = lm["shard_c"][0] * 2, lm["shard_c"][1] * 2
@@ -1955,10 +2271,10 @@ def synthesize_portrait_expression(calm_rgba: np.ndarray, pid: str, expr: str) -
             draw_bezier_ink(ds_w, [(1214, 1178), (1174, 1204), (1126, 1246), (1094, 1284)], (118, 26, 28, 150), 8.0, 2.0, 20)
             scuff_soft = scuff_layer.filter(ImageFilter.GaussianBlur(radius=3.4))
             ov_comb = Image.alpha_composite(ov_blur, scuff_soft)
-            ov_1x = np.asarray(ov_comb.resize((1024, 1280), Image.Resampling.LANCZOS)).copy()
-            ov_1x[..., 3] = np.minimum(ov_1x[..., 3], orig_alpha)
+            ov_1x = resize_rgba_premultiplied_lanczos(np.asarray(ov_comb), 1024, 1280, alpha_cutoff=1)
+            ov_1x[..., 3] = np.minimum(ov_1x[..., 3], out[..., 3])
             alpha_over_np(out, ov_1x)
-            return clean_zero_alpha(out)
+            return keep_largest_alpha_cc(clean_zero_alpha(out), alpha_thresh=12)
 
     # Humanoid Song-Ming Gongbi anatomical warps + 2x-supersampled brush overpaint
     warps_h: list[tuple[tuple[float, float], tuple[float, float], tuple[float, float]]] = []
@@ -2584,7 +2900,7 @@ def update_asset_manifest(new_entries: list[dict[str, Any]]) -> int:
 
 
 def run_self_audit() -> None:
-    """Enforces hard build-time assertions across all generated sprite sheets and portraits."""
+    """Enforces hard build-time assertions across all generated sprite sheets and all 33 portraits."""
     for aid in ["gu_changqing", "shen_qinghe", "pei_zhao", "boss_mist_wolf_king"]:
         png_p = os.path.join(REPO_ROOT, f"project/assets/sprites/{aid}_sheet.png")
         js_p = os.path.join(REPO_ROOT, f"project/assets/sprites/{aid}_sheet.json")
@@ -2618,14 +2934,80 @@ def run_self_audit() -> None:
                     f"(top={int(np.max(ca[0,:]))}, bot={int(np.max(ca[ch-1,:]))}, left={int(np.max(ca[:,0]))}, right={int(np.max(ca[:,cw-1]))})"
                 )
 
-                nl, _, stats, _ = cv2.connectedComponentsWithStats((ca > 16).astype(np.uint8), connectivity=8)
-                assert nl <= 2, (
-                    f"Detached floating island/speck in {aid} cell ({r},{c}): {nl - 1} components (areas={stats[1:, cv2.CC_STAT_AREA].tolist()})"
-                )
+                for thr_cc in (1, 16, 40):
+                    nl, _, stats, _ = cv2.connectedComponentsWithStats((ca >= thr_cc).astype(np.uint8), connectivity=8)
+                    assert nl <= 2, (
+                        f"Detached floating island/speck (alpha>={thr_cc}) in {aid} cell ({r},{c}): {nl - 1} components (areas={stats[1:, cv2.CC_STAT_AREA].tolist()})"
+                    )
 
-                cy_solid, _ = np.where(ca > 40)
+                cy_solid, cx_solid = np.where(ca > 40)
                 if len(cy_solid) > 0:
-                    max_mane_above_fy = max(max_mane_above_fy, fy - int(cy_solid.min()))
+                    y_top_c = int(cy_solid.min())
+                    max_mane_above_fy = max(max_mane_above_fy, fy - y_top_c)
+
+                    if aid != "boss_mist_wolf_king":
+                        # Surgical Fix 2 Assertion (a): ZERO empty horizontal scanlines between head/neck top and foot_y - 14 (foot_y - 4 in down)
+                        is_down_cell = (r == 7 and c >= 2)
+                        scan_end_y = (fy - 4) if is_down_cell else (fy - 14)
+                        for sy in range(y_top_c + 4, max(y_top_c + 5, scan_end_y)):
+                            assert int(np.max(ca[sy, :])) > 40, (
+                                f"Empty horizontal torso/limb scanline in {aid} cell ({r},{c}) at y={sy} (top={y_top_c}, fy={fy})"
+                            )
+                        # Surgical Fix 2 Assertion (b): Shen Qinghe torso/midriff/waist/skirt must have ZERO enclosed interior holes
+                        # inside her torso/waist/skirt core (excluding the open air loop behind her left pibo silk ribbon / raised sleeve)!
+                        if aid == "shen_qinghe" and not is_down_cell:
+                            bg_m = (ca <= 16).astype(np.uint8)
+                            nl_b, lbl_b, _, _ = cv2.connectedComponentsWithStats(bg_m, connectivity=8)
+                            ext_b = set(lbl_b[0, :]) | set(lbl_b[-1, :]) | set(lbl_b[:, 0]) | set(lbl_b[:, -1])
+                            ext_b.discard(0)
+                            hole_mask = (bg_m > 0) & (~np.isin(lbl_b, list(ext_b)))
+                            for my in range(fy - 108, fy - 32):
+                                solid_row = ca[my, :] > 160
+                                best_l, best_r, cur_l = 0, -1, -1
+                                for x_i in range(cw):
+                                    if solid_row[x_i]:
+                                        if cur_l < 0:
+                                            cur_l = x_i
+                                        if (x_i - cur_l) > (best_r - best_l):
+                                            best_l, best_r = cur_l, x_i
+                                    else:
+                                        cur_l = -1
+                                max_run = best_r - best_l + 1
+                                assert max_run >= 15, (
+                                    f"Thin/severed midriff row in shen_qinghe cell ({r},{c}) at y={my}: max_contiguous_opaque={max_run}px"
+                                )
+                                interior_holes = int(np.sum(hole_mask[my, best_l : best_r + 1]))
+                                assert interior_holes == 0, (
+                                    f"Enclosed midriff/torso/skirt hole in shen_qinghe cell ({r},{c}) at y={my} [{best_l}..{best_r}]: {interior_holes}px"
+                                )
+                    elif aid == "boss_mist_wolf_king":
+                        # Surgical Fix 3 Assertions on boss_mist_wolf_king:
+                        # (a) Zero pale cream studio-background fringes ((ca > 20) & (luma > 184) & (chroma < 28)) across body/legs/tail/neck!
+                        c_rgb = cell[..., :3].astype(np.float32)
+                        c_luma = 0.299 * c_rgb[..., 0] + 0.587 * c_rgb[..., 1] + 0.114 * c_rgb[..., 2]
+                        c_chr = c_rgb.max(axis=2) - c_rgb.min(axis=2)
+                        x_max_c = int(cx_solid.max())
+                        # Exclude only the right-side head snout/eye/fangs zone (`x >= x_max_c - 125`)
+                        body_zone = np.ones((ch, cw), dtype=bool)
+                        body_zone[:, max(0, x_max_c - 125) :] = False
+                        cream_rem = int(((ca > 20) & body_zone & (c_luma > 184.0) & (c_chr < 28.0)).sum())
+                        assert cream_rem == 0, (
+                            f"Pale cream studio-background fringe remaining on Wolf body/legs/neck in cell ({r},{c}): {cream_rem}px"
+                        )
+                        # (b) Zero enclosed holes in dorsal neck (`y < fy - 210`) or roaring mouth (`x >= x_max_c - 85, y < fy - 145`)!
+                        bg_w = (ca <= 16).astype(np.uint8)
+                        nl_wb, lbl_wb, st_wb, _ = cv2.connectedComponentsWithStats(bg_w, connectivity=8)
+                        ext_wb = set(lbl_wb[0, :]) | set(lbl_wb[-1, :]) | set(lbl_wb[:, 0]) | set(lbl_wb[:, -1])
+                        ext_wb.discard(0)
+                        for wlid in range(1, nl_wb):
+                            if wlid not in ext_wb:
+                                wx, wy, ww, wh, warea = [int(v) for v in st_wb[wlid]]
+                                assert not (wy < fy - 210 and warea > 3), (
+                                    f"Enclosed dorsal-neck hole in boss_mist_wolf_king cell ({r},{c}): area={warea} bbox=({wx},{wy},{ww},{wh})"
+                                )
+                                assert not (wx >= x_max_c - 85 and wy < fy - 196 and warea > 4), (
+                                    f"Enclosed roaring-jaw hole in boss_mist_wolf_king cell ({r},{c}): area={warea} bbox=({wx},{wy},{ww},{wh})"
+                                )
 
         if aid == "boss_mist_wolf_king":
             assert max_mane_above_fy <= htop, (
@@ -2680,9 +3062,45 @@ def run_self_audit() -> None:
             )
         assert down_h <= int(idle_h * 0.68), f"Down height not collapsed on {aid}: {down_h} vs {idle_h}"
 
-    # 3. Verify portrait pairwise RMSE & affine-removed sRMSE summary
+    # 3. Surgical Fix 1 Hard Assertions across ALL 33 generated portraits (including ALL 3 mist_wolf_king variants!)
     pspec = json.load(open(os.path.join(REPO_ROOT, "assets_src/portraits/r2_expression_spec.json"), "r", encoding="utf-8"))
     for pid, info in pspec.items():
+        lm = PORTRAIT_LANDMARKS[pid]
+        calm_p = np.asarray(Image.open(os.path.join(REPO_ROOT, f"project/assets/portraits/{pid}_calm.png")).convert("RGBA"))
+        calm_max_15 = cv2.dilate(calm_p[..., :3], np.ones((15, 15), dtype=np.uint8), iterations=1).astype(np.int32)
+
+        for expr in info["emotions"]:
+            vp = np.asarray(Image.open(os.path.join(REPO_ROOT, f"project/assets/portraits/{pid}_{expr}.png")).convert("RGBA"))
+            # Zero-alpha RGB bleed == 0
+            vz = vp[..., 3] == 0
+            assert int(np.max(vp[vz, :3])) == 0, f"Zero-alpha RGB bleed in {pid}_{expr}"
+            # Exactly 1 single connected foreground component across ALL 33 portraits (at alpha >= 1, >= 12, and >= 16)!
+            for p_thr in (1, 12, 16):
+                nl_p, _, st_p, _ = cv2.connectedComponentsWithStats((vp[..., 3] >= p_thr).astype(np.uint8), connectivity=8)
+                assert nl_p == 2, (
+                    f"Disconnected floating sliver/speck in {pid}_{expr} (alpha>={p_thr}): {nl_p - 1} components, areas={st_p[1:, cv2.CC_STAT_AREA].tolist()}"
+                )
+            if pid == "mist_wolf_king":
+                v_luma = 0.299 * vp[..., 0].astype(np.float32) + 0.587 * vp[..., 1].astype(np.float32) + 0.114 * vp[..., 2].astype(np.float32)
+                for ear_label, ex0, ex1 in [("left_ear", 175, 245), ("right_ear", 745, 820)]:
+                    esub = vp[50:260, ex0:ex1]
+                    c_esub = calm_p[50:260, ex0:ex1]
+                    eluma = v_luma[50:260, ex0:ex1]
+                    ebright = int(((esub[..., 3] > 12) & (eluma > 160.0)).sum())
+                    c_black0 = int(((c_esub[..., 3] > 200) & (c_esub[..., 0] == 0) & (c_esub[..., 1] == 0) & (c_esub[..., 2] == 0)).sum())
+                    eblack0 = int(((esub[..., 3] > 200) & (esub[..., 0] == 0) & (esub[..., 1] == 0) & (esub[..., 2] == 0)).sum())
+                    assert ebright == 0, f"Bright ear-fringe pixels on {pid}_{expr} {ear_label}: {ebright}px"
+                    assert eblack0 <= c_black0 + 2, f"Added pure-black [0,0,0] ear-crust pixels on {pid}_{expr} {ear_label}: {eblack0} vs calm {c_black0}"
+            elif expr != "calm":
+                # Verify 0 INTER_CUBIC modulo-256 wraparound spikes on humanoids (excluding intentional pupil catchlights & tear bead)
+                allow_hi = np.zeros((1280, 1024), dtype=bool)
+                for lmk in ("le_pup", "re_pup", "le_low", "re_low"):
+                    kx, ky = lm[lmk]
+                    allow_hi[max(0, ky - 10) : min(1280, ky + 16), max(0, kx - 14) : min(1024, kx + 14)] = True
+                excess = (vp[..., :3].astype(np.int32) - calm_max_15).max(axis=2)
+                wrap_spikes = int(((vp[..., 3] > 40) & (~allow_hi) & (excess > 24)).sum())
+                assert wrap_spikes == 0, f"INTER_CUBIC wraparound spike detected on {pid}_{expr}: {wrap_spikes}px"
+
         print(
             f"[AUDIT PORTRAIT] {pid:18s}: {len(info['emotions'])} variants | min_RMSE={info['min_pairwise_face_rmse']:.2f} "
             f"| min_affine_sRMSE={info['min_pairwise_affine_srmse']:.2f} ({info['min_pair'][0]} vs {info['min_pair'][1]})"
