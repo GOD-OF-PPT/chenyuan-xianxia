@@ -36,6 +36,7 @@ var _notify_overlay: NotificationOverlay
 var _occluder_sprites: Array[Dictionary] = [] # [{sprite: Sprite2D, rect: Rect2}]
 var _interactables: Array[Dictionary] = []    # [{id, kind, pos, radius, title, sprite, obstacle_idx}]
 var _zone_portals: Array[Dictionary] = []     # [{rect: Rect2, target_zone: String, target_spawn: String, label: String}]
+var _portal_markers: Array[Node2D] = []
 var _npc_actors: Array[BattleActor] = []
 var _mm_roads: Array[PackedVector2Array] = []
 var _mm_buildings: Array[Rect2] = []
@@ -281,6 +282,7 @@ func load_zone(zone_id: String, spawn_tag: String = "", use_saved_pos_if_empty: 
 	_occluder_sprites.clear()
 	_interactables.clear()
 	_zone_portals.clear()
+	_portal_markers.clear()
 	_npc_actors.clear()
 	_mm_roads.clear()
 	_mm_buildings.clear()
@@ -325,9 +327,9 @@ func _get_spawn_coords(zone_id: String, spawn_tag: String) -> Vector2:
 	match zone_id:
 		"tingyu_town":
 			if spawn_tag == "from_pass":
-				return Vector2(2120.0, 480.0)
+				return Vector2(2110.0, 605.0)
 			if spawn_tag == "stele_tingyu_gate":
-				return Vector2(1940.0, 560.0)
+				return Vector2(1855.0, 645.0)
 			return Vector2(360.0, 790.0)
 		"qinglan_pass":
 			if spawn_tag == "from_cave":
@@ -347,58 +349,66 @@ func _get_spawn_coords(zone_id: String, spawn_tag: String) -> Vector2:
 ## ==================== 区域 ①：听雨镇 & 济世药庐外院 ====================
 func _assemble_tingyu_town() -> void:
 	_add_tiled_ground("res://assets/world/tex_moss_earth.png", ZONE_BOUNDS)
-	# 茶寮前庭石坪 + 散修地摊支坪 + 药庐外院石阶大院 + 青石板主街（自然衔接并带苔石路肩羽化！）
+	# 茶寮前庭石坪 + 散修地摊支坪 + 药庐外院石阶大院 + 青石板主街（深度嵌合主街消除接缝横线！）
 	_add_road_polygon(PackedVector2Array([
-		Vector2(410, 560), Vector2(675, 555), Vector2(695, 760), Vector2(400, 775)
+		Vector2(410, 560), Vector2(675, 555), Vector2(695, 795), Vector2(400, 805)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(705, 740), Vector2(935, 725), Vector2(945, 920), Vector2(710, 925)
+		Vector2(705, 760), Vector2(935, 750), Vector2(945, 920), Vector2(710, 925)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(995, 390), Vector2(1615, 390), Vector2(1635, 735), Vector2(980, 760)
+		Vector2(995, 395), Vector2(1625, 395), Vector2(1645, 765), Vector2(980, 785)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(60, 720), Vector2(980, 675), Vector2(1680, 515), Vector2(2360, 420),
-		Vector2(2360, 600), Vector2(1720, 695), Vector2(1020, 855), Vector2(60, 895)
+		Vector2(60, 720), Vector2(980, 675), Vector2(1680, 540), Vector2(2360, 505),
+		Vector2(2360, 705), Vector2(1720, 735), Vector2(1020, 855), Vector2(60, 895)
 	]), "res://assets/world/tex_bluestone_wet.png")
 
-	# 建筑与古树（立面进 Y-Sort + 55% 遮挡半透；药庐主殿下移至 y=562 确保屋脊鸱吻完整入镜！）
+	# 建筑与古树（下移香樟树至 y=595/605 确保树冠完整入镜不切顶！）
 	_add_ysort_structure("res://assets/world/prop_tea_pavilion.png", Vector2(540.0, 635.0), 96.0, true)
-	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1290.0, 562.0), 130.0, true)
-	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(835.0, 520.0), 56.0, true)
-	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(1735.0, 455.0), 56.0, true)
-	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(285.0, 545.0), 48.0, true)
-	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1830.0, 885.0), 48.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1290.0, 562.0), 122.0, true)
+	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(835.0, 595.0), 52.0, true)
+	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(1755.0, 605.0), 52.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(285.0, 565.0), 46.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1830.0, 885.0), 46.0, true)
 
-	# 专属城镇 NPC 序列帧（老樵夫 npc_elder / 周执事 npc_steward_zhou，彻底告别主角双胞胎穿帮！）
+	# 专属城镇 NPC 序列帧（老樵夫 / 游方摆摊散修 / 周执事）
 	_spawn_npc("npc_elder", "听雨镇老樵夫", "npc_elder", Vector2(565.0, 695.0), "tea_elder")
 
-	# 散修小地摊：草席挂入 _ground_decor_layer（绝不腰斩人物），仅在后方坐摊人位置设小碰撞圆
-	_combat_ctrl.obstacle_circles.append({"pos": Vector2(820.0, 775.0), "radius": 42.0})
-	_add_interactable("peddler_stall", "stall", Vector2(820.0, 865.0), 115.0, "散修小地摊 [F 掌眼淘旧物]", "res://assets/world/prop_peddler_stall.png", -1, true)
+	# 散修小地摊：斗笠游方散修守摊立像 + 贴地草席旧物，彻底告别“空摊无人”！
+	_spawn_npc("npc_peddler", "游方摆摊散修", "npc_peddler", Vector2(818.0, 782.0), "peddler")
+	_combat_ctrl.obstacle_circles.append({"pos": Vector2(818.0, 770.0), "radius": 38.0})
+	_add_interactable("peddler_stall", "stall", Vector2(820.0, 868.0), 135.0, "散修小地摊 [F 掌眼淘旧物]", "res://assets/world/prop_peddler_stall.png", -1, true)
 
 	if not bool(CampaignState.world_flags.get("met_shen_qinghe", false)):
-		_spawn_npc("shen_npc", "沈清禾 · 药庐医修", "shen_qinghe", Vector2(1175.0, 628.0), "meet_shen")
+		_spawn_npc("shen_npc", "沈清禾 · 药庐医修", "shen_qinghe", Vector2(1215.0, 650.0), "meet_shen")
 
-	_add_interactable("yaolu_alchemy", "alchemy", Vector2(1400.0, 622.0), 98.0, "济世青铜丹炉 [F 控火炼丹]", "res://assets/world/prop_alchemy_furnace.png")
-	_add_interactable("yaolu_shop", "shop", Vector2(1110.0, 580.0), 98.0, "药庐外院药肆 [F 购草寄售]", "")
+	# 药庐外院实体器物三件套：青铜丹炉（带实体阻挡圆与宽裕环炉触发半径）+ 药肆木柜 + 弃置废丹竹篓
+	var furnace_obs: int = _combat_ctrl.obstacle_circles.size()
+	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1405.0, 610.0), "radius": 54.0})
+	_add_interactable("yaolu_alchemy", "alchemy", Vector2(1405.0, 646.0), 158.0, "济世青铜丹炉 [F 控火炼丹]", "res://assets/world/prop_alchemy_furnace.png", furnace_obs)
 
-	# 丹炉旁弃置废丹匣（合乎世界观地获得首枚【焦黑废丹】供体验断玉剑匣提纯，取代开局凭空塞包）
+	var counter_obs: int = _combat_ctrl.obstacle_circles.size()
+	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1085.0, 598.0), "radius": 48.0})
+	_add_interactable("yaolu_shop", "shop", Vector2(1085.0, 632.0), 152.0, "药庐外院药肆 [F 购草寄售]", "res://assets/world/prop_yaolu_counter.png", counter_obs)
+
 	if not CampaignState.opened_containers.has("yaolu_discarded_pill"):
-		_add_interactable("yaolu_discarded_pill", "burnt_pill_pickup", Vector2(1485.0, 598.0), 85.0, "丹炉旁弃置药篓 [F 翻检废丹]", "")
+		_add_interactable("yaolu_discarded_pill", "burnt_pill_pickup", Vector2(1505.0, 616.0), 128.0, "丹炉旁弃置药篓 [F 翻检废丹]", "res://assets/world/prop_discarded_pill_basket.png")
 
 	if not bool(CampaignState.world_flags.get("yaolu_spy_resolved", false)):
-		_spawn_npc("npc_zhou", "药庐周执事", "npc_steward_zhou", Vector2(1545.0, 652.0), "steward_zhou")
+		_spawn_npc("npc_zhou", "药庐周执事", "npc_steward_zhou", Vector2(1590.0, 668.0), "steward_zhou")
 
 	# 灵草采集点 1（贴地层，宋明石绿调色）
 	if not CampaignState.opened_containers.has("herb_town_1"):
-		_add_interactable("herb_town_1", "herb", Vector2(1540.0, 865.0), 88.0, "青木灵叶丛 [F 采摘]", "res://assets/world/prop_spirit_herb_node.png", -1, true)
+		_add_interactable("herb_town_1", "herb", Vector2(1540.0, 865.0), 96.0, "青木灵叶丛 [F 采摘]", "res://assets/world/prop_spirit_herb_node.png", -1, true)
 
-	var stele_tex: String = "res://assets/world/prop_stele_lit.png"
-	_add_interactable("stele_tingyu_gate", "stele", Vector2(1980.0, 510.0), 108.0, "听雨镇驿口 · 引灵石碑 [F 休整/夜话/传送]", stele_tex)
+	# 镇口引灵石碑下移至南侧路台 y=695，彻底避开右上角小地图 HUD 面板遮挡！
+	var stele_obs: int = _combat_ctrl.obstacle_circles.size()
+	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1955.0, 672.0), "radius": 42.0})
+	_add_interactable("stele_tingyu_gate", "stele", Vector2(1955.0, 695.0), 128.0, "听雨镇驿口 · 引灵石碑 [F 休整/夜话/传送]", "res://assets/world/prop_stele_lit.png", stele_obs)
 
 	# 东北出镇官道 -> 风雨青岚山道
-	_add_zone_portal(Rect2(2270.0, 390.0, 125.0, 230.0), "qinglan_pass", "from_town", "北出听雨镇 ──▶ 风雨青岚山道")
+	_add_zone_portal(Rect2(2265.0, 505.0, 130.0, 210.0), "qinglan_pass", "from_town", "北出听雨镇 ──▶ 风雨青岚山道")
 
 
 ## ==================== 区域 ②：风雨青岚山道 & 破庙庭院 ====================
@@ -578,6 +588,9 @@ func _physics_process(delta: float) -> void:
 	if not _combat_ctrl.tactical_paused:
 		_camera.position = ctrl_pos
 	_parallax_bg.position = -_camera.get_screen_center_position() * 0.08 - Vector2(60.0, 40.0)
+	for pm: Node2D in _portal_markers:
+		if is_instance_valid(pm):
+			pm.queue_redraw()
 
 	# Layer 2 屋檐与古树树冠 55% 遮挡半透平滑过渡（20-art-bible.md 第 5.3 节）
 	_update_ysort_occlusion_fade(delta)
@@ -673,6 +686,11 @@ func _handle_left_click_world(world_pt: Vector2) -> void:
 			return
 
 
+func _interact_distance_to(pt: Vector2, ipos: Vector2) -> float:
+	# 兼顾贴图底边与立面器物腹心（y-46），使角色环绕丹炉/药柜任意方位均无交互死角！
+	return minf(pt.distance_to(ipos), pt.distance_to(ipos + Vector2(0.0, -46.0)))
+
+
 func _handle_right_click_world(world_pt: Vector2) -> void:
 	# 1. 右键敌人：锁定并开启自动平砍！
 	for ea: BattleActor in _combat_ctrl.enemy_actors:
@@ -692,7 +710,7 @@ func _handle_right_click_world(world_pt: Vector2) -> void:
 				return
 		for inter: Dictionary in _interactables:
 			var ipos: Vector2 = inter.get("pos", Vector2.ZERO) as Vector2
-			if world_pt.distance_to(ipos) <= 75.0 and _combat_ctrl.get_controlled_actor_pos().distance_to(ipos) <= 220.0:
+			if _interact_distance_to(world_pt, ipos) <= 88.0 and _interact_distance_to(_combat_ctrl.get_controlled_actor_pos(), ipos) <= maxf(220.0, float(inter.get("radius", 120.0))):
 				_activate_interactable(inter)
 				return
 
@@ -753,7 +771,7 @@ func _update_interact_prompt_and_cursor() -> void:
 
 	var ctrl_pos: Vector2 = _combat_ctrl.get_controlled_actor_pos()
 	var best_prompt: String = ""
-	var best_d: float = 165.0
+	var best_d: float = 175.0
 	var best_world_anchor: Vector2 = Vector2(-1.0, -1.0)
 	var best_target_pos: Vector2 = Vector2(-1.0, -1.0)
 
@@ -769,15 +787,15 @@ func _update_interact_prompt_and_cursor() -> void:
 
 		for inter: Dictionary in _interactables:
 			var ipos: Vector2 = inter.get("pos", Vector2.ZERO) as Vector2
-			var rad: float = float(inter.get("radius", 110.0))
-			var di: float = ctrl_pos.distance_to(ipos)
-			if di <= rad and di < best_d + 35.0:
+			var rad: float = float(inter.get("radius", 120.0))
+			var di: float = _interact_distance_to(ctrl_pos, ipos)
+			if di <= rad and di < best_d + 25.0:
 				best_d = di
 				best_prompt = str(inter.get("title", "[F] 交互"))
 				best_target_pos = ipos
-				var anchor_y: float = minf(ipos.y - 140.0, ctrl_pos.y - 182.0)
+				var anchor_y: float = minf(ipos.y - 148.0, ctrl_pos.y - 182.0)
 				best_world_anchor = Vector2(ipos.x, anchor_y)
-			if wmouse.distance_to(ipos) <= 68.0:
+			if _interact_distance_to(wmouse, ipos) <= 78.0:
 				over_interact = true
 
 	var place_below: bool = false
@@ -811,38 +829,68 @@ func _has_nearby_active_bark(ref_pos: Vector2) -> bool:
 	return false
 
 
+func _clear_all_world_barks() -> void:
+	for pa_var: Variant in _combat_ctrl.party_actors.values():
+		var pa: BattleActor = pa_var as BattleActor
+		if is_instance_valid(pa):
+			pa.clear_world_bark()
+	for npc: BattleActor in _npc_actors:
+		if is_instance_valid(npc):
+			npc.clear_world_bark()
+
+
 func _try_interact_nearest() -> void:
 	if _combat_ctrl.in_combat:
 		return
 	var ctrl_pos: Vector2 = _combat_ctrl.get_controlled_actor_pos()
 
+	var best_npc: BattleActor = null
+	var best_nd: float = 175.0
 	for npc: BattleActor in _npc_actors:
-		if is_instance_valid(npc) and ctrl_pos.distance_to(npc.position) <= 165.0:
-			_trigger_npc_dialogue(npc.actor_id)
-			return
+		if is_instance_valid(npc):
+			var dn: float = ctrl_pos.distance_to(npc.position)
+			if dn <= best_nd:
+				best_nd = dn
+				best_npc = npc
 
+	var best_inter: Dictionary = {}
+	var best_idist: float = 9999.0
 	for inter: Dictionary in _interactables:
 		var ipos: Vector2 = inter.get("pos", Vector2.ZERO) as Vector2
-		if ctrl_pos.distance_to(ipos) <= float(inter.get("radius", 115.0)):
-			_activate_interactable(inter)
-			return
+		var di: float = _interact_distance_to(ctrl_pos, ipos)
+		if di <= float(inter.get("radius", 120.0)) and di < best_idist:
+			best_idist = di
+			best_inter = inter
+
+	if not best_inter.is_empty() and (best_npc == null or best_idist <= best_nd + 18.0):
+		_activate_interactable(best_inter)
+		return
+	if best_npc != null:
+		_trigger_npc_dialogue(best_npc.actor_id)
 
 
 func _trigger_npc_dialogue(npc_id: String) -> void:
 	match npc_id:
 		"npc_elder":
 			if str(CampaignState.world_flags.get("marrow_choice", "")) == "scatter":
+				_clear_all_world_barks()
 				for n: BattleActor in _npc_actors:
 					if n.actor_id == "npc_elder":
 						n.show_world_bark("多亏灵雨天降，全镇染瘴乡亲都除根痊愈啦！恩公大德！", 4.5)
 			else:
 				_narrative.start_dialogue("dlg_ch01_tea_gossip")
+		"npc_peddler":
+			if not CampaignState.read_dialogues.has("dlg_ch01_peddler_resonance"):
+				_narrative.start_dialogue("dlg_ch01_peddler_resonance")
+			else:
+				_modals.open_shop_modal("shop_tingyu_peddler")
 		"shen_npc":
 			_narrative.start_dialogue("dlg_ch01_meet_shen")
 		"npc_zhou":
 			if CampaignState.get_item_count("item_yaolu_jade_token") > 0 or CampaignState.unlocked_clues.has("clue_yaolu_spy_token"):
 				_narrative.start_dialogue("dlg_ch01_confront_zhou")
 			else:
+				_clear_all_world_barks()
 				for nz: BattleActor in _npc_actors:
 					if nz.actor_id == "npc_zhou":
 						nz.show_world_bark("咳……药庐灵草紧缺，闲杂散修莫在库房附近乱转。", 3.8)
@@ -898,6 +946,7 @@ func _activate_interactable(inter: Dictionary) -> void:
 				_remove_interactable_visual(inter)
 		"cliff_vista":
 			CampaignState.unlock_clue("clue_golden_core_cliff")
+			_clear_all_world_barks()
 			var ctrl_a: BattleActor = _combat_ctrl.get_controlled_actor()
 			if ctrl_a != null:
 				ctrl_a.show_world_bark("断崖绝壁相隔百丈，待日后结成金丹御剑飞行再来取此秘匣。", 4.2)
@@ -909,9 +958,7 @@ func _activate_interactable(inter: Dictionary) -> void:
 		"fire_barrier":
 			# 五行破禁 ①：火焚毒棘墙
 			CampaignState.world_flags["vine_wall_burned"] = true
-			var ctrl_f: BattleActor = _combat_ctrl.get_controlled_actor()
-			if ctrl_f != null:
-				ctrl_f.clear_world_bark()
+			_clear_all_world_barks()
 			_audio.play_element_sfx("fire", AudioDirector.TIER_A)
 			_sky_vfx.spawn_ring_burst(inter.get("pos", Vector2.ZERO) as Vector2, 160.0, UIThemeBuilder.COL_CINNABAR_RED, 0.55)
 			NotifyHub.push_explore_slip("五行破禁 · 真火焚棘", "引赤阳剑火焚尽阻路腐瘴毒棘！", "unlock")
@@ -928,6 +975,7 @@ func _activate_interactable(inter: Dictionary) -> void:
 				NotifyHub.push_explore_slip("五行破禁 · 玄水净池", "死水化作清泉，池畔古修遗刻显露真容！", "unlock")
 		"remains":
 			if not bool(CampaignState.world_flags.get("miasma_pool_cleansed", false)):
+				_clear_all_world_barks()
 				var ctrl_b: BattleActor = _combat_ctrl.get_controlled_actor()
 				if ctrl_b != null:
 					ctrl_b.show_world_bark("池中腐瘴扑面，须先按 F 净化前方瘴毒潭方可靠近。", 3.8)
@@ -936,6 +984,7 @@ func _activate_interactable(inter: Dictionary) -> void:
 		"shortcut_gate":
 			if not bool(CampaignState.world_flags.get("shortcut_gate_opened", false)):
 				if _combat_ctrl.get_controlled_actor_pos().y > 895.0:
+					_clear_all_world_barks()
 					var ctrl_g: BattleActor = _combat_ctrl.get_controlled_actor()
 					if ctrl_g != null:
 						ctrl_g.show_world_bark("此回环石门机括设在北侧内廊，须先焚毁东侧毒棘绕回开启。", 3.8)
@@ -1114,26 +1163,7 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 	var poly_idx: int = _mm_roads.size()
 	_mm_roads.append(pts)
 
-	# 1. 外圈青苔泥土柔和晕染裙边（置于所有石板层之下，绝不在交叉路口切出暗沟！）
-	var outer_feather: Line2D = Line2D.new()
-	outer_feather.points = pts
-	outer_feather.closed = true
-	outer_feather.width = 48.0
-	outer_feather.default_color = Color(0.22, 0.27, 0.23, 0.42)
-	outer_feather.joint_mode = Line2D.LINE_JOINT_ROUND
-	outer_feather.begin_cap_mode = Line2D.LINE_CAP_ROUND
-	outer_feather.end_cap_mode = Line2D.LINE_CAP_ROUND
-	_road_feather_sub.add_child(outer_feather)
-
-	var mid_feather: Line2D = Line2D.new()
-	mid_feather.points = pts
-	mid_feather.closed = true
-	mid_feather.width = 20.0
-	mid_feather.default_color = Color(0.28, 0.33, 0.29, 0.68)
-	mid_feather.joint_mode = Line2D.LINE_JOINT_ROUND
-	_road_feather_sub.add_child(mid_feather)
-
-	# 2. 不透明青石板主体（重叠处世界坐标 UV 连续无缝合一！）
+	# 1. 不透明青石板主体（重叠处世界坐标 UV 连续无缝合一，移除原先造成半透明暗框的灰黑宽折线！）
 	var poly: Polygon2D = Polygon2D.new()
 	poly.polygon = pts
 	if ResourceLoader.exists(tex_path):
@@ -1144,7 +1174,7 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 		poly.color = Color("#56615E")
 	_road_stone_sub.add_child(poly)
 
-	# 3. 仅在真正外侧“石路-苔土”交界处点缀错落苔痕与条石收边（自动跳过路口重叠内边！）
+	# 2. 严格沿道路切线方向旋转排布宋明工笔青石收边条石（跳过重叠内边与世界极边，彻底消除未旋转小矩形锯齿马赛克！）
 	var curb: Node2D = Node2D.new()
 	curb.draw.connect(func() -> void:
 		var count_pts: int = pts.size()
@@ -1152,11 +1182,17 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 			var a: Vector2 = pts[i]
 			var b: Vector2 = pts[(i + 1) % count_pts]
 			var seg_len: float = a.distance_to(b)
-			if seg_len < 20.0:
+			if seg_len < 24.0:
+				continue
+			if (a.x <= 65.0 and b.x <= 65.0) or (a.x >= 2345.0 and b.x >= 2345.0):
 				continue
 			var dir_v: Vector2 = (b - a) / seg_len
 			var norm_v: Vector2 = Vector2(-dir_v.y, dir_v.x)
-			var steps: int = maxi(2, int(floor(seg_len / 38.0)))
+			if Geometry2D.is_point_in_polygon((a + b) * 0.5 + norm_v * 6.0, pts):
+				norm_v = -norm_v
+			var steps: int = maxi(2, int(floor(seg_len / 34.0)))
+			var half_len: float = (seg_len / float(steps)) * 0.46
+			var half_thk: float = 4.5
 			for s_i: int in range(steps):
 				var t: float = (float(s_i) + 0.5) / float(steps)
 				var base_p: Vector2 = a.lerp(b, t)
@@ -1167,21 +1203,33 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 					var o_poly: PackedVector2Array = _mm_roads[o_idx]
 					if (
 						Geometry2D.is_point_in_polygon(base_p, o_poly)
-						or Geometry2D.is_point_in_polygon(base_p + norm_v * 10.0, o_poly)
-						or Geometry2D.is_point_in_polygon(base_p - norm_v * 10.0, o_poly)
+						or Geometry2D.is_point_in_polygon(base_p + norm_v * 9.0, o_poly)
+						or Geometry2D.is_point_in_polygon(base_p - norm_v * 9.0, o_poly)
 					):
 						inside_other = true
 						break
 				if inside_other:
 					continue
 				var h_seed: float = sin(float(i * 31 + s_i * 17) * 1.73)
-				var center_p: Vector2 = base_p + norm_v * (h_seed * 3.5)
-				var stone_rx: float = 14.0 + absf(h_seed) * 6.0
-				var stone_ry: float = 5.5 + absf(cos(float(s_i * 13))) * 2.0
-				var s_box: Rect2 = Rect2(center_p - Vector2(stone_rx * 0.5, stone_ry * 0.5), Vector2(stone_rx, stone_ry))
-				curb.draw_rect(s_box, Color(0.35, 0.40, 0.37, 0.55), true)
-				if int(absf(h_seed * 100.0)) % 2 == 0:
-					curb.draw_circle(center_p + norm_v * 3.5, 5.2, Color(0.24, 0.33, 0.26, 0.46))
+				var p0: Vector2 = base_p - dir_v * half_len - norm_v * half_thk
+				var p1: Vector2 = base_p + dir_v * half_len - norm_v * half_thk
+				var p2: Vector2 = base_p + dir_v * half_len + norm_v * half_thk
+				var p3: Vector2 = base_p - dir_v * half_len + norm_v * half_thk
+				var sh_off: Vector2 = norm_v * 2.5 + Vector2(1.0, 1.8)
+				curb.draw_colored_polygon(
+					PackedVector2Array([p0 + sh_off, p1 + sh_off, p2 + sh_off, p3 + sh_off]),
+					Color(0.11, 0.14, 0.12, 0.32)
+				)
+				var stone_tone: float = 0.03 * h_seed
+				curb.draw_colored_polygon(
+					PackedVector2Array([p0, p1, p2, p3]),
+					Color(0.37 + stone_tone, 0.43 + stone_tone, 0.40 + stone_tone, 0.98)
+				)
+				curb.draw_polyline(
+					PackedVector2Array([p0, p1, p2, p3, p0]),
+					Color(0.16, 0.20, 0.18, 0.88),
+					1.4
+				)
 	)
 	_road_curb_sub.add_child(curb)
 
@@ -1254,24 +1302,34 @@ func _add_zone_portal(rect: Rect2, target_zone: String, target_spawn: String, la
 		"label": label_txt,
 	})
 	_mm_portals.append(rect.get_center())
-	# 在地面画出古雅路标牌示，并严格钳制在 ZONE_BOUNDS 镜头安全区内，杜绝左右贴边裁切！
+	# 走近出口 760px 内平滑浮现古雅路标牌，并实时钳制于当前镜头视口与 HUD 安全区内，彻底根除屏幕边缘半截裁切！
 	var marker: Node2D = Node2D.new()
 	marker.position = rect.get_center()
 	marker.z_index = 2
 	marker.draw.connect(func() -> void:
+		var cpos: Vector2 = marker.position
+		var dist: float = _combat_ctrl.get_controlled_actor_pos().distance_to(cpos)
+		if dist > 760.0:
+			return
+		var fade_a: float = clampf((760.0 - dist) / 170.0, 0.0, 1.0)
 		var font: Font = UIThemeBuilder.get_bold_font()
 		var w: float = font.get_string_size(label_txt, HORIZONTAL_ALIGNMENT_CENTER, -1, 18).x + 28.0
-		var cpos: Vector2 = marker.position
-		var min_left: float = 24.0 - cpos.x
-		var max_left: float = (ZONE_BOUNDS.size.x - 24.0 - w) - cpos.x
-		var box_x: float = clampf(-w * 0.5, min_left, max_left)
-		var box_y: float = clampf(-22.0, 24.0 - cpos.y, (ZONE_BOUNDS.size.y - 60.0) - cpos.y)
-		var box: Rect2 = Rect2(box_x, box_y, w, 36.0)
-		marker.draw_rect(box, Color(0.12, 0.11, 0.10, 0.90), true)
-		marker.draw_rect(box, UIThemeBuilder.COL_BRONZE_GOLD, false, 2.0)
-		marker.draw_string(font, Vector2(box_x + 14.0, box_y + 25.0), label_txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, UIThemeBuilder.COL_BRONZE_GOLD)
+		var vp_sz: Vector2 = get_viewport_rect().size / _camera.zoom
+		var cam_c: Vector2 = _camera.get_screen_center_position()
+		var cam_rect: Rect2 = Rect2(cam_c - vp_sz * 0.5, vp_sz)
+		var world_x: float = clampf(cpos.x - w * 0.5, maxf(24.0, cam_rect.position.x + 24.0), minf(ZONE_BOUNDS.size.x - w - 24.0, cam_rect.end.x - w - 24.0))
+		var world_y: float = clampf(cpos.y - 22.0, maxf(24.0, cam_rect.position.y + 24.0), minf(ZONE_BOUNDS.size.y - 60.0, cam_rect.end.y - 60.0))
+		if world_x + w > cam_rect.end.x - 368.0 and world_y < cam_rect.position.y + 266.0:
+			world_y = cam_rect.position.y + 268.0
+		if world_x < cam_rect.position.x + 340.0 and world_y + 36.0 > cam_rect.end.y - 428.0:
+			world_y = cam_rect.end.y - 468.0
+		var box: Rect2 = Rect2(world_x - cpos.x, world_y - cpos.y, w, 36.0)
+		marker.draw_rect(box, Color(0.12, 0.11, 0.10, 0.92 * fade_a), true)
+		marker.draw_rect(box, Color(UIThemeBuilder.COL_BRONZE_GOLD.r, UIThemeBuilder.COL_BRONZE_GOLD.g, UIThemeBuilder.COL_BRONZE_GOLD.b, fade_a), false, 2.0)
+		marker.draw_string(font, Vector2(box.position.x + 14.0, box.position.y + 25.0), label_txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(UIThemeBuilder.COL_BRONZE_GOLD.r, UIThemeBuilder.COL_BRONZE_GOLD.g, UIThemeBuilder.COL_BRONZE_GOLD.b, fade_a))
 	)
 	_ground_decor_layer.add_child(marker)
+	_portal_markers.append(marker)
 
 
 func _build_pass_cliff_abyss() -> void:

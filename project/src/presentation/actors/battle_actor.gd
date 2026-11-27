@@ -401,20 +401,18 @@ func _draw_overhead_ui() -> void:
 func _draw_bark_bubble(font: Font, anchor_y: float) -> void:
 	if _bark_timer <= 0.0 or _bark_text == "" or _overlay_canvas == null:
 		return
-	var reg_font: Font = UIThemeBuilder.get_regular_font()
-	if reg_font == null:
-		reg_font = font
-	var fade: float = clampf(minf(_bark_timer / 0.45, (_bark_duration - _bark_timer + 0.15) / 0.25), 0.0, 1.0)
-	var max_content_w: float = 264.0
-	var single_w: float = reg_font.get_string_size(_bark_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
-	var wrap_w: float = minf(max_content_w, maxf(112.0, single_w + 6.0))
+	var bark_font: Font = font if font != null else UIThemeBuilder.get_regular_font()
+	var fade: float = clampf(_bark_timer / 0.35, 0.0, 1.0)
+	var max_content_w: float = 272.0
+	var single_w: float = bark_font.get_string_size(_bark_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
+	var wrap_w: float = minf(max_content_w, maxf(116.0, single_w + 8.0))
 	var cjk_brk: int = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_GRAPHEME_BOUND
-	var msize: Vector2 = reg_font.get_multiline_string_size(_bark_text, HORIZONTAL_ALIGNMENT_LEFT, wrap_w, 16, -1, cjk_brk)
+	var msize: Vector2 = bark_font.get_multiline_string_size(_bark_text, HORIZONTAL_ALIGNMENT_LEFT, wrap_w, 16, -1, cjk_brk)
 	var box_w: float = wrap_w + 26.0
-	var box_h: float = maxf(34.0, msize.y + 18.0)
+	var box_h: float = maxf(36.0, msize.y + 18.0)
 	var rect: Rect2 = Rect2(-box_w * 0.5, anchor_y - box_h - 8.0, box_w, box_h)
 
-	# 视口左右与顶部安全边界内推（防止靠近屏幕边缘的老樵夫等 NPC 气泡被切掉半截！）
+	# 视口左右、顶部与右上舆图 HUD 安全边界内推（防止边缘 NPC 气泡切边或撞上右上小地图！）
 	var vp_size: Vector2 = get_viewport_rect().size
 	if vp_size.x > 200.0:
 		var scr_origin: Vector2 = get_global_transform_with_canvas().origin
@@ -424,28 +422,33 @@ func _draw_bark_bubble(font: Font, anchor_y: float) -> void:
 			rect.position.x = (vp_size.x - 18.0) - scr_origin.x - box_w
 		if scr_origin.y + rect.position.y < 16.0:
 			rect.position.y = 16.0 - scr_origin.y
+		if scr_origin.y + rect.position.y < 268.0 and scr_origin.x + rect.end.x > vp_size.x - 368.0:
+			rect.position.x = (vp_size.x - 368.0) - scr_origin.x - box_w
 
 	var tail_x: float = clampf(0.0, rect.position.x + 14.0, rect.end.x - 14.0)
 
-	# 宣纸底衬阴影 + 框体 + 指向三角尾标
-	_overlay_canvas.draw_rect(Rect2(rect.position + Vector2(2.0, 3.0), rect.size), Color(0.06, 0.05, 0.04, 0.42 * fade), true)
-	_overlay_canvas.draw_rect(rect, Color(0.89, 0.85, 0.77, 0.96 * fade), true)
-	_overlay_canvas.draw_rect(rect, Color(0.42, 0.32, 0.20, 0.96 * fade), false, 1.8)
+	# 高对比不透光熟宣底衬 + 深墨阴影 + 双层乌铜描边 + 指向尾角（叠在浅色茅草屋檐上依然清亮锐利！）
+	_overlay_canvas.draw_rect(Rect2(rect.position + Vector2(3.0, 4.0), rect.size), Color(0.04, 0.03, 0.03, 0.64 * fade), true)
+	_overlay_canvas.draw_rect(rect, Color(0.97, 0.94, 0.87, 0.99 * fade), true)
+	_overlay_canvas.draw_rect(rect, Color(0.26, 0.18, 0.11, 1.0 * fade), false, 2.2)
+	_overlay_canvas.draw_rect(Rect2(rect.position + Vector2(3.0, 3.0), rect.size - Vector2(6.0, 6.0)), Color(0.68, 0.54, 0.34, 0.62 * fade), false, 1.0)
 	var tail_pts: PackedVector2Array = PackedVector2Array([
-		Vector2(tail_x - 7.0, rect.end.y - 1.0),
-		Vector2(tail_x + 7.0, rect.end.y - 1.0),
-		Vector2(tail_x * 0.4, rect.end.y + 7.0),
+		Vector2(tail_x - 7.5, rect.end.y - 1.0),
+		Vector2(tail_x + 7.5, rect.end.y - 1.0),
+		Vector2(tail_x * 0.4, rect.end.y + 8.0),
 	])
-	_overlay_canvas.draw_colored_polygon(tail_pts, Color(0.89, 0.85, 0.77, 0.96 * fade))
+	_overlay_canvas.draw_colored_polygon(tail_pts, Color(0.97, 0.94, 0.87, 0.99 * fade))
+	_overlay_canvas.draw_line(tail_pts[0], tail_pts[2], Color(0.26, 0.18, 0.11, 1.0 * fade), 2.0)
+	_overlay_canvas.draw_line(tail_pts[1], tail_pts[2], Color(0.26, 0.18, 0.11, 1.0 * fade), 2.0)
 	_overlay_canvas.draw_multiline_string(
-		reg_font,
+		bark_font,
 		Vector2(rect.position.x + 13.0, rect.position.y + 22.0),
 		_bark_text,
 		HORIZONTAL_ALIGNMENT_LEFT,
 		wrap_w,
 		16,
 		-1,
-		Color(0.14, 0.11, 0.09, fade),
+		Color(0.08, 0.06, 0.04, fade),
 		cjk_brk
 	)
 

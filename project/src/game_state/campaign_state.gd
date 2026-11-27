@@ -238,6 +238,12 @@ func recruit_companion(char_id: String, preferred_slot: int = 2) -> void:
 		var idx: int = clampi(preferred_slot - 1, 0, 3)
 		if formation_slots[idx] == "":
 			formation_slots[idx] = char_id
+		elif char_id == "pei_zhao" and idx == 1 and formation_slots[2] == "":
+			# 裴照入阵接掌 2 号玄武前锋位，原 2 号位沈清禾顺移至 3 号朱雀灵枢位，保持 F1-F2-F3 连续且职责契合！
+			formation_slots[2] = formation_slots[1]
+			formation_slots[1] = char_id
+			if controlled_slot == 2:
+				controlled_slot = 3
 		else:
 			for i: int in range(4):
 				if formation_slots[i] == "":
@@ -812,8 +818,13 @@ func deserialize_payload(payload: Dictionary) -> void:
 	formation_slots = _to_str_array(payload.get("formation_slots", ["gu_changqing", "", "", ""]) as Array)
 	while formation_slots.size() < 4:
 		formation_slots.append("")
+	if formation_slots[1] == "" and formation_slots[2] != "" and formation_slots[3] == "":
+		formation_slots[1] = formation_slots[2]
+		formation_slots[2] = ""
 	recruited_order = _to_str_array(payload.get("recruited_order", ["gu_changqing"]) as Array)
 	controlled_slot = int(payload.get("controlled_slot", 1))
+	if controlled_slot >= 1 and controlled_slot <= 4 and formation_slots[controlled_slot - 1] == "":
+		controlled_slot = 1
 
 	party_members.clear()
 	_init_member_state("gu_changqing", "mortal", true)
