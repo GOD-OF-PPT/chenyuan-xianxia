@@ -11,8 +11,8 @@
     {
       "file": "vfx_silver_needle.png",
       "size": "160x56",
-      "source": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
-      "desc": "Horizontal (+X right) medicinal silver acupuncture needle with celadon meridian silk aura"
+      "source": "assets_src/vfx/r1_vfx_source_sheet.png",
+      "desc": "Horizontal (+X right) Song-Ming medicinal silver acupuncture needle with coiled filigree handle & celadon meridian silk aura"
     },
     {
       "file": "vfx_sword_trail_ribbon.png",

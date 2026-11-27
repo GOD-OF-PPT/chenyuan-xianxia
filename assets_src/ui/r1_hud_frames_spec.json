@@ -1,7 +1,7 @@
 {
   "generator": "tools/build_polish_r1_assets.py",
   "generated_date": "2026-11-27",
-  "supersampling": "2x SDF + Sobel (-0.707, -0.707) top-left bevel relief + Lanczos",
+  "supersampling": "2x SDF + Sobel (+0.7071*(gx+gy)) outward-normal top-left bevel relief + Lanczos",
   "frames": [
     {
       "file": "hud_avatar_frame.png",

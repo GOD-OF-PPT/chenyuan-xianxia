@@ -42,12 +42,12 @@ var _shockwave_pool: Array[Dictionary] = []
 var _particle_pool: Array[Dictionary] = []
 var _pending_spawns: Array[Dictionary] = []
 
-static var _mat_unshaded_mix: CanvasItemMaterial = null
-static var _mat_unshaded_add: CanvasItemMaterial = null
-static var _slash_shader: Shader = null
-static var _trail_width_curve: Curve = null
-static var _tex_cache: Dictionary = {}
-static var _ppm_cache: Dictionary = {}
+var _mat_unshaded_mix: CanvasItemMaterial = null
+var _mat_unshaded_add: CanvasItemMaterial = null
+var _slash_shader: Shader = null
+var _trail_width_curve: Curve = null
+var _tex_cache: Dictionary = {}
+var _ppm_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -69,7 +69,7 @@ func _physics_process(_delta: float) -> void:
 		_stepped_combat_this_frame = false
 
 
-static func _get_unshaded_mix_material() -> CanvasItemMaterial:
+func _get_unshaded_mix_material() -> CanvasItemMaterial:
 	if _mat_unshaded_mix == null:
 		_mat_unshaded_mix = CanvasItemMaterial.new()
 		_mat_unshaded_mix.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
@@ -77,7 +77,7 @@ static func _get_unshaded_mix_material() -> CanvasItemMaterial:
 	return _mat_unshaded_mix
 
 
-static func _get_unshaded_add_material() -> CanvasItemMaterial:
+func _get_unshaded_add_material() -> CanvasItemMaterial:
 	if _mat_unshaded_add == null:
 		_mat_unshaded_add = CanvasItemMaterial.new()
 		_mat_unshaded_add.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
@@ -85,13 +85,13 @@ static func _get_unshaded_add_material() -> CanvasItemMaterial:
 	return _mat_unshaded_add
 
 
-static func _get_slash_shader() -> Shader:
+func _get_slash_shader() -> Shader:
 	if _slash_shader == null and ResourceLoader.exists("res://src/presentation/shaders/vfx_slash_wipe.gdshader"):
 		_slash_shader = load("res://src/presentation/shaders/vfx_slash_wipe.gdshader") as Shader
 	return _slash_shader
 
 
-static func _get_trail_width_curve() -> Curve:
+func _get_trail_width_curve() -> Curve:
 	if _trail_width_curve == null:
 		_trail_width_curve = Curve.new()
 		_trail_width_curve.add_point(Vector2(0.0, 0.14))
@@ -100,7 +100,7 @@ static func _get_trail_width_curve() -> Curve:
 	return _trail_width_curve
 
 
-static func _get_vfx_tex(rel_name: String) -> Texture2D:
+func _get_vfx_tex(rel_name: String) -> Texture2D:
 	if _tex_cache.has(rel_name):
 		return _tex_cache[rel_name] as Texture2D
 	var full_p: String = "res://assets/vfx/" + rel_name
@@ -1101,7 +1101,7 @@ static func _make_scale_curve(s0: float, s_mid: float, s1: float) -> CurveTextur
 	return ct
 
 
-static func _get_or_build_particle_preset(preset_id: String) -> Dictionary:
+func _get_or_build_particle_preset(preset_id: String) -> Dictionary:
 	if _ppm_cache.has(preset_id):
 		return _ppm_cache[preset_id] as Dictionary
 

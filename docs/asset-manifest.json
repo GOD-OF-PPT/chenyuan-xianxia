@@ -827,7 +827,7 @@
       "source_path": "assets_src/ui/r1_hud_frames_source.png",
       "category": "ui_frame",
       "dimensions": "512x128",
-      "sha256": "5e5e231eaa33c177827b948c04bc6f68d7c7f43c3587591ad9a8ce193f64e582",
+      "sha256": "c5f3b8d460f6fe0b0c7efb822d568e00f221d3edfe5ac1074f9d4ec8e40addf4",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Carved #292620 ebony & gilt-bronze bottom action bar pedestal",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -837,7 +837,7 @@
       "source_path": "assets_src/ui/r1_hud_frames_source.png",
       "category": "ui_frame",
       "dimensions": "128x128",
-      "sha256": "9a32a466c66464ffa2655850859a4bac16c67c9943a2211d321c456f462d245c",
+      "sha256": "49881a66e8b4a0a16669335e61550d065c9c7344bd5f937c6d772ef22cc5fad8",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Double-rimmed gilt-bronze & ebony F1-F3 portrait frame with Ruyi corners",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -847,7 +847,7 @@
       "source_path": "assets_src/ui/r1_hud_frames_source.png",
       "category": "ui_frame",
       "dimensions": "220x108",
-      "sha256": "205c3be4e22f1111ca8686b57b9351f9d04a5290ecc3f869f1e1c79921097f45",
+      "sha256": "4e1cc82f4e166be2bcb9c2ba5aba6435a4c19cc241b72c7ba79d8a7f3b12f351",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Left cascading Song-Ming Ruyi cloud-scroll ebony-gilt wing",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -857,7 +857,7 @@
       "source_path": "assets_src/ui/r1_hud_frames_source.png",
       "category": "ui_frame",
       "dimensions": "220x108",
-      "sha256": "96746e25300a288d63876eaca5ddb5e146f3dacb928af249517ff80a1be6a181",
+      "sha256": "86d90245a42facc8852ca142bc00a303bb3a8d537ea7b0a978283970f4f3c96a",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Right cascading Song-Ming Ruyi cloud-scroll ebony-gilt wing (mask mirrored before top-left lighting)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -867,7 +867,7 @@
       "source_path": "assets_src/ui/r1_hud_frames_source.png",
       "category": "ui_frame",
       "dimensions": "640x164",
-      "sha256": "2420393b97a7115c20d5d22cbebc13bbd3c386c23e76a0e6e698a4277d1e2007",
+      "sha256": "1c9758da8b5a8590ec99e540893f52193d5a44f5c04bb40e425d3b6165061e96",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Top-center #181513 ebony & gilt-bronze Boss plaque frame",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -877,7 +877,7 @@
       "source_path": "assets_src/ui/r1_hud_frames_source.png",
       "category": "ui_frame",
       "dimensions": "340x46",
-      "sha256": "f529a3c2a44791a45d34ed2b033353cf2c8207b7c1ebb0360496b09dc64f4e3a",
+      "sha256": "f07932396ec617c70f00f501700be1cf1ea3d6f37e67718fb66a72fcdb064d65",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Stepped raised ebony-gilt Qimen formation plaque with cloud ears",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -887,7 +887,7 @@
       "source_path": "assets_src/ui/r1_hud_frames_source.png",
       "category": "ui_frame",
       "dimensions": "96x96",
-      "sha256": "8f969d04e3ed09a030ef77a1886cf9c7c67b7785d24592d290957c514f723759",
+      "sha256": "cdc179ebe746433c0508a2f8ee9dc79dedaae9eeb2888d6266bc325240023b6e",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled SDF bevel relief, anisotropic ebony woodgrain & gilt-bronze Ruyi filigree, aligned to master_b_cangmu_rtwp.png) | Spec: Recessed dark-ebony & bronze skill slot frame with celadon-jade corner inlays",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -897,7 +897,7 @@
       "source_path": "assets_src/portraits/gu_changqing_raw.jpg",
       "category": "ui_icon",
       "dimensions": "128x128",
-      "sha256": "1540fed8eec14866fdfc3a833404aeb89c780dbce24655c22e56e08ef35df46e",
+      "sha256": "407b95cbdeb128cf163be5f5036044712e60d406dac3f378c46a91f038e2d6b7",
       "creation_method": "tools/build_polish_r1_assets.py (Collar-safe exterior flood-fill cutout from assets_src/portraits/gu_changqing_raw.jpg crop (218, 42, 658, 482), #221F1D ink defringe, Song-Ming mineral LUT & warm sage-ochre silk Gongbi backing) | Spec: F1-F3 party card square bust portrait (gu_changqing)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1514,11 +1514,11 @@
     },
     {
       "path": "project/assets/vfx/vfx_silver_needle.png",
-      "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
+      "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "160x56",
-      "sha256": "6539afbd9f18972a0761acecf325a506caf158fe5b7ceaf272d9f40378975772",
-      "creation_method": "tools/build_polish_r1_assets.py (Hybrid extraction from assets_src/ui/ui_icon_sheet_equips_raw.jpg + +X projectile orientation, Song-Ming mineral qi envelope & sumi-ink feibai refinement) | Spec: Horizontal (+X right) medicinal silver acupuncture needle with celadon meridian silk aura",
+      "sha256": "0324b696bd7316811ea2af0c74c64b3c6d49c41c05f7d08ba83ecebdd8cd46e2",
+      "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Horizontal (+X right) Song-Ming medicinal silver acupuncture needle with coiled filigree handle & celadon meridian silk aura",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },

@@ -64,6 +64,16 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 func _ready() -> void:
 	_rng.randomize()
 	SaveManager.settings_changed.connect(_on_comfort_settings_changed)
+	CampaignState.party_updated.connect(_on_campaign_party_updated)
+
+
+func _exit_tree() -> void:
+	Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW)
+
+
+func _on_campaign_party_updated() -> void:
+	if ysort_root != null and not party_actors.is_empty():
+		sync_party_roster_in_place()
 
 
 func _process(delta: float) -> void:
@@ -73,6 +83,16 @@ func _process(delta: float) -> void:
 
 
 func _on_comfort_settings_changed() -> void:
+	if SaveManager.reduced_motion:
+		for pa_var: Variant in party_actors.values():
+			var pa: BattleActor = pa_var as BattleActor
+			if is_instance_valid(pa):
+				pa.clear_hit_flash()
+		if pet_actor != null and is_instance_valid(pet_actor):
+			pet_actor.clear_hit_flash()
+		for ea: BattleActor in enemy_actors:
+			if is_instance_valid(ea):
+				ea.clear_hit_flash()
 	if SaveManager.reduced_motion or SaveManager.screen_shake_pct <= 0.001:
 		_hitstop_timer = 0.0
 		_shake_timer = 0.0
@@ -231,8 +251,9 @@ func sync_party_roster_in_place() -> void:
 			_init_party_unit_state(cid, actor, mstate, sheet)
 		else:
 			var existing: BattleActor = party_actors[cid] as BattleActor
-			_refresh_party_unit_sheet(cid, existing, mstate, sheet)
+			_refresh_party_unit_sheet(cid, existing, mstate, sheet, true)
 
+	_ensure_valid_controlled_slot()
 	var ctrl_id: String = get_controlled_char_id()
 	for cid2_var: Variant in party_actors.keys():
 		var cid2: String = str(cid2_var)
@@ -258,6 +279,8 @@ func sync_pet_actor(spawn_pos: Vector2) -> void:
 	if pdef.is_empty():
 		return
 	var uid: String = "pet_" + pid
+	var same_pet_exists: bool = (pet_actor != null and pet_actor.actor_id == uid)
+	var prev_u: Dictionary = (unit_states.get(uid, {}) as Dictionary) if same_pet_exists else {}
 	if pet_actor != null and pet_actor.actor_id != uid:
 		unit_states.erase(pet_actor.actor_id)
 		pet_actor.queue_free()
@@ -276,8 +299,12 @@ func sync_pet_actor(spawn_pos: Vector2) -> void:
 		ysort_root.add_child(pet_actor)
 
 	pet_actor.max_hp = max_hp
-	pet_actor.hp = maxi(1, int(round(float(max_hp) * clampf(CampaignState.pet_hp_ratio, 0.2, 1.0))))
-	pet_actor.alive = true
+	if same_pet_exists and in_combat:
+		pet_actor.hp = clampi(pet_actor.hp, 0, max_hp)
+		pet_actor.alive = pet_actor.hp > 0
+	else:
+		pet_actor.hp = maxi(1, int(round(float(max_hp) * clampf(CampaignState.pet_hp_ratio, 0.2, 1.0))))
+		pet_actor.alive = true
 	unit_states[uid] = {
 		"id": uid,
 		"pet_def_id": pid,
@@ -287,15 +314,15 @@ func sync_pet_actor(spawn_pos: Vector2) -> void:
 		"hp": pet_actor.hp,
 		"power": pwr,
 		"attack_interval": float(pdef.get("attack_interval", 1.7)),
-		"attack_timer": 0.4,
+		"attack_timer": float(prev_u.get("attack_timer", 0.4)),
 		"attack_range_px": float(pdef.get("attack_range_px", 240.0)),
 		"move_speed_px": float(pdef.get("move_speed_px", 220.0)),
 		"damage_taken_mult": 0.80,
 		"threat_mult": 1.35 if pid == "pet_spirit_turtle" else 0.75,
 		"is_tank_role": pid == "pet_spirit_turtle",
-		"cooldowns": {},
-		"cooldown_totals": {},
-		"shield": 0.0,
+		"cooldowns": prev_u.get("cooldowns", {}) as Dictionary,
+		"cooldown_totals": prev_u.get("cooldown_totals", {}) as Dictionary,
+		"shield": float(prev_u.get("shield", 0.0)),
 	}
 
 
@@ -413,7 +440,7 @@ func _init_party_unit_state(cid: String, actor: BattleActor, mstate: Dictionary,
 	_refresh_party_unit_sheet(cid, actor, mstate, sheet)
 
 
-func _refresh_party_unit_sheet(cid: String, actor: BattleActor, mstate: Dictionary, sheet: Dictionary) -> void:
+func _refresh_party_unit_sheet(cid: String, actor: BattleActor, mstate: Dictionary, sheet: Dictionary, is_live_refresh: bool = false) -> void:
 	if not unit_states.has(cid):
 		return
 	var u: Dictionary = unit_states[cid] as Dictionary
@@ -427,9 +454,23 @@ func _refresh_party_unit_sheet(cid: String, actor: BattleActor, mstate: Dictiona
 	actor.role_badge = str(smod.get("role_title", "青龙位"))
 	actor.max_hp = int(sheet.get("max_hp", 120))
 	actor.max_mp = int(sheet.get("max_mp", 60))
-	actor.hp = clampi(int(mstate.get("hp", actor.max_hp)), 0, actor.max_hp)
-	actor.mp = clampi(int(mstate.get("mp", actor.max_mp)), 0, actor.max_mp)
+	if is_live_refresh and in_combat:
+		actor.hp = clampi(actor.hp, 0, actor.max_hp)
+		actor.mp = clampi(actor.mp, 0, actor.max_mp)
+	else:
+		actor.hp = clampi(int(mstate.get("hp", actor.max_hp)), 0, actor.max_hp)
+		actor.mp = clampi(int(mstate.get("mp", actor.max_mp)), 0, actor.max_mp)
 	actor.alive = actor.hp > 0
+
+
+func _ensure_valid_controlled_slot() -> void:
+	var packed: Array[int] = get_occupied_formation_slots()
+	if packed.is_empty():
+		return
+	var idx: int = clampi(CampaignState.controlled_slot - 1, 0, 3)
+	var cur_cid: String = CampaignState.formation_slots[idx]
+	if cur_cid == "" or not party_actors.has(cur_cid):
+		CampaignState.controlled_slot = packed[0]
 
 
 func get_controlled_char_id() -> String:
@@ -437,6 +478,9 @@ func get_controlled_char_id() -> String:
 	var cid: String = CampaignState.formation_slots[idx]
 	if cid != "" and party_actors.has(cid):
 		return cid
+	var packed: Array[int] = get_occupied_formation_slots()
+	if not packed.is_empty():
+		return CampaignState.formation_slots[packed[0] - 1]
 	for k_var: Variant in party_actors.keys():
 		return str(k_var)
 	return "gu_changqing"
@@ -463,14 +507,11 @@ func toggle_tactical_pause() -> void:
 
 
 func switch_controlled_party_slot(slot_num: int, center_camera: bool = false) -> void:
-	var idx: int = clampi(slot_num - 1, 0, 3)
-	var resolved_slot: int = slot_num
-	var cid: String = CampaignState.formation_slots[idx]
-	if cid == "" or not party_actors.has(cid):
-		var packed: Array[int] = get_occupied_formation_slots()
-		if idx < packed.size():
-			resolved_slot = packed[idx]
-			cid = CampaignState.formation_slots[resolved_slot - 1]
+	var packed: Array[int] = get_occupied_formation_slots()
+	if slot_num < 1 or slot_num > packed.size():
+		return
+	var resolved_slot: int = packed[slot_num - 1]
+	var cid: String = CampaignState.formation_slots[resolved_slot - 1]
 	if cid == "" or not party_actors.has(cid):
 		return
 	CampaignState.controlled_slot = resolved_slot
@@ -590,6 +631,7 @@ func trigger_hotkey_slot(slot_code: String) -> void:
 		_use_instant_combat_pill(ctrl_id, CampaignState.quick_pill_5_id if slot_code == "5" else CampaignState.quick_pill_6_id)
 		return
 
+	var caster_id: String = ctrl_id
 	var skill_id: String = ""
 	if slot_code == "G":
 		if CampaignState.unlocked_bond_ultimates.has("ult_qinglian_sword"):
@@ -597,7 +639,11 @@ func trigger_hotkey_slot(slot_code: String) -> void:
 		else:
 			return
 	elif slot_code == "STUNT":
-		skill_id = _find_party_blue_stunt_id()
+		var stunt_info: Dictionary = get_active_blue_stunt_info()
+		skill_id = str(stunt_info.get("skill_id", ""))
+		var owner_id: String = str(stunt_info.get("owner_id", ""))
+		if owner_id != "" and unit_states.has(owner_id):
+			caster_id = owner_id
 	else:
 		var bar: Dictionary = CampaignState.get_member_active_skills(ctrl_id)
 		skill_id = str(bar.get(slot_code, ""))
@@ -611,8 +657,8 @@ func trigger_hotkey_slot(slot_code: String) -> void:
 
 	var target_id: String = _resolve_skill_target_id(ctrl_id, sdef)
 	if tactical_paused:
-		# 战术凝时期间：为当前主控角色预排下一个技能与目标！
-		var u: Dictionary = unit_states[ctrl_id] as Dictionary
+		# 战术凝时期间：为施法者预排下一个技能与目标！
+		var u: Dictionary = unit_states[caster_id] as Dictionary
 		u["queued_slot"] = slot_code
 		u["queued_skill_id"] = skill_id
 		u["queued_target_id"] = target_id
@@ -621,7 +667,7 @@ func trigger_hotkey_slot(slot_code: String) -> void:
 		combat_hud_dirty.emit()
 		return
 
-	_try_execute_party_skill(ctrl_id, skill_id, target_id, true)
+	_try_execute_party_skill(caster_id, skill_id, target_id, true)
 
 
 func trigger_pet_manual_skill(pet_slot_idx: int) -> void:
@@ -1489,6 +1535,11 @@ func _try_execute_party_skill(cid: String, skill_id: String, target_id: String, 
 	var cds: Dictionary = u.get("cooldowns", {}) as Dictionary
 	if cds.has(skill_id):
 		return false
+	if bool(sdef.get("is_blue_stunt", false)):
+		var stunt_owner: String = _resolve_blue_stunt_owner_id(cid, skill_id)
+		var owner_cds: Dictionary = (unit_states.get(stunt_owner, {}) as Dictionary).get("cooldowns", {}) as Dictionary
+		if owner_cds.has(skill_id):
+			return false
 
 	var mp_cost: int = int(sdef.get("mp_cost", 0))
 	if actor.mp < mp_cost:
@@ -1569,8 +1620,10 @@ func _resolve_party_skill_effect(cid: String, skill_id: String, target_id: Strin
 	var u: Dictionary = unit_states[cid] as Dictionary
 	var sheet: Dictionary = u.get("sheet", {}) as Dictionary
 	var sdef: Dictionary = DataDB.get_skill(skill_id)
-	var cds: Dictionary = u.get("cooldowns", {}) as Dictionary
-	var cd_tots: Dictionary = u.get("cooldown_totals", {}) as Dictionary
+	var cd_owner_id: String = _resolve_blue_stunt_owner_id(cid, skill_id) if bool(sdef.get("is_blue_stunt", false)) else cid
+	var cd_owner_u: Dictionary = unit_states.get(cd_owner_id, u) as Dictionary
+	var cds: Dictionary = cd_owner_u.get("cooldowns", {}) as Dictionary
+	var cd_tots: Dictionary = cd_owner_u.get("cooldown_totals", {}) as Dictionary
 	var cd_sec: float = float(sdef.get("cooldown_sec", 0.0))
 	if cd_sec > 0.0:
 		cds[skill_id] = cd_sec
@@ -2595,21 +2648,75 @@ func _heal_lowest_party_member(amount: int, cleanse: bool = false) -> void:
 		_apply_ally_heal(best_a.actor_id, best_a, amount, cleanse)
 
 
-func _find_party_blue_stunt_id() -> String:
+func _get_member_blue_stunt_ids(cid: String) -> Array:
+	var sh: Dictionary = (unit_states.get(cid, {}) as Dictionary).get("sheet", {}) as Dictionary
+	var stunts: Array = sh.get("blue_stunt_ids", []) as Array
+	if stunts.is_empty():
+		var pm: Dictionary = CampaignState.party_members.get(cid, {}) as Dictionary
+		var cs_sh: Dictionary = pm.get("sheet", {}) as Dictionary
+		stunts = cs_sh.get("blue_stunt_ids", []) as Array
+	return stunts
+
+
+func _char_has_blue_stunt(cid: String, skill_id: String) -> bool:
+	var stunts: Array = _get_member_blue_stunt_ids(cid)
+	for st_var: Variant in stunts:
+		if str(st_var) == skill_id:
+			return true
+	return false
+
+
+func _resolve_blue_stunt_owner_id(fallback_cid: String, skill_id: String) -> String:
+	if fallback_cid != "" and _char_has_blue_stunt(fallback_cid, skill_id):
+		return fallback_cid
+	var packed: Array[int] = get_occupied_formation_slots()
+	for fslot: int in packed:
+		var cid: String = CampaignState.formation_slots[fslot - 1]
+		if cid != "" and _char_has_blue_stunt(cid, skill_id):
+			return cid
 	for cid_var: Variant in party_actors.keys():
-		var cid: String = str(cid_var)
-		var pa: BattleActor = party_actors[cid] as BattleActor
+		var k: String = str(cid_var)
+		if _char_has_blue_stunt(k, skill_id):
+			return k
+	return fallback_cid
+
+
+func get_active_blue_stunt_info() -> Dictionary:
+	var candidates: Array[String] = []
+	var ctrl_id: String = get_controlled_char_id()
+	if ctrl_id != "" and party_actors.has(ctrl_id):
+		candidates.append(ctrl_id)
+	var packed: Array[int] = get_occupied_formation_slots()
+	for fslot: int in packed:
+		var cid: String = CampaignState.formation_slots[fslot - 1]
+		if cid != "" and not candidates.has(cid):
+			candidates.append(cid)
+	for cid_var: Variant in party_actors.keys():
+		var k: String = str(cid_var)
+		if not candidates.has(k):
+			candidates.append(k)
+
+	for cid2: String in candidates:
+		if not party_actors.has(cid2):
+			continue
+		var pa: BattleActor = party_actors[cid2] as BattleActor
 		if not pa.alive:
 			continue
-		var sh: Dictionary = (unit_states.get(cid, {}) as Dictionary).get("sheet", {}) as Dictionary
-		var stunts: Array = sh.get("blue_stunt_ids", []) as Array
+		var stunts: Array = _get_member_blue_stunt_ids(cid2)
 		if not stunts.is_empty():
-			return str(stunts[0])
-	return ""
+			return {
+				"skill_id": str(stunts[0]),
+				"owner_id": cid2,
+			}
+	return {"skill_id": "", "owner_id": ""}
+
+
+func _find_party_blue_stunt_id() -> String:
+	return str(get_active_blue_stunt_info().get("skill_id", ""))
 
 
 func get_active_blue_stunt_id() -> String:
-	return _find_party_blue_stunt_id()
+	return str(get_active_blue_stunt_info().get("skill_id", ""))
 
 
 func _get_all_living_allies_and_pet() -> Array[BattleActor]:

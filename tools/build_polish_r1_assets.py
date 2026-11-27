@@ -110,7 +110,7 @@ def extract_portrait_bust_rgba(raw_rgb_im: Image.Image, char_id: str, tol: float
             area = int(c_stats[lid, cv2.CC_STAT_AREA])
             cx, cy = float(c_centroids[lid][0]), float(c_centroids[lid][1])
             if char_id == "gu_changqing":
-                if area >= 2 and (cy < 365.0 or (cx < 395.0 and cy < 430.0)):
+                if area >= 2 and (cy < 320.0 or (cx < 375.0 and cy < 360.0)):
                     bg_mask |= c_labels == lid
             elif char_id == "pei_zhao":
                 if area >= 15 and cy < 425.0:
@@ -224,8 +224,8 @@ def render_sdf_ebony_gilt(
 
     gx = cv2.Sobel(height_blur, cv2.CV_32F, 1, 0, ksize=3)
     gy = cv2.Sobel(height_blur, cv2.CV_32F, 0, 1, ksize=3)
-    # Upper-left 45-deg key light L = (-0.707, -0.707)
-    shade = np.clip(-0.7071 * gx - 0.7071 * gy, -1.0, 1.0)
+    # Outward bevel normal (-gx, -gy) dotted with upper-left 45-deg key light L_to_light = (-0.7071, -0.7071)
+    shade = np.clip(0.7071 * gx + 0.7071 * gy, -1.0, 1.0)
 
     yy = np.linspace(0.0, 1.0, h, dtype=np.float32)[:, None]
     wood_grad = np.array(ebony_top, dtype=np.float32)[None, None, :] * (1.0 - yy[..., None]) + (
@@ -593,7 +593,7 @@ def build_hud_frames() -> List[Dict[str, str]]:
     spec_doc = {
         "generator": "tools/build_polish_r1_assets.py",
         "generated_date": GEN_DATE,
-        "supersampling": "2x SDF + Sobel (-0.707, -0.707) top-left bevel relief + Lanczos",
+        "supersampling": "2x SDF + Sobel (+0.7071*(gx+gy)) outward-normal top-left bevel relief + Lanczos",
         "frames": [{"file": fn, "size": f"{sz[0]}x{sz[1]}", "desc": desc} for fn, _, sz, desc in frame_items],
     }
     os.makedirs(os.path.join(REPO_ROOT, "assets_src/ui"), exist_ok=True)
@@ -626,19 +626,6 @@ def build_hud_frames() -> List[Dict[str, str]]:
 # ==============================================================================
 # 3. Combat VFX & Particle Textures (project/assets/vfx/)
 # ==============================================================================
-def extract_dark_tile_item(raw_im: Image.Image, box: Tuple[int, int, int, int]) -> Image.Image:
-    crop = raw_im.crop(box).convert("RGB")
-    arr = np.asarray(crop, dtype=np.float32)
-    border = np.concatenate([arr[0], arr[-1], arr[:, 0], arr[:, -1]], axis=0)
-    bg = np.median(border, axis=0)
-    diff = np.linalg.norm(arr - bg[None, None, :], axis=2)
-    luma = 0.299 * arr[..., 0] + 0.587 * arr[..., 1] + 0.114 * arr[..., 2]
-    fg = ((diff > 22.0) | (luma > 46.0)).astype(np.uint8) * 255
-    alpha = cv2.GaussianBlur(fg, (3, 3), 0.7)
-    out = np.dstack([arr.astype(np.uint8), alpha])
-    out[out[..., 3] < 10, :3] = 0
-    out[out[..., 3] < 10, 3] = 0
-    return Image.fromarray(out, "RGBA")
 
 
 def make_vfx_flying_sword_qi(equips_im: Image.Image) -> Image.Image:
@@ -710,41 +697,126 @@ def make_vfx_flying_sword_qi(equips_im: Image.Image) -> Image.Image:
     return comp.resize((256, 96), Image.Resampling.LANCZOS)
 
 
-def make_vfx_silver_needle(equips_im: Image.Image) -> Image.Image:
-    """160x56 RGBA horizontal (+X right) medicinal silver needle with celadon-jade meridian silk aura."""
+def make_vfx_silver_needle_2x() -> Image.Image:
+    """
+    320x112 -> 160x56 RGBA horizontal (+X right) Song-Ming medicinal silver acupuncture needle (银针):
+    coiled silver-gold filigree handle at left + razor-straight tapered #F4FAFC silver shaft + #8CE8BE/#3E7B67 celadon meridian silk aura.
+    """
     W, H = 320, 112
-    raw_pin = extract_dark_tile_item(equips_im, (997, 52, 1277, 260))
-    # Rotate -45 deg CW? Wait: hairpin prongs point bottom-left (-1,+1) and leafy head is top-right (+1,-1).
-    # For an acupuncture needle projectile flying +X right, sharp silver tip should lead at +X right!
-    rot_pin = raw_pin.rotate(135.0, resample=Image.Resampling.BICUBIC, expand=True)
-    p_arr = np.asarray(rot_pin)
-    ys, xs = np.where(p_arr[..., 3] > 24)
-    if len(xs) > 0:
-        rot_pin = rot_pin.crop((int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1))
-    pin_fit = rot_pin.resize((220, 62), Image.Resampling.LANCZOS)
-
+    rng = np.random.default_rng(308)
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     cy = H * 0.5
-    t_x = np.clip((xx - 16.0) / 292.0, 0.0, 1.0)
-    aura_w = 18.0 * np.sin(t_x ** 0.8 * math.pi) + 2.0
-    # Trailing celadon silk wave
-    wave_y = cy + np.sin(xx * 0.045) * 5.0 * (1.0 - t_x)
-    aura = np.clip(1.0 - np.abs(yy - wave_y) / aura_w, 0.0, 1.0) ** 1.6 * (xx >= 14.0) * (xx <= 308.0)
-    col = np.array([120.0, 218.0, 176.0], dtype=np.float32)[None, None, :] * (1.0 - t_x[..., None] * 0.45) + (
-        np.array([242.0, 252.0, 248.0], dtype=np.float32)[None, None, :] * (t_x[..., None] * 0.45)
-    )
-    aura_im = Image.fromarray(
-        np.dstack([np.clip(col, 0, 255).astype(np.uint8), np.clip(aura * 185.0, 0, 255).astype(np.uint8)]),
+
+    # 1. Soft celadon-jade meridian qi envelope & intertwined silk ribbons (#3E7B67 -> #8CE8BE -> #EAFFF6)
+    t_x = np.clip((xx - 14.0) / 294.0, 0.0, 1.0)
+    env_w = 20.0 * np.sin(np.clip(t_x, 0.0, 1.0) ** 0.78 * math.pi) + 2.2
+    wave_main = cy + np.sin(xx * 0.046 - 0.5) * 5.2 * (1.0 - 0.65 * t_x)
+    aura_a = (np.clip(1.0 - np.abs(yy - wave_main) / env_w, 0.0, 1.0) ** 1.75) * ((xx >= 12.0) & (xx <= 308.0)) * 0.62
+
+    c_deep = np.array([62.0, 123.0, 103.0], dtype=np.float32)    # #3E7B67 stone-green
+    c_cela = np.array([140.0, 232.0, 190.0], dtype=np.float32)   # #8CE8BE celadon-jade
+    c_pale = np.array([236.0, 252.0, 246.0], dtype=np.float32)
+    aura_rgb = c_deep[None, None, :] * (1.0 - t_x[..., None] * 0.65) + c_cela[None, None, :] * (t_x[..., None] * 0.65)
+    aura_rgb = aura_rgb * 0.72 + c_pale[None, None, :] * (aura_a[..., None] * 0.28)
+    comp = Image.fromarray(
+        np.dstack([np.clip(aura_rgb, 0, 255).astype(np.uint8), np.clip(aura_a * 255.0, 0, 255).astype(np.uint8)]),
         "RGBA",
     )
 
-    pin_layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    pin_layer.paste(pin_fit, (34, (H - pin_fit.height) // 2), pin_fit)
-    comp = Image.alpha_composite(aura_im, pin_layer)
-    nd = ImageDraw.Draw(comp)
-    nd.polygon([(92, int(cy) - 4), (308, int(cy)), (92, int(cy) + 4)], fill=(246, 252, 255, 245))
-    nd.line([(76, int(cy)), (310, int(cy))], fill=(255, 255, 255, 255), width=2)
-    return comp.resize((160, 56), Image.Resampling.LANCZOS)
+    silk_layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    sd = ImageDraw.Draw(silk_layer)
+    for phase, amp, col_o, col_i in [
+        (0.0, 9.5, (62, 123, 103, 150), (140, 232, 190, 205)),
+        (math.pi * 0.85, 7.0, (62, 123, 103, 125), (214, 252, 236, 185)),
+    ]:
+        pts = []
+        steps = 64
+        for i in range(steps + 1):
+            u = i / float(steps)
+            px = 16.0 + u * 276.0
+            taper = math.sin(u * math.pi) * (1.0 - 0.45 * u)
+            py = cy + math.sin(u * math.pi * 3.1 + phase) * amp * taper
+            pts.append((px, py))
+        for i in range(steps):
+            u = i / float(steps)
+            w_s = max(1, int(round(4.5 * math.sin(u * math.pi))))
+            sd.line([pts[i], pts[i + 1]], fill=col_o, width=w_s + 2)
+            sd.line([pts[i], pts[i + 1]], fill=col_i, width=w_s)
+    for _ in range(12):
+        mx = float(rng.uniform(24.0, 265.0))
+        my = cy + float(rng.uniform(-11.0, 11.0)) * (1.0 - (mx - 24.0) / 280.0)
+        mr = float(rng.uniform(1.4, 2.8))
+        sd.ellipse((mx - mr, my - mr, mx + mr, my + mr), fill=(224, 255, 242, int(rng.integers(145, 215))))
+    silk_layer = silk_layer.filter(ImageFilter.GaussianBlur(radius=0.85))
+    comp = Image.alpha_composite(comp, silk_layer)
+
+    # 2. Needle body: tail filigree ring (x=24..41) + coiled silver-gold handle (x=40..106) + bolster (104..112) + razor shaft (112..308)
+    needle = np.zeros((H, W, 4), dtype=np.float32)
+    dy = yy - cy
+
+    # Tail ring finial centered at (33, cy)
+    ring_r = np.sqrt((xx - 33.0) ** 2.0 + dy ** 2.0)
+    ring_band = np.clip(1.0 - np.abs(ring_r - 6.4) / 2.6, 0.0, 1.0)
+    ring_ink = np.clip(1.0 - np.abs(ring_r - 8.6) / 1.2, 0.0, 1.0) + np.clip(1.0 - np.abs(ring_r - 4.1) / 1.1, 0.0, 1.0)
+
+    # Coiled wire handle (x=40..106, half_h=5.2) & bolster collar (x=104..113, half_h=6.2)
+    in_handle = (xx >= 40.0) & (xx <= 106.0)
+    in_bolster = (xx > 104.0) & (xx <= 113.0)
+    h_half = np.where(in_bolster, 6.2, 5.2)
+    h_cov = np.clip((h_half - np.abs(dy)) / 1.1, 0.0, 1.0) * (in_handle | in_bolster)
+    h_ink = np.clip(1.0 - np.abs(np.abs(dy) - h_half) / 1.25, 0.0, 1.0) * (in_handle | in_bolster)
+    # Top-left lit cylindrical shading + fine spiral wire ridges
+    cyl_ny = np.clip(-dy / np.maximum(h_half, 1.0), -1.0, 1.0)
+    coil_wave = 0.5 + 0.5 * np.sin((xx - 40.0) * 1.15 + dy * 0.22)
+    h_light = np.clip(0.54 + 0.34 * cyl_ny + 0.18 * (coil_wave - 0.5) * in_handle, 0.0, 1.0)
+    c_h_dark = np.array([112.0, 92.0, 58.0], dtype=np.float32)
+    c_h_mid = np.array([214.0, 186.0, 132.0], dtype=np.float32)
+    c_h_spec = np.array([248.0, 242.0, 224.0], dtype=np.float32)
+    h_rgb = np.where(
+        (h_light > 0.72)[..., None],
+        c_h_mid[None, None, :] * (1.0 - (h_light[..., None] - 0.72) / 0.28) + c_h_spec[None, None, :] * ((h_light[..., None] - 0.72) / 0.28),
+        c_h_dark[None, None, :] * (1.0 - h_light[..., None] / 0.72) + c_h_mid[None, None, :] * (h_light[..., None] / 0.72),
+    )
+
+    # Razor-straight tapered #F4FAFC medicinal silver shaft (x=112..308 -> +X tip)
+    s_u = np.clip((xx - 112.0) / 196.0, 0.0, 1.0)
+    in_shaft = (xx >= 112.0) & (xx <= 308.5)
+    s_half = 3.9 * ((1.0 - s_u) ** 0.72) + 0.55
+    s_cov = np.clip((s_half - np.abs(dy)) / 0.95, 0.0, 1.0) * in_shaft
+    s_ink = np.clip(1.0 - np.abs(np.abs(dy) - (s_half + 0.55)) / 1.05, 0.0, 1.0) * in_shaft * (1.0 - 0.45 * (s_u ** 2.0))
+    s_ny = np.clip(-dy / np.maximum(s_half, 0.6), -1.0, 1.0)
+    s_spec = np.exp(-(((dy + 0.55) / np.maximum(s_half * 0.48, 0.45)) ** 2.0))
+    c_s_low = np.array([188.0, 208.0, 218.0], dtype=np.float32)
+    c_s_body = np.array([244.0, 250.0, 252.0], dtype=np.float32)  # #F4FAFC
+    c_s_hi = np.array([255.0, 255.0, 255.0], dtype=np.float32)
+    s_base = c_s_low[None, None, :] * np.clip(0.5 - 0.5 * s_ny, 0.0, 1.0)[..., None] + c_s_body[None, None, :] * np.clip(0.5 + 0.5 * s_ny, 0.0, 1.0)[..., None]
+    s_rgb = s_base * (1.0 - s_spec[..., None] * 0.75) + c_s_hi[None, None, :] * (s_spec[..., None] * 0.75)
+
+    # Combine ring, handle, shaft, and crisp Gongbi ink hairline (#1C2226)
+    ink_col = np.array([28.0, 34.0, 38.0], dtype=np.float32)
+    ring_rgb = c_h_mid[None, None, :] * 0.75 + c_h_spec[None, None, :] * (np.clip(-dy / 7.0, 0.0, 1.0)[..., None] * 0.25)
+
+    metal_a = np.maximum.reduce([ring_band, h_cov, s_cov])
+    ink_a = np.clip(np.maximum.reduce([ring_ink * 0.85, h_ink * 0.88, s_ink * 0.78]), 0.0, 1.0) * (1.0 - metal_a * 0.65)
+    tot_a = np.clip(np.maximum(metal_a, ink_a), 0.0, 1.0)
+
+    metal_rgb = np.where(
+        (s_cov >= np.maximum(h_cov, ring_band))[..., None],
+        s_rgb,
+        np.where((h_cov >= ring_band)[..., None], h_rgb, ring_rgb),
+    )
+    w_ink = np.clip(ink_a / np.maximum(tot_a, 1e-4), 0.0, 1.0)[..., None]
+    needle[..., :3] = metal_rgb * (1.0 - w_ink) + ink_col[None, None, :] * w_ink
+    needle[..., 3] = tot_a * 255.0
+
+    comp = Image.alpha_composite(comp, Image.fromarray(np.clip(needle, 0, 255).astype(np.uint8), "RGBA"))
+
+    # Subtle surgical tip star-glint at +X point (x=298, cy)
+    glint = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(glint)
+    gd.line([(284, int(cy)), (309, int(cy))], fill=(255, 255, 255, 235), width=2)
+    gd.ellipse((294, int(cy) - 3, 302, int(cy) + 3), fill=(236, 255, 248, 210))
+    return Image.alpha_composite(comp, glint)
 
 
 def make_vfx_sword_trail_ribbon_2x() -> Image.Image:
@@ -1216,7 +1288,7 @@ def build_vfx_assets() -> List[Dict[str, str]]:
     equips_im = Image.open(os.path.join(REPO_ROOT, equips_src_rel)).convert("RGB")
 
     sword_im = make_vfx_flying_sword_qi(equips_im)
-    needle_im = make_vfx_silver_needle(equips_im)
+    needle_2x = make_vfx_silver_needle_2x()
 
     trail_2x = make_vfx_sword_trail_ribbon_2x()
     slash_ink_2x = make_vfx_slash_ink_arc_2x()
@@ -1240,6 +1312,7 @@ def build_vfx_assets() -> List[Dict[str, str]]:
     sheet.paste(claw_2x, (1724, 548))           # (1724..2236, 548..1060)
     sheet.paste(shock_2x, (16, 1068))           # (16..528, 1068..1580)
     sheet.paste(trail_2x, (556, 1068))          # (556..1068, 1068..1196)
+    sheet.paste(needle_2x, (1096, 1076))        # (1096..1416, 1076..1188)
     sheet.paste(spark_2x, (556, 1228))
     sheet.paste(ink_drop_2x, (704, 1228))
     sheet.paste(jade_mote_2x, (852, 1228))
@@ -1258,15 +1331,9 @@ def build_vfx_assets() -> List[Dict[str, str]]:
             "256x96",
             "Horizontal (+X right) Qingyun flying sword with ice-cyan qi & sumi-ink feibai wisps",
         ),
-        (
-            "vfx_silver_needle.png",
-            needle_im,
-            equips_src_rel,
-            "160x56",
-            "Horizontal (+X right) medicinal silver acupuncture needle with celadon meridian silk aura",
-        ),
     ]
     proc_items = [
+        ("vfx_silver_needle.png", needle_2x, (160, 56), "Horizontal (+X right) Song-Ming medicinal silver acupuncture needle with coiled filigree handle & celadon meridian silk aura"),
         ("vfx_sword_trail_ribbon.png", trail_2x, (256, 64), "Stretchable white-cyan sword trail ribbon with longitudinal sumi-ink feibai bristles"),
         ("vfx_slash_ink_arc.png", slash_ink_2x, (320, 256), "Calligraphic +X sword crescent (UV.y 0->1 sweep): cyan razor rim + dry-brush sumi-ink feibai"),
         ("vfx_slash_fire_arc.png", slash_fire_2x, (320, 256), "Blazing +X Song-Ming mineral-fire crescent (UV.y 0->1 sweep): ivory-gold core + cinnabar flame tongues"),

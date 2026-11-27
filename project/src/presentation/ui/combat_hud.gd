@@ -20,6 +20,8 @@ class RadialCooldownOverlay extends Control:
 	var ready_flash: float = 0.0
 
 	func set_sweep(new_ratio: float, gcd_only: bool) -> void:
+		if is_nan(new_ratio) or is_inf(new_ratio):
+			new_ratio = 0.0
 		var clamped: float = clampf(new_ratio, 0.0, 1.0)
 		if absf(clamped - ratio) > 0.002 or is_gcd_sweep != gcd_only:
 			var was_active: bool = ratio > 0.02
@@ -140,7 +142,7 @@ var _hud_hovered: bool = false
 var _fade_alpha: float = 1.0
 var _ui_pulse_clock: float = 0.0
 
-static var _tex_cache: Dictionary = {}
+var _tex_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -219,8 +221,8 @@ func set_interact_prompt(prompt_text: String, screen_anchor: Vector2 = Vector2(-
 		_interact_prompt_box.anchor_right = 0.5
 		_interact_prompt_box.offset_left = -box_w * 0.5
 		_interact_prompt_box.offset_right = box_w * 0.5
-		_interact_prompt_box.offset_top = 720.0
-		_interact_prompt_box.offset_bottom = 760.0
+		_interact_prompt_box.offset_top = 728.0
+		_interact_prompt_box.offset_bottom = 768.0
 
 
 func is_quick_drawer_open() -> bool:
@@ -239,15 +241,15 @@ func _build_top_boss_bar() -> void:
 	_boss_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_boss_panel.anchor_left = 0.5
 	_boss_panel.anchor_right = 0.5
-	_boss_panel.offset_left = -310.0
-	_boss_panel.offset_right = 310.0
+	_boss_panel.offset_left = -316.0
+	_boss_panel.offset_right = 316.0
 	_boss_panel.offset_top = 14.0
-	_boss_panel.offset_bottom = 172.0
+	_boss_panel.offset_bottom = 192.0
 	_boss_panel.add_theme_stylebox_override(
 		"panel",
 		UIThemeBuilder.make_texture_or_ebony_box(
 			"res://assets/ui/frames/hud_boss_plaque_bg.png",
-			20, 14, 20, 14,
+			26, 18, 26, 22,
 			UIThemeBuilder.COL_BOSS_EBONY,
 			Color("#D6A244"),
 			2, 6
@@ -447,8 +449,8 @@ func _build_tactical_pause_watermark() -> void:
 	_pause_banner.anchor_right = 0.5
 	_pause_banner.offset_left = -360.0
 	_pause_banner.offset_right = 360.0
-	_pause_banner.offset_top = 772.0
-	_pause_banner.offset_bottom = 816.0
+	_pause_banner.offset_top = 644.0
+	_pause_banner.offset_bottom = 688.0
 	_pause_banner.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.08, 0.14, 0.16, 0.92), Color("#8CE0D4"), 2, 6))
 	_pause_banner.visible = false
 	add_child(_pause_banner)
@@ -469,8 +471,8 @@ func _build_tactical_pause_watermark() -> void:
 	_status_buff_lbl.anchor_right = 0.5
 	_status_buff_lbl.offset_left = -280.0
 	_status_buff_lbl.offset_right = 280.0
-	_status_buff_lbl.offset_top = 822.0
-	_status_buff_lbl.offset_bottom = 850.0
+	_status_buff_lbl.offset_top = 694.0
+	_status_buff_lbl.offset_bottom = 722.0
 	_status_buff_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_status_buff_lbl.add_theme_font_size_override("font_size", UIThemeBuilder.FS_MIN)
 	_status_buff_lbl.add_theme_color_override("font_color", Color("#98E2C6"))
@@ -663,7 +665,7 @@ func _build_party_frames() -> void:
 			if ev is InputEventMouseButton:
 				var mb: InputEventMouseButton = ev as InputEventMouseButton
 				if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT and combat_ctrl != null:
-					combat_ctrl.switch_controlled_party_slot(int(card_info.get("formation_slot", slot_num)), false)
+					combat_ctrl.switch_controlled_party_slot(slot_num, false)
 		)
 		ai_btn.pressed.connect(func() -> void:
 			var cid_a: String = str(card_info.get("char_id", ""))
@@ -687,13 +689,13 @@ func _build_bottom_action_bar() -> void:
 	_bottom_cluster.anchor_bottom = 1.0
 	_bottom_cluster.offset_left = -540.0
 	_bottom_cluster.offset_right = 540.0
-	_bottom_cluster.offset_top = -168.0
+	_bottom_cluster.offset_top = -172.0
 	_bottom_cluster.offset_bottom = 0.0
 	add_child(_bottom_cluster)
 
-	# 左肩迷你灵宠控制条（严守至多 1 只出战灵宠，screen x=428..772, y=924..956，绝不触碰中央奇门匾额！）
+	# 左肩上层迷你灵宠控制条（严守至多 1 只出战灵宠，screen x=436..900, y=882..916，与奇门匾额及 Z 抽屉 100% 零重叠！）
 	_pet_bar = PanelContainer.new()
-	_pet_bar.position = Vector2(8.0, 12.0)
+	_pet_bar.position = Vector2(16.0, -26.0)
 	var pet_sb: StyleBoxFlat = UIThemeBuilder.make_ebony_box(Color(0.12, 0.11, 0.10, 0.94), UIThemeBuilder.COL_BRONZE_DIM, 1, 4)
 	pet_sb.content_margin_left = 4.0
 	pet_sb.content_margin_right = 4.0
@@ -730,22 +732,22 @@ func _build_bottom_action_bar() -> void:
 	)
 	pet_hb.add_child(_pet_sk2_btn)
 
-	# 右肩同调气机青莲槽（x=1134..1454, y=922..954）
-	var att_info: Dictionary = _make_framed_bar_row(316.0, 28.0, Color(0.08, 0.14, 0.12, 0.95), UIThemeBuilder.COL_BRONZE_DIM, 1, 16, false)
+	# 右肩同调气机青莲槽（screen x=1152..1452, y=930..958）
+	var att_info: Dictionary = _make_framed_bar_row(300.0, 28.0, Color(0.08, 0.14, 0.12, 0.95), UIThemeBuilder.COL_BRONZE_DIM, 1, 16, false)
 	_attunement_wrap = att_info["panel"] as PanelContainer
 	_attunement_sb = att_info["stylebox"] as StyleBoxFlat
 	_attunement_fill = att_info["fill"] as ColorRect
 	_attunement_fill.color = UIThemeBuilder.COL_JADE_GREEN
 	_attunement_lbl = att_info["label"] as Label
-	_attunement_wrap.position = Vector2(716.0, 12.0)
+	_attunement_wrap.position = Vector2(732.0, 22.0)
 	_attunement_wrap.visible = false
 	_bottom_cluster.add_child(_attunement_wrap)
 
-	# 主雕花乌木错金底座 + 左右祥云卷草侧翼（紧凑自居中包裹，严格位于 x=424..1496 绝不压左下小队框！）
+	# 主雕花乌木错金底座 + 左右祥云卷草侧翼（全12槽位总宽 <= 980px，居中于 x=470..1450，距左下小队框 >=54px！）
 	var bar_center: CenterContainer = CenterContainer.new()
 	bar_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	bar_center.position = Vector2(0.0, 48.0)
-	bar_center.custom_minimum_size = Vector2(1080.0, 112.0)
+	bar_center.position = Vector2(0.0, 54.0)
+	bar_center.custom_minimum_size = Vector2(1080.0, 108.0)
 	_bottom_cluster.add_child(bar_center)
 
 	var pedestal_hb: HBoxContainer = HBoxContainer.new()
@@ -755,11 +757,11 @@ func _build_bottom_action_bar() -> void:
 	bar_center.add_child(pedestal_hb)
 
 	var wing_l_wrap: Control = Control.new()
-	wing_l_wrap.custom_minimum_size = Vector2(124.0, 108.0)
+	wing_l_wrap.custom_minimum_size = Vector2(106.0, 106.0)
 	wing_l_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var wing_l_tex: TextureRect = TextureRect.new()
-	wing_l_tex.position = Vector2(0.0, 44.0)
-	wing_l_tex.size = Vector2(124.0, 62.0)
+	wing_l_tex.position = Vector2(0.0, 48.0)
+	wing_l_tex.size = Vector2(106.0, 56.0)
 	wing_l_tex.texture = _load_tex("res://assets/ui/frames/hud_bar_wing_l.png")
 	wing_l_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	wing_l_tex.stretch_mode = TextureRect.STRETCH_SCALE
@@ -771,7 +773,7 @@ func _build_bottom_action_bar() -> void:
 	main_bar.custom_minimum_size = Vector2(0.0, 106.0)
 	var main_sb: StyleBox = UIThemeBuilder.make_texture_or_ebony_box(
 		"res://assets/ui/frames/hud_action_bar_bg.png",
-		18, 12, 18, 10,
+		16, 12, 16, 10,
 		UIThemeBuilder.COL_CARVED_EBONY,
 		Color("#C8A055"),
 		2, 6
@@ -782,11 +784,11 @@ func _build_bottom_action_bar() -> void:
 	pedestal_hb.add_child(main_bar)
 
 	var wing_r_wrap: Control = Control.new()
-	wing_r_wrap.custom_minimum_size = Vector2(124.0, 108.0)
+	wing_r_wrap.custom_minimum_size = Vector2(106.0, 106.0)
 	wing_r_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var wing_r_tex: TextureRect = TextureRect.new()
-	wing_r_tex.position = Vector2(0.0, 44.0)
-	wing_r_tex.size = Vector2(124.0, 62.0)
+	wing_r_tex.position = Vector2(0.0, 48.0)
+	wing_r_tex.size = Vector2(106.0, 56.0)
 	wing_r_tex.texture = _load_tex("res://assets/ui/frames/hud_bar_wing_r.png")
 	wing_r_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	wing_r_tex.stretch_mode = TextureRect.STRETCH_SCALE
@@ -796,7 +798,7 @@ func _build_bottom_action_bar() -> void:
 
 	var hb: HBoxContainer = HBoxContainer.new()
 	hb.alignment = BoxContainer.ALIGNMENT_CENTER
-	hb.add_theme_constant_override("separation", 4)
+	hb.add_theme_constant_override("separation", 3)
 	main_bar.add_child(hb)
 
 	var slot_order: Array[String] = ["1", "2", "3", "4", "Q", "E", "R", "G", "5", "6", "STUNT", "Z"]
@@ -806,20 +808,20 @@ func _build_bottom_action_bar() -> void:
 		var tile: PanelContainer = _create_action_tile(code)
 		hb.add_child(tile)
 
-	# 顶部正中凸起奇门常驻阵图匾额（对标 master_b `地载阵 · 调息流转`，点击即展开/收起 Z 键奇门抽屉）
+	# 顶部正中凸起奇门常驻阵图匾额（对标 master_b `地载阵 · 调息流转`，screen x=814..1106, y=924..962）
 	_formation_plaque = Button.new()
 	_formation_plaque.focus_mode = Control.FOCUS_NONE
 	_formation_plaque.z_index = 2
-	_formation_plaque.position = Vector2(380.0, 14.0)
-	_formation_plaque.size = Vector2(320.0, 40.0)
-	_formation_plaque.custom_minimum_size = Vector2(320.0, 40.0)
+	_formation_plaque.position = Vector2(394.0, 16.0)
+	_formation_plaque.size = Vector2(292.0, 38.0)
+	_formation_plaque.custom_minimum_size = Vector2(292.0, 38.0)
 	_formation_plaque.add_theme_font_override("font", UIThemeBuilder.get_bold_font())
 	_formation_plaque.add_theme_font_size_override("font_size", 17)
 	_formation_plaque.add_theme_color_override("font_color", UIThemeBuilder.COL_XUAN_WARM)
 	_formation_plaque.add_theme_color_override("font_hover_color", UIThemeBuilder.COL_GILT_BRIGHT)
 	var fp_sb: StyleBox = UIThemeBuilder.make_texture_or_ebony_box(
 		"res://assets/ui/frames/hud_formation_plaque.png",
-		28, 6, 28, 6,
+		24, 5, 24, 5,
 		Color("#24201B"),
 		Color("#C8A055"),
 		2, 5
@@ -831,11 +833,11 @@ func _build_bottom_action_bar() -> void:
 	_formation_plaque.pressed.connect(toggle_quick_drawer)
 	_bottom_cluster.add_child(_formation_plaque)
 
-	# Z 键奇门变阵小抽屉
+	# Z 键奇门变阵小抽屉（screen x=918..1174, y=774..918，避开左肩灵宠条与上方凝时横幅）
 	_quick_drawer = PanelContainer.new()
 	_quick_drawer.z_index = 4
-	_quick_drawer.position = Vector2(410.0, -142.0)
-	_quick_drawer.custom_minimum_size = Vector2(260.0, 140.0)
+	_quick_drawer.position = Vector2(498.0, -134.0)
+	_quick_drawer.custom_minimum_size = Vector2(256.0, 140.0)
 	_quick_drawer.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.12, 0.11, 0.10, 0.97), UIThemeBuilder.COL_BRONZE_GOLD, 2, 6))
 	_quick_drawer.visible = false
 	_bottom_cluster.add_child(_quick_drawer)
@@ -860,10 +862,10 @@ func _make_bar_group_divider() -> Control:
 
 func _create_action_tile(slot_code: String) -> PanelContainer:
 	var tile: PanelContainer = PanelContainer.new()
-	tile.custom_minimum_size = Vector2(60.0, 82.0)
+	tile.custom_minimum_size = Vector2(56.0, 82.0)
 	var sb: StyleBox = UIThemeBuilder.make_texture_or_ebony_box(
 		"res://assets/ui/frames/hud_slot_frame.png",
-		8, 6, 8, 4,
+		6, 6, 6, 4,
 		Color(0.14, 0.12, 0.11, 0.96),
 		UIThemeBuilder.COL_BRONZE_DIM,
 		2, 5
@@ -876,7 +878,7 @@ func _create_action_tile(slot_code: String) -> PanelContainer:
 	tile.add_child(vb)
 
 	var icon_wrap: Control = Control.new()
-	icon_wrap.custom_minimum_size = Vector2(46.0, 48.0)
+	icon_wrap.custom_minimum_size = Vector2(44.0, 46.0)
 	icon_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vb.add_child(icon_wrap)
 
@@ -960,8 +962,8 @@ func _build_interact_prompt() -> void:
 	_interact_prompt_box.anchor_right = 0.5
 	_interact_prompt_box.offset_left = -240.0
 	_interact_prompt_box.offset_right = 240.0
-	_interact_prompt_box.offset_top = 720.0
-	_interact_prompt_box.offset_bottom = 762.0
+	_interact_prompt_box.offset_top = 728.0
+	_interact_prompt_box.offset_bottom = 768.0
 	_interact_prompt_box.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.12, 0.11, 0.10, 0.90), UIThemeBuilder.COL_BRONZE_GOLD, 2, 5))
 	_interact_prompt_box.visible = false
 	add_child(_interact_prompt_box)
@@ -1031,6 +1033,8 @@ func refresh_static_bindings() -> void:
 
 	# 1. 更新左下 F1→F2→F3 无跳号连续小队框与工笔头像
 	var occupied_slots: Array[int] = combat_ctrl.get_occupied_formation_slots()
+	if not occupied_slots.is_empty() and not occupied_slots.has(CampaignState.controlled_slot):
+		CampaignState.controlled_slot = occupied_slots[0]
 	for card_idx: int in range(4):
 		var cinfo: Dictionary = _party_cards[card_idx]
 		var card: PanelContainer = cinfo["card"] as PanelContainer
@@ -1117,14 +1121,19 @@ func refresh_static_bindings() -> void:
 				tile.tooltip_text = "%s\n%s" % [DataDB.loc(str(gsdef.get("name_key", ""))), DataDB.loc(str(gsdef.get("desc_key", "")))]
 			continue
 		elif code == "STUNT":
-			var stunt_id: String = combat_ctrl.get_active_blue_stunt_id()
+			var stunt_info: Dictionary = combat_ctrl.get_active_blue_stunt_info()
+			var stunt_id: String = str(stunt_info.get("skill_id", ""))
 			tile.visible = (stunt_id != "")
 			if stunt_id != "":
 				var st_def: Dictionary = DataDB.get_skill(stunt_id)
 				w["skill_id"] = stunt_id
+				w["stunt_owner_id"] = str(stunt_info.get("owner_id", ""))
 				key_l.text = "特技"
 				icon_r.texture = _load_tex(str(st_def.get("icon", "")))
 				tile.tooltip_text = "%s\n%s" % [DataDB.loc(str(st_def.get("name_key", ""))), DataDB.loc(str(st_def.get("desc_key", "")))]
+			else:
+				w["skill_id"] = ""
+				w["stunt_owner_id"] = ""
 			continue
 
 		var sk_id: String = str(bar.get(code, ""))
@@ -1274,16 +1283,34 @@ func _process(delta: float) -> void:
 			continue
 
 		var sdef: Dictionary = DataDB.get_skill(sk_id)
-		var sk_cd: float = float(cds.get(sk_id, 0.0))
+		var slot_u: Dictionary = cu
+		var slot_cds: Dictionary = cds
+		var slot_cd_tots: Dictionary = cd_tots
+		var slot_gcd_rem: float = gcd_rem
+		var slot_gcd_tot: float = gcd_tot
+		if code == "STUNT":
+			var live_st: Dictionary = combat_ctrl.get_active_blue_stunt_info()
+			var st_owner: String = str(live_st.get("owner_id", str(w.get("stunt_owner_id", ctrl_id))))
+			if st_owner != "" and combat_ctrl.unit_states.has(st_owner):
+				slot_u = combat_ctrl.unit_states[st_owner] as Dictionary
+				slot_cds = slot_u.get("cooldowns", {}) as Dictionary
+				slot_cd_tots = slot_u.get("cooldown_totals", {}) as Dictionary
+				slot_gcd_rem = float(slot_u.get("gcd_timer", 0.0))
+				slot_gcd_tot = maxf(0.001, float(slot_u.get("gcd_total", StatLedger.BASE_GCD_SEC)))
+
+		var sk_cd: float = float(slot_cds.get(sk_id, 0.0))
 		var uses_gcd: bool = bool(sdef.get("uses_gcd", true))
-		var gcd_part: float = gcd_rem if uses_gcd else 0.0
+		var gcd_part: float = slot_gcd_rem if uses_gcd else 0.0
 		var eff_rem: float = maxf(sk_cd, gcd_part)
 
-		if eff_rem > 0.05:
-			var is_gcd_only: bool = (gcd_part >= sk_cd and sk_cd <= 0.05)
-			var sk_tot: float = maxf(sk_cd, float(cd_tots.get(sk_id, maxf(0.001, float(sdef.get("cooldown_sec", gcd_tot))))))
-			var denom: float = gcd_tot if is_gcd_only else maxf(0.001, sk_tot)
-			cd_rad.set_sweep(eff_rem / denom, is_gcd_only)
+		var sk_tot: float = maxf(sk_cd, float(slot_cd_tots.get(sk_id, maxf(0.001, float(sdef.get("cooldown_sec", slot_gcd_tot))))))
+		var sk_ratio: float = (sk_cd / maxf(0.001, sk_tot)) if sk_cd > 0.001 else 0.0
+		var gcd_ratio: float = (gcd_part / maxf(0.001, slot_gcd_tot)) if gcd_part > 0.001 else 0.0
+		var sweep_ratio: float = maxf(sk_ratio, gcd_ratio)
+
+		if eff_rem > 0.05 and sweep_ratio > 0.005:
+			var is_gcd_only: bool = (gcd_ratio >= sk_ratio and sk_cd <= gcd_part)
+			cd_rad.set_sweep(sweep_ratio, is_gcd_only)
 			cd_l.text = "%.1fs" % eff_rem
 		else:
 			cd_rad.set_sweep(0.0, false)
@@ -1312,7 +1339,7 @@ func _process(delta: float) -> void:
 	_attunement_wrap.visible = combat_ctrl.in_combat or (combat_ctrl.out_of_combat_sec < 2.5 and combat_ctrl.team_attunement >= 0.5)
 	if _attunement_wrap.visible:
 		var att_r: float = clampf(combat_ctrl.team_attunement / RtwpSimStep.MAX_ATTUNEMENT, 0.0, 1.0)
-		_attunement_fill.size.x = 314.0 * att_r
+		_attunement_fill.size.x = 298.0 * att_r
 		var att_suffix: String = ""
 		if combat_ctrl.team_attunement >= 100.0:
 			_attunement_sb.border_color = Color("#74F0C2")

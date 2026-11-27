@@ -74,13 +74,23 @@ var _bark_timer: float = 0.0
 var _bark_duration: float = 3.5
 var _pulse_clock: float = 0.0
 
-static var _seal_textures: Dictionary = {}
-static var _hit_flash_shader: Shader = null
+var _seal_textures: Dictionary = {}
+var _hit_flash_shader: Shader = null
 
 var _hit_flash_mat: ShaderMaterial = null
 var _hit_flash_timer: float = 0.0
 var _hit_flash_duration: float = 0.12
 var _hit_flash_peak: float = 0.0
+
+
+func _ready() -> void:
+	if not SaveManager.settings_changed.is_connected(_on_comfort_settings_changed):
+		SaveManager.settings_changed.connect(_on_comfort_settings_changed)
+
+
+func _on_comfort_settings_changed() -> void:
+	if SaveManager.reduced_motion:
+		clear_hit_flash()
 
 
 func setup_actor(
@@ -100,6 +110,8 @@ func setup_actor(
 	_hit_flash_peak = 0.0
 	visible = true
 
+	if not SaveManager.settings_changed.is_connected(_on_comfort_settings_changed):
+		SaveManager.settings_changed.connect(_on_comfort_settings_changed)
 	if _sprite == null:
 		_sprite = Sprite2D.new()
 		_sprite.centered = false
@@ -136,7 +148,7 @@ func _load_sprite_sheet(sid: String) -> void:
 	_sprite.offset = Vector2(-float(_cell_w) * 0.5, -float(_foot_y))
 
 
-static func _ensure_seal_icons() -> void:
+func _ensure_seal_icons() -> void:
 	if not _seal_textures.is_empty():
 		return
 	for elem: String in ["metal", "wood", "water", "fire", "earth"]:
@@ -171,12 +183,17 @@ func _ensure_hit_flash_material() -> void:
 		_hit_flash_mat.set_shader_parameter("hit_flash", 0.0)
 
 
+func clear_hit_flash() -> void:
+	_hit_flash_timer = 0.0
+	_hit_flash_duration = 0.0
+	_hit_flash_peak = 0.0
+	if _hit_flash_mat != null:
+		_hit_flash_mat.set_shader_parameter("hit_flash", 0.0)
+
+
 func trigger_hit_flash(duration: float = 0.12, intensity: float = 1.0) -> void:
 	if SaveManager.reduced_motion or duration <= 0.0 or intensity <= 0.0:
-		_hit_flash_timer = 0.0
-		_hit_flash_peak = 0.0
-		if _hit_flash_mat != null:
-			_hit_flash_mat.set_shader_parameter("hit_flash", 0.0)
+		clear_hit_flash()
 		return
 	var dur: float = maxf(0.03, duration)
 	var pk: float = clampf(intensity, 0.0, 1.0)

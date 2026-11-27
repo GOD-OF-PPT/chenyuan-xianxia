@@ -4,11 +4,16 @@ shader_type canvas_item;
 uniform float hit_flash : hint_range(0.0, 1.0) = 0.0;
 uniform vec4 flash_color : source_color = vec4(1.0, 0.96, 0.88, 1.0);
 
+varying vec4 v_modulate;
+
+void vertex() {
+	v_modulate = COLOR;
+}
+
 void fragment() {
-	vec4 vtx_col = COLOR;
 	vec4 tex_col = texture(TEXTURE, UV);
-	float out_alpha = tex_col.a * vtx_col.a;
-	vec3 base_rgb = tex_col.rgb * vtx_col.rgb;
+	float out_alpha = tex_col.a * v_modulate.a;
+	vec3 base_rgb = tex_col.rgb * v_modulate.rgb;
 	float f = clamp(hit_flash, 0.0, 1.0) * flash_color.a;
 	// Blend 88% toward warm mineral white-gold + 12% lift so Song-Ming Gongbi ink lines remain subtly legible
 	vec3 flashed_rgb = mix(base_rgb, flash_color.rgb, f * 0.88) + flash_color.rgb * (f * 0.12);
