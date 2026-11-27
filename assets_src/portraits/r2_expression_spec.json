@@ -1,0 +1,140 @@
+{
+  "gu_changqing": {
+    "emotions": [
+      "calm",
+      "guarded",
+      "solemn",
+      "cold",
+      "smile_faint",
+      "grief",
+      "bloodied"
+    ],
+    "face_box": [
+      348,
+      168,
+      224,
+      214
+    ],
+    "min_pairwise_face_rmse": 10.511,
+    "min_pair": [
+      "cold",
+      "bloodied"
+    ]
+  },
+  "shen_qinghe": {
+    "emotions": [
+      "calm",
+      "guarded",
+      "solemn",
+      "cold",
+      "smile_faint",
+      "grief",
+      "bloodied"
+    ],
+    "face_box": [
+      386,
+      160,
+      232,
+      238
+    ],
+    "min_pairwise_face_rmse": 10.152,
+    "min_pair": [
+      "guarded",
+      "cold"
+    ]
+  },
+  "pei_zhao": {
+    "emotions": [
+      "calm",
+      "guarded",
+      "solemn",
+      "cold",
+      "smile_faint",
+      "grief",
+      "bloodied"
+    ],
+    "face_box": [
+      420,
+      216,
+      210,
+      222
+    ],
+    "min_pairwise_face_rmse": 11.175,
+    "min_pair": [
+      "cold",
+      "bloodied"
+    ]
+  },
+  "mist_wolf_king": {
+    "emotions": [
+      "calm",
+      "grief",
+      "bloodied"
+    ],
+    "face_box": [
+      240,
+      260,
+      540,
+      600
+    ],
+    "min_pairwise_face_rmse": 16.377,
+    "min_pair": [
+      "calm",
+      "grief"
+    ]
+  },
+  "npc_elder": {
+    "emotions": [
+      "calm",
+      "solemn",
+      "grief"
+    ],
+    "face_box": [
+      432,
+      178,
+      224,
+      224
+    ],
+    "min_pairwise_face_rmse": 13.659,
+    "min_pair": [
+      "solemn",
+      "grief"
+    ]
+  },
+  "npc_peddler": {
+    "emotions": [
+      "calm",
+      "smile_faint",
+      "cold"
+    ],
+    "face_box": [
+      430,
+      174,
+      226,
+      212
+    ],
+    "min_pairwise_face_rmse": 17.66,
+    "min_pair": [
+      "calm",
+      "smile_faint"
+    ]
+  },
+  "npc_steward_zhou": {
+    "emotions": [
+      "calm",
+      "guarded",
+      "grief"
+    ],
+    "face_box": [
+      386,
+      192,
+      206,
+      214
+    ],
+    "min_pairwise_face_rmse": 10.817,
+    "min_pair": [
+      "calm",
+      "guarded"
+    ]
+  }
+}

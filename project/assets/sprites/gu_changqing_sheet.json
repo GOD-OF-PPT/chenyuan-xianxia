@@ -1,9 +1,9 @@
 {
   "actor_id": "gu_changqing",
-  "cell_w": 232,
-  "cell_h": 224,
-  "foot_y": 202,
-  "head_top_px": 166,
+  "cell_w": 288,
+  "cell_h": 240,
+  "foot_y": 212,
+  "head_top_px": 162,
   "cols": 6,
   "rows": {
     "idle_se": {
@@ -21,39 +21,39 @@
     "run_se": {
       "row": 2,
       "frames": 6,
-      "fps": 10.0,
+      "fps": 10.5,
       "loop": true
     },
     "run_ne": {
       "row": 3,
       "frames": 6,
-      "fps": 10.0,
+      "fps": 10.5,
       "loop": true
     },
     "attack_1": {
       "row": 4,
       "frames": 5,
-      "fps": 11.0,
+      "fps": 12.0,
       "loop": false
     },
     "attack_2": {
       "row": 5,
       "frames": 5,
-      "fps": 11.0,
+      "fps": 12.0,
       "loop": false
     },
     "cast_loop": {
       "row": 6,
       "start_col": 0,
       "frames": 3,
-      "fps": 7.0,
+      "fps": 7.5,
       "loop": true
     },
     "cast_release": {
       "row": 6,
       "start_col": 3,
       "frames": 3,
-      "fps": 10.0,
+      "fps": 10.5,
       "loop": false
     },
     "hit": {
@@ -69,6 +69,298 @@
       "frames": 2,
       "fps": 4.0,
       "loop": false
+    }
+  },
+  "anchors": {
+    "weapon": [
+      54,
+      -76
+    ],
+    "hand": [
+      36,
+      -88
+    ],
+    "cast": [
+      38,
+      -90
+    ],
+    "chest": [
+      4,
+      -84
+    ],
+    "head": [
+      4,
+      -138
+    ],
+    "mouth": [
+      12,
+      -132
+    ],
+    "overhead": [
+      0,
+      -172
+    ]
+  },
+  "state_anchors": {
+    "idle_se": {
+      "weapon": [
+        48,
+        -64
+      ],
+      "hand": [
+        30,
+        -84
+      ],
+      "cast": [
+        32,
+        -88
+      ],
+      "chest": [
+        2,
+        -84
+      ],
+      "head": [
+        2,
+        -138
+      ],
+      "overhead": [
+        0,
+        -172
+      ]
+    },
+    "idle_ne": {
+      "weapon": [
+        48,
+        -64
+      ],
+      "hand": [
+        30,
+        -84
+      ],
+      "cast": [
+        32,
+        -88
+      ],
+      "chest": [
+        2,
+        -84
+      ],
+      "head": [
+        2,
+        -138
+      ],
+      "overhead": [
+        0,
+        -172
+      ]
+    },
+    "run_se": {
+      "weapon": [
+        -38,
+        -68
+      ],
+      "hand": [
+        34,
+        -82
+      ],
+      "cast": [
+        34,
+        -84
+      ],
+      "chest": [
+        8,
+        -80
+      ],
+      "head": [
+        12,
+        -132
+      ],
+      "overhead": [
+        6,
+        -168
+      ]
+    },
+    "run_ne": {
+      "weapon": [
+        -38,
+        -68
+      ],
+      "hand": [
+        34,
+        -82
+      ],
+      "cast": [
+        34,
+        -84
+      ],
+      "chest": [
+        8,
+        -80
+      ],
+      "head": [
+        12,
+        -132
+      ],
+      "overhead": [
+        6,
+        -168
+      ]
+    },
+    "attack_1": {
+      "weapon": [
+        78,
+        -82
+      ],
+      "hand": [
+        52,
+        -86
+      ],
+      "cast": [
+        52,
+        -86
+      ],
+      "chest": [
+        16,
+        -76
+      ],
+      "head": [
+        20,
+        -126
+      ],
+      "overhead": [
+        12,
+        -162
+      ]
+    },
+    "attack_2": {
+      "weapon": [
+        72,
+        -98
+      ],
+      "hand": [
+        46,
+        -96
+      ],
+      "cast": [
+        46,
+        -96
+      ],
+      "chest": [
+        12,
+        -80
+      ],
+      "head": [
+        14,
+        -130
+      ],
+      "overhead": [
+        8,
+        -166
+      ]
+    },
+    "cast_loop": {
+      "weapon": [
+        36,
+        -108
+      ],
+      "hand": [
+        34,
+        -94
+      ],
+      "cast": [
+        38,
+        -98
+      ],
+      "chest": [
+        4,
+        -86
+      ],
+      "head": [
+        4,
+        -140
+      ],
+      "overhead": [
+        0,
+        -174
+      ]
+    },
+    "cast_release": {
+      "weapon": [
+        68,
+        -88
+      ],
+      "hand": [
+        54,
+        -90
+      ],
+      "cast": [
+        58,
+        -90
+      ],
+      "chest": [
+        14,
+        -80
+      ],
+      "head": [
+        16,
+        -130
+      ],
+      "overhead": [
+        10,
+        -166
+      ]
+    },
+    "hit": {
+      "weapon": [
+        26,
+        -66
+      ],
+      "hand": [
+        18,
+        -88
+      ],
+      "cast": [
+        18,
+        -88
+      ],
+      "chest": [
+        -8,
+        -80
+      ],
+      "head": [
+        -12,
+        -132
+      ],
+      "overhead": [
+        -8,
+        -166
+      ]
+    },
+    "down": {
+      "weapon": [
+        34,
+        -28
+      ],
+      "hand": [
+        22,
+        -42
+      ],
+      "cast": [
+        22,
+        -42
+      ],
+      "chest": [
+        6,
+        -46
+      ],
+      "head": [
+        14,
+        -78
+      ],
+      "overhead": [
+        6,
+        -102
+      ]
     }
   }
 }

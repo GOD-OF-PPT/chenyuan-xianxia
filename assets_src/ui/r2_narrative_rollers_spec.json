@@ -1,0 +1,54 @@
+{
+  "narrative_roller_cap_l": {
+    "size": [
+      80,
+      386
+    ],
+    "nine_slice_tb": [
+      64,
+      52
+    ]
+  },
+  "narrative_roller_cap_r": {
+    "size": [
+      80,
+      386
+    ],
+    "nine_slice_tb": [
+      64,
+      52
+    ]
+  },
+  "narrative_roller_scroll_bg": {
+    "size": [
+      640,
+      290
+    ],
+    "nine_slice_ltrb": [
+      48,
+      44,
+      48,
+      44
+    ],
+    "xuan_hex": "#D8CEBE"
+  },
+  "narrative_roller_plaque_bg": {
+    "size": [
+      380,
+      62
+    ],
+    "nine_slice_ltrb": [
+      44,
+      14,
+      44,
+      16
+    ]
+  },
+  "narrative_roller_temple_backdrop": {
+    "size": [
+      1920,
+      1080
+    ],
+    "source": "assets_src/masters/master_c_temple_stage_raw.jpg"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "gu_changqing": {
+    "cell": [
+      288,
+      240
+    ],
+    "foot_y": 212,
+    "head_top_px": 162
+  },
+  "shen_qinghe": {
+    "cell": [
+      288,
+      240
+    ],
+    "foot_y": 212,
+    "head_top_px": 154
+  },
+  "pei_zhao": {
+    "cell": [
+      288,
+      240
+    ],
+    "foot_y": 212,
+    "head_top_px": 166
+  }
+}
