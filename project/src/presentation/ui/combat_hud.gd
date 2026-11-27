@@ -85,12 +85,13 @@ func _ready() -> void:
 
 
 func bind_combat_controller(ctrl: RtwpCombatController) -> void:
-	combat_ctrl = ctrl
-	combat_ctrl.boss_combat_changed.connect(func(b: BattleActor) -> void:
-		_tracked_boss = b
-		_boss_panel.visible = (b != null and b.alive)
-	)
-	combat_ctrl.combat_hud_dirty.connect(refresh_static_bindings)
+	if combat_ctrl != ctrl:
+		combat_ctrl = ctrl
+		combat_ctrl.boss_combat_changed.connect(func(b: BattleActor) -> void:
+			_tracked_boss = b
+			_boss_panel.visible = (b != null and b.alive)
+		)
+		combat_ctrl.combat_hud_dirty.connect(refresh_static_bindings)
 	refresh_static_bindings()
 
 
@@ -116,7 +117,7 @@ func set_box_selection_visual(active: bool, rect: Rect2) -> void:
 	queue_redraw()
 
 
-func set_interact_prompt(prompt_text: String, screen_anchor: Vector2 = Vector2(-1.0, -1.0)) -> void:
+func set_interact_prompt(prompt_text: String, screen_anchor: Vector2 = Vector2(-1.0, -1.0), place_below: bool = false) -> void:
 	if prompt_text == "":
 		_interact_prompt_box.visible = false
 		return
@@ -127,7 +128,8 @@ func set_interact_prompt(prompt_text: String, screen_anchor: Vector2 = Vector2(-
 	var box_h: float = 40.0
 	if screen_anchor.x >= 0.0 and screen_anchor.y >= 0.0:
 		var px: float = clampf(screen_anchor.x - box_w * 0.5, 24.0, maxf(24.0, vp_size.x - box_w - 24.0))
-		var py: float = clampf(screen_anchor.y - box_h - 14.0, 28.0, maxf(28.0, vp_size.y - 210.0))
+		var raw_py: float = (screen_anchor.y + 10.0) if place_below else (screen_anchor.y - box_h - 14.0)
+		var py: float = clampf(raw_py, 28.0, maxf(28.0, vp_size.y - 210.0))
 		_interact_prompt_box.anchor_left = 0.0
 		_interact_prompt_box.anchor_right = 0.0
 		_interact_prompt_box.offset_left = px
@@ -463,28 +465,38 @@ func _build_bottom_action_bar() -> void:
 	)
 	pet_hb.add_child(_pet_sk2_btn)
 
-	# 正上方居中同调气机青莲槽（仅在战斗中或拥有同调气机时展开显示，脱战零气机时干净收纳！）
+	# 正上方居中同调气机青莲槽（仅在交战期间或刚脱战 2.5s 内显示，平时探索干净收纳！）
 	_attunement_wrap = PanelContainer.new()
-	_attunement_wrap.position = Vector2(310.0, 4.0)
-	_attunement_wrap.custom_minimum_size = Vector2(368.0, 34.0)
+	_attunement_wrap.position = Vector2(382.0, 4.0)
+	_attunement_wrap.custom_minimum_size = Vector2(384.0, 34.0)
 	_attunement_wrap.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.11, 0.10, 0.09, 0.94), UIThemeBuilder.COL_BRONZE_DIM, 1, 4))
 	_attunement_wrap.visible = false
 	_bottom_cluster.add_child(_attunement_wrap)
 
-	var att_bar: Control = _make_bar_row(356.0, 24.0, Color(0.08, 0.14, 0.12, 0.95))
+	var att_bar: Control = _make_bar_row(372.0, 24.0, Color(0.08, 0.14, 0.12, 0.95))
 	_attunement_fill = att_bar.get_child(0) as ColorRect
 	_attunement_fill.color = UIThemeBuilder.COL_JADE_GREEN
 	_attunement_lbl = att_bar.get_child(1) as Label
 	_attunement_wrap.add_child(att_bar)
 
-	# 主乌木镶青铜技能栏底座
+	# 主乌木镶青铜技能栏底座（自适应当前已解锁槽位数紧凑包裹，杜绝两侧空洞黑边！）
+	var bar_center: CenterContainer = CenterContainer.new()
+	bar_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar_center.position = Vector2(0.0, 44.0)
+	bar_center.custom_minimum_size = Vector2(990.0, 108.0)
+	_bottom_cluster.add_child(bar_center)
+
 	var main_bar: PanelContainer = PanelContainer.new()
-	main_bar.position = Vector2(8.0, 44.0)
-	main_bar.custom_minimum_size = Vector2(974.0, 108.0)
-	main_bar.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.11, 0.09, 0.08, 0.96), UIThemeBuilder.COL_BRONZE_GOLD, 2, 6))
+	main_bar.custom_minimum_size = Vector2(0.0, 104.0)
+	var main_sb: StyleBoxFlat = UIThemeBuilder.make_ebony_box(Color(0.11, 0.09, 0.08, 0.96), UIThemeBuilder.COL_BRONZE_GOLD, 2, 6)
+	main_sb.content_margin_left = 14.0
+	main_sb.content_margin_right = 14.0
+	main_sb.content_margin_top = 8.0
+	main_sb.content_margin_bottom = 8.0
+	main_bar.add_theme_stylebox_override("panel", main_sb)
 	main_bar.mouse_entered.connect(func() -> void: _hud_hovered = true)
 	main_bar.mouse_exited.connect(func() -> void: _hud_hovered = false)
-	_bottom_cluster.add_child(main_bar)
+	bar_center.add_child(main_bar)
 
 	var hb: HBoxContainer = HBoxContainer.new()
 	hb.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -830,15 +842,21 @@ func _process(delta: float) -> void:
 		else:
 			sb.border_color = UIThemeBuilder.COL_BRONZE_DIM
 
-	# 同调气机槽刷新（脱战且气机为 0 时干净隐藏，入战或积攒气机后展开）
-	_attunement_wrap.visible = combat_ctrl.in_combat or combat_ctrl.team_attunement >= 0.5
+	# 同调气机槽刷新（仅在交战中或刚脱战 2.5s 内显示，平时探索干净收起；满 100 时明确提示 G 键或夜话领悟！）
+	_attunement_wrap.visible = combat_ctrl.in_combat or (combat_ctrl.out_of_combat_sec < 2.5 and combat_ctrl.team_attunement >= 0.5)
 	if _attunement_wrap.visible:
 		var att_r: float = clampf(combat_ctrl.team_attunement / RtwpSimStep.MAX_ATTUNEMENT, 0.0, 1.0)
-		_attunement_fill.size.x = 352.0 * att_r
+		_attunement_fill.size.x = 368.0 * att_r
+		var att_suffix: String = ""
+		if combat_ctrl.team_attunement >= 100.0:
+			if CampaignState.unlocked_bond_ultimates.has("ult_qinglian_sword"):
+				att_suffix = " 【可按 G 放合击！】"
+			else:
+				att_suffix = " （石碑夜话可领悟合击）"
 		_attunement_lbl.text = "%s: %d / 100%s" % [
 			tr("TERM_ATTUNEMENT"),
 			int(floor(combat_ctrl.team_attunement)),
-			" 【可按 G 放合击！】" if combat_ctrl.team_attunement >= 100.0 and CampaignState.unlocked_bond_ultimates.has("ult_qinglian_sword") else ""
+			att_suffix
 		]
 
 	# 4. 顶部首领大框刷新

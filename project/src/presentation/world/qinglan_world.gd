@@ -258,6 +258,8 @@ func load_zone(zone_id: String, spawn_tag: String = "", use_saved_pos_if_empty: 
 	CampaignState.current_zone_id = zone_id
 	if spawn_tag != "":
 		CampaignState.current_spawn_tag = spawn_tag
+	if _rain_overlay != null:
+		_rain_overlay.queue_redraw()
 
 	NotifyHub.clear_all_transient()
 	for ch: Node in _ground_layer.get_children():
@@ -329,16 +331,16 @@ func _get_spawn_coords(zone_id: String, spawn_tag: String) -> Vector2:
 			return Vector2(360.0, 790.0)
 		"qinglan_pass":
 			if spawn_tag == "from_cave":
-				return Vector2(1980.0, 440.0)
+				return Vector2(1950.0, 645.0)
 			if spawn_tag == "stele_temple_courtyard":
-				return Vector2(1740.0, 560.0)
+				return Vector2(1725.0, 645.0)
 			return Vector2(220.0, 960.0)
 		"cangmu_cave":
 			if spawn_tag == "stele_cave_mid":
-				return Vector2(1280.0, 740.0)
+				return Vector2(1290.0, 775.0)
 			if spawn_tag == "stele_wolf_altar":
-				return Vector2(1750.0, 440.0)
-			return Vector2(240.0, 1080.0)
+				return Vector2(1680.0, 570.0)
+			return Vector2(240.0, 1090.0)
 	return Vector2(400.0, 700.0)
 
 
@@ -402,26 +404,32 @@ func _assemble_tingyu_town() -> void:
 ## ==================== 区域 ②：风雨青岚山道 & 破庙庭院 ====================
 func _assemble_qinglan_pass() -> void:
 	_add_tiled_ground("res://assets/world/tex_moss_earth.png", ZONE_BOUNDS)
+	# 主山道 + 破庙前庭宽阔石坪 + 东南临渊观景支路
 	_add_road_polygon(PackedVector2Array([
-		Vector2(60, 900), Vector2(720, 820), Vector2(1260, 620), Vector2(1680, 480), Vector2(2180, 420),
-		Vector2(2180, 620), Vector2(1720, 660), Vector2(1310, 790), Vector2(760, 990), Vector2(60, 1060)
+		Vector2(60, 900), Vector2(720, 820), Vector2(1260, 620), Vector2(1620, 560), Vector2(2210, 560),
+		Vector2(2210, 710), Vector2(1650, 715), Vector2(1310, 785), Vector2(760, 990), Vector2(60, 1060)
+	]), "res://assets/world/tex_bluestone_wet.png")
+	_add_road_polygon(PackedVector2Array([
+		Vector2(1300, 740), Vector2(1435, 740), Vector2(1455, 920), Vector2(1315, 930)
 	]), "res://assets/world/tex_bluestone_wet.png")
 
-	# 掩体巨石（支持魔兽式卡远程法怪视野 Pulling！）与竹林古樟
+	# 东南云海断崖深渊与对岸孤峰古修秘匣（物理阻断不可徒步跨越，彻底自洽“百丈绝壁金丹御剑”伏笔！）
+	_build_pass_cliff_abyss()
+
+	# 掩体巨石（支持魔兽式卡远程法怪视野 Pulling！）与竹林古樟；破庙下移至 y=515 确保残檐完整入镜
 	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(690.0, 740.0), 68.0, false)
 	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1220.0, 560.0), 68.0, false)
 	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(520.0, 430.0), 58.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1060.0, 880.0), 52.0, true)
-	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1240.0, 940.0), 52.0, true)
-	_add_ysort_structure("res://assets/world/prop_ruined_temple.png", Vector2(1960.0, 420.0), 135.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1215.0, 930.0), 52.0, true)
+	_add_ysort_structure("res://assets/world/prop_ruined_temple.png", Vector2(1890.0, 515.0), 115.0, true)
 
 	# 支线 ②：古樟下救护受瘴幼兽契约初生灵宠（火狐 / 灵龟二选一）
 	if CampaignState.active_pet_id == "":
 		_add_interactable("injured_beast", "beast_rescue", Vector2(560.0, 495.0), 105.0, "受瘴哀鸣的通灵幼兽 [F 施药救治契宠]", "res://assets/world/prop_spirit_herb_node.png", -1, true)
 
-	# 金丹御剑悬崖宝箱伏笔（建立半开放世界升维重返纵深！）
-	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1480.0, 1080.0), 75.0, false)
-	_add_interactable("cliff_chest_vista", "cliff_vista", Vector2(1380.0, 1080.0), 110.0, "断崖绝壁对岸的古修石匣 [F 远眺]", "res://assets/world/prop_treasure_chest.png")
+	# 临渊观景石台（对岸孤峰石匣在 _build_pass_cliff_abyss 中隔渊陈列）
+	_add_interactable("cliff_chest_vista", "cliff_vista", Vector2(1385.0, 895.0), 110.0, "临渊远眺绝壁对岸的古修石匣 [F]", "")
 
 	# 山道采集点
 	if not CampaignState.opened_containers.has("herb_pass_1"):
@@ -433,22 +441,22 @@ func _assemble_qinglan_pass() -> void:
 		_combat_ctrl.spawn_enemy_unit("miasma_shaman", Vector2(860.0, 890.0), "enc_pass_pack_1")
 
 	if not CampaignState.cleared_encounters.has("enc_pass_pack_2"):
-		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(1350.0, 670.0), "enc_pass_pack_2")
-		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(1410.0, 720.0), "enc_pass_pack_2")
+		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(1350.0, 650.0), "enc_pass_pack_2")
+		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(1415.0, 695.0), "enc_pass_pack_2")
 
-	# 破庙前庭引灵石碑
+	# 破庙前庭引灵石碑（未点亮时为苍苔暗刻石碑，点亮后绽放青莲灵纹）
 	var temple_stele_lit: bool = CampaignState.unlocked_steles.has("stele_temple_courtyard")
 	_add_interactable(
-		"stele_temple_courtyard", "stele", Vector2(1710.0, 500.0), 105.0,
+		"stele_temple_courtyard", "stele", Vector2(1655.0, 610.0), 105.0,
 		"青岚破庙前庭 · 引灵石碑 [F 休整/夜话/传送]",
 		"res://assets/world/prop_stele_lit.png" if temple_stele_lit else "res://assets/world/prop_stele_dim.png"
 	)
 
 	# 破庙主事件或地底古窟入口
 	if not bool(CampaignState.world_flags.get("met_pei_zhao", false)):
-		_add_interactable("temple_event_trigger", "temple_clash", Vector2(1960.0, 520.0), 145.0, "踏入【青岚破庙】查探狼啸异变 [F]", "")
+		_add_interactable("temple_event_trigger", "temple_clash", Vector2(1890.0, 640.0), 145.0, "踏入【青岚破庙】查探狼啸异变 [F]", "")
 	elif CampaignState.cleared_encounters.has("enc_temple_wolves"):
-		_add_zone_portal(Rect2(1910.0, 440.0, 150.0, 130.0), "cangmu_cave", "from_pass", "破庙地脉石阶 ──▶ 苍木灵枢古窟")
+		_add_zone_portal(Rect2(2060.0, 565.0, 150.0, 130.0), "cangmu_cave", "from_pass", "破庙地脉石阶 ──▶ 苍木灵枢古窟")
 
 	_add_zone_portal(Rect2(10.0, 870.0, 120.0, 220.0), "tingyu_town", "from_pass", "◀── 南返听雨镇")
 
@@ -456,83 +464,104 @@ func _assemble_qinglan_pass() -> void:
 ## ==================== 区域 ③：苍木灵枢古窟（三段回环五行秘境 + 雾隐狼王） ====================
 func _assemble_cangmu_cave() -> void:
 	_add_tiled_ground("res://assets/world/tex_cave_flagstone.png", ZONE_BOUNDS)
-	# 回环石板路：入口(左下) -> 毒棘门(中左) -> 分岔(北路敛息偷草 / 南路水净瘴池) -> 中枢石碑与回环近路石门 -> 祭坛石碑 -> 雾隐狼王仙台(右上)
+	# 1. 四段地底石板甬道：主通道 -> 回环捷径廊 -> 北侧潜行幽窟 -> 南侧腐瘴潭窟
 	_add_road_polygon(PackedVector2Array([
-		Vector2(140, 1020), Vector2(780, 980), Vector2(1260, 760), Vector2(1740, 420), Vector2(2220, 360),
-		Vector2(2220, 540), Vector2(1780, 580), Vector2(1320, 900), Vector2(820, 1120), Vector2(140, 1160)
+		Vector2(80, 1025), Vector2(820, 1015), Vector2(1240, 680), Vector2(1700, 420), Vector2(2260, 390),
+		Vector2(2260, 560), Vector2(1740, 590), Vector2(1320, 820), Vector2(880, 1145), Vector2(80, 1155)
 	]), "res://assets/world/tex_bluestone_wet.png")
-	# 回环近路走廊（连接中枢石碑直通入口！）
 	_add_road_polygon(PackedVector2Array([
-		Vector2(420, 1020), Vector2(420, 680), Vector2(1240, 680), Vector2(1240, 790), Vector2(540, 790), Vector2(540, 1020)
+		Vector2(435, 1040), Vector2(435, 685), Vector2(1260, 685), Vector2(1260, 775), Vector2(545, 775), Vector2(545, 1040)
+	]), "res://assets/world/tex_bluestone_wet.png")
+	_add_road_polygon(PackedVector2Array([
+		Vector2(880, 700), Vector2(880, 225), Vector2(1080, 225), Vector2(1080, 700)
+	]), "res://assets/world/tex_bluestone_wet.png")
+	_add_road_polygon(PackedVector2Array([
+		Vector2(880, 1070), Vector2(1340, 1100), Vector2(1340, 1215), Vector2(880, 1185)
 	]), "res://assets/world/tex_bluestone_wet.png")
 
-	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(680.0, 850.0), 72.0, false)
-	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1040.0, 560.0), 72.0, false)
-	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(1540.0, 290.0), 62.0, true)
+	# 2. 地底玄岩实体山壁（彻底封死毒棘墙与回环石门两侧，杜绝无视机关穿墙绕路，并移除室外香樟树！）
+	_add_cavern_rock_mass(PackedVector2Array([
+		Vector2(0, 0), Vector2(690, 0), Vector2(690, 620), Vector2(380, 660), Vector2(380, 975), Vector2(0, 975)
+	]))
+	_add_cavern_rock_mass(PackedVector2Array([
+		Vector2(600, 815), Vector2(735, 815), Vector2(735, 985), Vector2(600, 985)
+	]))
+	_add_cavern_rock_mass(PackedVector2Array([
+		Vector2(0, 1200), Vector2(760, 1200), Vector2(900, 1290), Vector2(1460, 1290),
+		Vector2(1560, 920), Vector2(1740, 680), Vector2(2400, 630), Vector2(2400, 1400), Vector2(0, 1400)
+	]))
+	_add_cavern_rock_mass(PackedVector2Array([
+		Vector2(690, 0), Vector2(2400, 0), Vector2(2400, 310), Vector2(1680, 340),
+		Vector2(1380, 540), Vector2(1270, 540), Vector2(1270, 145), Vector2(690, 145)
+	]))
 
-	# 五行禁制 ①：火焚腐瘴毒棘墙（阻断主通道，按 F 调用裴照/顾长青真火焚毁！）
+	# 洞窟钟乳奇石点缀（纯石质地貌，零露天绿树）
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(668.0, 925.0), 48.0, false)
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1325.0, 520.0), 54.0, false)
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1620.0, 335.0), 54.0, false)
+
+	# 五行禁制 ①：火焚腐瘴毒棘墙（严密卡死主通道咽喉 x=640,y=1085，未焚毁前 100% 不可通行！）
 	if not bool(CampaignState.world_flags.get("vine_wall_burned", false)):
 		var obs_idx: int = _combat_ctrl.obstacle_circles.size()
-		_combat_ctrl.obstacle_circles.append({"pos": Vector2(640.0, 1040.0), "radius": 88.0})
-		_add_interactable("barrier_vine", "fire_barrier", Vector2(640.0, 1040.0), 135.0, "【五行禁制】腐瘴毒棘墙 [按 F 引真火焚毁]", "res://assets/world/prop_vine_barrier.png", obs_idx)
+		_combat_ctrl.obstacle_circles.append({"pos": Vector2(640.0, 1085.0), "radius": 96.0})
+		_add_interactable("barrier_vine", "fire_barrier", Vector2(640.0, 1085.0), 145.0, "【五行禁制】腐瘴毒棘墙 [按 F 引真火焚毁]", "res://assets/world/prop_vine_barrier.png", obs_idx)
 
-	# 北侧【敛息符】越级潜行偷草岔路：110 巡逻守窟木傀镇守腐骨幽花与【裂风虎纹佩·破血狂攻】秘匣！
+	# 北侧【敛息符】越级潜行偷草岔路：巡逻守窟木傀在南侧 y=430 镇守，与北侧 y=235 秘匣拉开 195px 纵深绝不重叠！
 	if not CampaignState.cleared_encounters.has("enc_cave_golem"):
-		_combat_ctrl.spawn_enemy_unit("wood_golem", Vector2(920.0, 340.0), "enc_cave_golem", [Vector2(780.0, 360.0), Vector2(1080.0, 340.0)])
+		_combat_ctrl.spawn_enemy_unit("wood_golem", Vector2(980.0, 430.0), "enc_cave_golem", [Vector2(845.0, 430.0), Vector2(1115.0, 430.0)])
 	if not CampaignState.opened_containers.has("herb_cave_stealth"):
-		_add_interactable("herb_cave_stealth", "herb_corrupt", Vector2(880.0, 220.0), 90.0, "腐骨幽花丛 [F 屏息采摘]", "res://assets/world/prop_spirit_herb_node.png", -1, true)
+		_add_interactable("herb_cave_stealth", "herb_corrupt", Vector2(835.0, 235.0), 90.0, "腐骨幽花丛 [F 屏息采摘]", "res://assets/world/prop_spirit_herb_node.png", -1, true)
 	if not CampaignState.opened_containers.has("chest_poxue_pendant"):
-		_add_interactable("chest_poxue_pendant", "chest_poxue", Vector2(1060.0, 210.0), 95.0, "古修秘藏石匣 [F 开启]", "res://assets/world/prop_treasure_chest.png")
+		_add_interactable("chest_poxue_pendant", "chest_poxue", Vector2(1125.0, 235.0), 95.0, "古修秘藏石匣 [F 开启]", "res://assets/world/prop_treasure_chest.png")
 
 	# 南侧五行禁制 ②：水净瘴池（贴地层，不遮挡人物） & 坐化古修遗骸
 	var pool_clean: bool = bool(CampaignState.world_flags.get("miasma_pool_cleansed", false))
 	_add_interactable(
-		"barrier_pool", "water_barrier", Vector2(1080.0, 1120.0), 125.0,
+		"barrier_pool", "water_barrier", Vector2(1120.0, 1155.0), 125.0,
 		"清冽灵泉池" if pool_clean else "【五行禁制】死水腐瘴潭 [按 F 唤沈清禾玄水净池]",
 		"res://assets/world/prop_miasma_pool_clean.png" if pool_clean else "res://assets/world/prop_miasma_pool.png",
 		-1, true
 	)
-	_add_interactable("ancient_remains", "remains", Vector2(1260.0, 1150.0), 105.0, "百年前坐化古修遗骸 [F 参悟遗刻]", "res://assets/world/prop_ancient_remains.png")
+	_add_interactable("ancient_remains", "remains", Vector2(1310.0, 1165.0), 105.0, "百年前坐化古修遗骸 [F 参悟遗刻]", "res://assets/world/prop_ancient_remains.png")
 
 	# 古窟中段明雷群
 	if not CampaignState.cleared_encounters.has("enc_cave_pack_1"):
-		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(980.0, 910.0), "enc_cave_pack_1")
-		_combat_ctrl.spawn_enemy_unit("miasma_shaman", Vector2(1050.0, 940.0), "enc_cave_pack_1")
+		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(930.0, 960.0), "enc_cave_pack_1")
+		_combat_ctrl.spawn_enemy_unit("miasma_shaman", Vector2(1010.0, 995.0), "enc_cave_pack_1")
 
-	# 回环捷径石门（打通后直接连回入口！）
+	# 回环捷径石门（设在 x=490,y=885 竖直近路咽喉，远离左屏边缘不裁切，须从北侧内廊开启！）
 	var gate_open: bool = bool(CampaignState.world_flags.get("shortcut_gate_opened", false))
 	var gate_obs: int = -1
 	if not gate_open:
 		gate_obs = _combat_ctrl.obstacle_circles.size()
-		_combat_ctrl.obstacle_circles.append({"pos": Vector2(480.0, 740.0), "radius": 82.0})
+		_combat_ctrl.obstacle_circles.append({"pos": Vector2(490.0, 885.0), "radius": 96.0})
 	_add_interactable(
-		"shortcut_gate", "shortcut_gate", Vector2(480.0, 740.0), 130.0,
-		"回环捷径石门（已贯通）" if gate_open else "古窟回环机关石门 [F 自内侧开启近路]",
+		"shortcut_gate", "shortcut_gate", Vector2(490.0, 885.0), 135.0,
+		"回环捷径石门（已贯通）" if gate_open else "古窟回环机关石门 [F 自北侧内廊开启]",
 		"res://assets/world/prop_cave_arch_gate.png", gate_obs
 	)
 
 	# 中枢石碑与首领祭坛门前石碑（首领门前必设石碑铁律！）
 	_add_interactable(
-		"stele_cave_mid", "stele", Vector2(1290.0, 700.0), 105.0,
+		"stele_cave_mid", "stele", Vector2(1290.0, 725.0), 105.0,
 		"苍木古窟中枢 · 引灵石碑 [F 休整/夜话/传送]",
 		"res://assets/world/prop_stele_lit.png" if CampaignState.unlocked_steles.has("stele_cave_mid") else "res://assets/world/prop_stele_dim.png"
 	)
 	_add_interactable(
-		"stele_wolf_altar", "stele", Vector2(1710.0, 480.0), 105.0,
+		"stele_wolf_altar", "stele", Vector2(1650.0, 505.0), 105.0,
 		"灵枢祭坛门前 · 引灵石碑 [F 战前休整/夜话]",
 		"res://assets/world/prop_stele_lit.png" if CampaignState.unlocked_steles.has("stele_wolf_altar") else "res://assets/world/prop_stele_dim.png"
 	)
 
-	# 章节双阶段主首领：【雾隐狼王】（4200 气血 / 450 木灵护罡）
+	# 章节双阶段主首领：【雾隐狼王】（站位 x=2085,y=505 避开右上角小地图遮挡，踏上 x=1875 祭坛桥即触发战前对峙！）
 	if not bool(CampaignState.world_flags.get("wolf_king_defeated", false)):
-		var boss: BattleActor = _combat_ctrl.spawn_enemy_unit("boss_mist_wolf_king", Vector2(2110.0, 430.0), "enc_boss_wolf_king")
+		var boss: BattleActor = _combat_ctrl.spawn_enemy_unit("boss_mist_wolf_king", Vector2(2085.0, 505.0), "enc_boss_wolf_king")
 		if boss != null:
-			# 通过门前对话后再正式开战，给足玩家备丹结阵仪式感
 			var bu: Dictionary = _combat_ctrl.unit_states[boss.actor_id] as Dictionary
-			bu["aggro_radius_px"] = 195.0
-			_add_interactable("wolf_altar_trigger", "boss_intro", Vector2(1950.0, 445.0), 135.0, "踏上苍木灵枢祭坛迎战【雾隐狼王】 [F]", "")
+			bu["aggro_radius_px"] = 245.0
+			_add_interactable("wolf_altar_trigger", "boss_intro", Vector2(1875.0, 495.0), 135.0, "踏上苍木灵枢祭坛迎战【雾隐狼王】 [F]", "")
 
-	_add_zone_portal(Rect2(20.0, 1010.0, 130.0, 190.0), "qinglan_pass", "from_cave", "◀── 拾级返回青岚破庙")
+	_add_zone_portal(Rect2(35.0, 1005.0, 130.0, 170.0), "qinglan_pass", "from_cave", "◀── 拾级返回青岚破庙")
 
 
 ## ==================== 物理帧循环、Y-Sort 55% 遮挡半透与纯键鼠交互 ====================
@@ -726,6 +755,7 @@ func _update_interact_prompt_and_cursor() -> void:
 	var best_prompt: String = ""
 	var best_d: float = 165.0
 	var best_world_anchor: Vector2 = Vector2(-1.0, -1.0)
+	var best_target_pos: Vector2 = Vector2(-1.0, -1.0)
 
 	if not _combat_ctrl.in_combat:
 		for npc2: BattleActor in _npc_actors:
@@ -734,6 +764,7 @@ func _update_interact_prompt_and_cursor() -> void:
 				if dn < best_d:
 					best_d = dn
 					best_prompt = "[F / 右键] 与 %s 交谈" % npc2.display_name
+					best_target_pos = npc2.position
 					best_world_anchor = npc2.position + Vector2(0.0, -168.0)
 
 		for inter: Dictionary in _interactables:
@@ -743,23 +774,41 @@ func _update_interact_prompt_and_cursor() -> void:
 			if di <= rad and di < best_d + 35.0:
 				best_d = di
 				best_prompt = str(inter.get("title", "[F] 交互"))
+				best_target_pos = ipos
 				var anchor_y: float = minf(ipos.y - 140.0, ctrl_pos.y - 182.0)
 				best_world_anchor = Vector2(ipos.x, anchor_y)
 			if wmouse.distance_to(ipos) <= 68.0:
 				over_interact = true
+
+	var place_below: bool = false
+	if best_prompt != "" and best_target_pos.x >= 0.0:
+		if _has_nearby_active_bark(best_target_pos) or _has_nearby_active_bark(ctrl_pos):
+			place_below = true
+			best_world_anchor = Vector2(best_target_pos.x, maxf(best_target_pos.y, ctrl_pos.y) + 14.0)
 
 	var scr_anchor: Vector2 = Vector2(-1.0, -1.0)
 	if best_prompt != "" and best_world_anchor.x >= 0.0:
 		var vp_half: Vector2 = get_viewport_rect().size * 0.5
 		var cam_c: Vector2 = _camera.get_screen_center_position()
 		scr_anchor = (best_world_anchor - cam_c) * _camera.zoom + vp_half
-	_hud.set_interact_prompt(best_prompt, scr_anchor)
+	_hud.set_interact_prompt(best_prompt, scr_anchor, place_below)
 	if over_enemy:
 		_set_cursor_mode(1)
 	elif over_interact:
 		_set_cursor_mode(2)
 	else:
 		_set_cursor_mode(0)
+
+
+func _has_nearby_active_bark(ref_pos: Vector2) -> bool:
+	for pa_var: Variant in _combat_ctrl.party_actors.values():
+		var pa: BattleActor = pa_var as BattleActor
+		if is_instance_valid(pa) and pa.has_active_bark() and pa.position.distance_to(ref_pos) <= 320.0:
+			return true
+	for npc: BattleActor in _npc_actors:
+		if is_instance_valid(npc) and npc.has_active_bark() and npc.position.distance_to(ref_pos) <= 320.0:
+			return true
+	return false
 
 
 func _try_interact_nearest() -> void:
@@ -860,6 +909,9 @@ func _activate_interactable(inter: Dictionary) -> void:
 		"fire_barrier":
 			# 五行破禁 ①：火焚毒棘墙
 			CampaignState.world_flags["vine_wall_burned"] = true
+			var ctrl_f: BattleActor = _combat_ctrl.get_controlled_actor()
+			if ctrl_f != null:
+				ctrl_f.clear_world_bark()
 			_audio.play_element_sfx("fire", AudioDirector.TIER_A)
 			_sky_vfx.spawn_ring_burst(inter.get("pos", Vector2.ZERO) as Vector2, 160.0, UIThemeBuilder.COL_CINNABAR_RED, 0.55)
 			NotifyHub.push_explore_slip("五行破禁 · 真火焚棘", "引赤阳剑火焚尽阻路腐瘴毒棘！", "unlock")
@@ -883,10 +935,10 @@ func _activate_interactable(inter: Dictionary) -> void:
 				_narrative.start_dialogue("dlg_ch01_ancient_remains")
 		"shortcut_gate":
 			if not bool(CampaignState.world_flags.get("shortcut_gate_opened", false)):
-				if _combat_ctrl.get_controlled_actor_pos().x < 460.0:
+				if _combat_ctrl.get_controlled_actor_pos().y > 895.0:
 					var ctrl_g: BattleActor = _combat_ctrl.get_controlled_actor()
 					if ctrl_g != null:
-						ctrl_g.show_world_bark("此回环石门机括设在内侧，须从古窟中枢绕回开启。", 3.8)
+						ctrl_g.show_world_bark("此回环石门机括设在北侧内廊，须先焚毁东侧毒棘绕回开启。", 3.8)
 				else:
 					CampaignState.world_flags["shortcut_gate_opened"] = true
 					_audio.play_sfx("sfx_stele_activate", AudioDirector.TIER_A)
@@ -911,11 +963,11 @@ func _check_dynamic_zone_triggers() -> void:
 				_narrative.start_dialogue("dlg_ch01_rogue_ambush")
 
 		# 走近破庙大门自动触发破庙初阵与全屏动态 CG
-		if not bool(CampaignState.world_flags.get("met_pei_zhao", false)) and ppos.distance_to(Vector2(1940.0, 480.0)) <= 155.0:
+		if not bool(CampaignState.world_flags.get("met_pei_zhao", false)) and ppos.distance_to(Vector2(1890.0, 640.0)) <= 155.0:
 			_narrative.start_dialogue("dlg_ch01_temple_clash")
 
 	elif CampaignState.current_zone_id == "cangmu_cave":
-		if not bool(CampaignState.world_flags.get("wolf_king_defeated", false)) and ppos.distance_to(Vector2(1980.0, 440.0)) <= 165.0:
+		if not bool(CampaignState.world_flags.get("wolf_king_defeated", false)) and ppos.distance_to(Vector2(1875.0, 495.0)) <= 140.0:
 			if not CampaignState.read_dialogues.has("dlg_ch01_wolf_king_intro"):
 				_narrative.start_dialogue("dlg_ch01_wolf_king_intro")
 
@@ -1012,7 +1064,7 @@ func _on_encounter_cleared(group_id: String, _was_boss: bool) -> void:
 		get_tree().create_timer(0.80).timeout.connect(func() -> void:
 			if CampaignState.scene_epoch != epoch:
 				return
-			_add_zone_portal(Rect2(1910.0, 390.0, 150.0, 130.0), "cangmu_cave", "from_pass", "破庙地脉石阶 ──▶ 苍木灵枢古窟")
+			_add_zone_portal(Rect2(2060.0, 565.0, 150.0, 130.0), "cangmu_cave", "from_pass", "破庙地脉石阶 ──▶ 苍木灵枢古窟")
 			_narrative.start_dialogue("dlg_ch01_temple_aftermath")
 		)
 	elif group_id == "enc_rogue_ambush":
@@ -1202,18 +1254,182 @@ func _add_zone_portal(rect: Rect2, target_zone: String, target_spawn: String, la
 		"label": label_txt,
 	})
 	_mm_portals.append(rect.get_center())
-	# 在地面画出古雅路标牌示，确保 100% 玩家一眼看清去向
+	# 在地面画出古雅路标牌示，并严格钳制在 ZONE_BOUNDS 镜头安全区内，杜绝左右贴边裁切！
 	var marker: Node2D = Node2D.new()
 	marker.position = rect.get_center()
+	marker.z_index = 2
 	marker.draw.connect(func() -> void:
 		var font: Font = UIThemeBuilder.get_bold_font()
 		var w: float = font.get_string_size(label_txt, HORIZONTAL_ALIGNMENT_CENTER, -1, 18).x + 28.0
-		var box: Rect2 = Rect2(-w * 0.5, -22.0, w, 36.0)
-		marker.draw_rect(box, Color(0.12, 0.11, 0.10, 0.88), true)
+		var cpos: Vector2 = marker.position
+		var min_left: float = 24.0 - cpos.x
+		var max_left: float = (ZONE_BOUNDS.size.x - 24.0 - w) - cpos.x
+		var box_x: float = clampf(-w * 0.5, min_left, max_left)
+		var box_y: float = clampf(-22.0, 24.0 - cpos.y, (ZONE_BOUNDS.size.y - 60.0) - cpos.y)
+		var box: Rect2 = Rect2(box_x, box_y, w, 36.0)
+		marker.draw_rect(box, Color(0.12, 0.11, 0.10, 0.90), true)
 		marker.draw_rect(box, UIThemeBuilder.COL_BRONZE_GOLD, false, 2.0)
-		marker.draw_string(font, Vector2(-w * 0.5 + 14.0, 3.0), label_txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, UIThemeBuilder.COL_BRONZE_GOLD)
+		marker.draw_string(font, Vector2(box_x + 14.0, box_y + 25.0), label_txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, UIThemeBuilder.COL_BRONZE_GOLD)
 	)
-	_ground_layer.add_child(marker)
+	_ground_decor_layer.add_child(marker)
+
+
+func _build_pass_cliff_abyss() -> void:
+	# 1. 近岸断崖自然弧形折线与深渊墨色底谷（由南端斜切东北，拉开 430px 云海天堑且无生硬竖切边！）
+	var rim_pts: PackedVector2Array = PackedVector2Array([
+		Vector2(1175.0, 1400.0),
+		Vector2(1230.0, 1170.0),
+		Vector2(1290.0, 985.0),
+		Vector2(1485.0, 965.0),
+		Vector2(1615.0, 815.0),
+		Vector2(2400.0, 785.0),
+	])
+	var abyss_pts: PackedVector2Array = PackedVector2Array()
+	for pt: Vector2 in rim_pts:
+		abyss_pts.append(pt)
+	abyss_pts.append(Vector2(2400.0, 1400.0))
+
+	var abyss_poly: Polygon2D = Polygon2D.new()
+	abyss_poly.polygon = abyss_pts
+	abyss_poly.color = Color(0.06, 0.09, 0.09, 0.98)
+	_ground_decor_layer.add_child(abyss_poly)
+
+	# 2. 断崖立面皴擦岩壁、青苔崩石边沿、流岚云海与对岸百丈孤峰剑台
+	var cliff_canvas: Node2D = Node2D.new()
+	cliff_canvas.draw.connect(func() -> void:
+		# 近岸断崖陡壁下垂立面（斧劈皴深浅两层）
+		for seg_i: int in range(rim_pts.size() - 1):
+			var a: Vector2 = rim_pts[seg_i]
+			var b: Vector2 = rim_pts[seg_i + 1]
+			var drop_v: Vector2 = Vector2(36.0, 88.0) if seg_i <= 1 else Vector2(0.0, 92.0)
+			var drop_u: Vector2 = Vector2(14.0, 34.0) if seg_i <= 1 else Vector2(0.0, 36.0)
+			var wall_deep: PackedVector2Array = PackedVector2Array([
+				a, b, b + drop_v, a + drop_v
+			])
+			cliff_canvas.draw_colored_polygon(wall_deep, Color(0.12, 0.16, 0.16, 0.96))
+			var wall_upper: PackedVector2Array = PackedVector2Array([
+				a, b, b + drop_u, a + drop_u
+			])
+			cliff_canvas.draw_colored_polygon(wall_upper, Color(0.18, 0.24, 0.22, 0.96))
+			var crags: int = maxi(3, int(floor(a.distance_to(b) / 42.0)))
+			for c_i: int in range(crags):
+				var t: float = (float(c_i) + 0.5) / float(crags)
+				var cp: Vector2 = a.lerp(b, t)
+				cliff_canvas.draw_line(cp + Vector2(0.0, 6.0), cp + Vector2(-8.0, 68.0), Color(0.08, 0.11, 0.11, 0.78), 2.5)
+				cliff_canvas.draw_rect(Rect2(cp - Vector2(16.0, 6.0), Vector2(32.0, 11.0)), Color(0.28, 0.35, 0.32, 0.95), true)
+
+		# 渊底流岚云气（隔开近岸观景台与对岸孤峰）
+		var mist_bands: Array[Dictionary] = [
+			{"pos": Vector2(1460.0, 1065.0), "rx": 240.0, "ry": 44.0, "a": 0.18},
+			{"pos": Vector2(1620.0, 1005.0), "rx": 210.0, "ry": 38.0, "a": 0.15},
+			{"pos": Vector2(1560.0, 1175.0), "rx": 290.0, "ry": 52.0, "a": 0.14},
+			{"pos": Vector2(1960.0, 960.0), "rx": 260.0, "ry": 46.0, "a": 0.16},
+		]
+		for mb: Dictionary in mist_bands:
+			var mpos: Vector2 = mb["pos"] as Vector2
+			var mrx: float = float(mb["rx"])
+			var mry: float = float(mb["ry"])
+			var ma: float = float(mb["a"])
+			var mpts: PackedVector2Array = PackedVector2Array()
+			for k: int in range(20):
+				var ang: float = TAU * float(k) / 20.0
+				mpts.append(mpos + Vector2(cos(ang) * mrx, sin(ang) * mry))
+			cliff_canvas.draw_colored_polygon(mpts, Color(0.72, 0.85, 0.83, ma))
+
+		# 对岸孤峰绝壁石柱与台面（x=1690..1925, y=1025..1130）
+		var pillar_trunk: PackedVector2Array = PackedVector2Array([
+			Vector2(1695.0, 1095.0), Vector2(1915.0, 1090.0),
+			Vector2(1945.0, 1400.0), Vector2(1665.0, 1400.0),
+		])
+		cliff_canvas.draw_colored_polygon(pillar_trunk, Color(0.13, 0.18, 0.17, 0.98))
+		for p_x: int in [1730, 1775, 1825, 1875]:
+			cliff_canvas.draw_line(Vector2(float(p_x), 1105.0), Vector2(float(p_x - 14), 1390.0), Color(0.08, 0.11, 0.11, 0.82), 3.0)
+
+		var pinnacle_top: PackedVector2Array = PackedVector2Array([
+			Vector2(1715.0, 1035.0), Vector2(1885.0, 1030.0), Vector2(1925.0, 1075.0),
+			Vector2(1895.0, 1122.0), Vector2(1720.0, 1126.0), Vector2(1685.0, 1082.0),
+		])
+		cliff_canvas.draw_colored_polygon(pinnacle_top, Color(0.25, 0.33, 0.29, 0.98))
+		for p_i: int in range(pinnacle_top.size()):
+			var pa: Vector2 = pinnacle_top[p_i]
+			var pb: Vector2 = pinnacle_top[(p_i + 1) % pinnacle_top.size()]
+			cliff_canvas.draw_line(pa, pb, Color(0.42, 0.52, 0.47, 0.90), 3.0)
+	)
+	_ground_decor_layer.add_child(cliff_canvas)
+
+	# 3. 沿近岸整条弧形悬崖边沿铺设严密物理空气墙圆，100% 阻断徒步下渊！
+	for seg_i2: int in range(rim_pts.size() - 1):
+		_append_wall_segment_obstacles(rim_pts[seg_i2], rim_pts[seg_i2 + 1], 40.0, 44.0)
+
+	# 近岸观景台两侧镇崖巨石 + 对岸孤峰奇石与古修石匣（纯视觉隔渊相望！）
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1255.0, 985.0), 46.0, false)
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1540.0, 925.0), 46.0, false)
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1855.0, 1105.0), 0.0, false)
+	if ResourceLoader.exists("res://assets/world/prop_treasure_chest.png"):
+		var far_chest: Sprite2D = Sprite2D.new()
+		far_chest.position = Vector2(1765.0, 1095.0)
+		far_chest.centered = false
+		var ctex: Texture2D = load("res://assets/world/prop_treasure_chest.png") as Texture2D
+		far_chest.texture = ctex
+		far_chest.offset = Vector2(-float(ctex.get_width()) * 0.5, -float(ctex.get_height()))
+		_ysort_root.add_child(far_chest)
+
+
+func _add_cavern_rock_mass(poly: PackedVector2Array) -> void:
+	if poly.size() < 3:
+		return
+	var outer_shadow: Line2D = Line2D.new()
+	outer_shadow.points = poly
+	outer_shadow.closed = true
+	outer_shadow.width = 26.0
+	outer_shadow.default_color = Color(0.03, 0.05, 0.05, 0.82)
+	outer_shadow.joint_mode = Line2D.LINE_JOINT_ROUND
+	_ground_decor_layer.add_child(outer_shadow)
+
+	var body: Polygon2D = Polygon2D.new()
+	body.polygon = poly
+	body.color = Color(0.09, 0.12, 0.12, 0.98)
+	_ground_decor_layer.add_child(body)
+
+	var rim: Line2D = Line2D.new()
+	rim.points = poly
+	rim.closed = true
+	rim.width = 11.0
+	rim.default_color = Color(0.20, 0.27, 0.25, 0.94)
+	rim.joint_mode = Line2D.LINE_JOINT_ROUND
+	_ground_decor_layer.add_child(rim)
+
+	var rim_hi: Line2D = Line2D.new()
+	rim_hi.points = poly
+	rim_hi.closed = true
+	rim_hi.width = 2.5
+	rim_hi.default_color = Color(0.34, 0.44, 0.40, 0.65)
+	rim_hi.joint_mode = Line2D.LINE_JOINT_ROUND
+	_ground_decor_layer.add_child(rim_hi)
+
+	for i: int in range(poly.size()):
+		var a: Vector2 = poly[i]
+		var b: Vector2 = poly[(i + 1) % poly.size()]
+		# 跳过外框世界极边以节省无谓碰撞圆，洞内所有岩壁边 100% 密铺阻挡圆！
+		var on_world_border: bool = (
+			(a.x <= 1.0 and b.x <= 1.0)
+			or (a.x >= 2399.0 and b.x >= 2399.0)
+			or (a.y <= 1.0 and b.y <= 1.0)
+			or (a.y >= 1399.0 and b.y >= 1399.0)
+		)
+		if not on_world_border:
+			_append_wall_segment_obstacles(a, b, 38.0, 44.0)
+
+
+func _append_wall_segment_obstacles(a: Vector2, b: Vector2, step_px: float, radius_px: float) -> void:
+	var dist: float = a.distance_to(b)
+	var steps: int = maxi(1, int(ceil(dist / maxf(16.0, step_px))))
+	for s_i: int in range(steps + 1):
+		var t: float = float(s_i) / float(steps)
+		_combat_ctrl.obstacle_circles.append({
+			"pos": a.lerp(b, t),
+			"radius": radius_px,
+		})
 
 
 func _spawn_npc(npc_id: String, name_str: String, sprite_id: String, pos: Vector2, _tag: String) -> BattleActor:
@@ -1258,26 +1474,45 @@ func _clear_obstacle_and_remove(inter: Dictionary) -> void:
 
 
 func _step_ambient_world_barks(delta: float) -> void:
-	if _combat_ctrl.in_combat:
+	if _combat_ctrl.in_combat or _narrative.visible or _modals.visible or _casket.visible:
 		return
 	_bark_cooldown -= delta
 	if _bark_cooldown > 0.0:
 		return
-	_bark_cooldown = 8.5
+	_bark_cooldown = 9.5
 
+	# 同一时刻全屏最多仅允许 1 条世界气泡，彻底杜绝多气泡叠字喧宾夺主！
+	for pa_chk_var: Variant in _combat_ctrl.party_actors.values():
+		var pa_chk: BattleActor = pa_chk_var as BattleActor
+		if is_instance_valid(pa_chk) and pa_chk.has_active_bark():
+			return
+	for npc_chk: BattleActor in _npc_actors:
+		if is_instance_valid(npc_chk) and npc_chk.has_active_bark():
+			return
+
+	var ctrl_pos: Vector2 = _combat_ctrl.get_controlled_actor_pos()
 	if CampaignState.current_zone_id == "tingyu_town" and not _npc_actors.is_empty():
-		var pick: BattleActor = _npc_actors[randi() % _npc_actors.size()]
-		if is_instance_valid(pick):
-			if pick.actor_id == "shen_npc":
-				pick.show_world_bark(tr("BARK_SHEN_1"), 4.0)
-			elif pick.actor_id == "npc_zhou":
-				pick.show_world_bark(tr("BARK_ZHOU_1"), 4.0)
-			else:
-				var keys: Array[String] = ["BARK_TOWN_1", "BARK_TOWN_2", "BARK_TOWN_3"]
-				pick.show_world_bark(tr(keys[randi() % keys.size()]), 4.0)
+		var nearby_npcs: Array[BattleActor] = []
+		for cand: BattleActor in _npc_actors:
+			if is_instance_valid(cand) and cand.position.distance_to(ctrl_pos) <= 640.0:
+				nearby_npcs.append(cand)
+		if nearby_npcs.is_empty():
+			return
+		var pick: BattleActor = nearby_npcs[randi() % nearby_npcs.size()]
+		if pick.actor_id == "shen_npc":
+			pick.show_world_bark(tr("BARK_SHEN_1"), 4.0)
+		elif pick.actor_id == "npc_zhou":
+			pick.show_world_bark(tr("BARK_ZHOU_1"), 4.0)
+		else:
+			var keys: Array[String] = ["BARK_TOWN_1", "BARK_TOWN_2", "BARK_TOWN_3"]
+			pick.show_world_bark(tr(keys[randi() % keys.size()]), 4.0)
 	elif CampaignState.current_zone_id == "cangmu_cave":
 		var ctrl_a: BattleActor = _combat_ctrl.get_controlled_actor()
-		if ctrl_a != null and not bool(CampaignState.world_flags.get("vine_wall_burned", false)):
+		if (
+			ctrl_a != null
+			and not bool(CampaignState.world_flags.get("vine_wall_burned", false))
+			and ctrl_a.position.distance_to(Vector2(640.0, 1085.0)) <= 320.0
+		):
 			ctrl_a.show_world_bark(tr("BARK_CAVE_1"), 3.5)
 
 

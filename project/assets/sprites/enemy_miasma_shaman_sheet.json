@@ -1,8 +1,9 @@
 {
   "actor_id": "enemy_miasma_shaman",
-  "cell_w": 208,
+  "cell_w": 224,
   "cell_h": 224,
   "foot_y": 202,
+  "head_top_px": 157,
   "cols": 6,
   "rows": {
     "idle_se": {

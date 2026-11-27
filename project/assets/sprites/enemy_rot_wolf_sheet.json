@@ -1,8 +1,9 @@
 {
   "actor_id": "enemy_rot_wolf",
-  "cell_w": 208,
+  "cell_w": 256,
   "cell_h": 192,
   "foot_y": 170,
+  "head_top_px": 118,
   "cols": 6,
   "rows": {
     "idle_se": {

@@ -1,8 +1,9 @@
 {
   "actor_id": "enemy_wood_golem",
-  "cell_w": 256,
-  "cell_h": 256,
-  "foot_y": 234,
+  "cell_w": 272,
+  "cell_h": 264,
+  "foot_y": 242,
+  "head_top_px": 202,
   "cols": 6,
   "rows": {
     "idle_se": {

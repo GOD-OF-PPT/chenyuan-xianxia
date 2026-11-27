@@ -86,6 +86,11 @@ func reset_for_zone(p_ysort: Node2D, p_ground_vfx: CombatVfxOverlay, p_sky_vfx: 
 func spawn_party_at(origin_pos: Vector2) -> void:
 	if ysort_root == null:
 		return
+	for old_pa_var: Variant in party_actors.values():
+		var old_pa: BattleActor = old_pa_var as BattleActor
+		if is_instance_valid(old_pa):
+			old_pa.queue_free()
+	party_actors.clear()
 	CampaignState.recalculate_all_party_stats(false)
 	var active_ids: Array[String] = CampaignState.get_active_party_ids()
 	var offsets: Array[Vector2] = [
@@ -1558,7 +1563,7 @@ func _execute_pet_skill(pu: Dictionary, sdef: Dictionary) -> void:
 		party_haste_buff_val = float(sdef.get("party_haste_bonus", 0.14))
 		party_haste_buff_timer = float(sdef.get("buff_duration_sec", 6.0))
 		team_attunement = minf(RtwpSimStep.MAX_ATTUNEMENT, team_attunement + float(sdef.get("attunement_gain", 12.0)))
-		NotifyHub.push_combat_banner("%s【%s】全队急速 +14%！" % [pet_actor.display_name, sname], "pet", "wood")
+		NotifyHub.push_combat_banner("%s【%s】全队急速 +14%%！" % [pet_actor.display_name, sname], "pet", "wood")
 		if audio_director != null:
 			audio_director.play_element_sfx("wood", AudioDirector.TIER_B)
 		return
@@ -1778,13 +1783,16 @@ func _apply_direct_enemy_hp_loss(eu: Dictionary, ea: BattleActor, dmg: int, elem
 
 	if next_hp <= 0:
 		ea.alive = false
+		ea.is_targeted = false
+		ea.is_hovered = false
 		eu["engaged"] = false
 		eu["casting"] = false
 		ea.is_casting = false
 		_grant_enemy_drops(eu, ea)
 		if ea.actor_id == locked_enemy_id:
-			locked_enemy_id = ""
-			cycle_tab_enemy_target()
+			set_locked_enemy("", false)
+			if in_combat:
+				cycle_tab_enemy_target()
 
 
 func _grant_enemy_drops(eu: Dictionary, _ea: BattleActor) -> void:

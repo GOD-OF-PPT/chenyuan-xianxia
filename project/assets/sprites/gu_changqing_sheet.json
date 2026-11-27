@@ -1,8 +1,9 @@
 {
   "actor_id": "gu_changqing",
-  "cell_w": 224,
+  "cell_w": 232,
   "cell_h": 224,
   "foot_y": 202,
+  "head_top_px": 166,
   "cols": 6,
   "rows": {
     "idle_se": {

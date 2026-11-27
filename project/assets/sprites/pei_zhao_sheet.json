@@ -1,8 +1,9 @@
 {
   "actor_id": "pei_zhao",
-  "cell_w": 224,
+  "cell_w": 240,
   "cell_h": 224,
   "foot_y": 202,
+  "head_top_px": 169,
   "cols": 6,
   "rows": {
     "idle_se": {
