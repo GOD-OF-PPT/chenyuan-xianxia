@@ -687,7 +687,7 @@
       "source_path": "assets_src/sprites/r2_wolf_king_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "3840x3584",
-      "sha256": "d24b5400293925a7078666f6ab9663b1395944b36085388e2b8ae1d36cf7234d",
+      "sha256": "63b6b1e651154958579acf90de5692229544ad8364c805f309d4c111b584e0e8",
       "creation_method": "Gemini Image Generation (assets_src/sprites/r2_wolf_king_side34_raw.png, Song-Ming Gongbi side-3/4 studio turnaround) + tools/build_polish_r2_actors.py (9-part anatomical segmentation, curved Telea socket feathering, 2x-supersampled rotary gallop/lunge/roar/grounded-collapse articulation, Song-Ming mineral LUT) | Spec: Giant side-3/4 Mist Wolf King 640x448 multi-pose combat sheet aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -777,7 +777,7 @@
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "e5fc3c8bd0fa9cf67af8f6c4cc7c6ef29cbe63a164dd269d013c1964fe9462f8",
+      "sha256": "68b340ee754d0acfffdae0c9cca0713ff55fe67f3c06a1d45973d4330292b71a",
       "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for pei_zhao aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"

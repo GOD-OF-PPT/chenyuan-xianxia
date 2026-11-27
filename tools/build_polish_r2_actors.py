@@ -263,14 +263,19 @@ def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]
     chroma = arr.max(axis=2) - arr.min(axis=2)
 
     # Protect legitimate bright anatomical features inside the head:
-    # 1. Glowing pale-jade eye sclera (x: 1158..1188, y: 376..402)
+    # 1. Glowing pale-jade near & far eye sclerae (near: 1158..1188, 376..402; far: 1230..1239, 378..391)
     # 2. Glowing emerald forehead shard (x: 1184..1220, y: 314..368)
-    # 3. Ivory fangs & teeth ROI (x: 1135..1275, y: 420..520) inside the snout/jaw ink contour
+    # 3. Exact ivory fangs & teeth polygon inside the snout/jaw ink contour (zero exterior chin rim!)
     protect_eye_shard = np.zeros((H, W), dtype=bool)
     protect_eye_shard[376:402, 1158:1188] = True
+    protect_eye_shard[378:391, 1230:1239] = True
     protect_eye_shard[314:368, 1184:1220] = True
-    protect_fangs = np.zeros((H, W), dtype=bool)
-    protect_fangs[420:520, 1135:1275] = True
+    fang_poly_u8 = np.zeros((H, W), dtype=np.uint8)
+    cv2.fillPoly(fang_poly_u8, [np.array([
+        (1158, 439), (1188, 446), (1212, 472), (1250, 475),
+        (1247, 487), (1237, 495), (1200, 495), (1175, 476), (1158, 456),
+    ], dtype=np.int32)], 255)
+    protect_fangs = fang_poly_u8 > 0
 
     # 1a. Outer studio background: keep strict diff<24.5 inside mouth ROI so exterior air around snout is stripped
     #     without breaching tooth ink lines, while stripping wider pale halo (luma>184 & chroma<28) everywhere else!
@@ -351,21 +356,32 @@ def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]
         [(1082, 695), (980, 558)],
     ], 12), 4.0)
 
-    # Extend m_jaw & m_head past x=1340 AND extend m_head upper neck boundary up to y=110
-    # so 100% of upper dorsal neck ruff & snout/fangs are captured with ZERO dorsal neck V-notches!
+    # True anatomical mouth parting line strictly BELOW black nose (x=1225..1266, y=440..479) & upper canines (y=444..490)!
     m_jaw = poly_mask(sample_bezier_chain([
-        [(1122, 434), (1188, 428), (1275, 462)],
-        [(1275, 462), (1270, 526)],
-        [(1270, 526), (1132, 522)],
-    ], 10), 2.2)
+        [(1134, 452), (1162, 458), (1184, 473), (1205, 489)],
+        [(1205, 489), (1220, 486), (1252, 485)],
+        [(1252, 485), (1256, 522)],
+        [(1256, 522), (1192, 525), (1132, 514)],
+        [(1132, 514), (1134, 452)],
+    ], 12), 1.4)
+    m_jaw[:445, :] = 0.0
+
+    m_jaw_cut = poly_mask(sample_bezier_chain([
+        [(1134, 454), (1162, 460), (1184, 475), (1205, 491)],
+        [(1205, 491), (1220, 487), (1254, 486)],
+        [(1254, 486), (1258, 526)],
+        [(1258, 526), (1192, 528), (1130, 516)],
+        [(1130, 516), (1134, 454)],
+    ], 12), 1.0)
+    m_jaw_cut[:446, :] = 0.0
 
     m_shard = poly_mask([(1186, 314), (1216, 314), (1220, 366), (1184, 366)], 1.6)
 
     m_head = poly_mask(sample_bezier_chain([
         [(1012, 110), (1340, 110)],
-        [(1340, 110), (1340, 494)],
-        [(1340, 494), (1235, 484), (1186, 446)],
-        [(1186, 446), (1120, 456), (1008, 436)],
+        [(1340, 110), (1340, 504)],
+        [(1340, 504), (1276, 504), (1212, 506), (1165, 484)],
+        [(1165, 484), (1120, 458), (1008, 436)],
         [(1008, 436), (998, 345), (1002, 225), (1012, 110)],
     ], 16), 5.5)
 
@@ -430,14 +446,14 @@ def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]
         torso_a = np.maximum(torso_a, hull_torso * 248.0)
     torso_a[torso_a < 18.0] = 0.0
 
-    # Head cranium: clip dark_maw strictly to a tight curved upper-palate shadow behind upper teeth (never overhanging air!)
+    # Head cranium retains 100% of black canine nose, upper lip, and upper canines; lower_jaw carries ONLY lower mandible & lower teeth!
     head_rgb = rgba[..., :3].copy()
-    head_a = rgba[..., 3].astype(np.float32) * m_head * np.clip(1.0 - m_jaw, 0.0, 1.0)
+    head_a = rgba[..., 3].astype(np.float32) * m_head * np.clip(1.0 - m_jaw_cut, 0.0, 1.0)
     head_a[head_a < 16.0] = 0.0
     mouth_interior = poly_mask(sample_bezier_chain([
-        [(1148, 420), (1195, 422), (1236, 438)],
-        [(1236, 438), (1196, 445), (1148, 440)],
-    ], 10), 2.8)
+        [(1156, 442), (1196, 458), (1240, 476)],
+        [(1240, 476), (1196, 472), (1156, 452)],
+    ], 10), 2.2)
     dark_maw = np.zeros_like(rgba)
     dark_maw[..., 0] = 48
     dark_maw[..., 1] = 22
@@ -447,6 +463,15 @@ def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]
     maw_under = dark_maw.copy()
     alpha_over_np(maw_under, head_rgba)
     head_rgba = keep_largest_alpha_cc(clean_zero_alpha(maw_under), 12)
+
+    jaw_rgba = keep_largest_alpha_cc(
+        clean_zero_alpha(np.concatenate([rgba[..., :3], np.clip(rgba[..., 3].astype(np.float32) * m_jaw, 0, 255).astype(np.uint8)[..., None]], axis=2)),
+        10,
+    )
+    head_luma_chk = 0.299 * head_rgba[..., 0].astype(np.float32) + 0.587 * head_rgba[..., 1].astype(np.float32) + 0.114 * head_rgba[..., 2].astype(np.float32)
+    nose_opaque_dark = int(((head_rgba[445:476, 1230:1262, 3] >= 240) & (head_luma_chk[445:476, 1230:1262] < 85.0)).sum())
+    assert nose_opaque_dark >= 600, f"head_cranium lost black canine nose tip in [1230..1262, 445..476]: {nose_opaque_dark}px"
+    assert int(jaw_rgba[:445, :, 3].max()) == 0, f"lower_jaw bleeds into upper snout above y=445: max_alpha={int(jaw_rgba[:445, :, 3].max())}"
 
     def make_part(
         mask_f: np.ndarray,
@@ -480,7 +505,7 @@ def segment_wolf_king_parts() -> dict[str, tuple[np.ndarray, tuple[float, float]
         "hind_leg_near": make_part(m_hind_near, (468.0, 428.0), soften_top_px=16),
         "fore_leg_near": make_part(m_fore_near, (852.0, 432.0), soften_top_px=16),
         "head_cranium": make_part(np.ones((H, W), dtype=np.float32), (1076.0, 342.0), head_rgba),
-        "lower_jaw": make_part(m_jaw, (1134.0, 444.0)),
+        "lower_jaw": make_part(np.ones((H, W), dtype=np.float32), (1142.0, 456.0), jaw_rgba),
         "forehead_shard": make_part(m_shard, (1202.0, 340.0)),
     }
 
@@ -561,7 +586,7 @@ def render_wolf_king_cell(
         uy = (ry - 342.0) * bsy * sc_h[1]
         return (base_head[0] + ux * math.cos(rr) - uy * math.sin(rr), base_head[1] + ux * math.sin(rr) + uy * math.cos(rr))
 
-    p_jaw = head_rel(1134.0, 444.0, p_head, head_ang)
+    p_jaw = head_rel(1142.0, 456.0, p_head, head_ang)
     p_shard = head_rel(1202.0, 340.0, p_head, head_ang)
 
     def place(name: str, dst_pt: tuple[float, float], ang: float, sc_mult: tuple[float, float] = (1.0, 1.0), rgb_m: tuple[float, float, float] = (1.0, 1.0, 1.0), a_m: float = 1.0) -> None:
@@ -593,50 +618,56 @@ def render_wolf_king_cell(
         shade_m: float = 1.0,
     ) -> None:
         """
-        Draws a solid curved dark crimson-umber oral cavity bridging `head_cranium` upper palate
-        and rotated `lower_jaw` whenever `jaw_ang > 3.0`, composited underneath upper/lower fangs.
+        Draws a full-span curved dark crimson-umber oral cavity + tongue tucked 8-12px inside
+        `head_cranium` and rotated `lower_jaw` out behind the front canines (zero front cleft, zero overhang).
         """
-        if j_open_d <= 3.0:
+        if j_open_d <= 0.5:
             return
         j_tot_rad = math.radians(h_ang_d + j_open_d)
 
         def jaw_rel(rx: float, ry: float) -> tuple[float, float]:
-            ux = (rx - 1134.0) * bsx * sc_h[0]
-            uy = (ry - 444.0) * bsy * sc_h[1]
+            ux = (rx - 1142.0) * bsx * sc_h[0]
+            uy = (ry - 456.0) * bsy * sc_h[1]
             return (
                 base_jaw_pt[0] + ux * math.cos(j_tot_rad) - uy * math.sin(j_tot_rad),
                 base_jaw_pt[1] + ux * math.sin(j_tot_rad) + uy * math.cos(j_tot_rad),
             )
 
-        u0 = head_rel(1136.0, 430.0, base_head_pt, h_ang_d, sc_h)
-        u1 = head_rel(1184.0, 435.0, base_head_pt, h_ang_d, sc_h)
-        u2 = head_rel(1224.0, 452.0, base_head_pt, h_ang_d, sc_h)
-        l2 = jaw_rel(1218.0, 484.0)
-        l1 = jaw_rel(1182.0, 475.0)
-        l0 = jaw_rel(1136.0, 454.0)
-        # Concave cheek/throat arch recessed slightly behind front canines so zero maw overhangs air
-        throat_in = (
-            0.5 * (u2[0] + l2[0]) - 0.18 * (u2[0] - u0[0]),
-            0.5 * (u2[1] + l2[1]),
-        )
+        u0 = head_rel(1140.0, 444.0, base_head_pt, h_ang_d, sc_h)
+        u1 = head_rel(1196.0, 464.0, base_head_pt, h_ang_d, sc_h)
+        u2 = head_rel(1248.0, 477.0, base_head_pt, h_ang_d, sc_h)
+        l2 = jaw_rel(1244.0, 488.0)
+        l1b = jaw_rel(1218.0, 502.0)
+        l1 = jaw_rel(1194.0, 492.0)
+        l0b = jaw_rel(1170.0, 471.0)
+        l0 = jaw_rel(1140.0, 459.0)
+        throat_in = (0.5 * (u2[0] + l2[0]), 0.5 * (u2[1] + l2[1]))
 
         maw_im = Image.new("RGBA", (W2, H2), (0, 0, 0, 0))
         md = ImageDraw.Draw(maw_im)
         maw_pts = sample_bezier_chain([
             [u0, u1, u2],
             [u2, throat_in, l2],
-            [l2, l1, l0],
+            [l2, l1b, l1],
+            [l1, l0b, l0],
             [l0, u0],
-        ], 12)
-        c_outer = (int(44 * shade_m), int(18 * shade_m), int(24 * shade_m), 255)
-        c_inner = (int(74 * shade_m), int(26 * shade_m), int(34 * shade_m), 245)
+        ], 14)
+        c_outer = (int(46 * shade_m), int(18 * shade_m), int(24 * shade_m), 255)
+        c_mid = (int(68 * shade_m), int(24 * shade_m), int(32 * shade_m), 255)
+        c_tongue = (int(96 * shade_m), int(36 * shade_m), int(44 * shade_m), 255)
         md.polygon(maw_pts, fill=c_outer, outline=(22, 12, 16, 255))
-        # Subtle inner crimson tongue/palate ridge inside deep maw
-        t_pts = sample_bezier_chain([
-            [l0, ((l0[0] + l1[0]) * 0.5, (l0[1] + l1[1]) * 0.5 - 4.0), ((l1[0] + l2[0]) * 0.5, (l1[1] + l2[1]) * 0.5 - 3.0)],
-            [((l1[0] + l2[0]) * 0.5, (l1[1] + l2[1]) * 0.5 - 3.0), l1, l0],
+        m_in_pts = sample_bezier_chain([
+            [((u0[0] + l0[0]) * 0.5, (u0[1] + l0[1]) * 0.5), ((u1[0] + l1[0]) * 0.5, (u1[1] + l1[1]) * 0.5 - 3.0), (throat_in[0] - 5.0, throat_in[1])],
+            [(throat_in[0] - 5.0, throat_in[1]), l1, ((u0[0] + l0[0]) * 0.5, (u0[1] + l0[1]) * 0.5)],
         ], 10)
-        md.polygon(t_pts, fill=c_inner)
+        md.polygon(m_in_pts, fill=c_mid)
+        t_tip = (0.35 * u2[0] + 0.65 * l2[0] - 4.0, 0.35 * u2[1] + 0.65 * l2[1] - 2.0)
+        t_pts = sample_bezier_chain([
+            [l0, ((l0[0] + l1[0]) * 0.5, (l0[1] + l1[1]) * 0.5 - 5.0), t_tip],
+            [t_tip, l1b, l1],
+            [l1, l0b, l0],
+        ], 10)
+        md.polygon(t_pts, fill=c_tongue)
         alpha_over_np(canvas, np.asarray(maw_im))
 
     if is_down:
@@ -672,7 +703,7 @@ def render_wolf_king_cell(
         ne_head_pt = (p_head[0] - 28.0, p_head[1] - 24.0)
         ne_head_ang = head_ang - 10.0
         ne_head_sc = (0.88, 0.90)
-        ne_jaw_pt = head_rel(1134.0, 444.0, ne_head_pt, ne_head_ang, ne_head_sc)
+        ne_jaw_pt = head_rel(1142.0, 456.0, ne_head_pt, ne_head_ang, ne_head_sc)
         place("fore_leg_far", (p_ff[0] + ff_off[0] - 18.0, p_ff[1] + ff_off[1] - 24.0), float(pose.get("ff_ang", 0.0)) - 6.0, sc_mult=(0.90, 0.90), rgb_m=(0.76, 0.77, 0.82))
         draw_open_oral_cavity(ne_head_pt, ne_jaw_pt, ne_head_ang, jaw_ang * 0.65, ne_head_sc, 0.84)
         place("lower_jaw", ne_jaw_pt, ne_head_ang + jaw_ang * 0.65, sc_mult=ne_head_sc, rgb_m=(0.82, 0.82, 0.86))
@@ -764,8 +795,8 @@ def build_wolf_king_sheet() -> dict[str, Any]:
 
     # Row 4: attack_1 (5 frames — rearing razor-claw cleave; dorsal mane <= 368px < head_top_px=372!)
     atk1 = [
-        {"root_dx": -12.0, "root_dy": -8.0, "torso_ang": -13.5, "fn_ang": -52.0, "fn_dx": 14.0, "fn_dy": -34.0, "ff_ang": -18.0, "ff_dy": -14.0, "hn_ang": 10.0, "head_ang": -8.0, "jaw_ang": 16.0, "tail_ang": 16.0, "shard_glow": 0.55},
-        {"root_dx": -4.0, "root_dy": -11.0, "torso_ang": -15.0, "fn_ang": -64.0, "fn_dx": 22.0, "fn_dy": -44.0, "ff_ang": -24.0, "ff_dy": -18.0, "hn_ang": 14.0, "head_ang": -6.0, "jaw_ang": 22.0, "tail_ang": 20.0, "shard_glow": 0.75},
+        {"root_dx": -12.0, "root_dy": -8.0, "torso_ang": -13.5, "fn_ang": -44.0, "fn_dx": 14.0, "fn_dy": -24.0, "ff_ang": 4.0, "ff_dy": -2.0, "hn_ang": 10.0, "head_ang": -8.0, "jaw_ang": 16.0, "tail_ang": 16.0, "shard_glow": 0.55},
+        {"root_dx": -4.0, "root_dy": -11.0, "torso_ang": -15.0, "fn_ang": -48.0, "fn_dx": 20.0, "fn_dy": -24.0, "ff_ang": 6.0, "ff_dy": -2.0, "hn_ang": 14.0, "head_ang": -6.0, "jaw_ang": 22.0, "tail_ang": 20.0, "shard_glow": 0.75},
         {"root_dx": 20.0, "root_dy": -4.0, "torso_ang": 7.5, "fn_ang": -28.0, "fn_dx": 38.0, "fn_dy": -14.0, "fn_scale": (1.08, 1.04), "ff_ang": 16.0, "hn_ang": -22.0, "head_ang": 6.0, "head_dx": 12.0, "jaw_ang": 18.0, "tail_ang": -12.0, "shard_glow": 0.65},
         {"root_dx": 14.0, "root_dy": 0.0, "torso_ang": 9.0, "fn_ang": 12.0, "fn_dx": 18.0, "ff_ang": 10.0, "hn_ang": -16.0, "head_ang": 4.0, "jaw_ang": 8.0, "tail_ang": -8.0, "shard_glow": 0.35},
         {"root_dx": 4.0, "root_dy": -1.0, "torso_ang": 3.0, "fn_ang": 4.0, "hn_ang": -6.0, "head_ang": 1.0, "jaw_ang": 4.0, "tail_ang": 2.0, "shard_glow": 0.22},
@@ -882,7 +913,7 @@ def extract_party_graft_parts() -> dict[str, dict[str, Any]]:
     pf_rgb = np.asarray(Image.open(os.path.join(REPO_ROOT, "assets_src/sprites/char_ref_party_pets_raw.jpg")).convert("RGB"))
     pb_rgb = np.asarray(Image.open(os.path.join(REPO_ROOT, "assets_src/sprites/char_ref_party_back_raw.jpg")).convert("RGB"))
 
-    def matte_plate(arr: np.ndarray) -> np.ndarray:
+    def matte_plate(arr: np.ndarray, kill_interior_pockets: bool = True) -> np.ndarray:
         af = arr.astype(np.float32)
         bg = np.median(np.concatenate([af[0], af[-1], af[:, 0], af[:, -1]], axis=0), axis=0)
         bc = ((np.linalg.norm(af - bg, axis=2) < 22.5) & (af.mean(axis=2) > 198.0)).astype(np.uint8)
@@ -890,11 +921,12 @@ def extract_party_graft_parts() -> dict[str, dict[str, Any]]:
         ext = set(lbl[0, :]) | set(lbl[-1, :]) | set(lbl[:, 0]) | set(lbl[:, -1])
         ext.discard(0)
         fg = (~np.isin(lbl, list(ext))).astype(np.float32)
-        for lid in range(1, nl):
-            if lid not in ext:
-                pts_y, _ = np.where(lbl == lid)
-                if len(pts_y) < 180 and af[lbl == lid].mean() > 214.0:
-                    fg[lbl == lid] = 0.0
+        if kill_interior_pockets:
+            for lid in range(1, nl):
+                if lid not in ext:
+                    pts_y, _ = np.where(lbl == lid)
+                    if len(pts_y) < 180 and af[lbl == lid].mean() > 214.0:
+                        fg[lbl == lid] = 0.0
         fg_b = cv2.GaussianBlur(fg, (3, 3), 0.50)
         al = np.clip((fg_b - 0.12) / 0.82 * 255.0, 0.0, 255.0).astype(np.uint8)
         rgb = af.copy()
@@ -905,6 +937,7 @@ def extract_party_graft_parts() -> dict[str, dict[str, Any]]:
 
     pf = matte_plate(pf_rgb)
     pb = matte_plate(pb_rgb)
+    pb_cape = matte_plate(pb_rgb, kill_interior_pockets=False)
 
     def sub_poly(plate: np.ndarray, box: tuple[int, int, int, int], poly_rel: list[tuple[float, float]] | None = None, feather: float = 1.8) -> np.ndarray:
         x0, y0, x1, y1 = box
@@ -949,7 +982,7 @@ def extract_party_graft_parts() -> dict[str, dict[str, Any]]:
     pei_head_b = sub_poly(pb, (672, 100, 760, 224), [(0, 0), (86, 0), (86, 120), (0, 120)], 1.5)
     pei_chest_f = sub_poly(pf, (640, 206, 770, 366), [(14, 0), (118, 0), (128, 36), (108, 156), (24, 156), (4, 36)], 2.2)
     pei_cape_b = sub_poly(
-        pb,
+        pb_cape,
         (602, 206, 796, 584),
         sample_bezier_chain([
             [(34, 0), (166, 0)],
@@ -2980,33 +3013,66 @@ def run_self_audit() -> None:
                                 assert interior_holes == 0, (
                                     f"Enclosed midriff/torso/skirt hole in shen_qinghe cell ({r},{c}) at y={my} [{best_l}..{best_r}]: {interior_holes}px"
                                 )
+                        elif aid == "pei_zhao" and r in (1, 3):
+                            # Zero interior white-silk pinholes in Pei Zhao dorsal cape_b (`idle_ne`, `run_ne`)!
+                            bg_p = (ca <= 32).astype(np.uint8)
+                            nl_p, lbl_p, st_p, _ = cv2.connectedComponentsWithStats(bg_p, connectivity=8)
+                            ext_p = set(lbl_p[0, :]) | set(lbl_p[-1, :]) | set(lbl_p[:, 0]) | set(lbl_p[:, -1])
+                            ext_p.discard(0)
+                            for plid in range(1, nl_p):
+                                if plid not in ext_p:
+                                    px_h, py_h, pw_h, ph_h, parea = [int(v) for v in st_p[plid]]
+                                    assert not (py_h < fy - 36 and (parea > 2 or px_h >= 162)), (
+                                        f"Interior dorsal cape_b pinhole in pei_zhao cell ({r},{c}): area={parea} bbox=({px_h},{py_h},{pw_h},{ph_h})"
+                                    )
                     elif aid == "boss_mist_wolf_king":
-                        # Surgical Fix 3 Assertions on boss_mist_wolf_king:
+                        # Surgical Fix 3 & Iter-4 Snout/Maw Assertions on boss_mist_wolf_king:
                         # (a) Zero pale cream studio-background fringes ((ca > 20) & (luma > 184) & (chroma < 28)) across body/legs/tail/neck!
                         c_rgb = cell[..., :3].astype(np.float32)
                         c_luma = 0.299 * c_rgb[..., 0] + 0.587 * c_rgb[..., 1] + 0.114 * c_rgb[..., 2]
                         c_chr = c_rgb.max(axis=2) - c_rgb.min(axis=2)
                         x_max_c = int(cx_solid.max())
-                        # Exclude only the right-side head snout/eye/fangs zone (`x >= x_max_c - 125`)
                         body_zone = np.ones((ch, cw), dtype=bool)
                         body_zone[:, max(0, x_max_c - 125) :] = False
                         cream_rem = int(((ca > 20) & body_zone & (c_luma > 184.0) & (c_chr < 28.0)).sum())
                         assert cream_rem == 0, (
                             f"Pale cream studio-background fringe remaining on Wolf body/legs/neck in cell ({r},{c}): {cream_rem}px"
                         )
-                        # (b) Zero enclosed holes in dorsal neck (`y < fy - 210`) or roaring mouth (`x >= x_max_c - 85, y < fy - 145`)!
-                        bg_w = (ca <= 16).astype(np.uint8)
-                        nl_wb, lbl_wb, st_wb, _ = cv2.connectedComponentsWithStats(bg_w, connectivity=8)
-                        ext_wb = set(lbl_wb[0, :]) | set(lbl_wb[-1, :]) | set(lbl_wb[:, 0]) | set(lbl_wb[:, -1])
-                        ext_wb.discard(0)
-                        for wlid in range(1, nl_wb):
-                            if wlid not in ext_wb:
-                                wx, wy, ww, wh, warea = [int(v) for v in st_wb[wlid]]
-                                assert not (wy < fy - 210 and warea > 3), (
-                                    f"Enclosed dorsal-neck hole in boss_mist_wolf_king cell ({r},{c}): area={warea} bbox=({wx},{wy},{ww},{wh})"
-                                )
-                                assert not (wx >= x_max_c - 85 and wy < fy - 196 and warea > 4), (
-                                    f"Enclosed roaring-jaw hole in boss_mist_wolf_king cell ({r},{c}): area={warea} bbox=({wx},{wy},{ww},{wh})"
+                        # (b) Zero enclosed interior background holes (`wy < fy - 140` on all standing/rearing/roaring/biting/down cells;
+                        #     `wy < fy - 155` above rotary-gallop mid-air limb/tail loops) at BOTH alpha<=16 AND alpha<=80 across ALL 40 cells!
+                        y_hole_lim = (fy - 155) if r in (2, 3) else (fy - 140)
+                        for thr_wh in (16, 80):
+                            bg_w = (ca <= thr_wh).astype(np.uint8)
+                            nl_wb, lbl_wb, st_wb, _ = cv2.connectedComponentsWithStats(bg_w, connectivity=8)
+                            ext_wb = set(lbl_wb[0, :]) | set(lbl_wb[-1, :]) | set(lbl_wb[:, 0]) | set(lbl_wb[:, -1])
+                            ext_wb.discard(0)
+                            for wlid in range(1, nl_wb):
+                                if wlid not in ext_wb:
+                                    wx, wy, ww, wh, warea = [int(v) for v in st_wb[wlid]]
+                                    if wy < y_hole_lim and (wy + wh) < fy - 100:
+                                        assert warea <= 3, (
+                                            f"Enclosed interior hole (alpha<={thr_wh}) in boss_mist_wolf_king cell ({r},{c}): area={warea} bbox=({wx},{wy},{ww},{wh})"
+                                        )
+                        # (c) Across all open-jaw / roaring / biting cells, assert min_vertical_alpha >= 220 across vertical scanlines spanning upper snout to lower jaw!
+                        if (r == 4 and c in (0, 1, 2)) or (r == 5 and c in (0, 1, 2)) or (r == 6 and c in (0, 1, 2, 3, 4, 5)) or (r == 7 and c in (0, 1)):
+                            x_nose, y_nose = -1, -1
+                            for yn in range(fy - 215, fy - 105):
+                                xs_n = np.where((ca[yn, :] >= 240) & (c_luma[yn, :] < 50.0))[0]
+                                if len(xs_n) > 0:
+                                    xr_n = int(xs_n.max())
+                                    if xr_n >= 40 and int(ca[yn - 6 : yn + 12, xr_n - 26 : xr_n - 4].min()) >= 235:
+                                        if xr_n > x_nose:
+                                            x_nose, y_nose = xr_n, yn
+                            assert x_nose > 0, f"Failed to locate dark canine nose tip in boss_mist_wolf_king cell ({r},{c})"
+                            my0 = max(0, y_nose - 4)
+                            my1 = min(ch, y_nose + 38)
+                            for mx in range(x_nose - 30, x_nose - 10):
+                                col_a = ca[my0:my1, mx]
+                                sy_op = np.where(col_a >= 235)[0]
+                                assert len(sy_op) >= 10, f"Missing snout/jaw column in boss_mist_wolf_king cell ({r},{c}) at x={mx}"
+                                min_va = int(col_a[int(sy_op.min()) : int(sy_op.max()) + 1].min())
+                                assert min_va >= 220, (
+                                    f"Front-mouth cleft/wedge in boss_mist_wolf_king cell ({r},{c}) at x={mx} (x_nose={x_nose}): min_vertical_alpha={min_va} < 220"
                                 )
 
         if aid == "boss_mist_wolf_king":
