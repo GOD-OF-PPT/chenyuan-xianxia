@@ -733,6 +733,16 @@
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
     {
+      "path": "project/assets/sprites/npc_peddler_sheet.png",
+      "source_path": "assets_src/world/prop_peddler_and_yaolu_raw.jpg",
+      "category": "sprite_sheet",
+      "dimensions": "1344x1792",
+      "sha256": "05c7c80b8b433c40052c0b000b159cebc080d1f7b0bd6419e26d0c29ffc439d9",
+      "creation_method": "generate_image (prop_peddler_and_yaolu: 35-deg Song-Ming Gongbi wandering Daoist peddler in conical bamboo hat & grey hemp robe) + connected-component exterior cutout & 8x6 keyframe sheet",
+      "generated_date": "2026-11-26",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
       "path": "project/assets/sprites/npc_steward_zhou_sheet.png",
       "source_path": "assets_src/sprites/char_ref_town_npcs_raw.jpg",
       "category": "sprite_sheet",
@@ -1345,12 +1355,12 @@
     {
       "path": "project/assets/world/prop_camphor_tree.png",
       "source_path": "assets_src/world/prop_sheet_foliage_raw.jpg",
-      "category": "world_ysort_foliage",
+      "category": "world_prop",
       "dimensions": "340x340",
-      "sha256": "59ac5fb7cc94f8a7009a8d82d77b59c796a40627143a7bf2bedb57d214f4cc5b",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi foliage/structure (prop_camphor_tree.png)",
+      "sha256": "1402e1f7d37b6abd12b5a2fd99edd3cfdaba97827174d8b60d88136c0be50940",
+      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi foliage/structure (prop_camphor_tree.png) + root-skirt alpha feathering + root-skirt alpha feathering",
       "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_cave_arch_gate.png",
@@ -1371,6 +1381,16 @@
       "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi dungeon prop (prop_cliff_rock.png)",
       "generated_date": "2026-11-26",
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_discarded_pill_basket.png",
+      "source_path": "assets_src/world/prop_peddler_and_yaolu_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "109x86",
+      "sha256": "0dc1846ba525ee642e24cdb49d2138bbe939137911827139c5482697f4041413",
+      "creation_method": "generate_image (prop_peddler_and_yaolu: 35-deg Song-Ming Gongbi woven bamboo discard basket with scorched failed pills & herb stems) + grounded contact shadow",
+      "generated_date": "2026-11-26",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_miasma_pool.png",
@@ -1473,6 +1493,16 @@
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     },
     {
+      "path": "project/assets/world/prop_yaolu_counter.png",
+      "source_path": "assets_src/world/prop_peddler_and_yaolu_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "156x170",
+      "sha256": "22c140f37d15ba4bbec7498577404f0dab43afccef6a98434faa3ed5d0e54aa5",
+      "creation_method": "generate_image (prop_peddler_and_yaolu: 35-deg Song-Ming Gongbi wooden apothecary counter with celadon medicine jars, dried herbs & gourd sign) + grounded contact shadow",
+      "generated_date": "2026-11-26",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
       "path": "project/assets/world/prop_yaolu_hall.png",
       "source_path": "assets_src/world/prop_sheet_buildings_raw.jpg",
       "category": "world_ysort_building",
@@ -1504,11 +1534,11 @@
     },
     {
       "path": "project/assets/world/tex_moss_earth.png",
-      "source_path": "assets_src/world/terrain_moss_natural_raw.jpg",
+      "source_path": "assets_src/world/terrain_gongbi_meadow_raw.jpg",
       "category": "world_terrain",
       "dimensions": "1024x1024",
-      "sha256": "2d9af1c09d37d00f27f801e1ebc2f202be031726887260a03e162104a4e509e9",
-      "creation_method": "generate_image (terrain_moss_natural) + 1024x1024 cosine wrap-around seamless blend & low-contrast Song-Ming mineral wash clamp | Spec: Seamless mossy mountain earth without grid repetition",
+      "sha256": "98586b864e7604252cb8053c765d170c5e2ff6a386e1ab555cae63c64b20aec2",
+      "creation_method": "generate_image (terrain_gongbi_meadow: Song-Ming Gongbi hand-inked short grass tufts, moss patches & fallen bamboo leaves) + 80px edge-only overlap seamless wrap (zero interior blur)",
       "generated_date": "2026-11-26",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     }

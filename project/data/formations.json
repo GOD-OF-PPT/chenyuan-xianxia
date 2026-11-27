@@ -7,7 +7,7 @@
       "slice_available": true,
       "slots": {
         "slot_1": { "role_title": "青龙阵眼", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 1.0 },
-        "slot_2": { "role_title": "玄武镇岳", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 1.25 },
+        "slot_2": { "role_title": "青囊护脉", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 0.9 },
         "slot_3": { "role_title": "朱雀灵枢", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 0.9 },
         "slot_4": { "role_title": "白虎破锐", "damage_mult": 1.0, "heal_mult": 1.0, "damage_taken_mult": 1.0, "move_speed_mult": 1.0, "threat_mult": 1.0 }
       }
