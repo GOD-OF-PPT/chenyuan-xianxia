@@ -681,8 +681,7 @@ func _handle_left_click_world(world_pt: Vector2) -> void:
 		var cid: String = str(cid_var)
 		var pa: BattleActor = _combat_ctrl.party_actors[cid] as BattleActor
 		if pa.contains_world_point(world_pt):
-			var slot_n: int = CampaignState.get_member_formation_slot(cid)
-			_combat_ctrl.switch_controlled_party_slot(slot_n, false)
+			_combat_ctrl.switch_controlled_member(cid, false)
 			return
 
 

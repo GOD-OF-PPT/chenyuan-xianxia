@@ -524,6 +524,17 @@ func switch_controlled_party_slot(slot_num: int, center_camera: bool = false) ->
 	combat_hud_dirty.emit()
 
 
+func switch_controlled_member(cid: String, center_camera: bool = false) -> void:
+	if cid == "" or not party_actors.has(cid):
+		return
+	var f_slot: int = CampaignState.get_member_formation_slot(cid)
+	if f_slot < 1:
+		return
+	var packed_idx: int = get_occupied_formation_slots().find(f_slot) + 1
+	if packed_idx >= 1:
+		switch_controlled_party_slot(packed_idx, center_camera)
+
+
 func get_occupied_formation_slots() -> Array[int]:
 	var out: Array[int] = []
 	for i: int in range(CampaignState.formation_slots.size()):
