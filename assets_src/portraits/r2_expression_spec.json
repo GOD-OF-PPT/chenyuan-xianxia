@@ -10,12 +10,13 @@
       "bloodied"
     ],
     "face_box": [
-      348,
-      168,
-      224,
-      214
+      385,
+      195,
+      196,
+      206
     ],
-    "min_pairwise_face_rmse": 10.511,
+    "min_pairwise_face_rmse": 16.695,
+    "min_pairwise_affine_srmse": 16.477,
     "min_pair": [
       "cold",
       "bloodied"
@@ -32,12 +33,13 @@
       "bloodied"
     ],
     "face_box": [
-      386,
-      160,
-      232,
-      238
+      396,
+      188,
+      186,
+      224
     ],
-    "min_pairwise_face_rmse": 10.152,
+    "min_pairwise_face_rmse": 14.604,
+    "min_pairwise_affine_srmse": 14.29,
     "min_pair": [
       "guarded",
       "cold"
@@ -54,12 +56,13 @@
       "bloodied"
     ],
     "face_box": [
-      420,
-      216,
-      210,
-      222
+      432,
+      240,
+      168,
+      214
     ],
-    "min_pairwise_face_rmse": 11.175,
+    "min_pairwise_face_rmse": 13.705,
+    "min_pairwise_affine_srmse": 13.551,
     "min_pair": [
       "cold",
       "bloodied"
@@ -77,7 +80,8 @@
       540,
       600
     ],
-    "min_pairwise_face_rmse": 16.377,
+    "min_pairwise_face_rmse": 15.565,
+    "min_pairwise_affine_srmse": 15.084,
     "min_pair": [
       "calm",
       "grief"
@@ -90,12 +94,13 @@
       "grief"
     ],
     "face_box": [
-      432,
-      178,
-      224,
-      224
+      456,
+      206,
+      186,
+      212
     ],
-    "min_pairwise_face_rmse": 13.659,
+    "min_pairwise_face_rmse": 18.324,
+    "min_pairwise_affine_srmse": 17.812,
     "min_pair": [
       "solemn",
       "grief"
@@ -108,15 +113,16 @@
       "cold"
     ],
     "face_box": [
-      430,
+      480,
+      192,
       174,
-      226,
-      212
+      206
     ],
-    "min_pairwise_face_rmse": 17.66,
+    "min_pairwise_face_rmse": 23.118,
+    "min_pairwise_affine_srmse": 21.989,
     "min_pair": [
       "calm",
-      "smile_faint"
+      "cold"
     ]
   },
   "npc_steward_zhou": {
@@ -127,11 +133,12 @@
     ],
     "face_box": [
       386,
-      192,
-      206,
-      214
+      224,
+      166,
+      194
     ],
-    "min_pairwise_face_rmse": 10.817,
+    "min_pairwise_face_rmse": 18.725,
+    "min_pairwise_affine_srmse": 17.966,
     "min_pair": [
       "calm",
       "guarded"

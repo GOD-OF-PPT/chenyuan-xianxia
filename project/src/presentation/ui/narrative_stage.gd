@@ -514,7 +514,7 @@ func _dismiss_cg_step() -> void:
 
 
 func _on_advance_input() -> void:
-	if not visible:
+	if not visible or not InputRouter.can_advance_dialogue():
 		return
 	if _cg_active:
 		_dismiss_cg_step()
@@ -522,6 +522,7 @@ func _on_advance_input() -> void:
 	if _choices_box.visible:
 		# 抉择分支阶段必须由玩家主动点选具体道心选项，严禁盲按 Enter 误选！
 		return
+	InputRouter.trigger_dialogue_lock()
 	_advance_line()
 
 
@@ -563,17 +564,28 @@ func _format_speaker_title(spk_key: String) -> String:
 
 func _wrap_scroll_lines(raw_text: String, max_chars: int = 34) -> String:
 	var clean_t: String = raw_text.replace("\n", "")
-	if clean_t.length() <= max_chars:
+	var total_len: int = clean_t.length()
+	if total_len <= max_chars:
 		return clean_t
-	# 优先在靠近中段的中文标点处优雅断为两行（严格 <= 2 行）
+	# 优先在靠近中段的中文标点处优雅断为两行（严格 <= 2 行且每行 <= max_chars）
 	var puncts: String = "，。？！；：、"
 	var best_idx: int = -1
-	var target_mid: int = mini(max_chars, int(ceil(float(clean_t.length()) * 0.52)))
-	for i: int in range(maxi(8, target_mid - 12), mini(clean_t.length() - 4, max_chars)):
-		if puncts.contains(clean_t.substr(i, 1)):
-			best_idx = i + 1
+	var target_mid: int = mini(max_chars, int(ceil(float(total_len) * 0.52)))
+	var min_idx: int = maxi(8, target_mid - 12)
+	if total_len <= max_chars * 2:
+		min_idx = maxi(min_idx, total_len - max_chars)
+	var max_search: int = mini(total_len - 4, max_chars)
+	for i: int in range(maxi(0, min_idx - 1), max_search):
+		var split_at: int = i + 1
+		if split_at <= max_chars and (total_len > max_chars * 2 or (total_len - split_at) <= max_chars):
+			if puncts.contains(clean_t.substr(i, 1)):
+				best_idx = split_at
 	if best_idx < 0:
-		best_idx = mini(max_chars, int(ceil(float(clean_t.length()) * 0.5)))
+		var mid_fb: int = int(ceil(float(total_len) * 0.5))
+		if total_len <= max_chars * 2:
+			best_idx = clampi(mid_fb, total_len - max_chars, max_chars)
+		else:
+			best_idx = mini(max_chars, mid_fb)
 	return clean_t.substr(0, best_idx) + "\n" + clean_t.substr(best_idx)
 
 

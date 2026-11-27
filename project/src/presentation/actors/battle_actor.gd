@@ -487,6 +487,19 @@ func _draw() -> void:
 		_draw_ellipse(Vector2.ZERO, ring_rx, ring_ry, Color(0.88, 0.74, 0.44, 0.65), 2.0)
 
 
+func _get_current_overhead_top_px() -> float:
+	var top_px: float = float(_head_top_px)
+	var state_anchors_raw: Variant = _sheet_meta.get("state_anchors", null)
+	if state_anchors_raw is Dictionary:
+		var sa_dict: Dictionary = state_anchors_raw as Dictionary
+		var st_raw: Variant = sa_dict.get(_resolve_effective_lookup_key(), null)
+		if st_raw is Dictionary:
+			var ov_vec: Vector2 = _parse_anchor_offset((st_raw as Dictionary).get("overhead", null), Vector2.INF)
+			if ov_vec.is_finite():
+				top_px = maxf(top_px, -ov_vec.y)
+	return top_px
+
+
 func _draw_overhead_ui() -> void:
 	if _overlay_canvas == null:
 		return
@@ -509,7 +522,8 @@ func _draw_overhead_ui() -> void:
 		font = ThemeDB.fallback_font
 
 	var sc_y: float = _sprite.scale.y if _sprite != null else 1.0
-	var head_y: float = -float(_head_top_px) * sc_y - 10.0
+	var top_px_cur: float = _get_current_overhead_top_px()
+	var head_y: float = -top_px_cur * sc_y - 10.0
 
 	# 1. NPC 简化名牌与气泡
 	if faction == "npc":
@@ -531,22 +545,22 @@ func _draw_overhead_ui() -> void:
 	if faction == "enemy":
 		var has_cast_line: bool = (is_casting and cast_duration > 0.0) or lockout_timer > 0.0
 		var stack_below_by: float = bar_h + (11.0 if ward_max > 0.0 else 0.0) + (20.0 if has_cast_line else 0.0)
-		by = -float(_head_top_px) * sc_y - stack_below_by - 8.0
+		by = -top_px_cur * sc_y - stack_below_by - 8.0
 		var seal_extra_w: float = 82.0 if (mother_seal_element != "" and mother_seal_timer > 0.0) else 8.0
 		var vp_sz: Vector2 = get_viewport_rect().size
 		if vp_sz.x > 200.0:
 			var scr_o: Vector2 = get_global_transform_with_canvas().origin
 			if scr_o.y + by - 25.0 < 16.0:
 				by = 16.0 + 25.0 - scr_o.y
-			# 避让右上角小地图与菜单簇（x >= vp_sz.x - 372, y <= 268）
-			if scr_o.y + by - 25.0 < 268.0 and scr_o.x + bx + bar_w + seal_extra_w > vp_sz.x - 372.0:
-				bx = (vp_sz.x - 372.0) - scr_o.x - bar_w - seal_extra_w
+			# 避让右上角小地图与菜单簇（x >= vp_sz.x - 356, y <= 268；_top_right_cluster 始于 x = 1568）
+			if scr_o.y + by - 25.0 < 268.0 and scr_o.x + bx + bar_w + seal_extra_w > vp_sz.x - 356.0:
+				bx = (vp_sz.x - 356.0) - scr_o.x - bar_w - seal_extra_w
 			# 避让顶中首领铭牌（Rect2(vp_sz.x*0.5 - 322, 0, 644, 198)）
 			var plaque_l: float = vp_sz.x * 0.5 - 322.0
 			var plaque_r: float = vp_sz.x * 0.5 + 322.0
 			if NotifyHub.combat_active and scr_o.y + by - 25.0 < 198.0:
 				if scr_o.x + bx + bar_w + seal_extra_w > plaque_l and scr_o.x + bx - 6.0 < plaque_r:
-					if scr_o.x >= vp_sz.x * 0.5 and (plaque_r + 8.0 + bar_w + seal_extra_w) <= vp_sz.x - 372.0:
+					if scr_o.x >= vp_sz.x * 0.5 and (plaque_r + 8.0 + bar_w + seal_extra_w) <= vp_sz.x - 356.0:
 						bx = plaque_r + 8.0 - scr_o.x
 					elif scr_o.x < vp_sz.x * 0.5 and (plaque_l - 8.0 - bar_w - seal_extra_w) >= 16.0:
 						bx = plaque_l - 8.0 - bar_w - seal_extra_w - scr_o.x

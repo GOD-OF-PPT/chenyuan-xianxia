@@ -1,8 +1,8 @@
 {
   "actor_id": "gu_changqing",
-  "cell_w": 288,
-  "cell_h": 240,
-  "foot_y": 212,
+  "cell_w": 352,
+  "cell_h": 280,
+  "foot_y": 248,
   "head_top_px": 162,
   "cols": 6,
   "rows": {
@@ -130,15 +130,15 @@
     },
     "idle_ne": {
       "weapon": [
-        48,
-        -64
+        46,
+        -66
       ],
       "hand": [
-        30,
+        28,
         -84
       ],
       "cast": [
-        32,
+        30,
         -88
       ],
       "chest": [
@@ -186,11 +186,11 @@
         -68
       ],
       "hand": [
-        34,
+        32,
         -82
       ],
       "cast": [
-        34,
+        32,
         -84
       ],
       "chest": [

@@ -1,8 +1,8 @@
 {
   "actor_id": "shen_qinghe",
-  "cell_w": 288,
-  "cell_h": 240,
-  "foot_y": 212,
+  "cell_w": 352,
+  "cell_h": 280,
+  "foot_y": 248,
   "head_top_px": 154,
   "cols": 6,
   "rows": {
@@ -130,15 +130,15 @@
     },
     "idle_ne": {
       "weapon": [
-        32,
+        30,
         -82
       ],
       "hand": [
-        32,
+        30,
         -82
       ],
       "cast": [
-        34,
+        32,
         -84
       ],
       "chest": [
@@ -182,15 +182,15 @@
     },
     "run_ne": {
       "weapon": [
-        36,
+        34,
         -80
       ],
       "hand": [
-        36,
+        34,
         -80
       ],
       "cast": [
-        38,
+        36,
         -82
       ],
       "chest": [
