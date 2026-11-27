@@ -1,8 +1,9 @@
 {
   "actor_id": "pet_spirit_turtle",
-  "cell_w": 176,
+  "cell_w": 208,
   "cell_h": 176,
   "foot_y": 154,
+  "head_top_px": 86,
   "cols": 6,
   "rows": {
     "idle_se": {

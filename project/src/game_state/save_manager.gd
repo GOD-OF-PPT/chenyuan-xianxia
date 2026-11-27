@@ -381,10 +381,8 @@ func _canonical_json(val: Variant) -> String:
 		for item: Variant in arr:
 			parts2.append(_canonical_json(item))
 		return "[%s]" % ",".join(parts2)
-	elif val is float:
+	elif val is int or val is float:
 		return "%.4f" % float(val)
-	elif val is int:
-		return "%d" % int(val)
 	return JSON.stringify(val)
 
 
