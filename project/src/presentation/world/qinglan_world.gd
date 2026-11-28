@@ -59,6 +59,7 @@ var _hover_outline_shader: Shader = null
 var _wet_bluestone_shader: Shader = null
 var _light_radial_tex: Texture2D = null
 var _fg_bamboo_tex: Texture2D = null
+var _fg_cave_stalactite_tex: Texture2D = null
 var _alt_nameplate_overlay: Node2D = null
 var _xuan_nameplate_tex: Texture2D = null
 var _hovered_interactable_id: String = ""
@@ -79,6 +80,8 @@ func _ready() -> void:
 		_light_radial_tex = load("res://assets/world/light_radial_soft.png") as Texture2D
 	if ResourceLoader.exists("res://assets/world/fg_bamboo_leaf.png"):
 		_fg_bamboo_tex = load("res://assets/world/fg_bamboo_leaf.png") as Texture2D
+	if ResourceLoader.exists("res://assets/world/fg_cave_stalactite.png"):
+		_fg_cave_stalactite_tex = load("res://assets/world/fg_cave_stalactite.png") as Texture2D
 	if ResourceLoader.exists("res://assets/ui/frames/casket_xuan_nameplate.png"):
 		_xuan_nameplate_tex = load("res://assets/ui/frames/casket_xuan_nameplate.png") as Texture2D
 	_load_custom_cursors()
@@ -561,9 +564,13 @@ func _assemble_qinglan_pass() -> void:
 	# 东南云海断崖深渊与对岸孤峰古修秘匣（物理阻断不可徒步跨越，彻底自洽“百丈绝壁金丹御剑”伏笔！）
 	_build_pass_cliff_abyss()
 
-	# M4 山道临渊杉木栈桥（跨越东西两道山涧深壑，桥台严丝合缝搭接两岸青石路肩，东桥头与石碑留足净距零误触！）
+	# M4 山道临渊杉木栈桥（跨越东西两道山涧深壑，桥台严丝合缝搭接两岸青石路肩，并以苔石奇峰压边收口！）
 	_add_ground_decor_prop("res://assets/world/prop_mountain_plank_bridge.png", Vector2(978.0, 874.0), "PassPlankBridgeWest")
 	_add_ground_decor_prop("res://assets/world/prop_mountain_plank_bridge.png", Vector2(1388.0, 734.0), "PassPlankBridgeEast")
+	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(902.0, 916.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(1078.0, 710.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(1312.0, 774.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(1488.0, 568.0), 0.0, false)
 
 	# 掩体巨石（支持魔兽式卡远程法怪视野 Pulling！）与 M4 苍翠竹海（>= 7 处竹丛）+ 破庙
 	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(690.0, 740.0), 68.0, false)
@@ -624,48 +631,72 @@ func _assemble_qinglan_pass() -> void:
 ## ==================== 区域 ③：苍木灵枢古窟（三段回环五行秘境 + 雾隐狼王） ====================
 func _assemble_cangmu_cave() -> void:
 	_add_tiled_ground("res://assets/world/tex_cave_flagstone.png", ZONE_BOUNDS)
-	# 1. 四段地底石板甬道：主通道 -> 回环捷径廊 -> 北侧潜行幽窟 -> 南侧腐瘴潭窟
+	# 1. 四段自然斜切地底古窟岩板洞室（专属地底无缝石灰岩铺地 tex_cave_pathway.png，完整覆盖北侧潜行石室、南侧泉窟与八卦首领祭坛，消除窄条拼接与小地图悬空！）
 	_add_road_polygon(PackedVector2Array([
-		Vector2(80, 1025), Vector2(820, 1015), Vector2(1240, 680), Vector2(1700, 420), Vector2(2260, 390),
-		Vector2(2260, 560), Vector2(1740, 590), Vector2(1320, 820), Vector2(880, 1145), Vector2(80, 1155)
-	]), "res://assets/world/tex_bluestone_wet.png")
+		Vector2(60, 1018), Vector2(410, 1008), Vector2(815, 1002), Vector2(1235, 675),
+		Vector2(1625, 428), Vector2(1840, 368), Vector2(2190, 362), Vector2(2320, 445),
+		Vector2(2310, 625), Vector2(2095, 665), Vector2(1745, 642), Vector2(1335, 835),
+		Vector2(890, 1152), Vector2(430, 1162), Vector2(60, 1165)
+	]), "res://assets/world/tex_cave_pathway.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(435, 1040), Vector2(435, 685), Vector2(1260, 685), Vector2(1260, 775), Vector2(545, 775), Vector2(545, 1040)
-	]), "res://assets/world/tex_bluestone_wet.png")
+		Vector2(422, 1030), Vector2(418, 742), Vector2(482, 672), Vector2(1275, 668),
+		Vector2(1275, 782), Vector2(578, 786), Vector2(552, 822), Vector2(556, 1030)
+	]), "res://assets/world/tex_cave_pathway.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(880, 700), Vector2(880, 225), Vector2(1080, 225), Vector2(1080, 700)
-	]), "res://assets/world/tex_bluestone_wet.png")
+		Vector2(768, 695), Vector2(736, 515), Vector2(748, 256), Vector2(822, 184),
+		Vector2(1148, 184), Vector2(1224, 258), Vector2(1232, 512), Vector2(1196, 695)
+	]), "res://assets/world/tex_cave_pathway.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(880, 1070), Vector2(1340, 1100), Vector2(1340, 1215), Vector2(880, 1185)
-	]), "res://assets/world/tex_bluestone_wet.png")
+		Vector2(855, 1068), Vector2(1325, 1086), Vector2(1412, 1138),
+		Vector2(1392, 1236), Vector2(1140, 1252), Vector2(868, 1202)
+	]), "res://assets/world/tex_cave_pathway.png")
 
-	# 2. 地底玄岩实体山壁（彻底封死毒棘墙与回环石门两侧，杜绝无视机关穿墙绕路，并严禁室外香樟树与竹丛！）
+	# 2. 地底斧劈皴玄岩实体山壁（彻底封死毒棘墙与回环石门两侧，消除直角黑块与亮青描边，严禁室外香樟树与竹丛！）
 	_add_cavern_rock_mass(PackedVector2Array([
-		Vector2(0, 0), Vector2(690, 0), Vector2(690, 620), Vector2(380, 660), Vector2(380, 975), Vector2(0, 975)
+		Vector2(0, 0), Vector2(690, 0), Vector2(685, 608), Vector2(438, 648), Vector2(380, 712), Vector2(380, 975), Vector2(0, 975)
 	]))
 	_add_cavern_rock_mass(PackedVector2Array([
-		Vector2(600, 815), Vector2(735, 815), Vector2(735, 985), Vector2(600, 985)
+		Vector2(600, 815), Vector2(718, 808), Vector2(742, 892), Vector2(735, 985), Vector2(600, 985)
 	]))
 	_add_cavern_rock_mass(PackedVector2Array([
-		Vector2(0, 1200), Vector2(760, 1200), Vector2(900, 1290), Vector2(1460, 1290),
-		Vector2(1560, 920), Vector2(1740, 680), Vector2(2400, 630), Vector2(2400, 1400), Vector2(0, 1400)
+		Vector2(0, 1205), Vector2(760, 1205), Vector2(900, 1292), Vector2(1455, 1288),
+		Vector2(1560, 920), Vector2(1748, 682), Vector2(2140, 688), Vector2(2400, 648), Vector2(2400, 1400), Vector2(0, 1400)
 	]))
 	_add_cavern_rock_mass(PackedVector2Array([
-		Vector2(690, 0), Vector2(2400, 0), Vector2(2400, 310), Vector2(1680, 340),
-		Vector2(1380, 540), Vector2(1270, 540), Vector2(1270, 145), Vector2(690, 145)
+		Vector2(690, 0), Vector2(2400, 0), Vector2(2400, 322), Vector2(1820, 332), Vector2(1660, 352),
+		Vector2(1385, 535), Vector2(1272, 535), Vector2(1258, 218), Vector2(1182, 148), Vector2(768, 148), Vector2(690, 218)
 	]))
 
-	# M4 古窟云雷纹青苔石阶（居中嵌入石板甬道，零插岩壁、零侵入石碑点击框！）与巨型盘根古木（开启 55% 半透遮挡与根基阻挡圆，零死遮盲区！）
-	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1095.0, 938.0), "CaveStoneStepsMid")
-	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1455.0, 678.0), "CaveStoneStepsAltar")
-	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(365.0, 985.0), 42.0, true)
-	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1425.0, 520.0), 42.0, true)
-	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1965.0, 378.0), 42.0, true)
+	# 3. 八卦首领古祭坛地坪（对标 master_b_cangmu_rtwp.png）与宋明工笔青苔石阶
+	_add_ground_decor_prop("res://assets/world/prop_cave_bagua_altar.png", Vector2(1985.0, 628.0), "CaveBossBaguaAltar")
+	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1078.0, 932.0), "CaveStoneStepsMid")
+	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1485.0, 622.0), "CaveStoneStepsAltar")
 
-	# 洞窟钟乳奇石点缀（纯石质地貌，零露天绿树）
-	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(668.0, 925.0), 48.0, false)
-	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1325.0, 520.0), 54.0, false)
-	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1620.0, 335.0), 54.0, false)
+	# 4. 扎根苔石的巨型盘根古木（开启 55% 半透遮挡）+ 顺应 35° 斜壁走势的立面洞壁与石笋群（双侧石墩嵌合回环石门，零遮挡门洞！）
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(242.0, 968.0), 38.0, true)
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(716.0, 382.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1435.0, 498.0), 38.0, true)
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1965.0, 366.0), 38.0, true)
+
+	_add_ysort_structure("res://assets/world/prop_cave_cliff_wall.png", Vector2(1528.0, 446.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_cliff_wall.png", Vector2(1748.0, 362.0), 0.0, false)
+
+	_add_ysort_structure("res://assets/world/prop_cave_stalagmite.png", Vector2(382.0, 876.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_stalagmite.png", Vector2(604.0, 878.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_stalagmite.png", Vector2(692.0, 616.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_stalagmite.png", Vector2(978.0, 178.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_stalagmite.png", Vector2(1286.0, 548.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_stalagmite.png", Vector2(1562.0, 928.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_stalagmite.png", Vector2(2215.0, 362.0), 0.0, false)
+
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(698.0, 936.0), 44.0, false)
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1322.0, 520.0), 48.0, false)
+	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1612.0, 342.0), 48.0, false)
+
+	# 5. 实体雕纹石火盆（独立立于石门南侧与祭坛阶侧零遮挡位，精准托举洞窟暖色炭火 PointLight2D！）
+	_add_ysort_structure("res://assets/world/prop_cave_stone_brazier.png", Vector2(384.0, 1006.0), 22.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_stone_brazier.png", Vector2(598.0, 962.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_stone_brazier.png", Vector2(1832.0, 390.0), 22.0, false)
 
 	# 五行禁制 ①：火焚腐瘴毒棘墙（严密卡死主通道咽喉 x=640,y=1085，未焚毁前 100% 不可通行！）
 	if not bool(CampaignState.world_flags.get("vine_wall_burned", false)):
@@ -696,7 +727,7 @@ func _assemble_cangmu_cave() -> void:
 		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(900.0, 1005.0), "enc_cave_pack_1")
 		_combat_ctrl.spawn_enemy_unit("miasma_shaman", Vector2(1035.0, 975.0), "enc_cave_pack_1")
 
-	# 回环捷径石门（设在 x=490,y=885 竖直近路咽喉，远离左屏边缘不裁切，须从北侧内廊开启！）
+	# 回环捷径石门（设在 x=490,y=885 竖直近路咽喉，两侧连接实体岩壁，须从北侧内廊开启！）
 	var gate_open: bool = bool(CampaignState.world_flags.get("shortcut_gate_opened", false))
 	var gate_obs: int = -1
 	if not gate_open:
@@ -720,20 +751,21 @@ func _assemble_cangmu_cave() -> void:
 		"res://assets/world/prop_stele_lit.png" if CampaignState.unlocked_steles.has("stele_wolf_altar") else "res://assets/world/prop_stele_dim.png"
 	)
 
-	# Stage C 地底动态暖/冷光源（全区严格 5 盏 <= 8 盏/屏，含祭坛石碑青玉冷光 @ (1650, 505)）
-	_add_stage_c_point_light(Vector2(320.0, 1060.0), Color(0.98, 0.60, 0.24, 1.0), 0.85, 2.05, 0.7)
-	_add_stage_c_point_light(Vector2(540.0, 865.0), Color(0.96, 0.62, 0.28, 1.0), 0.76, 1.95, 2.1)
+	# Stage C 地底动态暖/冷光源（全区严格 6 盏 <= 8 盏/屏，暖光全部锚定石火盆火芯，冷光锚定石碑与灵池！）
+	_add_stage_c_point_light(Vector2(384.0, 950.0), Color(0.98, 0.62, 0.26, 1.0), 0.84, 2.00, 0.7)
+	_add_stage_c_point_light(Vector2(598.0, 906.0), Color(0.96, 0.62, 0.28, 1.0), 0.78, 1.92, 2.1)
+	_add_stage_c_point_light(Vector2(1832.0, 336.0), Color(0.98, 0.60, 0.24, 1.0), 0.78, 1.95, 3.4)
 	_add_stage_c_point_light(Vector2(1120.0, 1145.0), Color(0.36, 0.86, 0.82, 1.0), 0.82, 2.05, -1.0)
 	_add_stage_c_point_light(Vector2(1290.0, 715.0), Color(0.38, 0.90, 0.82, 1.0), 0.95, 2.20, -1.0)
 	_add_stage_c_point_light(Vector2(1650.0, 505.0), Color(0.38, 0.92, 0.84, 1.0), 1.04, 2.30, -1.0)
 
-	# 章节双阶段主首领：【雾隐狼王】（站位 x=2085,y=505 避开右上角小地图遮挡，踏上 x=1875 祭坛桥即触发战前对峙！）
+	# 章节双阶段主首领：【雾隐狼王】（镇守八卦古祭坛 x=2025,y=545，远离右上角小地图遮挡，踏上 x=1875 祭坛即触发对峙！）
 	if not bool(CampaignState.world_flags.get("wolf_king_defeated", false)):
-		var boss: BattleActor = _combat_ctrl.spawn_enemy_unit("boss_mist_wolf_king", Vector2(2085.0, 505.0), "enc_boss_wolf_king")
+		var boss: BattleActor = _combat_ctrl.spawn_enemy_unit("boss_mist_wolf_king", Vector2(2025.0, 545.0), "enc_boss_wolf_king")
 		if boss != null:
 			var bu: Dictionary = _combat_ctrl.unit_states[boss.actor_id] as Dictionary
-			bu["aggro_radius_px"] = 245.0
-			_add_interactable("wolf_altar_trigger", "boss_intro", Vector2(1875.0, 495.0), 135.0, "踏上苍木灵枢祭坛迎战【雾隐狼王】 [F]", "")
+			bu["aggro_radius_px"] = 235.0
+			_add_interactable("wolf_altar_trigger", "boss_intro", Vector2(1875.0, 505.0), 150.0, "踏上苍木灵枢祭坛迎战【雾隐狼王】 [F]", "")
 
 	_add_zone_portal(Rect2(35.0, 1005.0, 130.0, 170.0), "qinglan_pass", "from_cave", "◀── 拾级返回青岚破庙")
 
@@ -1393,7 +1425,7 @@ func _check_dynamic_zone_triggers() -> void:
 			_narrative.start_dialogue("dlg_ch01_temple_clash")
 
 	elif CampaignState.current_zone_id == "cangmu_cave":
-		if not bool(CampaignState.world_flags.get("wolf_king_defeated", false)) and ppos.distance_to(Vector2(1875.0, 495.0)) <= 140.0:
+		if not bool(CampaignState.world_flags.get("wolf_king_defeated", false)) and ppos.distance_to(Vector2(1875.0, 505.0)) <= 145.0:
 			if not CampaignState.read_dialogues.has("dlg_ch01_wolf_king_intro"):
 				_narrative.start_dialogue("dlg_ch01_wolf_king_intro")
 
@@ -1594,7 +1626,8 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 		_wet_road_materials.append(rmat)
 	_road_stone_sub.add_child(poly)
 
-	# 2. 严格沿道路切线方向旋转排布宋明工笔青石收边条石（跳过重叠内边与世界极边，彻底消除未旋转小矩形锯齿马赛克！）
+	# 2. 沿通路切线排布收边石（城镇/山道用整齐青石条石，地底古窟用参差苍苔碎岩收口，彻底消除城镇砖边穿帮与锯齿！）
+	var is_cave_road: bool = (CampaignState.current_zone_id == "cangmu_cave")
 	var curb: Node2D = Node2D.new()
 	curb.draw.connect(func() -> void:
 		var count_pts: int = pts.size()
@@ -1610,9 +1643,10 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 			var norm_v: Vector2 = Vector2(-dir_v.y, dir_v.x)
 			if Geometry2D.is_point_in_polygon((a + b) * 0.5 + norm_v * 6.0, pts):
 				norm_v = -norm_v
-			var steps: int = maxi(2, int(floor(seg_len / 34.0)))
-			var half_len: float = (seg_len / float(steps)) * 0.46
-			var half_thk: float = 4.5
+			var step_span: float = 42.0 if is_cave_road else 34.0
+			var steps: int = maxi(2, int(floor(seg_len / step_span)))
+			var half_len: float = (seg_len / float(steps)) * (0.42 if is_cave_road else 0.46)
+			var half_thk: float = 6.2 if is_cave_road else 4.5
 			for s_i: int in range(steps):
 				var t: float = (float(s_i) + 0.5) / float(steps)
 				var base_p: Vector2 = a.lerp(b, t)
@@ -1631,25 +1665,48 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 				if inside_other:
 					continue
 				var h_seed: float = sin(float(i * 31 + s_i * 17) * 1.73)
-				var p0: Vector2 = base_p - dir_v * half_len - norm_v * half_thk
-				var p1: Vector2 = base_p + dir_v * half_len - norm_v * half_thk
-				var p2: Vector2 = base_p + dir_v * half_len + norm_v * half_thk
-				var p3: Vector2 = base_p - dir_v * half_len + norm_v * half_thk
-				var sh_off: Vector2 = norm_v * 2.5 + Vector2(1.0, 1.8)
-				curb.draw_colored_polygon(
-					PackedVector2Array([p0 + sh_off, p1 + sh_off, p2 + sh_off, p3 + sh_off]),
-					Color(0.11, 0.14, 0.12, 0.32)
-				)
-				var stone_tone: float = 0.03 * h_seed
-				curb.draw_colored_polygon(
-					PackedVector2Array([p0, p1, p2, p3]),
-					Color(0.37 + stone_tone, 0.43 + stone_tone, 0.40 + stone_tone, 0.98)
-				)
-				curb.draw_polyline(
-					PackedVector2Array([p0, p1, p2, p3, p0]),
-					Color(0.16, 0.20, 0.18, 0.88),
-					1.4
-				)
+				var h_seed2: float = cos(float(i * 19 + s_i * 29) * 2.11)
+				if is_cave_road:
+					var c_center: Vector2 = base_p + norm_v * (h_seed * 2.6)
+					var hl_a: float = half_len * (0.82 + 0.28 * absf(h_seed))
+					var ht_a: float = half_thk * (0.76 + 0.36 * absf(h_seed2))
+					var cobble: PackedVector2Array = PackedVector2Array([
+						c_center - dir_v * hl_a - norm_v * (ht_a * 0.65),
+						c_center - dir_v * (hl_a * 0.25) - norm_v * ht_a,
+						c_center + dir_v * hl_a - norm_v * (ht_a * 0.55),
+						c_center + dir_v * (hl_a * 0.85) + norm_v * (ht_a * 0.80),
+						c_center + dir_v * (hl_a * 0.10) + norm_v * (ht_a * 1.08),
+						c_center - dir_v * (hl_a * 0.88) + norm_v * (ht_a * 0.72),
+					])
+					curb.draw_colored_polygon(
+						cobble,
+						Color(0.24 + 0.03 * h_seed, 0.29 + 0.03 * h_seed, 0.27 + 0.02 * h_seed2, 0.90)
+					)
+					curb.draw_polyline(
+						PackedVector2Array([cobble[0], cobble[1], cobble[2], cobble[3], cobble[4], cobble[5], cobble[0]]),
+						Color(0.10, 0.13, 0.12, 0.82),
+						1.5
+					)
+				else:
+					var p0: Vector2 = base_p - dir_v * half_len - norm_v * half_thk
+					var p1: Vector2 = base_p + dir_v * half_len - norm_v * half_thk
+					var p2: Vector2 = base_p + dir_v * half_len + norm_v * half_thk
+					var p3: Vector2 = base_p - dir_v * half_len + norm_v * half_thk
+					var sh_off: Vector2 = norm_v * 2.5 + Vector2(1.0, 1.8)
+					curb.draw_colored_polygon(
+						PackedVector2Array([p0 + sh_off, p1 + sh_off, p2 + sh_off, p3 + sh_off]),
+						Color(0.11, 0.14, 0.12, 0.32)
+					)
+					var stone_tone: float = 0.03 * h_seed
+					curb.draw_colored_polygon(
+						PackedVector2Array([p0, p1, p2, p3]),
+						Color(0.37 + stone_tone, 0.43 + stone_tone, 0.40 + stone_tone, 0.98)
+					)
+					curb.draw_polyline(
+						PackedVector2Array([p0, p1, p2, p3, p0]),
+						Color(0.16, 0.20, 0.18, 0.88),
+						1.4
+					)
 	)
 	_road_curb_sub.add_child(curb)
 
@@ -1766,7 +1823,34 @@ func _rebuild_foreground_bamboo_leaves(enable_outdoor: bool) -> void:
 	for st: Node in stale:
 		_rain_overlay.remove_child(st)
 		st.queue_free()
-	if not enable_outdoor or _fg_bamboo_tex == null:
+	if not enable_outdoor:
+		if CampaignState.current_zone_id == "cangmu_cave" and _fg_cave_stalactite_tex != null:
+			# 地底古窟左上穹顶与右下岩角挂载宋明工笔钟乳盘根暗角（严避右上角小地图与左下角小队框，静态微视差不随风摇曳！）
+			var cave_presets: Array[Dictionary] = [
+				{"corner": Vector2(-1.0, -1.0), "inset": Vector2(102.0, 88.0), "scale": Vector2(0.86, 0.86), "rot": 0.0, "phase": 0.0, "flip_h": true, "flip_v": false},
+				{"corner": Vector2(1.0, 1.0), "inset": Vector2(-102.0, -88.0), "scale": Vector2(0.84, 0.84), "rot": 0.0, "phase": 0.0, "flip_h": false, "flip_v": true},
+			]
+			for ci: int in range(cave_presets.size()):
+				var ccfg: Dictionary = cave_presets[ci]
+				var csp: Sprite2D = Sprite2D.new()
+				csp.name = "FgCaveStalactite_%d" % ci
+				csp.texture = _fg_cave_stalactite_tex
+				csp.flip_h = bool(ccfg["flip_h"])
+				csp.flip_v = bool(ccfg["flip_v"])
+				csp.scale = ccfg["scale"] as Vector2
+				csp.rotation = float(ccfg["rot"])
+				csp.modulate = Color(0.54, 0.60, 0.58, 0.64)
+				_rain_overlay.add_child(csp)
+				_fg_bamboo_leaves.append({
+					"node": csp,
+					"corner": ccfg["corner"] as Vector2,
+					"inset": ccfg["inset"] as Vector2,
+					"base_rot": float(ccfg["rot"]),
+					"phase": 0.0,
+					"sway": false,
+				})
+		return
+	if _fg_bamboo_tex == null:
 		return
 
 	# 严格锚定于视口外框边角（左上角、顶左檐、右下角、右中下缘），竹枝根部全部伸出画框之外，绝不漂移至画幅中央或遮挡 HUD/气泡！
@@ -1793,6 +1877,7 @@ func _rebuild_foreground_bamboo_leaves(enable_outdoor: bool) -> void:
 			"inset": cfg["inset"] as Vector2,
 			"base_rot": float(cfg["rot"]),
 			"phase": float(cfg["phase"]),
+			"sway": true,
 		})
 
 
@@ -1820,7 +1905,7 @@ func _sync_foreground_bamboo_positions(_delta: float) -> void:
 		var base_rot: float = float(entry["base_rot"])
 		var wind_vec: Vector2 = Vector2.ZERO
 		var rot_add: float = 0.0
-		if sway_on:
+		if sway_on and bool(entry.get("sway", true)):
 			wind_vec = Vector2(sin(_light_flicker_clock * 2.1 + ph) * 7.5, cos(_light_flicker_clock * 1.6 + ph) * 4.0)
 			rot_add = sin(_light_flicker_clock * 2.4 + ph) * 0.055
 		var edge_anchor: Vector2 = Vector2(corner.x * half_vp.x, corner.y * half_vp.y) + inset
@@ -2142,34 +2227,85 @@ func _build_pass_cliff_abyss() -> void:
 func _add_cavern_rock_mass(poly: PackedVector2Array) -> void:
 	if poly.size() < 3:
 		return
-	var outer_shadow: Line2D = Line2D.new()
-	outer_shadow.points = poly
-	outer_shadow.closed = true
-	outer_shadow.width = 26.0
-	outer_shadow.default_color = Color(0.03, 0.05, 0.05, 0.82)
-	outer_shadow.joint_mode = Line2D.LINE_JOINT_ROUND
-	_ground_decor_layer.add_child(outer_shadow)
 
+	# 1. 将洞内非极边折线细分为自然参差的斧劈皴碎岩轮廓（世界外边界点严格不动，消除 90° 死黑碰撞块！）
+	var crag_poly: PackedVector2Array = PackedVector2Array()
+	for idx_e: int in range(poly.size()):
+		var pa: Vector2 = poly[idx_e]
+		var pb: Vector2 = poly[(idx_e + 1) % poly.size()]
+		crag_poly.append(pa)
+		var is_border_edge: bool = (
+			(pa.x <= 1.0 and pb.x <= 1.0)
+			or (pa.x >= 2399.0 and pb.x >= 2399.0)
+			or (pa.y <= 1.0 and pb.y <= 1.0)
+			or (pa.y >= 1399.0 and pb.y >= 1399.0)
+		)
+		var seg_d: float = pa.distance_to(pb)
+		if not is_border_edge and seg_d >= 72.0:
+			var ed_v: Vector2 = (pb - pa) / seg_d
+			var nrm_v: Vector2 = Vector2(-ed_v.y, ed_v.x)
+			if Geometry2D.is_point_in_polygon((pa + pb) * 0.5 + nrm_v * 8.0, poly):
+				nrm_v = -nrm_v
+			var n_sub: int = maxi(2, int(floor(seg_d / 48.0)))
+			for sub_i: int in range(1, n_sub):
+				var u: float = float(sub_i) / float(n_sub)
+				var base_pt: Vector2 = pa.lerp(pb, u)
+				var h1: float = sin(base_pt.x * 0.043 + base_pt.y * 0.031 + float(idx_e * 7 + sub_i * 13))
+				var h2: float = cos(base_pt.x * 0.027 - base_pt.y * 0.053 + float(sub_i * 19))
+				crag_poly.append(base_pt + nrm_v * (h1 * 11.0 + 3.0) + ed_v * (h2 * 6.0))
+
+	# 2. 玄岩顶盖层挂载暗调无缝石灰岩肌理（不再是死黑纯色 Polygon2D）
 	var body: Polygon2D = Polygon2D.new()
-	body.polygon = poly
-	body.color = Color(0.09, 0.12, 0.12, 0.98)
+	body.polygon = crag_poly
+	if ResourceLoader.exists("res://assets/world/tex_cave_flagstone.png"):
+		body.texture = load("res://assets/world/tex_cave_flagstone.png") as Texture2D
+		body.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		body.color = Color(0.28, 0.32, 0.30, 0.99)
+	else:
+		body.color = Color(0.11, 0.14, 0.13, 0.99)
 	_ground_decor_layer.add_child(body)
 
-	var rim: Line2D = Line2D.new()
-	rim.points = poly
-	rim.closed = true
-	rim.width = 11.0
-	rim.default_color = Color(0.20, 0.27, 0.25, 0.94)
-	rim.joint_mode = Line2D.LINE_JOINT_ROUND
-	_ground_decor_layer.add_child(rim)
-
-	var rim_hi: Line2D = Line2D.new()
-	rim_hi.points = poly
-	rim_hi.closed = true
-	rim_hi.width = 2.5
-	rim_hi.default_color = Color(0.34, 0.44, 0.40, 0.65)
-	rim_hi.joint_mode = Line2D.LINE_JOINT_ROUND
-	_ground_decor_layer.add_child(rim_hi)
+	# 3. 沿非世界边界岩沿绘制宋明工笔双层斧劈皴立面断崖、青苔石缝与浓墨勾勒（彻底废除霓虹青双线 Line2D！）
+	var cliff_bevel: Node2D = Node2D.new()
+	cliff_bevel.draw.connect(func() -> void:
+		var n_c: int = crag_poly.size()
+		for ci: int in range(n_c):
+			var ca: Vector2 = crag_poly[ci]
+			var cb: Vector2 = crag_poly[(ci + 1) % n_c]
+			if (
+				(ca.x <= 2.0 and cb.x <= 2.0)
+				or (ca.x >= 2398.0 and cb.x >= 2398.0)
+				or (ca.y <= 2.0 and cb.y <= 2.0)
+				or (ca.y >= 1398.0 and cb.y >= 1398.0)
+			):
+				continue
+			var clen: float = ca.distance_to(cb)
+			if clen < 6.0:
+				continue
+			var cdir: Vector2 = (cb - ca) / clen
+			var cnorm: Vector2 = Vector2(-cdir.y, cdir.x)
+			if Geometry2D.is_point_in_polygon((ca + cb) * 0.5 + cnorm * 6.0, crag_poly):
+				cnorm = -cnorm
+			var drop_vec: Vector2 = cnorm * 16.0 + Vector2(0.0, 9.0)
+			var mid_vec: Vector2 = cnorm * 8.5 + Vector2(0.0, 4.5)
+			cliff_bevel.draw_colored_polygon(
+				PackedVector2Array([ca, cb, cb + drop_vec * 1.45, ca + drop_vec * 1.45]),
+				Color(0.04, 0.06, 0.06, 0.54)
+			)
+			cliff_bevel.draw_colored_polygon(
+				PackedVector2Array([ca, cb, cb + drop_vec, ca + drop_vec]),
+				Color(0.16, 0.20, 0.19, 0.96)
+			)
+			var tone_j: float = 0.025 * sin(float(ci * 23) * 1.41)
+			cliff_bevel.draw_colored_polygon(
+				PackedVector2Array([ca - cnorm * 3.0, cb - cnorm * 3.0, cb + mid_vec, ca + mid_vec]),
+				Color(0.23 + tone_j, 0.28 + tone_j, 0.25 + tone_j, 0.95)
+			)
+			cliff_bevel.draw_line(ca + mid_vec * 0.4, ca + drop_vec, Color(0.08, 0.10, 0.10, 0.80), 1.8)
+			cliff_bevel.draw_line(ca, cb, Color(0.09, 0.12, 0.11, 0.92), 2.2)
+			cliff_bevel.draw_line(ca + drop_vec, cb + drop_vec, Color(0.07, 0.09, 0.09, 0.88), 1.8)
+	)
+	_ground_decor_layer.add_child(cliff_bevel)
 
 	for i: int in range(poly.size()):
 		var a: Vector2 = poly[i]

@@ -758,7 +758,8 @@ func step_world_and_combat(raw_delta: float, zone_bounds: Rect2) -> void:
 		var spd: float = float((ctrl_u.get("sheet", {}) as Dictionary).get("move_speed_px", 220.0))
 		if stealth_timer > 0.0:
 			spd *= 0.90
-		ctrl_actor.set_facing(move_vec)
+		if not (in_combat and ctrl_actor.has_active_attack_or_cast()):
+			ctrl_actor.set_facing(move_vec)
 		ctrl_actor.position = _resolve_move_collision(ctrl_actor.position, ctrl_actor.position + move_vec * spd * combat_delta, zone_bounds)
 
 	# 2. 步进所有战斗时钟、明雷视野、AI 与技能结算
@@ -1045,7 +1046,8 @@ func _step_party_units(dt: float, ctrl_moving_wasd: bool, zone_bounds: Rect2) ->
 				actor.has_move_waypoint = false
 			else:
 				var mdir: Vector2 = to_wp.normalized()
-				actor.set_facing(mdir)
+				if not (in_combat and actor.has_active_attack_or_cast()):
+					actor.set_facing(mdir)
 				actor.position = _resolve_move_collision(actor.position, actor.position + mdir * float(sheet.get("move_speed_px", 215.0)) * dt, zone_bounds)
 		elif cid != ctrl_id and not in_combat and ctrl_actor != null:
 			var follow_offset: Vector2 = Vector2(-54.0 * float(idx_slot), 28.0 * float((idx_slot % 2) * 2 - 1))

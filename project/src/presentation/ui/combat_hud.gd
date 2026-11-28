@@ -244,7 +244,7 @@ func _build_top_boss_bar() -> void:
 	_boss_panel.offset_left = -316.0
 	_boss_panel.offset_right = 316.0
 	_boss_panel.offset_top = 14.0
-	_boss_panel.offset_bottom = 192.0
+	_boss_panel.offset_bottom = 196.0
 	_boss_panel.add_theme_stylebox_override(
 		"panel",
 		UIThemeBuilder.make_texture_or_ebony_box(
@@ -267,14 +267,14 @@ func _build_top_boss_bar() -> void:
 	_boss_title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_boss_title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_boss_title_lbl.add_theme_font_override("font", UIThemeBuilder.get_bold_font())
-	_boss_title_lbl.add_theme_font_size_override("font_size", 23)
+	_boss_title_lbl.add_theme_font_size_override("font_size", 22)
 	_boss_title_lbl.add_theme_color_override("font_color", Color("#F2E8D5"))
-	_boss_title_lbl.add_theme_constant_override("outline_size", 3)
+	_boss_title_lbl.add_theme_constant_override("outline_size", 2)
 	_boss_title_lbl.add_theme_color_override("font_outline_color", Color("#0D0B0A"))
 	vb.add_child(_boss_title_lbl)
 
 	# 朱砂气血条 (#B03A2E)
-	var hp_info: Dictionary = _make_framed_bar_row(580.0, 24.0, Color("#2B1311"), Color("#6E4B3A"), 1, 17, true)
+	var hp_info: Dictionary = _make_framed_bar_row(580.0, 26.0, Color("#2B1311"), Color("#6E4B3A"), 1, 16, true)
 	var hp_wrap: PanelContainer = hp_info["panel"] as PanelContainer
 	_boss_hp_fill = hp_info["fill"] as ColorRect
 	_boss_hp_fill.color = UIThemeBuilder.COL_HP_VERMILION
@@ -282,21 +282,21 @@ func _build_top_boss_bar() -> void:
 	vb.add_child(hp_wrap)
 
 	# ❖木灵护体灵罡条 (#3E7B67)
-	var ward_info: Dictionary = _make_framed_bar_row(580.0, 22.0, Color("#13221D"), Color("#4E6B5E"), 1, 16, true)
+	var ward_info: Dictionary = _make_framed_bar_row(580.0, 24.0, Color("#13221D"), Color("#4E6B5E"), 1, 16, true)
 	var ward_wrap: PanelContainer = ward_info["panel"] as PanelContainer
 	_boss_ward_fill = ward_info["fill"] as ColorRect
 	_boss_ward_fill.color = UIThemeBuilder.COL_JADE_GREEN
 	_boss_ward_lbl = ward_info["label"] as Label
 	vb.add_child(ward_wrap)
 
-	# 琥珀金 (#D6A244) 可打断 vs 暗红 (#8E2822) 锁链危招 30px 大读条
-	var cast_info: Dictionary = _make_framed_bar_row(580.0, 30.0, Color("#261D10"), Color("#F5D580"), 2, 20, true)
+	# 琥珀金 (#D6A244) 可打断 vs 暗红 (#8E2822) 锁链危招 32px 大读条
+	var cast_info: Dictionary = _make_framed_bar_row(580.0, 32.0, Color("#261D10"), Color("#F5D580"), 2, 18, true)
 	_boss_cast_box = cast_info["panel"] as PanelContainer
 	_boss_cast_sb = cast_info["stylebox"] as StyleBoxFlat
 	_boss_cast_fill = cast_info["fill"] as ColorRect
 	_boss_cast_lbl = cast_info["label"] as Label
 	_boss_cast_lbl.add_theme_color_override("font_color", Color("#FFF8EA"))
-	_boss_cast_lbl.add_theme_constant_override("outline_size", 4)
+	_boss_cast_lbl.add_theme_constant_override("outline_size", 2)
 	_boss_cast_lbl.add_theme_color_override("font_outline_color", Color("#16110C"))
 	_boss_cast_box.visible = false
 	vb.add_child(_boss_cast_box)
@@ -344,7 +344,7 @@ func _make_framed_bar_row(
 	lbl.add_theme_font_override("font", UIThemeBuilder.get_bold_font() if use_bold else UIThemeBuilder.get_regular_font())
 	lbl.add_theme_font_size_override("font_size", maxi(UIThemeBuilder.FS_MIN, font_sz))
 	lbl.add_theme_color_override("font_color", Color("#FAF5EC"))
-	lbl.add_theme_constant_override("outline_size", 4)
+	lbl.add_theme_constant_override("outline_size", 2)
 	lbl.add_theme_color_override("font_outline_color", Color("#090706"))
 	inner.add_child(lbl)
 
@@ -610,6 +610,7 @@ func _build_party_frames() -> void:
 			buff_badges.append({"panel": bp, "sb": bsb, "icon": b_ico})
 
 		var ai_btn: Button = _make_compact_btn("AI")
+		ai_btn.custom_minimum_size = Vector2(78.0, 22.0)
 		top_hb.add_child(ai_btn)
 
 		var hp_info_p: Dictionary = _make_framed_bar_row(312.0, 22.0, Color("#261210"), Color("#6A4838"), 1, 16, true)

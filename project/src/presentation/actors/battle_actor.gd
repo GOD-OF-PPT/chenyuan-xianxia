@@ -86,6 +86,7 @@ var _hit_flash_mat: ShaderMaterial = null
 var _hit_flash_timer: float = 0.0
 var _hit_flash_duration: float = 0.12
 var _hit_flash_peak: float = 0.0
+var _flipped_left: bool = false
 
 
 func _ready() -> void:
@@ -122,6 +123,7 @@ func setup_actor(
 	occlusion_silhouette_alpha = 0.0
 	if p_sprite_id == "boss_mist_wolf_king":
 		facing_dir = Vector2(-1.0, 0.35).normalized()
+	_flipped_left = facing_dir.x < -0.08
 	visible = true
 
 	if not SaveManager.settings_changed.is_connected(_on_comfort_settings_changed):
@@ -202,6 +204,16 @@ func set_facing(dir: Vector2) -> void:
 
 func is_knocked_down() -> bool:
 	return (not alive) or (is_boss and stagger_timer > 4.0)
+
+
+func has_active_attack_or_cast() -> bool:
+	if is_casting:
+		return true
+	return _one_shot_remaining > 0.0 and (
+		_one_shot_state == "attack_1"
+		or _one_shot_state == "attack_2"
+		or _one_shot_state == "cast_release"
+	)
 
 
 func play_action_anim(anim_name: String, duration_sec: float = 0.42) -> void:
@@ -409,8 +421,11 @@ func _apply_current_frame() -> void:
 	var final_col: int = start_col + col_offset
 
 	_sprite.region_rect = Rect2(float(final_col * _cell_w), float(row_idx * _cell_h), float(_cell_w), float(_cell_h))
-	# 基础素材默认朝右下（+X）；朝左（facing_dir.x < -0.08）时水平镜像
+	# 基础素材默认朝右下（+X）；交战竖向拉扯时启用轻回差防左右频闪，脱战保持即时响应
 	var flip: bool = facing_dir.x < -0.08
+	if NotifyHub.combat_active:
+		flip = (facing_dir.x < 0.05) if _flipped_left else (facing_dir.x < -0.11)
+	_flipped_left = flip
 	_sprite.flip_h = flip
 
 	var dir_n: Vector2 = facing_dir.normalized() if facing_dir.length_squared() > 0.001 else Vector2(0.894, 0.447)
@@ -616,11 +631,22 @@ func _draw_overhead_ui() -> void:
 		var vp_sz: Vector2 = get_viewport_rect().size
 		if vp_sz.x > 200.0:
 			var scr_o: Vector2 = get_global_transform_with_canvas().origin
+			# 脱战态下若远端未交战敌人处于视口边缘或正被右上角小地图遮蔽（且未被悬停），直接隐去远端浮空名牌，彻底根除血条脱离本体数百像素悬在岩壁上！
+			if not NotifyHub.combat_active and not is_hovered:
+				if scr_o.x < 68.0 or scr_o.x > vp_sz.x - 68.0 or scr_o.y < 52.0 or scr_o.y > vp_sz.y - 42.0:
+					return
+				if scr_o.y + by - 26.0 < 268.0 and scr_o.x + bx + bar_w + seal_extra_w > vp_sz.x - 356.0:
+					return
 			if scr_o.y + by - 25.0 < 16.0:
 				by = 16.0 + 25.0 - scr_o.y
-			# 避让右上角小地图与菜单簇（x >= vp_sz.x - 356, y <= 268；_top_right_cluster 始于 x = 1568）
+			# 避让右上角小地图与菜单簇（横向微调上限 92px，超出则顺滑下沉至小地图底沿下方，绝不横向飞离模型！）
 			if scr_o.y + by - 25.0 < 268.0 and scr_o.x + bx + bar_w + seal_extra_w > vp_sz.x - 356.0:
-				bx = (vp_sz.x - 356.0) - scr_o.x - bar_w - seal_extra_w
+				var cand_bx: float = (vp_sz.x - 356.0) - scr_o.x - bar_w - seal_extra_w
+				if cand_bx >= -bar_w * 0.5 - 92.0:
+					bx = cand_bx
+				else:
+					by = 268.0 + 25.0 - scr_o.y
+					bx = clampf(bx, 16.0 - scr_o.x, vp_sz.x - 16.0 - bar_w - seal_extra_w - scr_o.x)
 			# 避让顶中首领铭牌（Rect2(vp_sz.x*0.5 - 322, 0, 644, 198)）
 			var plaque_l: float = vp_sz.x * 0.5 - 322.0
 			var plaque_r: float = vp_sz.x * 0.5 + 322.0
