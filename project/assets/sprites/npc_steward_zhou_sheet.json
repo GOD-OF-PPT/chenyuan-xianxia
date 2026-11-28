@@ -8,25 +8,25 @@
     "idle_se": {
       "row": 0,
       "frames": 4,
-      "fps": 6.0,
+      "fps": 5.5,
       "loop": true
     },
     "idle_ne": {
       "row": 1,
       "frames": 4,
-      "fps": 6.0,
+      "fps": 5.5,
       "loop": true
     },
     "run_se": {
       "row": 2,
       "frames": 6,
-      "fps": 10.0,
+      "fps": 10.5,
       "loop": true
     },
     "run_ne": {
       "row": 3,
       "frames": 6,
-      "fps": 10.0,
+      "fps": 10.5,
       "loop": true
     },
     "attack_1": {
@@ -69,5 +69,6 @@
       "fps": 4.0,
       "loop": false
     }
-  }
+  },
+  "head_top_px": 165
 }

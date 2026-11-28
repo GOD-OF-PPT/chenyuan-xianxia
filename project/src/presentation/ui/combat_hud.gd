@@ -1456,15 +1456,25 @@ func _draw_minimap() -> void:
 			var scaled_pts: PackedVector2Array = PackedVector2Array()
 			for pt: Vector2 in rpoly:
 				scaled_pts.append(Vector2(clampf(pt.x * scale_x, 1.5, rect.size.x - 1.5), clampf(pt.y * scale_y, 1.5, rect.size.y - 1.5)))
-			_minimap_canvas.draw_colored_polygon(scaled_pts, Color(0.36, 0.39, 0.37, 0.78))
+			_minimap_canvas.draw_colored_polygon(scaled_pts, Color(0.32, 0.37, 0.35, 0.84))
+			var closed_pts: PackedVector2Array = scaled_pts.duplicate()
+			closed_pts.append(scaled_pts[0])
+			_minimap_canvas.draw_polyline(closed_pts, Color(0.48, 0.54, 0.50, 0.42), 1.0)
 
 	for brect: Rect2 in _mm_buildings:
-		var srect: Rect2 = Rect2(
-			Vector2(brect.position.x * scale_x, brect.position.y * scale_y),
-			Vector2(maxf(8.0, brect.size.x * scale_x), maxf(6.0, brect.size.y * scale_y))
+		var bx: float = clampf(brect.position.x * scale_x, 2.0, rect.size.x - 10.0)
+		var by: float = clampf(brect.position.y * scale_y, 2.0, rect.size.y - 8.0)
+		var bw: float = clampf(maxf(7.0, brect.size.x * scale_x), 7.0, rect.size.x - bx - 2.0)
+		var bh: float = clampf(maxf(5.5, brect.size.y * scale_y), 5.5, rect.size.y - by - 2.0)
+		var srect: Rect2 = Rect2(Vector2(bx, by), Vector2(bw, bh))
+		_minimap_canvas.draw_rect(srect, Color(0.44, 0.38, 0.30, 0.88), true)
+		_minimap_canvas.draw_rect(srect, Color(0.78, 0.65, 0.42, 0.86), false, 1.0)
+		_minimap_canvas.draw_line(
+			Vector2(srect.position.x + 1.5, srect.get_center().y),
+			Vector2(srect.end.x - 1.5, srect.get_center().y),
+			Color(0.24, 0.21, 0.18, 0.72),
+			1.0
 		)
-		_minimap_canvas.draw_rect(srect, Color(0.54, 0.45, 0.34, 0.85), true)
-		_minimap_canvas.draw_rect(srect, Color(0.82, 0.68, 0.44, 0.85), false, 1.0)
 
 	for p_pt: Vector2 in _mm_portals:
 		var mp: Vector2 = Vector2(clampf(p_pt.x * scale_x, 6.0, rect.size.x - 6.0), clampf(p_pt.y * scale_y, 6.0, rect.size.y - 6.0))
@@ -1495,7 +1505,8 @@ func _draw_minimap() -> void:
 		var live_vp: Vector2 = get_viewport_rect().size / combat_ctrl.world_camera.zoom
 		var vp_sz: Vector2 = Vector2(live_vp.x * scale_x, live_vp.y * scale_y)
 		var cam_r: Rect2 = Rect2(Vector2(cam_c.x * scale_x, cam_c.y * scale_y) - vp_sz * 0.5, vp_sz)
-		_minimap_canvas.draw_rect(cam_r.intersection(rect), Color(0.84, 0.68, 0.42, 0.34), false, 1.0)
+		var inset_rect: Rect2 = rect.grow(-2.5)
+		_minimap_canvas.draw_rect(cam_r.intersection(inset_rect), Color(0.86, 0.72, 0.45, 0.42), false, 1.0)
 
 	var ppos: Vector2 = combat_ctrl.get_controlled_actor_pos()
 	var pp: Vector2 = Vector2(clampf(ppos.x * scale_x, 5.0, rect.size.x - 5.0), clampf(ppos.y * scale_y, 5.0, rect.size.y - 5.0))
