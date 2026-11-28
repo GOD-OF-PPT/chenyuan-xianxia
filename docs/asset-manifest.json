@@ -697,120 +697,120 @@
       "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1344x1792",
-      "sha256": "fac4a8d5d6a34a81e795294559cc8bc74d38cf20e3dbf061232aba0ffe72ca4f",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_miasma_shaman)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "sha256": "e54059de594955f619e123f1c6f0bada1a2ddcda3a3e60f555ddd6645f0d8ea0",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_miasma_shaman)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/enemy_rogue_cultivator_sheet.png",
       "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1440x1792",
-      "sha256": "1d91e9bfdc5ebcb917e6fb5c151cf9779a45e361e28f5548d64e18bd1b083cd7",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_rogue_cultivator)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "sha256": "23158137daea5857ea145cce39c6da857b10b33ca44712337be7e0d19b9d3650",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_rogue_cultivator)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/enemy_rot_wolf_sheet.png",
       "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1536x1536",
-      "sha256": "e3839a19b1a4fac31dfaf7f1eaa6a84c4c84728bffcd0c7e1a1b96ba9ef5f82a",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_rot_wolf)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "sha256": "c193e71f3a425e9a96c1361ee6cbc5dac5964d37d0937742b1c404b4376d85a7",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_rot_wolf)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/enemy_wood_golem_sheet.png",
       "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1632x2112",
-      "sha256": "bd4fe282d6960d630ce1ddc3752321e48da09ec2ae2f3030024d7a63eeec7277",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (RGBA cutout, SE orientation normalization, multi-frame stride/telegraph/stagger articulation & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi enemy/boss keyframe sheet (enemy_wood_golem)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "sha256": "523c89fc333f7119314d8311653ece88fc124de549b1a1da14e5da74e17767d9",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_wood_golem)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/gu_changqing_sheet.png",
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "f18491cd151769ed85b8787cc176069a701ba17c38f0cca8c2a3d659fa791508",
-      "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for gu_changqing aligned to master_b_cangmu_rtwp.png",
-      "generated_date": "2026-11-27",
-      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+      "sha256": "2bffe99eb559498be4f647bc0b361183709094195459dc59c4e17d9a2deab3f4",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi 3/4 character sheets char_ref_party_pets_raw.jpg, char_ref_party_back_raw.jpg & r2_party_parts_sheet.png) + tools/build_polish_r6_actors_and_town.py canonical SE/NE idle + 2-bone scissor-stride run + anatomical martial combat rig (gu_changqing)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/npc_elder_sheet.png",
       "source_path": "assets_src/sprites/char_ref_town_npcs_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1344x1792",
-      "sha256": "e48d23b6f456d92c9a4b79fe307f0f794c338c2935cc29f7b6ccd87a6ada9eaa",
-      "creation_method": "generate_image (char_ref_town_npcs) + tools/build_polish_assets.py articulated 8x6 keyframe sheet | Spec: 35-deg Song-Ming Gongbi Town Elder woodcutter (npc_elder)",
-      "generated_date": "2026-11-26",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+      "sha256": "38f5a96b3bbd3cca9906058841928ef6e5534d601c76b41dc37145b36a956c95",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_town_npcs_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (npc_elder)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/npc_peddler_sheet.png",
       "source_path": "assets_src/world/prop_peddler_and_yaolu_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1344x1792",
-      "sha256": "05c7c80b8b433c40052c0b000b159cebc080d1f7b0bd6419e26d0c29ffc439d9",
-      "creation_method": "generate_image (prop_peddler_and_yaolu: 35-deg Song-Ming Gongbi wandering Daoist peddler in conical bamboo hat & grey hemp robe) + connected-component exterior cutout & 8x6 keyframe sheet",
-      "generated_date": "2026-11-26",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+      "sha256": "19d408d840d3efbad66163326f2ade90c45dcb12fecac36b25f4213586c2bc19",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/world/prop_peddler_and_yaolu_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (npc_peddler)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/npc_steward_zhou_sheet.png",
       "source_path": "assets_src/sprites/char_ref_town_npcs_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1344x1792",
-      "sha256": "169e58cbba2c929c4f8fb029a9e3d1baaf0c10d8504458c2eb4f038a736f5b12",
-      "creation_method": "generate_image (char_ref_town_npcs) + tools/build_polish_assets.py articulated 8x6 keyframe sheet | Spec: 35-deg Song-Ming Gongbi Pharmacy Steward Zhou (npc_steward_zhou)",
-      "generated_date": "2026-11-26",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+      "sha256": "c383c73ea57a0f5408b7a8dfca0be5cc6c2c4a28f9b7890bb6ad36a3d6756dc9",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_town_npcs_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (npc_steward_zhou)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/pei_zhao_sheet.png",
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "4b51729840458e3e53c594ebbc7fcbfa276738a30f0c1a5c0465382db094949c",
-      "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for pei_zhao aligned to master_b_cangmu_rtwp.png",
-      "generated_date": "2026-11-27",
-      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+      "sha256": "b0858707ead5ba75539f4798809504a42d3f47869eaac481e26859fcde728e44",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi 3/4 character sheets char_ref_party_pets_raw.jpg, char_ref_party_back_raw.jpg & r2_party_parts_sheet.png) + tools/build_polish_r6_actors_and_town.py canonical SE/NE idle + 2-bone scissor-stride run + anatomical martial combat rig (pei_zhao)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/pet_fire_fox_sheet.png",
       "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1152x1408",
-      "sha256": "4465505fe10d3274709af0997117f12a5e3c2acc1f0da6a853253ff66787c6a4",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT.) | Prompt: 35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (pet_fire_fox)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "sha256": "39460bc63060f9b62f5cdd5b3f54092866be21cfa0e9af174ca45abe84e1b251",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_party_pets_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (pet_fire_fox)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/pet_spirit_turtle_sheet.png",
       "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1248x1408",
-      "sha256": "f724a8a4dc70656b1e70c8795d37f6014327686cd935d2a17ec9eae7f4a61954",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Front/back RGBA extraction, piecewise skeletal stride/swing/cast/kneel articulation, locked FeetOrigin, Song-Ming LUT.) | Prompt: 35-degree SE/NE Song-Ming Gongbi articulated keyframe sheet (pet_spirit_turtle)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "sha256": "b157b0ee5873ff73df209e8e83d9f7778e4ad790c8dae0471bc7a8b7ecdd39bc",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_party_pets_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (pet_spirit_turtle)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/sprites/shen_qinghe_sheet.png",
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "9fc7b0901cbadc7ad6cf58ce046ae50bfa4fad21d75b492c3ae765d0ebec5f36",
-      "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for shen_qinghe aligned to master_b_cangmu_rtwp.png",
-      "generated_date": "2026-11-27",
-      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+      "sha256": "be833e7ee6fa55c402d63c871d911d014a71375bdeceafcc204c18c25e9def1b",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi 3/4 character sheets char_ref_party_pets_raw.jpg, char_ref_party_back_raw.jpg & r2_party_parts_sheet.png) + tools/build_polish_r6_actors_and_town.py canonical SE/NE idle + 2-bone scissor-stride run + anatomical martial combat rig (shen_qinghe)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/ui/cursors/cursor_bronze_sword.png",
@@ -1897,10 +1897,10 @@
       "source_path": "assets_src/world/prop_sheet_foliage_raw.jpg",
       "category": "world_ysort_foliage",
       "dimensions": "178x290",
-      "sha256": "70e80bb297331e6053db63ada7051597bca25fa95320321bf81f3b5f22cf522e",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi foliage/structure (prop_bamboo_cluster.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "sha256": "4065bbecdfdf1199eac85581bd2d02f7dd32df5fd5fb87f64d55fe3497cb6854",
+      "creation_method": "Gemini Imagen (2026-11-28, prop_sheet_foliage_raw.jpg Song-Ming Gongbi emerald bamboo cluster) + tools/build_polish_r6_actors_and_town.py full interior canopy pocket cutout & ink-jade defringe",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_camphor_tree.png",
@@ -1983,14 +1983,24 @@
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
-      "path": "project/assets/world/prop_folk_roof_eave.png",
-      "source_path": "assets_src/world/r5_town_folk_houses_raw.jpg",
+      "path": "project/assets/world/prop_folk_house_south.png",
+      "source_path": "assets_src/world/r6_south_folk_houses_raw.jpg",
       "category": "world_prop",
-      "dimensions": "292x276",
-      "sha256": "b634196c07ef9dea92b3844f75912b4cfb73cc36294673f08383f202f3280612",
-      "creation_method": "Gemini Imagen (r5_town_folk_houses_raw.jpg) + tools/build_polish_r5_town.py exterior cutout & Song-Ming LUT | Spec: 35-deg complete street-side 粉墙黛瓦 courtyard folk house with sweeping double eaves & full bluestone foundation",
+      "dimensions": "276x268",
+      "sha256": "e5d8580e3eab3343769d0c70ea98023d46cd4279645fac6c860d5ebcac834b79",
+      "creation_method": "Gemini Imagen (2026-11-28, prompt: '35-degree isometric Song-Ming Gongbi Jiangnan white-wall dark-tile folk houses facing northeast toward street, stepped Matouqiang gable walls, wooden porch & bamboo awning, cream studio background') + tools/build_polish_r6_actors_and_town.py cutout & LUT",
       "generated_date": "2026-04-12",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/world/prop_folk_roof_eave.png",
+      "source_path": "assets_src/world/r6_south_folk_houses_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "296x274",
+      "sha256": "70bfe4d832f769e5dc6807b86f35f0b3bde2b2cffc8f1bb22b46b41a0124f4b1",
+      "creation_method": "Gemini Imagen (2026-11-28, prompt: '35-degree isometric Song-Ming Gongbi Jiangnan white-wall dark-tile folk houses facing northeast toward street, stepped Matouqiang gable walls, cream studio background, no text') + tools/build_polish_r6_actors_and_town.py cutout & mineral palette LUT",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_miasma_pool.png",
@@ -2157,10 +2167,10 @@
       "source_path": "assets_src/world/r5_yaolu_gate_pavilion_raw.jpg",
       "category": "world_prop",
       "dimensions": "268x284",
-      "sha256": "f23c155316c4c2ded09d9799efea1a225b1eb47a2ac8c1dc6ffdcdfe691adf97",
-      "creation_method": "Gemini Imagen (r5_yaolu_gate_pavilion_raw.jpg) + tools/build_polish_r5_town.py 35-deg SW alignment, warm eave lantern & canonical Simplified Chinese '济世药庐' plaque",
+      "sha256": "ffa79792e05f8f0865237e6659e44b7c74f3b071ff47ba0741b303c543d85119",
+      "creation_method": "Gemini Imagen (2026-11-28, r5_yaolu_gate_pavilion_raw.jpg 35-deg Song-Ming Gongbi white-wall pharmacy gatehouse) + tools/build_polish_r6_actors_and_town.py SW alignment & enlarged '济世药庐' plaque",
       "generated_date": "2026-04-12",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_yaolu_hall.png",

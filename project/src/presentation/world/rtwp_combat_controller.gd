@@ -729,6 +729,19 @@ func step_world_and_combat(raw_delta: float, zone_bounds: Rect2) -> void:
 	if stealth_timer > 0.0 and combat_delta > 0.0:
 		stealth_timer = maxf(0.0, stealth_timer - combat_delta)
 
+	# 0. 记录本物理帧步进前各实体坐标，确保无论 WASD、右键路点、脱战跟随还是自动追击均精准驱动跑步步态（彻底根除冰上滑行！）
+	var prev_party_pos: Dictionary = {}
+	for cid_p_var: Variant in party_actors.keys():
+		var cid_p: String = str(cid_p_var)
+		var pa_p: BattleActor = party_actors[cid_p] as BattleActor
+		if pa_p != null:
+			prev_party_pos[cid_p] = pa_p.position
+	var prev_pet_pos: Vector2 = pet_actor.position if pet_actor != null else Vector2.ZERO
+	var prev_enemy_pos: Dictionary = {}
+	for ea_p: BattleActor in enemy_actors:
+		if is_instance_valid(ea_p):
+			prev_enemy_pos[ea_p.actor_id] = ea_p.position
+
 	# 1. 更新当前主控角色 WASD 走位（仅在非凝时态与非顿帧态实时推进；凝时态由右键路径线预览）
 	var ctrl_actor: BattleActor = get_controlled_actor()
 	var move_vec: Vector2 = InputRouter.get_movement_vector()
@@ -760,22 +773,28 @@ func step_world_and_combat(raw_delta: float, zone_bounds: Rect2) -> void:
 	# 3. 同步地面危招阵纹与凝时走位预览线（即使 Space 凝时也 60fps 实时刷新，同时把粒子锁定为 0.0！）
 	_refresh_vfx_overlays(combat_delta, ui_delta)
 
-	# 4. 步进所有实体关键帧与头顶姓名板显示
+	# 4. 步进所有实体关键帧与头顶姓名板显示（真实位移阈值 > 15px/s 自动触发交叉迈步 run 动画）
+	var move_eps: float = maxf(0.18, 15.0 * combat_delta)
 	for cid_var: Variant in party_actors.keys():
 		var cid: String = str(cid_var)
 		var pa: BattleActor = party_actors[cid] as BattleActor
 		pa.stealth_alpha = 0.52 if (stealth_timer > 0.0 and not in_combat) else 1.0
-		var is_mov: bool = (pa == ctrl_actor and ctrl_moving_wasd) or pa.has_move_waypoint
+		var prev_p: Vector2 = prev_party_pos.get(cid, pa.position) as Vector2
+		var moved_now: bool = (combat_delta > 0.0 and pa.position.distance_to(prev_p) > move_eps)
+		var is_mov: bool = moved_now or (pa == ctrl_actor and ctrl_moving_wasd) or (combat_delta <= 0.0 and pa.has_move_waypoint)
 		pa.step_visuals(combat_delta, ui_delta, is_mov)
 
 	if pet_actor != null:
 		pet_actor.stealth_alpha = 0.52 if (stealth_timer > 0.0 and not in_combat) else 1.0
-		pet_actor.step_visuals(combat_delta, ui_delta, pet_actor.has_move_waypoint)
+		var pet_moved: bool = (combat_delta > 0.0 and pet_actor.position.distance_to(prev_pet_pos) > move_eps) or (combat_delta <= 0.0 and pet_actor.has_move_waypoint)
+		pet_actor.step_visuals(combat_delta, ui_delta, pet_moved)
 
 	for ea: BattleActor in enemy_actors:
 		if is_instance_valid(ea):
 			var eu: Dictionary = unit_states.get(ea.actor_id, {}) as Dictionary
-			ea.step_visuals(combat_delta, ui_delta, bool(eu.get("is_moving", false)))
+			var prev_ep: Vector2 = prev_enemy_pos.get(ea.actor_id, ea.position) as Vector2
+			var ea_moved: bool = bool(eu.get("is_moving", false)) or (combat_delta > 0.0 and ea.position.distance_to(prev_ep) > move_eps)
+			ea.step_visuals(combat_delta, ui_delta, ea_moved)
 
 	if ctrl_actor != null:
 		CampaignState.saved_player_pos = ctrl_actor.position
@@ -1032,10 +1051,17 @@ func _step_party_units(dt: float, ctrl_moving_wasd: bool, zone_bounds: Rect2) ->
 			var follow_offset: Vector2 = Vector2(-54.0 * float(idx_slot), 28.0 * float((idx_slot % 2) * 2 - 1))
 			var follow_goal: Vector2 = ctrl_actor.position + follow_offset
 			var to_f: Vector2 = follow_goal - actor.position
-			if to_f.length() > 68.0:
-				var fdir: Vector2 = to_f.normalized()
+			var f_dist: float = to_f.length()
+			var was_following: bool = bool(u.get("is_following", false))
+			var should_follow: bool = (f_dist > 46.0) if was_following else (f_dist > 74.0)
+			u["is_following"] = should_follow
+			if should_follow and f_dist > 1.0:
+				var fdir: Vector2 = to_f / f_dist
 				actor.set_facing(fdir)
+				var prev_fpos: Vector2 = actor.position
 				actor.position = _resolve_move_collision(actor.position, actor.position + fdir * float(sheet.get("move_speed_px", 215.0)) * 1.05 * dt, zone_bounds)
+				if actor.position.distance_to(prev_fpos) < 0.2:
+					u["is_following"] = false
 
 		# 吟唱读条推进
 		if bool(u.get("casting", false)):
@@ -1204,10 +1230,17 @@ func _step_pet_unit(dt: float, zone_bounds: Rect2) -> void:
 	if not in_combat or CampaignState.pet_stance == "follow":
 		if leader != null:
 			var goal: Vector2 = leader.position + Vector2(44.0, 34.0)
-			if pet_actor.position.distance_to(goal) > 48.0:
-				var fdir: Vector2 = (goal - pet_actor.position).normalized()
+			var p_dist: float = pet_actor.position.distance_to(goal)
+			var pet_was_f: bool = bool(pu.get("is_following", false))
+			var pet_do_f: bool = (p_dist > 34.0) if pet_was_f else (p_dist > 56.0)
+			pu["is_following"] = pet_do_f
+			if pet_do_f and p_dist > 1.0:
+				var fdir: Vector2 = (goal - pet_actor.position) / p_dist
 				pet_actor.set_facing(fdir)
+				var prev_ppos: Vector2 = pet_actor.position
 				pet_actor.position = _resolve_move_collision(pet_actor.position, pet_actor.position + fdir * float(pu.get("move_speed_px", 220.0)) * dt, zone_bounds)
+				if pet_actor.position.distance_to(prev_ppos) < 0.2:
+					pu["is_following"] = false
 		return
 
 	if CampaignState.pet_stance == "hold":

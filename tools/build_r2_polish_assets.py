@@ -426,11 +426,16 @@ def rebuild_steles_and_furnace() -> list[str]:
 
 
 def isolate_sheet_components_from_pil(im_raw: Image.Image, expected_n: int, shadow_y_start: int) -> list[Image.Image]:
-    tmp_p = "/tmp/_r2_prop_row.png"
-    im_raw.save(tmp_p)
-    out = isolate_sheet_components(tmp_p, expected_n, shadow_y_start=shadow_y_start)
-    os.remove(tmp_p)
-    return out
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tf:
+        tmp_p = tf.name
+    try:
+        im_raw.save(tmp_p)
+        return isolate_sheet_components(tmp_p, expected_n, shadow_y_start=shadow_y_start)
+    finally:
+        if os.path.exists(tmp_p):
+            os.remove(tmp_p)
 
 
 def main() -> None:

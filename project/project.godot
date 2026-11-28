@@ -12,7 +12,7 @@ config_version=5
 
 config/name="尘缘问道"
 config/description="大型单机古典仙侠 RPG · 第一章青岚境精品垂直切片"
-config/version="0.1.5-slice"
+config/version="0.1.6-slice"
 run/main_scene="res://src/presentation/ui/title_screen.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
