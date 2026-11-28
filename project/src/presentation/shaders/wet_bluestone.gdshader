@@ -2,10 +2,10 @@ shader_type canvas_item;
 // Stage C shaded wet bluestone road shader (intentionally WITHOUT render_mode unshaded
 // so CanvasModulate ambient rain mood and warm/cool PointLight2D reflections illuminate roads).
 
-uniform float wetness : hint_range(0.0, 1.0) = 0.74;
+uniform float wetness : hint_range(0.0, 1.0) = 0.78;
 uniform float ripple_speed : hint_range(0.0, 2.0) = 1.0;
-uniform float ripple_strength : hint_range(0.0, 1.0) = 0.34;
-uniform vec4 sky_sheen_color : source_color = vec4(0.66, 0.75, 0.77, 1.0);
+uniform float ripple_strength : hint_range(0.0, 1.0) = 0.38;
+uniform vec4 sky_sheen_color : source_color = vec4(0.69, 0.78, 0.80, 1.0);
 
 varying vec2 v_world_pos;
 varying vec4 v_modulate;
@@ -61,24 +61,24 @@ void fragment() {
 	// Low-frequency shallow water film across worn bluestone depressions
 	float n_coarse = value_noise(v_world_pos * 0.0085);
 	float n_fine = value_noise(v_world_pos * 0.029 + vec2(4.2, -3.1));
-	float puddle_mask = smoothstep(0.38, 0.76, n_coarse * 0.72 + n_fine * 0.28) * wetness;
+	float puddle_mask = smoothstep(0.34, 0.74, n_coarse * 0.70 + n_fine * 0.30) * wetness;
 
-	// Darken wet porous stone slightly, then add misty sky glaze & raindrop concentric rings
-	vec3 darkened = base_rgb * mix(1.0, 0.87, puddle_mask * 0.65);
+	// Darken wet porous stone slightly, then add misty Jiangnan sky glaze & concentric raindrop rings
+	vec3 darkened = base_rgb * mix(1.0, 0.85, puddle_mask * 0.62);
 	float anim_t = TIME * ripple_speed;
 	float ripples = (ripple_speed > 0.001) ? rain_ripple_field(v_world_pos, anim_t) : (rain_ripple_field(v_world_pos, 1.35) * 0.35);
 
-	vec3 glazed = mix(darkened, sky_sheen_color.rgb * 0.74, puddle_mask * 0.22);
-	glazed += sky_sheen_color.rgb * (ripples * ripple_strength * (0.35 + 0.65 * puddle_mask) * 0.16);
+	vec3 glazed = mix(darkened, sky_sheen_color.rgb * 0.80, puddle_mask * 0.27);
+	glazed += sky_sheen_color.rgb * (ripples * ripple_strength * (0.38 + 0.62 * puddle_mask) * 0.19);
 
 	COLOR = vec4(clamp(glazed, vec3(0.0), vec3(0.92)), tex.a * v_modulate.a);
 }
 
 void light() {
-	float n_puddle = smoothstep(0.36, 0.78, value_noise(v_world_pos * 0.0085)) * wetness;
-	float wet_boost = 1.0 + n_puddle * 0.48;
+	float n_puddle = smoothstep(0.34, 0.75, value_noise(v_world_pos * 0.0085)) * wetness;
+	float wet_boost = 1.0 + n_puddle * 0.54;
 	vec3 lit = COLOR.rgb * LIGHT_COLOR.rgb * LIGHT_ENERGY * wet_boost;
-	// Subtle warm/cool water-film specular lift on wet bluestone slabs
-	vec3 spec = LIGHT_COLOR.rgb * (LIGHT_ENERGY * n_puddle * 0.11);
+	// Warm lantern/furnace & cool stele water-film specular reflection on wet bluestone slabs
+	vec3 spec = LIGHT_COLOR.rgb * (LIGHT_ENERGY * n_puddle * 0.13);
 	LIGHT = vec4(clamp(lit + spec, vec3(0.0), vec3(0.94)), LIGHT_COLOR.a);
 }

@@ -136,6 +136,11 @@ var _mm_npcs: Array[BattleActor] = []
 var _interact_prompt_box: PanelContainer
 var _interact_prompt_lbl: Label
 
+var _skill_tooltip_panel: PanelContainer
+var _skill_tooltip_title_lbl: Label
+var _skill_tooltip_desc_lbl: Label
+var _hovered_slot_code: String = ""
+
 var _box_select_rect: Rect2 = Rect2()
 var _is_box_selecting: bool = false
 var _hud_hovered: bool = false
@@ -156,6 +161,7 @@ func _ready() -> void:
 	_build_party_frames()
 	_build_bottom_action_bar()
 	_build_interact_prompt()
+	_build_skill_tooltip()
 
 	CampaignState.party_updated.connect(refresh_static_bindings)
 	CampaignState.inventory_updated.connect(refresh_static_bindings)
@@ -934,6 +940,16 @@ func _create_action_tile(slot_code: String) -> PanelContainer:
 	key_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vb.add_child(key_lbl)
 
+	tile.tooltip_text = ""
+	tile.mouse_entered.connect(func() -> void:
+		_hud_hovered = true
+		_show_slot_tooltip(slot_code)
+	)
+	tile.mouse_exited.connect(func() -> void:
+		_hud_hovered = false
+		_hide_slot_tooltip(slot_code)
+	)
+
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton:
 			var mb: InputEventMouseButton = ev as InputEventMouseButton
@@ -952,8 +968,99 @@ func _create_action_tile(slot_code: String) -> PanelContainer:
 		"cd_lbl": cd_lbl,
 		"key_lbl": key_lbl,
 		"skill_id": "",
+		"tip_title": "",
+		"tip_body": "",
 	}
 	return tile
+
+
+func _build_skill_tooltip() -> void:
+	_skill_tooltip_panel = PanelContainer.new()
+	_skill_tooltip_panel.name = "SkillTooltipPanel"
+	_skill_tooltip_panel.z_index = 18
+	_skill_tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_skill_tooltip_panel.visible = false
+	var tip_sb: StyleBoxFlat = UIThemeBuilder.make_ebony_box(
+		Color(0.11, 0.10, 0.09, 0.96),
+		UIThemeBuilder.COL_BRONZE_GOLD,
+		2,
+		6
+	)
+	tip_sb.content_margin_left = 14.0
+	tip_sb.content_margin_right = 14.0
+	tip_sb.content_margin_top = 10.0
+	tip_sb.content_margin_bottom = 10.0
+	_skill_tooltip_panel.add_theme_stylebox_override("panel", tip_sb)
+	add_child(_skill_tooltip_panel)
+
+	var tvb: VBoxContainer = VBoxContainer.new()
+	tvb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tvb.add_theme_constant_override("separation", 5)
+	_skill_tooltip_panel.add_child(tvb)
+
+	_skill_tooltip_title_lbl = Label.new()
+	_skill_tooltip_title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_skill_tooltip_title_lbl.custom_minimum_size = Vector2(332.0, 0.0)
+	_skill_tooltip_title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_skill_tooltip_title_lbl.add_theme_font_override("font", UIThemeBuilder.get_bold_font())
+	_skill_tooltip_title_lbl.add_theme_font_size_override("font_size", 17)
+	_skill_tooltip_title_lbl.add_theme_color_override("font_color", UIThemeBuilder.COL_GILT_BRIGHT)
+	tvb.add_child(_skill_tooltip_title_lbl)
+
+	_skill_tooltip_desc_lbl = Label.new()
+	_skill_tooltip_desc_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_skill_tooltip_desc_lbl.custom_minimum_size = Vector2(332.0, 0.0)
+	_skill_tooltip_desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_skill_tooltip_desc_lbl.add_theme_font_size_override("font_size", UIThemeBuilder.FS_MIN)
+	_skill_tooltip_desc_lbl.add_theme_color_override("font_color", UIThemeBuilder.COL_XUAN_WARM)
+	tvb.add_child(_skill_tooltip_desc_lbl)
+
+
+func show_slot_tooltip_for_capture(slot_code: String) -> void:
+	_show_slot_tooltip(slot_code)
+
+
+func _show_slot_tooltip(slot_code: String) -> void:
+	if _skill_tooltip_panel == null or not _slot_widgets.has(slot_code):
+		return
+	var w: Dictionary = _slot_widgets[slot_code] as Dictionary
+	var tile: PanelContainer = w["tile"] as PanelContainer
+	var t_title: String = str(w.get("tip_title", "")).strip_edges()
+	var t_body: String = str(w.get("tip_body", "")).strip_edges()
+	if not tile.visible or (t_title == "" and t_body == ""):
+		_skill_tooltip_panel.visible = false
+		return
+
+	_hovered_slot_code = slot_code
+	_skill_tooltip_title_lbl.text = t_title
+	_skill_tooltip_desc_lbl.text = t_body
+	_skill_tooltip_desc_lbl.visible = (t_body != "")
+	_skill_tooltip_panel.reset_size()
+	var p_sz: Vector2 = _skill_tooltip_panel.get_combined_minimum_size()
+	p_sz.x = maxf(360.0, p_sz.x)
+	p_sz.y = maxf(64.0, p_sz.y)
+	_skill_tooltip_panel.size = p_sz
+
+	var hud_sz: Vector2 = size if size.x >= 400.0 else Vector2(1920.0, 1080.0)
+	var tile_rect: Rect2 = tile.get_global_rect()
+	var cx: float = tile_rect.get_center().x
+	# 严格锚定于奇门常驻阵图匾额与灵宠迷你条正上方（y <= 874..908），与底部快捷栏全部槽位保持 >=16px 净距零叠压！
+	var safe_bottom_y: float = hud_sz.y - 170.0
+	if _pet_bar != null and _pet_bar.visible:
+		safe_bottom_y = minf(safe_bottom_y, hud_sz.y - 206.0)
+	if _quick_drawer != null and _quick_drawer.visible:
+		safe_bottom_y = minf(safe_bottom_y, hud_sz.y - 314.0)
+	var px: float = clampf(cx - p_sz.x * 0.5, 434.0, maxf(434.0, hud_sz.x - p_sz.x - 36.0))
+	var py: float = maxf(132.0, safe_bottom_y - p_sz.y)
+	_skill_tooltip_panel.position = Vector2(px, py)
+	_skill_tooltip_panel.visible = true
+
+
+func _hide_slot_tooltip(slot_code: String) -> void:
+	if _hovered_slot_code == slot_code:
+		_hovered_slot_code = ""
+		if _skill_tooltip_panel != null:
+			_skill_tooltip_panel.visible = false
 
 
 func _build_interact_prompt() -> void:
@@ -1085,7 +1192,7 @@ func refresh_static_bindings() -> void:
 	else:
 		_pet_bar.visible = false
 
-	# 3. 更新主控角色快捷栏图标与标准键位说明（1~4 | Q E R G | 5 6 | 特技 | Z）
+	# 3. 更新主控角色快捷栏图标与标准键位说明（全宣纸工笔图标 + 顶部避让自定义提示框，彻底根除原生 Tooltip 叠压！）
 	var ctrl_id: String = combat_ctrl.get_controlled_char_id()
 	var bar: Dictionary = CampaignState.get_member_active_skills(ctrl_id)
 
@@ -1095,12 +1202,14 @@ func refresh_static_bindings() -> void:
 		var tile: PanelContainer = w["tile"] as PanelContainer
 		var icon_r: TextureRect = w["icon"] as TextureRect
 		var key_l: Label = w["key_lbl"] as Label
+		tile.tooltip_text = ""
 
 		if code == "Z":
 			w["skill_id"] = "Z"
 			key_l.text = "Z"
-			icon_r.texture = _load_tex("res://assets/ui/icons/seal_earth.png")
-			tile.tooltip_text = "切换奇门常驻阵图（%s）" % fname
+			icon_r.texture = _load_tex("res://assets/ui/icons/hud_formation_bagua.png")
+			w["tip_title"] = "【奇门常驻阵图 · Z】"
+			w["tip_body"] = "当前阵图：%s。点击或按 Z 展开奇门阵盘切换常驻战阵。" % fname
 			continue
 		elif code == "5" or code == "6":
 			var pid: String = CampaignState.quick_pill_5_id if code == "5" else CampaignState.quick_pill_6_id
@@ -1109,7 +1218,8 @@ func refresh_static_bindings() -> void:
 			w["skill_id"] = pid
 			key_l.text = "%s(%d)" % [code, cnt]
 			icon_r.texture = _load_tex(str(idef.get("icon", "res://assets/ui/icons/pill_huichun.png")))
-			tile.tooltip_text = "%s\n%s" % [DataDB.loc(str(idef.get("name_key", pid))), DataDB.loc(str(idef.get("desc_key", "")))]
+			w["tip_title"] = "【%s】（余 %d）" % [DataDB.loc(str(idef.get("name_key", pid))), cnt]
+			w["tip_body"] = DataDB.loc(str(idef.get("desc_key", "")))
 			continue
 		elif code == "G":
 			var has_g: bool = CampaignState.unlocked_bond_ultimates.has("ult_qinglian_sword")
@@ -1119,7 +1229,11 @@ func refresh_static_bindings() -> void:
 				w["skill_id"] = "ult_qinglian_sword"
 				key_l.text = "G"
 				icon_r.texture = _load_tex(str(gsdef.get("icon", "")))
-				tile.tooltip_text = "%s\n%s" % [DataDB.loc(str(gsdef.get("name_key", ""))), DataDB.loc(str(gsdef.get("desc_key", "")))]
+				w["tip_title"] = "【%s】（G）" % DataDB.loc(str(gsdef.get("name_key", "")))
+				w["tip_body"] = DataDB.loc(str(gsdef.get("desc_key", "")))
+			else:
+				w["tip_title"] = ""
+				w["tip_body"] = ""
 			continue
 		elif code == "STUNT":
 			var stunt_info: Dictionary = combat_ctrl.get_active_blue_stunt_info()
@@ -1131,10 +1245,13 @@ func refresh_static_bindings() -> void:
 				w["stunt_owner_id"] = str(stunt_info.get("owner_id", ""))
 				key_l.text = "特技"
 				icon_r.texture = _load_tex(str(st_def.get("icon", "")))
-				tile.tooltip_text = "%s\n%s" % [DataDB.loc(str(st_def.get("name_key", ""))), DataDB.loc(str(st_def.get("desc_key", "")))]
+				w["tip_title"] = "【器物特技 · %s】" % DataDB.loc(str(st_def.get("name_key", "")))
+				w["tip_body"] = DataDB.loc(str(st_def.get("desc_key", "")))
 			else:
 				w["skill_id"] = ""
 				w["stunt_owner_id"] = ""
+				w["tip_title"] = ""
+				w["tip_body"] = ""
 			continue
 
 		var sk_id: String = str(bar.get(code, ""))
@@ -1142,16 +1259,21 @@ func refresh_static_bindings() -> void:
 		if sk_id == "":
 			icon_r.texture = null
 			key_l.text = code
-			tile.tooltip_text = ""
+			w["tip_title"] = ""
+			w["tip_body"] = ""
 		else:
 			var sdef: Dictionary = DataDB.get_skill(sk_id)
 			icon_r.texture = _load_tex(str(sdef.get("icon", "")))
 			key_l.text = code
-			tile.tooltip_text = "【%s】(%s)\n%s" % [
+			w["tip_title"] = "【%s】(%s · %s)" % [
 				DataDB.loc(str(sdef.get("name_key", sk_id))),
 				UIThemeBuilder.get_element_dual_badge(str(sdef.get("element", "none"))),
-				DataDB.loc(str(sdef.get("desc_key", "")))
+				code,
 			]
+			w["tip_body"] = DataDB.loc(str(sdef.get("desc_key", "")))
+
+	if _hovered_slot_code != "" and _skill_tooltip_panel != null and _skill_tooltip_panel.visible:
+		_show_slot_tooltip(_hovered_slot_code)
 
 
 func _process(delta: float) -> void:
@@ -1457,24 +1579,39 @@ func _draw_minimap() -> void:
 			var scaled_pts: PackedVector2Array = PackedVector2Array()
 			for pt: Vector2 in rpoly:
 				scaled_pts.append(Vector2(clampf(pt.x * scale_x, 1.5, rect.size.x - 1.5), clampf(pt.y * scale_y, 1.5, rect.size.y - 1.5)))
-			_minimap_canvas.draw_colored_polygon(scaled_pts, Color(0.32, 0.37, 0.35, 0.84))
+			_minimap_canvas.draw_colored_polygon(scaled_pts, Color(0.34, 0.40, 0.38, 0.88))
 			var closed_pts: PackedVector2Array = scaled_pts.duplicate()
 			closed_pts.append(scaled_pts[0])
-			_minimap_canvas.draw_polyline(closed_pts, Color(0.48, 0.54, 0.50, 0.42), 1.0)
+			_minimap_canvas.draw_polyline(closed_pts, Color(0.54, 0.60, 0.56, 0.48), 1.0, true)
+
+	if CampaignState.current_zone_id == "tingyu_town":
+		var yaolu_wall_pts: PackedVector2Array = PackedVector2Array([
+			Vector2(916.0 * scale_x, 620.0 * scale_y),
+			Vector2(1340.0 * scale_x, 416.0 * scale_y),
+			Vector2(1742.0 * scale_x, 607.0 * scale_y),
+			Vector2(1336.0 * scale_x, 822.0 * scale_y),
+			Vector2(916.0 * scale_x, 620.0 * scale_y),
+		])
+		_minimap_canvas.draw_colored_polygon(
+			PackedVector2Array([yaolu_wall_pts[0], yaolu_wall_pts[1], yaolu_wall_pts[2], yaolu_wall_pts[3]]),
+			Color(0.40, 0.46, 0.43, 0.55)
+		)
+		_minimap_canvas.draw_polyline(yaolu_wall_pts, Color(0.86, 0.78, 0.62, 0.86), 1.5, true)
 
 	for brect: Rect2 in _mm_buildings:
-		var bx: float = clampf(brect.position.x * scale_x, 2.0, rect.size.x - 10.0)
-		var by: float = clampf(brect.position.y * scale_y, 2.0, rect.size.y - 8.0)
-		var bw: float = clampf(maxf(7.0, brect.size.x * scale_x), 7.0, rect.size.x - bx - 2.0)
-		var bh: float = clampf(maxf(5.5, brect.size.y * scale_y), 5.5, rect.size.y - by - 2.0)
+		var bx: float = clampf(brect.position.x * scale_x, 2.0, rect.size.x - 11.0)
+		var by: float = clampf(brect.position.y * scale_y, 2.0, rect.size.y - 9.0)
+		var bw: float = clampf(maxf(8.5, brect.size.x * scale_x), 8.5, rect.size.x - bx - 2.0)
+		var bh: float = clampf(maxf(6.5, brect.size.y * scale_y), 6.5, rect.size.y - by - 2.0)
 		var srect: Rect2 = Rect2(Vector2(bx, by), Vector2(bw, bh))
-		_minimap_canvas.draw_rect(srect, Color(0.44, 0.38, 0.30, 0.88), true)
-		_minimap_canvas.draw_rect(srect, Color(0.78, 0.65, 0.42, 0.86), false, 1.0)
+		_minimap_canvas.draw_rect(srect, Color(0.32, 0.30, 0.28, 0.94), true)
+		_minimap_canvas.draw_rect(srect, Color(0.82, 0.69, 0.45, 0.90), false, 1.0)
 		_minimap_canvas.draw_line(
 			Vector2(srect.position.x + 1.5, srect.get_center().y),
 			Vector2(srect.end.x - 1.5, srect.get_center().y),
-			Color(0.24, 0.21, 0.18, 0.72),
-			1.0
+			Color(0.58, 0.52, 0.42, 0.68),
+			1.0,
+			true
 		)
 
 	for p_pt: Vector2 in _mm_portals:
