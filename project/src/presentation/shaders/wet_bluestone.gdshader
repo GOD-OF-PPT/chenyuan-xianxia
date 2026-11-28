@@ -42,7 +42,7 @@ float rain_ripple_field(vec2 wp, float t) {
 			float dist = length(diff);
 			float phase = fract(t * 0.62 + rnd);
 			float radius = phase * 0.58;
-			float ring = exp(-abs(dist - radius) * 34.0) * (1.0 - phase) * smoothstep(0.62, 0.06, dist);
+			float ring = exp(-abs(dist - radius) * 34.0) * (1.0 - phase) * (1.0 - smoothstep(0.06, 0.62, dist));
 			acc += ring;
 		}
 	}

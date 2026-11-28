@@ -80,6 +80,7 @@ var _pulse_clock: float = 0.0
 
 var _seal_textures: Dictionary = {}
 var _hit_flash_shader: Shader = null
+var _occ_silhouette_shader: Shader = null
 
 var _hit_flash_mat: ShaderMaterial = null
 var _hit_flash_timer: float = 0.0
@@ -135,7 +136,13 @@ func setup_actor(
 		_occlusion_silhouette.centered = false
 		_occlusion_silhouette.z_index = 5
 		_occlusion_silhouette.visible = false
-		_occlusion_silhouette.modulate = Color(0.14, 0.22, 0.22, 0.0)
+		_occlusion_silhouette.modulate = Color(1.0, 1.0, 1.0, 0.0)
+		if _occ_silhouette_shader == null and ResourceLoader.exists("res://src/presentation/shaders/actor_occlusion_silhouette.gdshader"):
+			_occ_silhouette_shader = load("res://src/presentation/shaders/actor_occlusion_silhouette.gdshader") as Shader
+		if _occ_silhouette_shader != null:
+			var sil_mat: ShaderMaterial = ShaderMaterial.new()
+			sil_mat.shader = _occ_silhouette_shader
+			_occlusion_silhouette.material = sil_mat
 		add_child(_occlusion_silhouette)
 	_ensure_hit_flash_material()
 	if _overlay_canvas == null:
@@ -230,7 +237,7 @@ func set_occlusion_state(p_occluded: bool, delta: float) -> void:
 		var vis_sil: bool = alive and (occlusion_silhouette_alpha > 0.02)
 		_occlusion_silhouette.visible = vis_sil
 		if vis_sil:
-			_occlusion_silhouette.modulate = Color(0.14, 0.22, 0.22, occlusion_silhouette_alpha * 0.42 * stealth_alpha)
+			_occlusion_silhouette.modulate = Color(1.0, 1.0, 1.0, occlusion_silhouette_alpha * 0.85 * stealth_alpha)
 
 
 func clear_hit_flash() -> void:
@@ -299,6 +306,8 @@ func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void
 		is_hovered = false
 		is_occluded = false
 		occlusion_silhouette_alpha = 0.0
+		if _hit_flash_mat != null:
+			_hit_flash_mat.set_shader_parameter("occlusion_alpha", 0.0)
 		if _occlusion_silhouette != null:
 			_occlusion_silhouette.visible = false
 		_anim_state = "down"
@@ -320,10 +329,14 @@ func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void
 	_death_dissolve = 0.0
 	if not visible:
 		visible = true
-	if not alive and _occlusion_silhouette != null and _occlusion_silhouette.visible:
-		is_occluded = false
-		occlusion_silhouette_alpha = 0.0
-		_occlusion_silhouette.visible = false
+	if not alive:
+		if is_occluded or occlusion_silhouette_alpha > 0.0:
+			is_occluded = false
+			occlusion_silhouette_alpha = 0.0
+		if _hit_flash_mat != null:
+			_hit_flash_mat.set_shader_parameter("occlusion_alpha", 0.0)
+		if _occlusion_silhouette != null and _occlusion_silhouette.visible:
+			_occlusion_silhouette.visible = false
 
 	# 关键帧与脉冲计时严格绑定 combat_delta（Space 凝时与顿帧期间 combat_delta == 0，100% 像素级定格！）
 	if combat_delta > 0.0:

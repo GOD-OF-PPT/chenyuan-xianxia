@@ -415,43 +415,61 @@ func _get_spawn_coords(zone_id: String, spawn_tag: String) -> Vector2:
 ## ==================== 区域 ①：听雨镇 & 济世药庐外院 ====================
 func _assemble_tingyu_town() -> void:
 	_add_tiled_ground("res://assets/world/tex_moss_earth.png", ZONE_BOUNDS)
-	# 茶寮前庭石坪 + 散修地摊支坪 + 药庐外院石阶大院 + 青石板主街（挂载受光 wet_bluestone.gdshader！）
+	# 茶寮前庭石坪 + 散修地摊支坪 + 围合药庐青石大院 + 三段平滑衔接湿青石主街（挂载受光 wet_bluestone.gdshader！）
 	_add_road_polygon(PackedVector2Array([
-		Vector2(410, 560), Vector2(675, 555), Vector2(695, 795), Vector2(400, 805)
+		Vector2(415, 560), Vector2(730, 555), Vector2(740, 795), Vector2(405, 805)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(705, 760), Vector2(935, 750), Vector2(945, 920), Vector2(710, 925)
+		Vector2(705, 760), Vector2(955, 755), Vector2(960, 925), Vector2(710, 925)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(995, 395), Vector2(1625, 395), Vector2(1645, 765), Vector2(980, 785)
+		Vector2(968, 395), Vector2(1692, 395), Vector2(1692, 812), Vector2(968, 812)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(60, 720), Vector2(980, 675), Vector2(1680, 540), Vector2(2360, 505),
-		Vector2(2360, 705), Vector2(1720, 735), Vector2(1020, 855), Vector2(60, 895)
+		Vector2(60, 725), Vector2(972, 700), Vector2(972, 925), Vector2(60, 895)
+	]), "res://assets/world/tex_bluestone_wet.png")
+	_add_road_polygon(PackedVector2Array([
+		Vector2(940, 808), Vector2(1735, 808), Vector2(1755, 932), Vector2(940, 925)
+	]), "res://assets/world/tex_bluestone_wet.png")
+	_add_road_polygon(PackedVector2Array([
+		Vector2(1680, 555), Vector2(2360, 505), Vector2(2360, 710), Vector2(1735, 932), Vector2(1680, 812)
 	]), "res://assets/world/tex_bluestone_wet.png")
 
-	# M4 左街（x < 965）连续江南粉墙黛瓦民居街巷（对标 master_a_tingyu_town.png 夹街白墙黑瓦！）
-	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(175.0, 675.0), 52.0, true)
-	_add_ysort_structure("res://assets/world/prop_folk_house_b.png", Vector2(365.0, 650.0), 46.0, true)
-	_add_ysort_structure("res://assets/world/prop_tea_pavilion.png", Vector2(540.0, 635.0), 96.0, true)
-	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(702.0, 608.0), 44.0, true)
-	# 街南前景黛瓦屋脊（不设阻挡圆，紧贴左下前景营造 master_a 夹街屋檐纵深）
-	_add_ysort_structure("res://assets/world/prop_folk_house_b.png", Vector2(145.0, 1045.0), 0.0, true)
-	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(420.0, 1095.0), 0.0, true)
+	# M4 左街（x < 965）错落层叠江南粉墙黛瓦街巷 + 左下近景夹街黛瓦飞檐（对标 master_a_tingyu_town.png，零互相穿模与切边！）
+	_add_ysort_structure("res://assets/world/prop_folk_house_b.png", Vector2(216.0, 512.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(422.0, 496.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(268.0, 676.0), 56.0, true)
+	_add_ysort_structure("res://assets/world/prop_tea_pavilion.png", Vector2(596.0, 634.0), 88.0, true)
+	# 街南近景夹街黛瓦飞檐屋顶（朝向街道，营造 master_a 左下近景层叠黑瓦屋檐纵深）
+	_add_ysort_structure("res://assets/world/prop_folk_roof_eave.png", Vector2(284.0, 1024.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_roof_eave.png", Vector2(578.0, 1094.0), 0.0, true)
 
-	# M4 右侧围合式【济世药庐】院落（粉墙黛瓦院墙 + 正楷匾额茅草门楼 + 敞轩茅草丹亭 + 抬高主堂）
-	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1290.0, 548.0), 112.0, true)
-	_add_ysort_structure("res://assets/world/prop_yaolu_alchemy_pavilion.png", Vector2(1418.0, 626.0), 0.0, true)
-	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(985.0, 748.0), 0.0, true)
-	_add_ysort_structure("res://assets/world/prop_yaolu_gatehouse.png", Vector2(1195.0, 762.0), 0.0, true)
-	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1548.0, 772.0), 0.0, true)
-	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1585.0, 585.0), 0.0, false)
+	# M4 右侧全闭合围合式【济世药庐】院落（青石炼丹月台 + 抬高主堂 + 宽开间敞轩丹亭 + 东/西/南粉墙黛瓦院墙 + 正楷匾额门楼）
+	_add_ground_decor_prop("res://assets/world/prop_yaolu_alchemy_terrace.png", Vector2(1406.0, 692.0), "YaoluAlchemyTerrace")
+	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1225.0, 548.0), 92.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_alchemy_pavilion.png", Vector2(1406.0, 656.0), 0.0, true)
+
+	# 东西两侧纵向回折院墙 + 南侧水平基线院墙与门楼（0 断口闭合、0 斜墙 Y-Sort 腰斩、全墙段铺设实体阻挡圆并预留门洞通道！）
+	_add_ysort_structure("res://assets/world/prop_yaolu_side_wall.png", Vector2(968.0, 632.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_side_wall.png", Vector2(968.0, 812.0), 0.0, true)
+	_append_wall_segment_obstacles(Vector2(968.0, 468.0), Vector2(968.0, 804.0), 28.0, 24.0)
+
+	_add_ysort_structure("res://assets/world/prop_yaolu_side_wall.png", Vector2(1692.0, 632.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_side_wall.png", Vector2(1692.0, 812.0), 0.0, true)
+	_append_wall_segment_obstacles(Vector2(1692.0, 468.0), Vector2(1692.0, 804.0), 28.0, 24.0)
+
+	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1042.0, 812.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_gatehouse.png", Vector2(1202.0, 816.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1390.0, 812.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1582.0, 812.0), 0.0, true)
+	_append_wall_segment_obstacles(Vector2(968.0, 800.0), Vector2(1136.0, 800.0), 26.0, 22.0)
+	_append_wall_segment_obstacles(Vector2(1268.0, 800.0), Vector2(1692.0, 800.0), 26.0, 22.0)
 
 	# 古樟树与翠竹簇（保留 Vector2(835, 595) 香樟供 Y-Sort 55% 遮挡与水墨剪影门禁核验！）
 	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(835.0, 595.0), 52.0, true)
-	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(1755.0, 605.0), 52.0, true)
-	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(285.0, 550.0), 38.0, true)
-	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1830.0, 885.0), 46.0, true)
+	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(1805.0, 585.0), 52.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(138.0, 555.0), 38.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1845.0, 895.0), 46.0, true)
 
 	# 专属城镇 NPC 序列帧（老樵夫 / 游方摆摊散修 / 周执事）
 	_spawn_npc("npc_elder", "听雨镇老樵夫", "npc_elder", Vector2(565.0, 695.0), "tea_elder")
@@ -462,38 +480,39 @@ func _assemble_tingyu_town() -> void:
 	_add_interactable("peddler_stall", "stall", Vector2(820.0, 868.0), 135.0, "散修小地摊 [F 掌眼淘旧物]", "res://assets/world/prop_peddler_stall.png", -1, true)
 
 	if not bool(CampaignState.world_flags.get("met_shen_qinghe", false)):
-		_spawn_npc("shen_npc", "沈清禾 · 药庐医修", "shen_qinghe", Vector2(1215.0, 650.0), "meet_shen")
+		# 沈清禾立于正堂台阶前开阔院心（y=622 < 门楼顶脊 y=628），0% 门楼遮挡且距 (1215, 675) 仅 60.9px！
+		_spawn_npc("shen_npc", "沈清禾 · 药庐医修", "shen_qinghe", Vector2(1245.0, 622.0), "meet_shen")
 
-	# 药庐外院实体器物三件套：青铜丹炉（带实体阻挡圆与宽裕环炉触发半径）+ 药肆木柜 + 弃置废丹竹篓
+	# 药庐外院实体器物三件套：青铜丹炉（端坐敞轩丹亭中央青石月台，0 柱檐穿模）+ 药肆木柜 + 弃置废丹竹篓
 	var furnace_obs: int = _combat_ctrl.obstacle_circles.size()
 	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1405.0, 610.0), "radius": 54.0})
 	_add_interactable("yaolu_alchemy", "alchemy", Vector2(1405.0, 646.0), 158.0, "济世青铜丹炉 [F 控火炼丹]", "res://assets/world/prop_alchemy_furnace.png", furnace_obs)
 
 	var counter_obs: int = _combat_ctrl.obstacle_circles.size()
-	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1085.0, 598.0), "radius": 48.0})
-	_add_interactable("yaolu_shop", "shop", Vector2(1085.0, 632.0), 152.0, "药庐外院药肆 [F 购草寄售]", "res://assets/world/prop_yaolu_counter.png", counter_obs)
+	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1068.0, 598.0), "radius": 46.0})
+	_add_interactable("yaolu_shop", "shop", Vector2(1068.0, 632.0), 152.0, "药庐外院药肆 [F 购草寄售]", "res://assets/world/prop_yaolu_counter.png", counter_obs)
 
 	if not CampaignState.opened_containers.has("yaolu_discarded_pill"):
-		_add_interactable("yaolu_discarded_pill", "burnt_pill_pickup", Vector2(1505.0, 616.0), 128.0, "丹炉旁弃置药篓 [F 翻检废丹]", "res://assets/world/prop_discarded_pill_basket.png")
+		_add_interactable("yaolu_discarded_pill", "burnt_pill_pickup", Vector2(1585.0, 656.0), 128.0, "丹炉旁弃置药篓 [F 翻检废丹]", "res://assets/world/prop_discarded_pill_basket.png")
 
 	if not bool(CampaignState.world_flags.get("yaolu_spy_resolved", false)):
-		_spawn_npc("npc_zhou", "药庐周执事", "npc_steward_zhou", Vector2(1590.0, 668.0), "steward_zhou")
+		_spawn_npc("npc_zhou", "药庐周执事", "npc_steward_zhou", Vector2(1612.0, 735.0), "steward_zhou")
 
-	# 灵草采集点 1（贴地层，宋明石绿调色）
+	# 灵草采集点 1（贴地层，移至街南苔草坡地避开院墙与行道）
 	if not CampaignState.opened_containers.has("herb_town_1"):
-		_add_interactable("herb_town_1", "herb", Vector2(1540.0, 865.0), 96.0, "青木灵叶丛 [F 采摘]", "res://assets/world/prop_spirit_herb_node.png", -1, true)
+		_add_interactable("herb_town_1", "herb", Vector2(1540.0, 965.0), 96.0, "青木灵叶丛 [F 采摘]", "res://assets/world/prop_spirit_herb_node.png", -1, true)
 
-	# 镇口引灵石碑下移至南侧路台 y=695，彻底避开右上角小地图 HUD 面板遮挡！
+	# 镇口引灵石碑设于南侧路台 (1936, 695)，避开右上角小地图 HUD 且主镜头零右缘裁切！
 	var stele_obs: int = _combat_ctrl.obstacle_circles.size()
-	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1955.0, 672.0), "radius": 42.0})
-	_add_interactable("stele_tingyu_gate", "stele", Vector2(1955.0, 695.0), 128.0, "听雨镇驿口 · 引灵石碑 [F 休整/夜话/传送]", "res://assets/world/prop_stele_lit.png", stele_obs)
+	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1936.0, 672.0), "radius": 42.0})
+	_add_interactable("stele_tingyu_gate", "stele", Vector2(1936.0, 695.0), 128.0, "听雨镇驿口 · 引灵石碑 [F 休整/夜话/传送]", "res://assets/world/prop_stele_lit.png", stele_obs)
 
 	# Stage C 动态暖/冷光源（全区严格 5 盏 <= 8 盏/屏：茶寮暖灯、地摊油灯、门楼檐灯、丹炉赤金暖火、石碑青玉冷光）
-	_add_stage_c_point_light(Vector2(540.0, 645.0), Color(0.98, 0.68, 0.32, 1.0), 0.72, 1.85, 0.4)
+	_add_stage_c_point_light(Vector2(596.0, 645.0), Color(0.98, 0.68, 0.32, 1.0), 0.72, 1.85, 0.4)
 	_add_stage_c_point_light(Vector2(820.0, 825.0), Color(0.96, 0.66, 0.30, 1.0), 0.64, 1.65, 1.7)
-	_add_stage_c_point_light(Vector2(1195.0, 715.0), Color(0.98, 0.68, 0.34, 1.0), 0.66, 1.70, 2.9)
-	_add_stage_c_point_light(Vector2(1385.0, 642.0), Color(1.00, 0.60, 0.20, 1.0), 1.48, 2.75, 4.1)
-	_add_stage_c_point_light(Vector2(1955.0, 685.0), Color(0.38, 0.90, 0.82, 1.0), 0.95, 2.15, -1.0)
+	_add_stage_c_point_light(Vector2(1176.0, 748.0), Color(0.98, 0.68, 0.34, 1.0), 0.58, 1.45, 2.9)
+	_add_stage_c_point_light(Vector2(1385.0, 642.0), Color(1.00, 0.60, 0.20, 1.0), 1.52, 2.75, 4.1)
+	_add_stage_c_point_light(Vector2(1936.0, 685.0), Color(0.38, 0.90, 0.82, 1.0), 0.95, 2.15, -1.0)
 
 	# 东北出镇官道 -> 风雨青岚山道
 	_add_zone_portal(Rect2(2265.0, 505.0, 130.0, 210.0), "qinglan_pass", "from_town", "北出听雨镇 ──▶ 风雨青岚山道")
@@ -502,21 +521,32 @@ func _assemble_tingyu_town() -> void:
 ## ==================== 区域 ②：风雨青岚山道 & 破庙庭院 ====================
 func _assemble_qinglan_pass() -> void:
 	_add_tiled_ground("res://assets/world/tex_moss_earth.png", ZONE_BOUNDS)
-	# 主山道 + 破庙前庭宽阔石坪 + 东南临渊观景支路（挂载受光 wet_bluestone.gdshader！）
+	# 两道横断山涧飞泉深壑（绘于道路下层，由两座杉木栈桥严丝合缝跨越天堑！）
+	_build_pass_mountain_ravines()
+
+	# 三段被山涧隔开的山道青石路 + 东南临渊观景支路（桥头精准对接栈桥青石桥台，挂载 wet_bluestone.gdshader！）
 	_add_road_polygon(PackedVector2Array([
-		Vector2(60, 900), Vector2(720, 820), Vector2(1260, 620), Vector2(1620, 560), Vector2(2210, 560),
-		Vector2(2210, 710), Vector2(1650, 715), Vector2(1310, 785), Vector2(760, 990), Vector2(60, 1060)
+		Vector2(60, 900), Vector2(720, 820), Vector2(888, 762),
+		Vector2(922, 876), Vector2(760, 990), Vector2(60, 1060)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(1300, 740), Vector2(1435, 740), Vector2(1455, 920), Vector2(1315, 930)
+		Vector2(1062, 704), Vector2(1296, 624),
+		Vector2(1332, 738), Vector2(1098, 818)
+	]), "res://assets/world/tex_bluestone_wet.png")
+	_add_road_polygon(PackedVector2Array([
+		Vector2(1474, 566), Vector2(1620, 560), Vector2(2210, 560),
+		Vector2(2210, 710), Vector2(1650, 715), Vector2(1506, 682)
+	]), "res://assets/world/tex_bluestone_wet.png")
+	_add_road_polygon(PackedVector2Array([
+		Vector2(1245, 725), Vector2(1395, 755), Vector2(1450, 920), Vector2(1310, 930)
 	]), "res://assets/world/tex_bluestone_wet.png")
 
 	# 东南云海断崖深渊与对岸孤峰古修秘匣（物理阻断不可徒步跨越，彻底自洽“百丈绝壁金丹御剑”伏笔！）
 	_build_pass_cliff_abyss()
 
-	# M4 山道临渊杉木栈桥（贴地装饰层，跨越险涧连接破庙前庭）
-	_add_ground_decor_prop("res://assets/world/prop_mountain_plank_bridge.png", Vector2(995.0, 790.0), "PassPlankBridgeWest")
-	_add_ground_decor_prop("res://assets/world/prop_mountain_plank_bridge.png", Vector2(1505.0, 695.0), "PassPlankBridgeEast")
+	# M4 山道临渊杉木栈桥（跨越东西两道山涧深壑，桥台严丝合缝搭接两岸青石路肩，东桥头与石碑留足净距零误触！）
+	_add_ground_decor_prop("res://assets/world/prop_mountain_plank_bridge.png", Vector2(978.0, 874.0), "PassPlankBridgeWest")
+	_add_ground_decor_prop("res://assets/world/prop_mountain_plank_bridge.png", Vector2(1388.0, 734.0), "PassPlankBridgeEast")
 
 	# 掩体巨石（支持魔兽式卡远程法怪视野 Pulling！）与 M4 苍翠竹海（>= 7 处竹丛）+ 破庙
 	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(690.0, 740.0), 68.0, false)
@@ -524,10 +554,10 @@ func _assemble_qinglan_pass() -> void:
 	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(520.0, 430.0), 58.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(205.0, 835.0), 0.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(415.0, 805.0), 0.0, true)
-	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(955.0, 585.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(885.0, 625.0), 0.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1060.0, 880.0), 52.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1215.0, 930.0), 52.0, true)
-	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1475.0, 515.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1515.0, 515.0), 0.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(2115.0, 495.0), 0.0, true)
 	_add_ysort_structure("res://assets/world/prop_ruined_temple.png", Vector2(1890.0, 515.0), 115.0, true)
 
@@ -548,8 +578,8 @@ func _assemble_qinglan_pass() -> void:
 		_combat_ctrl.spawn_enemy_unit("miasma_shaman", Vector2(860.0, 890.0), "enc_pass_pack_1")
 
 	if not CampaignState.cleared_encounters.has("enc_pass_pack_2"):
-		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(1350.0, 650.0), "enc_pass_pack_2")
-		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(1415.0, 695.0), "enc_pass_pack_2")
+		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(1355.0, 655.0), "enc_pass_pack_2")
+		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(1405.0, 685.0), "enc_pass_pack_2")
 
 	# 破庙前庭引灵石碑（未点亮时为苍苔暗刻石碑，点亮后绽放青莲灵纹）
 	var temple_stele_lit: bool = CampaignState.unlocked_steles.has("stele_temple_courtyard")
@@ -561,7 +591,7 @@ func _assemble_qinglan_pass() -> void:
 
 	# Stage C 动态暖/冷光源（全区严格 4 盏 <= 8 盏/屏）
 	_add_stage_c_point_light(Vector2(560.0, 495.0), Color(0.45, 0.88, 0.78, 1.0), 0.72, 1.95, -1.0)
-	_add_stage_c_point_light(Vector2(995.0, 735.0), Color(0.98, 0.66, 0.30, 1.0), 0.80, 2.15, 1.1)
+	_add_stage_c_point_light(Vector2(985.0, 795.0), Color(0.98, 0.66, 0.30, 1.0), 0.82, 2.15, 1.1)
 	_add_stage_c_point_light(Vector2(1655.0, 600.0), Color(0.38, 0.90, 0.82, 1.0), 0.94, 2.15, -1.0)
 	_add_stage_c_point_light(Vector2(1890.0, 560.0), Color(0.98, 0.64, 0.28, 1.0), 0.86, 2.05, 2.6)
 
@@ -608,12 +638,12 @@ func _assemble_cangmu_cave() -> void:
 		Vector2(1380, 540), Vector2(1270, 540), Vector2(1270, 145), Vector2(690, 145)
 	]))
 
-	# M4 古窟雕纹青苔石阶（贴地层）与巨型盘根古木（Y-Sort 岩壁地标，对标 master_b，零室外绿树竹丛！）
-	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1110.0, 845.0), "CaveStoneStepsMid")
-	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1555.0, 555.0), "CaveStoneStepsAltar")
-	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(365.0, 985.0), 0.0, false)
-	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1435.0, 555.0), 0.0, false)
-	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1965.0, 395.0), 0.0, false)
+	# M4 古窟云雷纹青苔石阶（居中嵌入石板甬道，零插岩壁、零侵入石碑点击框！）与巨型盘根古木（开启 55% 半透遮挡与根基阻挡圆，零死遮盲区！）
+	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1095.0, 938.0), "CaveStoneStepsMid")
+	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1455.0, 678.0), "CaveStoneStepsAltar")
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(365.0, 985.0), 42.0, true)
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1425.0, 520.0), 42.0, true)
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1965.0, 378.0), 42.0, true)
 
 	# 洞窟钟乳奇石点缀（纯石质地貌，零露天绿树）
 	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(668.0, 925.0), 48.0, false)
@@ -644,10 +674,10 @@ func _assemble_cangmu_cave() -> void:
 	)
 	_add_interactable("ancient_remains", "remains", Vector2(1310.0, 1165.0), 105.0, "百年前坐化古修遗骸 [F 参悟遗刻]", "res://assets/world/prop_ancient_remains.png")
 
-	# 古窟中段明雷群
+	# 古窟中段明雷群（拉开 135px 横向站位间距，使双怪头顶姓名血条清晰并列零叠压！）
 	if not CampaignState.cleared_encounters.has("enc_cave_pack_1"):
-		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(930.0, 960.0), "enc_cave_pack_1")
-		_combat_ctrl.spawn_enemy_unit("miasma_shaman", Vector2(1010.0, 995.0), "enc_cave_pack_1")
+		_combat_ctrl.spawn_enemy_unit("rot_wolf", Vector2(900.0, 1005.0), "enc_cave_pack_1")
+		_combat_ctrl.spawn_enemy_unit("miasma_shaman", Vector2(1035.0, 975.0), "enc_cave_pack_1")
 
 	# 回环捷径石门（设在 x=490,y=885 竖直近路咽喉，远离左屏边缘不裁切，须从北侧内廊开启！）
 	var gate_open: bool = bool(CampaignState.world_flags.get("shortcut_gate_opened", false))
@@ -759,11 +789,17 @@ func _physics_process(delta: float) -> void:
 
 
 func _update_ysort_occlusion_fade(delta: float) -> void:
-	var party_positions: Array[Vector2] = []
+	var living_actors: Array[BattleActor] = []
 	for cid_var: Variant in _combat_ctrl.party_actors.keys():
 		var pa: BattleActor = _combat_ctrl.party_actors[str(cid_var)] as BattleActor
-		if pa != null and is_instance_valid(pa) and pa.alive:
-			party_positions.append(pa.position)
+		if pa != null and is_instance_valid(pa):
+			if pa.alive:
+				living_actors.append(pa)
+			else:
+				pa.set_occlusion_state(false, delta)
+	for npc_a: BattleActor in _npc_actors:
+		if npc_a != null and is_instance_valid(npc_a) and npc_a.alive:
+			living_actors.append(npc_a)
 
 	for occ: Dictionary in _occluder_sprites:
 		var sp: Sprite2D = occ["sprite"] as Sprite2D
@@ -771,29 +807,25 @@ func _update_ysort_occlusion_fade(delta: float) -> void:
 			continue
 		var canopy_rect: Rect2 = occ["rect"] as Rect2
 		var occluded: bool = false
-		for ppos: Vector2 in party_positions:
-			# 角色站在建筑/古树基线后方（ppos.y < sp.position.y）且身体落入树冠/屋檐矩形内
-			if ppos.y < sp.position.y - 8.0 and canopy_rect.has_point(ppos + Vector2(0.0, -65.0)):
+		for act: BattleActor in living_actors:
+			var ppos: Vector2 = act.position
+			if ppos.y < sp.position.y - 6.0 and canopy_rect.has_point(ppos + Vector2(0.0, -65.0)):
 				occluded = true
 				break
 		var target_a: float = 0.55 if occluded else 1.0
 		sp.modulate.a = move_toward(sp.modulate.a, target_a, delta * 3.5)
 
-	for cid_occ_var: Variant in _combat_ctrl.party_actors.keys():
-		var pa_occ: BattleActor = _combat_ctrl.party_actors[str(cid_occ_var)] as BattleActor
-		if pa_occ == null or not is_instance_valid(pa_occ):
-			continue
+	for act_occ: BattleActor in living_actors:
 		var actor_occluded: bool = false
-		if pa_occ.alive:
-			for occ2: Dictionary in _occluder_sprites:
-				var sp2: Sprite2D = occ2["sprite"] as Sprite2D
-				if not is_instance_valid(sp2):
-					continue
-				var crect2: Rect2 = occ2["rect"] as Rect2
-				if pa_occ.position.y < sp2.position.y - 8.0 and crect2.has_point(pa_occ.position + Vector2(0.0, -65.0)):
-					actor_occluded = true
-					break
-		pa_occ.set_occlusion_state(actor_occluded, delta)
+		for occ2: Dictionary in _occluder_sprites:
+			var sp2: Sprite2D = occ2["sprite"] as Sprite2D
+			if not is_instance_valid(sp2):
+				continue
+			var crect2: Rect2 = occ2["rect"] as Rect2
+			if act_occ.position.y < sp2.position.y - 6.0 and crect2.has_point(act_occ.position + Vector2(0.0, -65.0)):
+				actor_occluded = true
+				break
+		act_occ.set_occlusion_state(actor_occluded, delta)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -861,11 +893,26 @@ func _interact_distance_to(pt: Vector2, ipos: Vector2) -> float:
 func _is_npc_hit_point(npc: BattleActor, pt: Vector2, include_hovered: bool = true) -> bool:
 	if not is_instance_valid(npc):
 		return false
-	if npc.contains_world_point(pt):
-		return true
 	if include_hovered and npc.is_hovered:
 		return true
-	return Rect2(npc.position.x - 46.0, npc.position.y - 160.0, 92.0, 196.0).has_point(pt)
+	if npc._sprite != null and npc._sprite.texture != null:
+		var local_pt: Vector2 = npc._sprite.to_local(pt) - npc._sprite.offset
+		var reg: Rect2 = npc._sprite.region_rect
+		var rw: int = int(reg.size.x) if npc._sprite.region_enabled else npc._sprite.texture.get_width()
+		var rh: int = int(reg.size.y) if npc._sprite.region_enabled else npc._sprite.texture.get_height()
+		if local_pt.x >= -6.0 and local_pt.x < float(rw) + 6.0 and local_pt.y >= -6.0 and local_pt.y < float(rh) + 6.0:
+			var img: Image = _get_cached_tex_image(npc._sprite.texture)
+			if img != null and not img.is_empty():
+				var lx: float = (float(rw) - 1.0 - local_pt.x) if npc._sprite.flip_h else local_pt.x
+				var bx: int = int(floor(lx)) + (int(reg.position.x) if npc._sprite.region_enabled else 0)
+				var by: int = int(floor(local_pt.y)) + (int(reg.position.y) if npc._sprite.region_enabled else 0)
+				for off: Vector2i in [Vector2i(0, 0), Vector2i(-6, 0), Vector2i(6, 0), Vector2i(0, -6), Vector2i(0, 6)]:
+					var sx: int = clampi(bx + off.x, 0, img.get_width() - 1)
+					var sy: int = clampi(by + off.y, 0, img.get_height() - 1)
+					if img.get_pixel(sx, sy).a > 0.08:
+						return true
+				return pt.distance_to(npc.position + Vector2(0.0, -32.0)) <= 30.0
+	return npc.contains_world_point(pt)
 
 
 func _get_cached_tex_image(tex: Texture2D) -> Image:
@@ -1564,11 +1611,18 @@ func _add_ysort_structure(tex_path: String, base_pos: Vector2, collision_r: floa
 		var th: float = float(tex.get_height())
 		sp.offset = Vector2(-tw * 0.5, -th)
 		if can_occlude:
+			var occ_rect: Rect2 = Rect2(base_pos.x - tw * 0.44, base_pos.y - th * 0.94, tw * 0.88, th * 0.80)
+			if tex_path.contains("alchemy_pavilion"):
+				occ_rect = Rect2(base_pos.x - tw * 0.46, base_pos.y - th * 0.96, tw * 0.92, th * 0.42)
+			elif tex_path.contains("bamboo_cluster"):
+				occ_rect = Rect2(base_pos.x - tw * 0.36, base_pos.y - th * 0.82, tw * 0.72, th * 0.68)
+			elif tex_path.contains("folk_house") or tex_path.contains("yaolu_hall") or tex_path.contains("tea_pavilion") or tex_path.contains("ruined_temple"):
+				occ_rect = Rect2(base_pos.x - tw * 0.44, base_pos.y - th * 0.94, tw * 0.88, th * 0.66)
 			_occluder_sprites.append({
 				"sprite": sp,
-				"rect": Rect2(base_pos.x - tw * 0.44, base_pos.y - th * 0.92, tw * 0.88, th * 0.78),
+				"rect": occ_rect,
 			})
-		if collision_r >= 90.0:
+		if collision_r >= 85.0:
 			_mm_buildings.append(Rect2(base_pos.x - tw * 0.36, base_pos.y - th * 0.55, tw * 0.72, th * 0.48))
 	_ysort_root.add_child(sp)
 	if collision_r > 0.0:
@@ -1631,13 +1685,14 @@ func _rebuild_foreground_bamboo_leaves(enable_outdoor: bool) -> void:
 	if not enable_outdoor or _fg_bamboo_tex == null:
 		return
 
+	# 避开右上角舆图簇（x > 580, y < -265）、右缘石碑、左下角色卡与底栏，在开阔画幅边缘呈现拂风翠竹虚影！
 	var presets: Array[Dictionary] = [
-		{"anchor": Vector2(-855.0, -460.0), "scale": Vector2(1.12, 1.12), "rot": 0.14, "phase": 0.0, "flip_h": false},
-		{"anchor": Vector2(-710.0, -482.0), "scale": Vector2(0.92, 0.92), "rot": 0.34, "phase": 1.3, "flip_h": false},
-		{"anchor": Vector2(825.0, -455.0), "scale": Vector2(1.16, 1.16), "rot": -0.18, "phase": 2.4, "flip_h": true},
-		{"anchor": Vector2(860.0, -325.0), "scale": Vector2(0.95, 0.95), "rot": -0.38, "phase": 3.5, "flip_h": true},
-		{"anchor": Vector2(-845.0, 445.0), "scale": Vector2(1.06, 1.06), "rot": -0.22, "phase": 4.6, "flip_h": false},
-		{"anchor": Vector2(835.0, 450.0), "scale": Vector2(1.08, 1.08), "rot": 0.24, "phase": 5.7, "flip_h": true},
+		{"anchor": Vector2(-815.0, -455.0), "scale": Vector2(1.26, 1.26), "rot": 0.12, "phase": 0.0, "flip_h": false},
+		{"anchor": Vector2(-535.0, -478.0), "scale": Vector2(1.12, 1.12), "rot": 0.28, "phase": 1.3, "flip_h": false},
+		{"anchor": Vector2(385.0, -476.0), "scale": Vector2(1.20, 1.20), "rot": -0.16, "phase": 2.4, "flip_h": true},
+		{"anchor": Vector2(-840.0, 65.0), "scale": Vector2(1.18, 1.18), "rot": -0.18, "phase": 3.5, "flip_h": false},
+		{"anchor": Vector2(825.0, -185.0), "scale": Vector2(1.18, 1.18), "rot": -0.22, "phase": 4.6, "flip_h": true},
+		{"anchor": Vector2(810.0, 395.0), "scale": Vector2(1.24, 1.24), "rot": 0.20, "phase": 5.7, "flip_h": true},
 	]
 	for i: int in range(presets.size()):
 		var cfg: Dictionary = presets[i]
@@ -1647,7 +1702,7 @@ func _rebuild_foreground_bamboo_leaves(enable_outdoor: bool) -> void:
 		lsp.flip_h = bool(cfg["flip_h"])
 		lsp.scale = cfg["scale"] as Vector2
 		lsp.rotation = float(cfg["rot"])
-		lsp.modulate = Color(0.14, 0.20, 0.18, 0.46)
+		lsp.modulate = Color(0.16, 0.25, 0.21, 0.68)
 		_rain_overlay.add_child(lsp)
 		_fg_bamboo_leaves.append({
 			"node": lsp,
@@ -1815,6 +1870,78 @@ func _add_zone_portal(rect: Rect2, target_zone: String, target_spawn: String, la
 	)
 	_ground_decor_layer.add_child(marker)
 	_portal_markers.append(marker)
+
+
+func _build_pass_mountain_ravines() -> void:
+	# 在两座杉木栈桥正下方绘制自然参差的斧劈皴山涧幽壑、溪石飞泉与流岚雾气！
+	var ravine_canvas: Node2D = Node2D.new()
+	ravine_canvas.name = "PassMountainRavines"
+	ravine_canvas.draw.connect(func() -> void:
+		var gorges: Array[Dictionary] = [
+			{"top": Vector2(928.0, 645.0), "bot": Vector2(1062.0, 1025.0), "hw": 78.0, "seed": 1.0},
+			{"top": Vector2(1338.0, 505.0), "bot": Vector2(1468.0, 865.0), "hw": 76.0, "seed": 2.7},
+		]
+		for g: Dictionary in gorges:
+			var p_top: Vector2 = g["top"] as Vector2
+			var p_bot: Vector2 = g["bot"] as Vector2
+			var hw: float = float(g["hw"])
+			var gseed: float = float(g["seed"])
+			var dir_v: Vector2 = (p_bot - p_top).normalized()
+			var perp: Vector2 = Vector2(-dir_v.y, dir_v.x)
+			var left_rim: PackedVector2Array = PackedVector2Array()
+			var right_rim: PackedVector2Array = PackedVector2Array()
+			var left_inner: PackedVector2Array = PackedVector2Array()
+			var right_inner: PackedVector2Array = PackedVector2Array()
+			var n_seg: int = 10
+			for si: int in range(n_seg + 1):
+				var u: float = float(si) / float(n_seg)
+				var taper: float = sin(u * PI) * 0.35 + 0.65
+				var jag_l: float = sin(float(si) * 2.3 + gseed) * 14.0
+				var jag_r: float = cos(float(si) * 2.1 + gseed * 1.4) * 14.0
+				var c_pt: Vector2 = p_top.lerp(p_bot, u)
+				left_rim.append(c_pt - perp * (hw * taper + jag_l))
+				right_rim.append(c_pt + perp * (hw * taper + jag_r))
+				left_inner.append(c_pt - perp * (hw * 0.48 * taper + jag_l * 0.5) + Vector2(0.0, 18.0))
+				right_inner.append(c_pt + perp * (hw * 0.48 * taper + jag_r * 0.5) + Vector2(0.0, 18.0))
+
+			var outer_poly: PackedVector2Array = PackedVector2Array()
+			outer_poly.append_array(left_rim)
+			for ri: int in range(right_rim.size() - 1, -1, -1):
+				outer_poly.append(right_rim[ri])
+			ravine_canvas.draw_colored_polygon(outer_poly, Color(0.11, 0.15, 0.15, 0.96))
+
+			var stream_poly: PackedVector2Array = PackedVector2Array()
+			stream_poly.append_array(left_inner)
+			for ri2: int in range(right_inner.size() - 1, -1, -1):
+				stream_poly.append(right_inner[ri2])
+			ravine_canvas.draw_colored_polygon(stream_poly, Color(0.15, 0.25, 0.26, 0.92))
+
+			# 斧劈皴崖壁立面裂纹与苔石压边
+			for si2: int in range(n_seg):
+				var lp: Vector2 = left_rim[si2]
+				var rp: Vector2 = right_rim[si2]
+				ravine_canvas.draw_line(lp, lp + Vector2(6.0, 26.0), Color(0.06, 0.08, 0.08, 0.78), 2.2)
+				ravine_canvas.draw_line(rp, rp + Vector2(-6.0, 26.0), Color(0.06, 0.08, 0.08, 0.78), 2.2)
+			ravine_canvas.draw_polyline(left_rim, Color(0.28, 0.36, 0.32, 0.94), 5.0)
+			ravine_canvas.draw_polyline(right_rim, Color(0.28, 0.36, 0.32, 0.94), 5.0)
+
+			# 涧底飞瀑流泉与桥下轻岚云气
+			for fi: int in range(1, n_seg - 1):
+				var t0: float = float(fi) / float(n_seg)
+				var t1: float = float(fi + 1) / float(n_seg)
+				var fa: Vector2 = p_top.lerp(p_bot, t0) + perp * (sin(float(fi) * 1.8 + gseed) * 9.0) + Vector2(0.0, 16.0)
+				var fb: Vector2 = p_top.lerp(p_bot, t1) + perp * (sin(float(fi + 1) * 1.8 + gseed) * 9.0) + Vector2(0.0, 16.0)
+				ravine_canvas.draw_line(fa, fb, Color(0.58, 0.72, 0.70, 0.36), 9.0)
+				ravine_canvas.draw_line(fa - perp * 4.0, fb - perp * 4.0, Color(0.76, 0.86, 0.84, 0.30), 2.5)
+			for mu: float in [0.34, 0.66]:
+				var mc: Vector2 = p_top.lerp(p_bot, mu)
+				var mpts: PackedVector2Array = PackedVector2Array()
+				for mk: int in range(16):
+					var mang: float = TAU * float(mk) / 16.0
+					mpts.append(mc + Vector2(cos(mang) * (hw * 0.82), sin(mang) * 26.0))
+				ravine_canvas.draw_colored_polygon(mpts, Color(0.70, 0.82, 0.80, 0.14))
+	)
+	_ground_base_sub.add_child(ravine_canvas)
 
 
 func _build_pass_cliff_abyss() -> void:
