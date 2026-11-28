@@ -56,16 +56,29 @@ var _cursor_attack: Texture2D = null
 var _cursor_interact: Texture2D = null
 var _current_cursor_mode: int = -1
 var _hover_outline_shader: Shader = null
+var _wet_bluestone_shader: Shader = null
+var _light_radial_tex: Texture2D = null
+var _fg_bamboo_tex: Texture2D = null
 var _alt_nameplate_overlay: Node2D = null
 var _xuan_nameplate_tex: Texture2D = null
 var _hovered_interactable_id: String = ""
 var _alt_key_down: bool = false
 var _tex_hit_images: Dictionary = {}
+var _fg_bamboo_leaves: Array[Dictionary] = []
+var _zone_point_lights: Array[Dictionary] = []
+var _wet_road_materials: Array[ShaderMaterial] = []
+var _light_flicker_clock: float = 0.0
 
 
 func _ready() -> void:
 	if ResourceLoader.exists("res://src/presentation/shaders/hover_outline.gdshader"):
 		_hover_outline_shader = load("res://src/presentation/shaders/hover_outline.gdshader") as Shader
+	if ResourceLoader.exists("res://src/presentation/shaders/wet_bluestone.gdshader"):
+		_wet_bluestone_shader = load("res://src/presentation/shaders/wet_bluestone.gdshader") as Shader
+	if ResourceLoader.exists("res://assets/world/light_radial_soft.png"):
+		_light_radial_tex = load("res://assets/world/light_radial_soft.png") as Texture2D
+	if ResourceLoader.exists("res://assets/world/fg_bamboo_leaf.png"):
+		_fg_bamboo_tex = load("res://assets/world/fg_bamboo_leaf.png") as Texture2D
 	if ResourceLoader.exists("res://assets/ui/frames/casket_xuan_nameplate.png"):
 		_xuan_nameplate_tex = load("res://assets/ui/frames/casket_xuan_nameplate.png") as Texture2D
 	_load_custom_cursors()
@@ -330,6 +343,8 @@ func load_zone(zone_id: String, spawn_tag: String = "", use_saved_pos_if_empty: 
 	_zone_portals.clear()
 	_portal_markers.clear()
 	_npc_actors.clear()
+	_zone_point_lights.clear()
+	_wet_road_materials.clear()
 	_hovered_interactable_id = ""
 	_mm_roads.clear()
 	_mm_buildings.clear()
@@ -344,22 +359,24 @@ func load_zone(zone_id: String, spawn_tag: String = "", use_saved_pos_if_empty: 
 	match zone_id:
 		"tingyu_town":
 			_assemble_tingyu_town()
-			_mood_modulate.color = Color(0.92, 0.95, 0.94, 1.0)
+			_mood_modulate.color = Color(0.76, 0.81, 0.84, 1.0)
 			_parallax_bg.modulate = Color(0.75, 0.82, 0.80, 1.0)
 			_audio.start_qinglan_dual_stem(true)
 		"qinglan_pass":
 			_assemble_qinglan_pass()
-			_mood_modulate.color = Color(0.86, 0.91, 0.90, 1.0)
+			_mood_modulate.color = Color(0.74, 0.80, 0.83, 1.0)
 			_parallax_bg.modulate = Color(0.62, 0.70, 0.72, 1.0)
 			_audio.start_qinglan_dual_stem(true)
 		"cangmu_cave":
 			_assemble_cangmu_cave()
-			_mood_modulate.color = Color(0.84, 0.88, 0.86, 1.0)
+			_mood_modulate.color = Color(0.70, 0.76, 0.76, 1.0)
 			_parallax_bg.modulate = Color(0.28, 0.34, 0.32, 1.0)
 			_audio.start_qinglan_dual_stem(false)
 
 	_combat_ctrl.spawn_party_at(spawn_pos)
 	_camera.position = spawn_pos
+	_rebuild_foreground_bamboo_leaves(zone_id != "cangmu_cave")
+	_sync_foreground_bamboo_positions(0.0)
 	_hud.bind_combat_controller(_combat_ctrl)
 	_hud.set_minimap_zone_geometry(_mm_roads, _mm_buildings, _mm_steles, _mm_portals, _npc_actors)
 	InputRouter.set_mode(InputRouter.MODE_WORLD_COMBAT)
@@ -398,7 +415,7 @@ func _get_spawn_coords(zone_id: String, spawn_tag: String) -> Vector2:
 ## ==================== 区域 ①：听雨镇 & 济世药庐外院 ====================
 func _assemble_tingyu_town() -> void:
 	_add_tiled_ground("res://assets/world/tex_moss_earth.png", ZONE_BOUNDS)
-	# 茶寮前庭石坪 + 散修地摊支坪 + 药庐外院石阶大院 + 青石板主街（深度嵌合主街消除接缝横线！）
+	# 茶寮前庭石坪 + 散修地摊支坪 + 药庐外院石阶大院 + 青石板主街（挂载受光 wet_bluestone.gdshader！）
 	_add_road_polygon(PackedVector2Array([
 		Vector2(410, 560), Vector2(675, 555), Vector2(695, 795), Vector2(400, 805)
 	]), "res://assets/world/tex_bluestone_wet.png")
@@ -413,12 +430,27 @@ func _assemble_tingyu_town() -> void:
 		Vector2(2360, 705), Vector2(1720, 735), Vector2(1020, 855), Vector2(60, 895)
 	]), "res://assets/world/tex_bluestone_wet.png")
 
-	# 建筑与古树（下移香樟树至 y=595/605 确保树冠完整入镜不切顶！）
+	# M4 左街（x < 965）连续江南粉墙黛瓦民居街巷（对标 master_a_tingyu_town.png 夹街白墙黑瓦！）
+	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(175.0, 675.0), 52.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_house_b.png", Vector2(365.0, 650.0), 46.0, true)
 	_add_ysort_structure("res://assets/world/prop_tea_pavilion.png", Vector2(540.0, 635.0), 96.0, true)
-	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1290.0, 562.0), 122.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(702.0, 608.0), 44.0, true)
+	# 街南前景黛瓦屋脊（不设阻挡圆，紧贴左下前景营造 master_a 夹街屋檐纵深）
+	_add_ysort_structure("res://assets/world/prop_folk_house_b.png", Vector2(145.0, 1045.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(420.0, 1095.0), 0.0, true)
+
+	# M4 右侧围合式【济世药庐】院落（粉墙黛瓦院墙 + 正楷匾额茅草门楼 + 敞轩茅草丹亭 + 抬高主堂）
+	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1290.0, 548.0), 112.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_alchemy_pavilion.png", Vector2(1418.0, 626.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(985.0, 748.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_gatehouse.png", Vector2(1195.0, 762.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1548.0, 772.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1585.0, 585.0), 0.0, false)
+
+	# 古樟树与翠竹簇（保留 Vector2(835, 595) 香樟供 Y-Sort 55% 遮挡与水墨剪影门禁核验！）
 	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(835.0, 595.0), 52.0, true)
 	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(1755.0, 605.0), 52.0, true)
-	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(285.0, 565.0), 46.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(285.0, 550.0), 38.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1830.0, 885.0), 46.0, true)
 
 	# 专属城镇 NPC 序列帧（老樵夫 / 游方摆摊散修 / 周执事）
@@ -456,6 +488,13 @@ func _assemble_tingyu_town() -> void:
 	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1955.0, 672.0), "radius": 42.0})
 	_add_interactable("stele_tingyu_gate", "stele", Vector2(1955.0, 695.0), 128.0, "听雨镇驿口 · 引灵石碑 [F 休整/夜话/传送]", "res://assets/world/prop_stele_lit.png", stele_obs)
 
+	# Stage C 动态暖/冷光源（全区严格 5 盏 <= 8 盏/屏：茶寮暖灯、地摊油灯、门楼檐灯、丹炉赤金暖火、石碑青玉冷光）
+	_add_stage_c_point_light(Vector2(540.0, 645.0), Color(0.98, 0.68, 0.32, 1.0), 0.72, 1.85, 0.4)
+	_add_stage_c_point_light(Vector2(820.0, 825.0), Color(0.96, 0.66, 0.30, 1.0), 0.64, 1.65, 1.7)
+	_add_stage_c_point_light(Vector2(1195.0, 715.0), Color(0.98, 0.68, 0.34, 1.0), 0.66, 1.70, 2.9)
+	_add_stage_c_point_light(Vector2(1385.0, 642.0), Color(1.00, 0.60, 0.20, 1.0), 1.48, 2.75, 4.1)
+	_add_stage_c_point_light(Vector2(1955.0, 685.0), Color(0.38, 0.90, 0.82, 1.0), 0.95, 2.15, -1.0)
+
 	# 东北出镇官道 -> 风雨青岚山道
 	_add_zone_portal(Rect2(2265.0, 505.0, 130.0, 210.0), "qinglan_pass", "from_town", "北出听雨镇 ──▶ 风雨青岚山道")
 
@@ -463,7 +502,7 @@ func _assemble_tingyu_town() -> void:
 ## ==================== 区域 ②：风雨青岚山道 & 破庙庭院 ====================
 func _assemble_qinglan_pass() -> void:
 	_add_tiled_ground("res://assets/world/tex_moss_earth.png", ZONE_BOUNDS)
-	# 主山道 + 破庙前庭宽阔石坪 + 东南临渊观景支路
+	# 主山道 + 破庙前庭宽阔石坪 + 东南临渊观景支路（挂载受光 wet_bluestone.gdshader！）
 	_add_road_polygon(PackedVector2Array([
 		Vector2(60, 900), Vector2(720, 820), Vector2(1260, 620), Vector2(1620, 560), Vector2(2210, 560),
 		Vector2(2210, 710), Vector2(1650, 715), Vector2(1310, 785), Vector2(760, 990), Vector2(60, 1060)
@@ -475,12 +514,21 @@ func _assemble_qinglan_pass() -> void:
 	# 东南云海断崖深渊与对岸孤峰古修秘匣（物理阻断不可徒步跨越，彻底自洽“百丈绝壁金丹御剑”伏笔！）
 	_build_pass_cliff_abyss()
 
-	# 掩体巨石（支持魔兽式卡远程法怪视野 Pulling！）与竹林古樟；破庙下移至 y=515 确保残檐完整入镜
+	# M4 山道临渊杉木栈桥（贴地装饰层，跨越险涧连接破庙前庭）
+	_add_ground_decor_prop("res://assets/world/prop_mountain_plank_bridge.png", Vector2(995.0, 790.0), "PassPlankBridgeWest")
+	_add_ground_decor_prop("res://assets/world/prop_mountain_plank_bridge.png", Vector2(1505.0, 695.0), "PassPlankBridgeEast")
+
+	# 掩体巨石（支持魔兽式卡远程法怪视野 Pulling！）与 M4 苍翠竹海（>= 7 处竹丛）+ 破庙
 	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(690.0, 740.0), 68.0, false)
 	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(1220.0, 560.0), 68.0, false)
 	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(520.0, 430.0), 58.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(205.0, 835.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(415.0, 805.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(955.0, 585.0), 0.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1060.0, 880.0), 52.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1215.0, 930.0), 52.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(1475.0, 515.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(2115.0, 495.0), 0.0, true)
 	_add_ysort_structure("res://assets/world/prop_ruined_temple.png", Vector2(1890.0, 515.0), 115.0, true)
 
 	# 支线 ②：古樟下救护受瘴幼兽契约初生灵宠（火狐 / 灵龟二选一）
@@ -511,6 +559,12 @@ func _assemble_qinglan_pass() -> void:
 		"res://assets/world/prop_stele_lit.png" if temple_stele_lit else "res://assets/world/prop_stele_dim.png"
 	)
 
+	# Stage C 动态暖/冷光源（全区严格 4 盏 <= 8 盏/屏）
+	_add_stage_c_point_light(Vector2(560.0, 495.0), Color(0.45, 0.88, 0.78, 1.0), 0.72, 1.95, -1.0)
+	_add_stage_c_point_light(Vector2(995.0, 735.0), Color(0.98, 0.66, 0.30, 1.0), 0.80, 2.15, 1.1)
+	_add_stage_c_point_light(Vector2(1655.0, 600.0), Color(0.38, 0.90, 0.82, 1.0), 0.94, 2.15, -1.0)
+	_add_stage_c_point_light(Vector2(1890.0, 560.0), Color(0.98, 0.64, 0.28, 1.0), 0.86, 2.05, 2.6)
+
 	# 破庙主事件或地底古窟入口
 	if not bool(CampaignState.world_flags.get("met_pei_zhao", false)):
 		_add_interactable("temple_event_trigger", "temple_clash", Vector2(1890.0, 640.0), 145.0, "踏入【青岚破庙】查探狼啸异变 [F]", "")
@@ -538,7 +592,7 @@ func _assemble_cangmu_cave() -> void:
 		Vector2(880, 1070), Vector2(1340, 1100), Vector2(1340, 1215), Vector2(880, 1185)
 	]), "res://assets/world/tex_bluestone_wet.png")
 
-	# 2. 地底玄岩实体山壁（彻底封死毒棘墙与回环石门两侧，杜绝无视机关穿墙绕路，并移除室外香樟树！）
+	# 2. 地底玄岩实体山壁（彻底封死毒棘墙与回环石门两侧，杜绝无视机关穿墙绕路，并严禁室外香樟树与竹丛！）
 	_add_cavern_rock_mass(PackedVector2Array([
 		Vector2(0, 0), Vector2(690, 0), Vector2(690, 620), Vector2(380, 660), Vector2(380, 975), Vector2(0, 975)
 	]))
@@ -553,6 +607,13 @@ func _assemble_cangmu_cave() -> void:
 		Vector2(690, 0), Vector2(2400, 0), Vector2(2400, 310), Vector2(1680, 340),
 		Vector2(1380, 540), Vector2(1270, 540), Vector2(1270, 145), Vector2(690, 145)
 	]))
+
+	# M4 古窟雕纹青苔石阶（贴地层）与巨型盘根古木（Y-Sort 岩壁地标，对标 master_b，零室外绿树竹丛！）
+	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1110.0, 845.0), "CaveStoneStepsMid")
+	_add_ground_decor_prop("res://assets/world/prop_cave_stone_steps.png", Vector2(1555.0, 555.0), "CaveStoneStepsAltar")
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(365.0, 985.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1435.0, 555.0), 0.0, false)
+	_add_ysort_structure("res://assets/world/prop_cave_gnarled_roots.png", Vector2(1965.0, 395.0), 0.0, false)
 
 	# 洞窟钟乳奇石点缀（纯石质地貌，零露天绿树）
 	_add_ysort_structure("res://assets/world/prop_cliff_rock.png", Vector2(668.0, 925.0), 48.0, false)
@@ -612,6 +673,13 @@ func _assemble_cangmu_cave() -> void:
 		"res://assets/world/prop_stele_lit.png" if CampaignState.unlocked_steles.has("stele_wolf_altar") else "res://assets/world/prop_stele_dim.png"
 	)
 
+	# Stage C 地底动态暖/冷光源（全区严格 5 盏 <= 8 盏/屏，含祭坛石碑青玉冷光 @ (1650, 505)）
+	_add_stage_c_point_light(Vector2(320.0, 1060.0), Color(0.98, 0.60, 0.24, 1.0), 0.85, 2.05, 0.7)
+	_add_stage_c_point_light(Vector2(540.0, 865.0), Color(0.96, 0.62, 0.28, 1.0), 0.76, 1.95, 2.1)
+	_add_stage_c_point_light(Vector2(1120.0, 1145.0), Color(0.36, 0.86, 0.82, 1.0), 0.82, 2.05, -1.0)
+	_add_stage_c_point_light(Vector2(1290.0, 715.0), Color(0.38, 0.90, 0.82, 1.0), 0.95, 2.20, -1.0)
+	_add_stage_c_point_light(Vector2(1650.0, 505.0), Color(0.38, 0.92, 0.84, 1.0), 1.04, 2.30, -1.0)
+
 	# 章节双阶段主首领：【雾隐狼王】（站位 x=2085,y=505 避开右上角小地图遮挡，踏上 x=1875 祭坛桥即触发战前对峙！）
 	if not bool(CampaignState.world_flags.get("wolf_king_defeated", false)):
 		var boss: BattleActor = _combat_ctrl.spawn_enemy_unit("boss_mist_wolf_king", Vector2(2085.0, 505.0), "enc_boss_wolf_king")
@@ -664,16 +732,17 @@ func _physics_process(delta: float) -> void:
 	if _alt_nameplate_overlay != null:
 		_alt_nameplate_overlay.queue_redraw()
 
-	# 镜头平滑跟随当前主控角色，远景 0.25x 视差偏移
+	# 镜头平滑跟随当前主控角色，远景 0.25x 视差偏移 + Layer 3 前景竹叶视差与动态光源呼吸
 	var ctrl_pos: Vector2 = _combat_ctrl.get_controlled_actor_pos()
 	if not _combat_ctrl.tactical_paused:
 		_camera.position = ctrl_pos
 	_parallax_bg.position = -_camera.get_screen_center_position() * 0.08 - Vector2(60.0, 40.0)
+	_step_m4_lighting_and_foreground(delta)
 	for pm: Node2D in _portal_markers:
 		if is_instance_valid(pm):
 			pm.queue_redraw()
 
-	# Layer 2 屋檐与古树树冠 55% 遮挡半透平滑过渡（20-art-bible.md 第 5.3 节）
+	# Layer 2 屋檐与古树树冠 55% 遮挡半透平滑过渡 + 角色淡青墨剪影（20-art-bible.md 第 5.3 节）
 	_update_ysort_occlusion_fade(delta)
 
 	# 雨丝飘落动效（支持减弱动态效果开关）
@@ -693,7 +762,7 @@ func _update_ysort_occlusion_fade(delta: float) -> void:
 	var party_positions: Array[Vector2] = []
 	for cid_var: Variant in _combat_ctrl.party_actors.keys():
 		var pa: BattleActor = _combat_ctrl.party_actors[str(cid_var)] as BattleActor
-		if pa.alive:
+		if pa != null and is_instance_valid(pa) and pa.alive:
 			party_positions.append(pa.position)
 
 	for occ: Dictionary in _occluder_sprites:
@@ -709,6 +778,22 @@ func _update_ysort_occlusion_fade(delta: float) -> void:
 				break
 		var target_a: float = 0.55 if occluded else 1.0
 		sp.modulate.a = move_toward(sp.modulate.a, target_a, delta * 3.5)
+
+	for cid_occ_var: Variant in _combat_ctrl.party_actors.keys():
+		var pa_occ: BattleActor = _combat_ctrl.party_actors[str(cid_occ_var)] as BattleActor
+		if pa_occ == null or not is_instance_valid(pa_occ):
+			continue
+		var actor_occluded: bool = false
+		if pa_occ.alive:
+			for occ2: Dictionary in _occluder_sprites:
+				var sp2: Sprite2D = occ2["sprite"] as Sprite2D
+				if not is_instance_valid(sp2):
+					continue
+				var crect2: Rect2 = occ2["rect"] as Rect2
+				if pa_occ.position.y < sp2.position.y - 8.0 and crect2.has_point(pa_occ.position + Vector2(0.0, -65.0)):
+					actor_occluded = true
+					break
+		pa_occ.set_occlusion_state(actor_occluded, delta)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -1389,7 +1474,7 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 	var poly_idx: int = _mm_roads.size()
 	_mm_roads.append(pts)
 
-	# 1. 不透明青石板主体（重叠处世界坐标 UV 连续无缝合一，移除原先造成半透明暗框的灰黑宽折线！）
+	# 1. 不透明青石板主体（雨中听雨镇与山道挂载受光 wet_bluestone.gdshader 呈现水膜天光与暖/冷灯火倒影！）
 	var poly: Polygon2D = Polygon2D.new()
 	poly.polygon = pts
 	if ResourceLoader.exists(tex_path):
@@ -1398,6 +1483,14 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 		poly.color = Color(0.86, 0.90, 0.87, 1.0)
 	else:
 		poly.color = Color("#56615E")
+	if CampaignState.current_zone_id != "cangmu_cave" and _wet_bluestone_shader != null:
+		var rmat: ShaderMaterial = ShaderMaterial.new()
+		rmat.shader = _wet_bluestone_shader
+		rmat.set_shader_parameter("wetness", 0.74)
+		rmat.set_shader_parameter("ripple_speed", 0.0 if SaveManager.reduced_motion else 1.0)
+		rmat.set_shader_parameter("ripple_strength", 0.34)
+		poly.material = rmat
+		_wet_road_materials.append(rmat)
 	_road_stone_sub.add_child(poly)
 
 	# 2. 严格沿道路切线方向旋转排布宋明工笔青石收边条石（跳过重叠内边与世界极边，彻底消除未旋转小矩形锯齿马赛克！）
@@ -1481,6 +1574,132 @@ func _add_ysort_structure(tex_path: String, base_pos: Vector2, collision_r: floa
 	if collision_r > 0.0:
 		_combat_ctrl.obstacle_circles.append({"pos": base_pos + Vector2(0.0, -24.0), "radius": collision_r})
 	return sp
+
+
+func _add_ground_decor_prop(tex_path: String, base_pos: Vector2, node_name: String) -> Sprite2D:
+	var sp: Sprite2D = Sprite2D.new()
+	sp.name = node_name
+	sp.position = base_pos
+	sp.centered = false
+	if ResourceLoader.exists(tex_path):
+		var tex: Texture2D = load(tex_path) as Texture2D
+		sp.texture = tex
+		sp.offset = Vector2(-float(tex.get_width()) * 0.5, -float(tex.get_height()))
+	_ground_decor_layer.add_child(sp)
+	return sp
+
+
+func _add_stage_c_point_light(
+	pos: Vector2,
+	col: Color,
+	energy_val: float,
+	tex_scale: float,
+	flicker_phase: float = -1.0
+) -> PointLight2D:
+	if _light_radial_tex == null:
+		return null
+	var pl: PointLight2D = PointLight2D.new()
+	pl.name = "StageCPointLight_%d" % _zone_point_lights.size()
+	pl.position = pos
+	pl.texture = _light_radial_tex
+	pl.texture_scale = tex_scale
+	pl.color = col
+	pl.energy = energy_val
+	pl.blend_mode = Light2D.BLEND_MODE_ADD
+	pl.range_z_min = -100
+	pl.range_z_max = 100
+	pl.enabled = true
+	_ground_decor_layer.add_child(pl)
+	_zone_point_lights.append({
+		"light": pl,
+		"base_energy": energy_val,
+		"flicker_phase": flicker_phase,
+	})
+	return pl
+
+
+func _rebuild_foreground_bamboo_leaves(enable_outdoor: bool) -> void:
+	_fg_bamboo_leaves.clear()
+	if _rain_overlay == null:
+		return
+	var stale: Array[Node] = []
+	for ch: Node in _rain_overlay.get_children():
+		stale.append(ch)
+	for st: Node in stale:
+		_rain_overlay.remove_child(st)
+		st.queue_free()
+	if not enable_outdoor or _fg_bamboo_tex == null:
+		return
+
+	var presets: Array[Dictionary] = [
+		{"anchor": Vector2(-855.0, -460.0), "scale": Vector2(1.12, 1.12), "rot": 0.14, "phase": 0.0, "flip_h": false},
+		{"anchor": Vector2(-710.0, -482.0), "scale": Vector2(0.92, 0.92), "rot": 0.34, "phase": 1.3, "flip_h": false},
+		{"anchor": Vector2(825.0, -455.0), "scale": Vector2(1.16, 1.16), "rot": -0.18, "phase": 2.4, "flip_h": true},
+		{"anchor": Vector2(860.0, -325.0), "scale": Vector2(0.95, 0.95), "rot": -0.38, "phase": 3.5, "flip_h": true},
+		{"anchor": Vector2(-845.0, 445.0), "scale": Vector2(1.06, 1.06), "rot": -0.22, "phase": 4.6, "flip_h": false},
+		{"anchor": Vector2(835.0, 450.0), "scale": Vector2(1.08, 1.08), "rot": 0.24, "phase": 5.7, "flip_h": true},
+	]
+	for i: int in range(presets.size()):
+		var cfg: Dictionary = presets[i]
+		var lsp: Sprite2D = Sprite2D.new()
+		lsp.name = "FgBambooLeaf_%d" % i
+		lsp.texture = _fg_bamboo_tex
+		lsp.flip_h = bool(cfg["flip_h"])
+		lsp.scale = cfg["scale"] as Vector2
+		lsp.rotation = float(cfg["rot"])
+		lsp.modulate = Color(0.14, 0.20, 0.18, 0.46)
+		_rain_overlay.add_child(lsp)
+		_fg_bamboo_leaves.append({
+			"node": lsp,
+			"anchor": cfg["anchor"] as Vector2,
+			"base_rot": float(cfg["rot"]),
+			"phase": float(cfg["phase"]),
+		})
+
+
+func _sync_foreground_bamboo_positions(_delta: float) -> void:
+	if _fg_bamboo_leaves.is_empty() or _camera == null:
+		return
+	var cam_ref: Vector2 = _camera.position
+	var sway_on: bool = not SaveManager.reduced_motion
+	for entry: Dictionary in _fg_bamboo_leaves:
+		var lsp: Sprite2D = entry["node"] as Sprite2D
+		if not is_instance_valid(lsp):
+			continue
+		var anchor: Vector2 = entry["anchor"] as Vector2
+		var ph: float = float(entry["phase"])
+		var base_rot: float = float(entry["base_rot"])
+		var parallax_shift: Vector2 = -(cam_ref - Vector2(1200.0, 700.0)) * 0.14
+		var wind_vec: Vector2 = Vector2.ZERO
+		var rot_add: float = 0.0
+		if sway_on:
+			wind_vec = Vector2(sin(_light_flicker_clock * 2.1 + ph) * 8.0, cos(_light_flicker_clock * 1.6 + ph) * 4.5)
+			rot_add = sin(_light_flicker_clock * 2.4 + ph) * 0.065
+		lsp.position = cam_ref + anchor + parallax_shift + wind_vec
+		lsp.rotation = base_rot + rot_add
+
+
+func _step_m4_lighting_and_foreground(delta: float) -> void:
+	var target_ripple_spd: float = 0.0 if SaveManager.reduced_motion else 1.0
+	for rmat: ShaderMaterial in _wet_road_materials:
+		if rmat != null:
+			rmat.set_shader_parameter("ripple_speed", target_ripple_spd)
+
+	if not SaveManager.reduced_motion:
+		_light_flicker_clock += delta
+	for linfo: Dictionary in _zone_point_lights:
+		var pl: PointLight2D = linfo["light"] as PointLight2D
+		if pl == null or not is_instance_valid(pl):
+			continue
+		var base_e: float = float(linfo["base_energy"])
+		var fphase: float = float(linfo["flicker_phase"])
+		if fphase >= 0.0 and not SaveManager.reduced_motion:
+			var wave: float = 0.055 * sin(_light_flicker_clock * 4.8 + fphase) + 0.03 * sin(_light_flicker_clock * 8.3 + fphase * 1.7)
+			pl.energy = maxf(0.05, base_e * (1.0 + wave))
+		else:
+			pl.energy = base_e
+
+	_sync_foreground_bamboo_positions(delta)
 
 
 func _resolve_interactable_plaque_name(id_str: String, fallback_title: String) -> String:

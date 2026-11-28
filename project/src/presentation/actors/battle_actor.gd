@@ -45,6 +45,8 @@ var cast_interruptible: bool = true
 
 var nameplate_threat_state: String = "jade_safe" # jade_safe / amber_warn / cinnabar_ot
 var stealth_alpha: float = 1.0
+var is_occluded: bool = false
+var occlusion_silhouette_alpha: float = 0.0
 
 ## 走位与朝向
 var facing_dir: Vector2 = Vector2(1.0, 0.5).normalized()
@@ -56,6 +58,7 @@ var patrol_index: int = 0
 
 ## 关键帧图集元数据
 var _sprite: Sprite2D
+var _occlusion_silhouette: Sprite2D
 var _overlay_canvas: Node2D
 var _sheet_meta: Dictionary = {}
 var _cell_w: int = 224
@@ -114,6 +117,8 @@ func setup_actor(
 	_death_dissolve = 0.0
 	_hit_flash_timer = 0.0
 	_hit_flash_peak = 0.0
+	is_occluded = false
+	occlusion_silhouette_alpha = 0.0
 	if p_sprite_id == "boss_mist_wolf_king":
 		facing_dir = Vector2(-1.0, 0.35).normalized()
 	visible = true
@@ -124,6 +129,14 @@ func setup_actor(
 		_sprite = Sprite2D.new()
 		_sprite.centered = false
 		add_child(_sprite)
+	if _occlusion_silhouette == null:
+		_occlusion_silhouette = Sprite2D.new()
+		_occlusion_silhouette.name = "OcclusionSilhouette"
+		_occlusion_silhouette.centered = false
+		_occlusion_silhouette.z_index = 5
+		_occlusion_silhouette.visible = false
+		_occlusion_silhouette.modulate = Color(0.14, 0.22, 0.22, 0.0)
+		add_child(_occlusion_silhouette)
 	_ensure_hit_flash_material()
 	if _overlay_canvas == null:
 		_overlay_canvas = Node2D.new()
@@ -133,6 +146,8 @@ func setup_actor(
 
 	_load_sprite_sheet(p_sprite_id)
 	_sprite.scale = Vector2(p_scale_mult, p_scale_mult)
+	if _occlusion_silhouette != null:
+		_occlusion_silhouette.scale = Vector2(p_scale_mult, p_scale_mult)
 	_ensure_seal_icons()
 	_apply_current_frame()
 	queue_redraw()
@@ -144,6 +159,8 @@ func _load_sprite_sheet(sid: String) -> void:
 	var json_path: String = "res://assets/sprites/%s_sheet.json" % sid
 	if ResourceLoader.exists(png_path):
 		_sprite.texture = load(png_path) as Texture2D
+		if _occlusion_silhouette != null:
+			_occlusion_silhouette.texture = _sprite.texture
 	if FileAccess.file_exists(json_path):
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(json_path))
 		if parsed is Dictionary:
@@ -154,6 +171,9 @@ func _load_sprite_sheet(sid: String) -> void:
 			_head_top_px = int(_sheet_meta.get("head_top_px", maxi(80, _foot_y - 44)))
 	_sprite.region_enabled = true
 	_sprite.offset = Vector2(-float(_cell_w) * 0.5, -float(_foot_y))
+	if _occlusion_silhouette != null:
+		_occlusion_silhouette.region_enabled = true
+		_occlusion_silhouette.offset = _sprite.offset
 
 
 func _ensure_seal_icons() -> void:
@@ -196,6 +216,21 @@ func _ensure_hit_flash_material() -> void:
 		_sprite.material = _hit_flash_mat
 	if _hit_flash_mat != null:
 		_hit_flash_mat.set_shader_parameter("hit_flash", 0.0)
+		_hit_flash_mat.set_shader_parameter("occlusion_alpha", occlusion_silhouette_alpha)
+
+
+func set_occlusion_state(p_occluded: bool, delta: float) -> void:
+	var eff_occ: bool = p_occluded and alive
+	is_occluded = eff_occ
+	var target_a: float = 1.0 if eff_occ else 0.0
+	occlusion_silhouette_alpha = move_toward(occlusion_silhouette_alpha, target_a, delta * 5.0)
+	if _hit_flash_mat != null:
+		_hit_flash_mat.set_shader_parameter("occlusion_alpha", occlusion_silhouette_alpha)
+	if _occlusion_silhouette != null:
+		var vis_sil: bool = alive and (occlusion_silhouette_alpha > 0.02)
+		_occlusion_silhouette.visible = vis_sil
+		if vis_sil:
+			_occlusion_silhouette.modulate = Color(0.14, 0.22, 0.22, occlusion_silhouette_alpha * 0.42 * stealth_alpha)
 
 
 func clear_hit_flash() -> void:
@@ -262,6 +297,10 @@ func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void
 	if not alive and faction == "enemy":
 		is_targeted = false
 		is_hovered = false
+		is_occluded = false
+		occlusion_silhouette_alpha = 0.0
+		if _occlusion_silhouette != null:
+			_occlusion_silhouette.visible = false
 		_anim_state = "down"
 		_anim_timer = 0.35
 		_death_dissolve += ui_delta
@@ -281,6 +320,10 @@ func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void
 	_death_dissolve = 0.0
 	if not visible:
 		visible = true
+	if not alive and _occlusion_silhouette != null and _occlusion_silhouette.visible:
+		is_occluded = false
+		occlusion_silhouette_alpha = 0.0
+		_occlusion_silhouette.visible = false
 
 	# 关键帧与脉冲计时严格绑定 combat_delta（Space 凝时与顿帧期间 combat_delta == 0，100% 像素级定格！）
 	if combat_delta > 0.0:
@@ -365,6 +408,10 @@ func _apply_current_frame() -> void:
 	else:
 		_visual_root_offset = Vector2.ZERO
 	_sprite.position = _visual_root_offset
+	if _occlusion_silhouette != null:
+		_occlusion_silhouette.region_rect = _sprite.region_rect
+		_occlusion_silhouette.flip_h = flip
+		_occlusion_silhouette.position = _visual_root_offset
 
 
 func get_hit_rect_local() -> Rect2:

@@ -1,0 +1,68 @@
+{
+  "assets": {
+    "project/assets/world/fg_bamboo_leaf.png": {
+      "dimensions": "144x96",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "7c93b36d01269dd7177644cf872f782140b14a41cedc0bad2019ef2b7052c3a0"
+    },
+    "project/assets/world/light_radial_soft.png": {
+      "dimensions": "256x256",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "b7045e895519fb03ea25bc7bdba1830901527569a3c9be5a70d116a747de59a6"
+    },
+    "project/assets/world/prop_cave_gnarled_roots.png": {
+      "dimensions": "284x264",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "4d9d7c2637e49d0faff32fa0e584a8063cad2db43ad2fa4097388d55830f7309"
+    },
+    "project/assets/world/prop_cave_stone_steps.png": {
+      "dimensions": "236x164",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "d56aea69683862bfda8d1657d1c64668ebdbbe4493d124297c70062a6f05605d"
+    },
+    "project/assets/world/prop_folk_house_a.png": {
+      "dimensions": "316x292",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "3dcaeeaa5b56f490a6d1d723778cc97877cdecfd9a1869b5c4e57bd4b07e46f5"
+    },
+    "project/assets/world/prop_folk_house_b.png": {
+      "dimensions": "288x276",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "c430021d12bd3a2ca1ff750d451950f375c920886c2519fa161268b065c78cef"
+    },
+    "project/assets/world/prop_mountain_plank_bridge.png": {
+      "dimensions": "336x196",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "5ee6f227854ada24a352b4f8b1fa545766bca9a695ea4ec7e9a36fa2621c2081"
+    },
+    "project/assets/world/prop_yaolu_alchemy_pavilion.png": {
+      "dimensions": "268x264",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "4ed77fa7914a58c94b14fab5809fc6c2a9cfe9fbf5bb2219ecd701d71abcd980"
+    },
+    "project/assets/world/prop_yaolu_courtyard_wall.png": {
+      "dimensions": "236x168",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "bee2779db438849e1fa672438ea75132be3572017e36e772459c9da9e295f2b3"
+    },
+    "project/assets/world/prop_yaolu_gatehouse.png": {
+      "dimensions": "244x264",
+      "neon_e2e_245_092": 0,
+      "neon_strict_235_085": 0,
+      "sha256": "4358352013b058e7e4327a24f3a637e9ae11c227162493948071b1626293169e"
+    }
+  },
+  "generated_date": "2026-04-12",
+  "milestone": "M4_polish_r4_world_lighting",
+  "source_contact_sheet": "assets_src/world/r4_world_lighting_source.png",
+  "source_contact_sheet_sha256": "c764f42743846d72273dabb107c86d10d0f3eefd7e33cc2fe801527b41f10c56"
+}

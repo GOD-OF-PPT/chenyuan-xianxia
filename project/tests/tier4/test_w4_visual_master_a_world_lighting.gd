@@ -742,7 +742,7 @@ func case_t4_w4_02_master_a_tingyu_town_visual_gate() -> void:
 
 	# 4. Layer 3 foreground bamboo leaves + 55% Y-Sort occlusion + ink actor silhouette
 	var has_fg_bamboo: bool = false
-	for dnode: Node in world.find_children("*", "*", true, false):
+	for dnode: Node in world.find_children("*", "", true, false):
 		var dtag: String = str(dnode.name)
 		if dnode is Sprite2D and (dnode as Sprite2D).texture != null:
 			dtag += "::" + (dnode as Sprite2D).texture.resource_path

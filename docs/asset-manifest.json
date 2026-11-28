@@ -1853,6 +1853,26 @@
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
     {
+      "path": "project/assets/world/fg_bamboo_leaf.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "144x96",
+      "sha256": "7c93b36d01269dd7177644cf872f782140b14a41cedc0bad2019ef2b7052c3a0",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled Song-Ming calligraphic wind-blown foreground bamboo leaf cluster with soft lens blur)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+    },
+    {
+      "path": "project/assets/world/light_radial_soft.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_light",
+      "dimensions": "256x256",
+      "sha256": "b7045e895519fb03ea25bc7bdba1830901527569a3c9be5a70d116a747de59a6",
+      "creation_method": "tools/build_polish_r4_world.py (256x256 C2-smooth radial PointLight2D attenuation texture for Stage C warm/cool dynamic lighting)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+    },
+    {
       "path": "project/assets/world/prop_alchemy_furnace.png",
       "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
       "category": "world_prop",
@@ -1903,6 +1923,26 @@
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     },
     {
+      "path": "project/assets/world/prop_cave_gnarled_roots.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "284x264",
+      "sha256": "4d9d7c2637e49d0faff32fa0e584a8063cad2db43ad2fa4097388d55830f7309",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled giant gnarled ancient roots & mossy cavern crag aligned to master_b_cangmu_rtwp.png)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+    },
+    {
+      "path": "project/assets/world/prop_cave_stone_steps.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "236x164",
+      "sha256": "d56aea69683862bfda8d1657d1c64668ebdbbe4493d124297c70062a6f05605d",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled carved mossy underground cavern stone steps with cloud-fret cheek curbs)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+    },
+    {
       "path": "project/assets/world/prop_cliff_rock.png",
       "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
       "category": "world_prop",
@@ -1923,6 +1963,26 @@
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
     {
+      "path": "project/assets/world/prop_folk_house_a.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "316x292",
+      "sha256": "3dcaeeaa5b56f490a6d1d723778cc97877cdecfd9a1869b5c4e57bd4b07e46f5",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled Song-Ming 粉墙黛瓦 Jiangnan pitched-tile folk residence A aligned to master_a_tingyu_town.png)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+    },
+    {
+      "path": "project/assets/world/prop_folk_house_b.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "288x276",
+      "sha256": "c430021d12bd3a2ca1ff750d451950f375c920886c2519fa161268b065c78cef",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled Song-Ming 粉墙黛瓦 Jiangnan eave-veranda folk residence B with hanging paper lantern)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+    },
+    {
       "path": "project/assets/world/prop_miasma_pool.png",
       "source_path": "assets_src/world/prop_sheet_extra_raw.jpg",
       "category": "world_prop",
@@ -1941,6 +2001,16 @@
       "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Chromatic shift from miasma plum to mineral celadon-jade water.) | Prompt: Purified clear spring pool after Water-Element barrier solved",
       "generated_date": "2026-11-26",
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/world/prop_mountain_plank_bridge.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "336x196",
+      "sha256": "5ee6f227854ada24a352b4f8b1fa545766bca9a695ea4ec7e9a36fa2621c2081",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled wet cedar mountain plank bridge with hemp-bound timber guardrails for qinglan_pass)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
     },
     {
       "path": "project/assets/world/prop_peddler_stall.png",
@@ -2023,6 +2093,16 @@
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     },
     {
+      "path": "project/assets/world/prop_yaolu_alchemy_pavilion.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "268x264",
+      "sha256": "4ed77fa7914a58c94b14fab5809fc6c2a9cfe9fbf5bb2219ecd701d71abcd980",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled open-sided thatched alchemy pavilion on raised bluestone terrace aligned to master_a_tingyu_town.png)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+    },
+    {
       "path": "project/assets/world/prop_yaolu_counter.png",
       "source_path": "assets_src/world/prop_peddler_and_yaolu_raw.jpg",
       "category": "world_prop",
@@ -2031,6 +2111,26 @@
       "creation_method": "generate_image (prop_peddler_and_yaolu: 35-deg Song-Ming Gongbi wooden apothecary counter with celadon medicine jars, dried herbs & gourd sign) + grounded contact shadow",
       "generated_date": "2026-11-26",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/world/prop_yaolu_courtyard_wall.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "236x168",
+      "sha256": "bee2779db438849e1fa672438ea75132be3572017e36e772459c9da9e295f2b3",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled whitewashed courtyard wall segment with cut-bluestone dado & dark fish-scale tile coping)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+    },
+    {
+      "path": "project/assets/world/prop_yaolu_gatehouse.png",
+      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "category": "world_prop",
+      "dimensions": "244x264",
+      "sha256": "4358352013b058e7e4327a24f3a637e9ae11c227162493948071b1626293169e",
+      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled timber & thatch courtyard gatehouse with canonical Simplified Chinese '济世药庐' plaque)",
+      "generated_date": "2026-04-12",
+      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
     },
     {
       "path": "project/assets/world/prop_yaolu_hall.png",
