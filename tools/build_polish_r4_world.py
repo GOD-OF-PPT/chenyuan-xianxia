@@ -959,32 +959,37 @@ def build_cave_stone_steps() -> np.ndarray:
 
 
 def build_fg_bamboo_leaf() -> np.ndarray:
-    """168x112 Song-Ming calligraphic wind-swept bamboo leaf cluster for Layer 3 foreground parallax."""
+    """220x156 corner-rooted Song-Ming calligraphic wind-swept bamboo branch for Layer 3 viewport-edge framing."""
     S = 2
-    W, H = 168 * S, 112 * S
+    W, H = 220 * S, 156 * S
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
 
-    # Arched bamboo stem & nodes (竹枝竹节)
-    d.line([(16, 22), (112, 52), (218, 92), (298, 128)], fill=(22, 34, 30, 242), width=5)
-    for nx, ny in [(112, 52), (218, 92)]:
-        d.line([(nx - 3, ny - 5), (nx + 3, ny + 5)], fill=(14, 22, 20, 250), width=4)
+    # Primary & secondary bamboo stalks emerging directly from outer corner (x=0, y=0..44) — zero floating mid-air stem!
+    main_stalk = _catmull_rom_chain([(0, 10), (96, 38), (212, 82), (334, 138)], samples_per_seg=18)
+    sub_stalk = _catmull_rom_chain([(0, 48), (68, 92), (146, 154), (218, 224)], samples_per_seg=16)
+    d.line(main_stalk, fill=(20, 32, 27, 236), width=6)
+    d.line(sub_stalk, fill=(22, 35, 30, 224), width=4)
+    for nx, ny in [(96, 38), (212, 82), (68, 92), (146, 154)]:
+        d.line([(nx - 4, ny - 5), (nx + 4, ny + 5)], fill=(14, 22, 19, 246), width=4)
 
     leaves = [
-        [(62, 36), (128, 12), (216, 10), (146, 36)],
-        [(94, 46), (172, 46), (278, 72), (182, 68)],
-        [(52, 38), (98, 86), (178, 148), (108, 104)],
-        [(142, 64), (218, 44), (316, 52), (228, 74)],
-        [(132, 62), (184, 118), (264, 188), (190, 138)],
-        [(198, 84), (264, 96), (326, 134), (254, 116)],
-        [(36, 30), (62, 74), (108, 128), (68, 88)],
+        [(76, 30), (162, 8), (268, 12), (174, 34)],
+        [(132, 52), (234, 34), (358, 48), (246, 66)],
+        [(186, 72), (288, 72), (408, 106), (296, 102)],
+        [(248, 98), (332, 118), (422, 172), (324, 142)],
+        [(92, 40), (148, 92), (232, 162), (154, 112)],
+        [(172, 68), (226, 126), (308, 204), (228, 148)],
+        [(52, 80), (118, 116), (196, 178), (116, 136)],
+        [(108, 124), (158, 186), (214, 268), (150, 206)],
+        [(36, 64), (58, 132), (92, 222), (52, 148)],
     ]
     for lpts in leaves:
-        d.polygon(lpts, fill=(28, 44, 38, 244), outline=(16, 24, 22, 250))
-        d.line([lpts[0], lpts[2]], fill=(54, 78, 68, 220), width=2)
+        d.polygon(lpts, fill=(24, 40, 34, 234), outline=(15, 24, 21, 242))
+        d.line([lpts[0], lpts[2]], fill=(48, 72, 62, 205), width=2)
 
-    im_blur = im.filter(ImageFilter.GaussianBlur(radius=1.3))
-    im_1x = im_blur.resize((168, 112), Image.Resampling.LANCZOS)
+    im_blur = im.filter(ImageFilter.GaussianBlur(radius=1.2))
+    im_1x = im_blur.resize((220, 156), Image.Resampling.LANCZOS)
     return clamp_song_ming_mineral_hsv(np.array(im_1x, dtype=np.uint8))
 
 

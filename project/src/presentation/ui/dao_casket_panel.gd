@@ -234,11 +234,10 @@ func _ready() -> void:
 	visible = false
 	theme = UIThemeBuilder.get_global_theme()
 
-	# 1. 全屏雕花乌木如意纹深匣外框（1920x1080，四角 mean_luma ~0.095 < 0.17）
+	# 1. 全屏雕花乌木如意纹深匣外框（1920x1080 基准全幅铺满，兼容超宽屏 expand 拉伸，四角 mean_luma ~0.095 < 0.17）
 	var outer_frame: TextureRect = TextureRect.new()
 	outer_frame.name = "OuterEbonyFrame"
-	outer_frame.position = Vector2.ZERO
-	outer_frame.size = Vector2(1920.0, 1080.0)
+	outer_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	outer_frame.custom_minimum_size = Vector2(1920.0, 1080.0)
 	outer_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	outer_frame.stretch_mode = TextureRect.STRETCH_SCALE
@@ -249,8 +248,12 @@ func _ready() -> void:
 	# 2. 顶部乌木错金页签槽（严格 4 个第一章已开放页签 C / N / B / J，隐藏 P）
 	var top_bar: HBoxContainer = HBoxContainer.new()
 	top_bar.name = "TopHeaderBar"
-	top_bar.position = Vector2(196.0, 34.0)
-	top_bar.size = Vector2(1590.0, 62.0)
+	top_bar.anchor_left = 0.5
+	top_bar.anchor_right = 0.5
+	top_bar.offset_left = -764.0
+	top_bar.offset_right = 826.0
+	top_bar.offset_top = 34.0
+	top_bar.offset_bottom = 96.0
 	top_bar.custom_minimum_size = Vector2(1590.0, 62.0)
 	top_bar.alignment = BoxContainer.ALIGNMENT_BEGIN
 	top_bar.add_theme_constant_override("separation", 18)
@@ -293,8 +296,14 @@ func _ready() -> void:
 	# 3. 摊开式线装旧宣纸古籍书页总成（1704x864，中心轴 852x432 承载开卷/翻页 Tween）
 	_tome_rig = Control.new()
 	_tome_rig.name = "TomeSpreadRig"
-	_tome_rig.position = Vector2(108.0, 146.0)
-	_tome_rig.size = Vector2(1704.0, 864.0)
+	_tome_rig.anchor_left = 0.5
+	_tome_rig.anchor_right = 0.5
+	_tome_rig.anchor_top = 0.5
+	_tome_rig.anchor_bottom = 0.5
+	_tome_rig.offset_left = -852.0
+	_tome_rig.offset_right = 852.0
+	_tome_rig.offset_top = -394.0
+	_tome_rig.offset_bottom = 470.0
 	_tome_rig.custom_minimum_size = Vector2(1704.0, 864.0)
 	_tome_rig.pivot_offset = Vector2(852.0, 432.0)
 	add_child(_tome_rig)

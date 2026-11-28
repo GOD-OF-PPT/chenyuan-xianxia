@@ -1856,8 +1856,8 @@
       "path": "project/assets/world/fg_bamboo_leaf.png",
       "source_path": "assets_src/world/r4_world_lighting_source.png",
       "category": "world_prop",
-      "dimensions": "168x112",
-      "sha256": "1913dfa376310d55066009bcf84b43c2d62d029e842a21e862f103b208ac15eb",
+      "dimensions": "220x156",
+      "sha256": "2b9010ccb530d9dedb68bf0e569582a4dcf35f722966db4688850f75fad4f558",
       "creation_method": "tools/build_polish_r4_world.py (2x-supersampled Song-Ming calligraphic wind-blown foreground bamboo leaf cluster with soft lens blur)",
       "generated_date": "2026-04-12",
       "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
@@ -1964,33 +1964,33 @@
     },
     {
       "path": "project/assets/world/prop_folk_house_a.png",
-      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "source_path": "assets_src/world/r5_town_folk_houses_raw.jpg",
       "category": "world_prop",
-      "dimensions": "264x264",
-      "sha256": "100db5356328d31017b1eb5917d3c3c7171dccb9c6b9b17436e34f014a14c697",
-      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled Song-Ming 粉墙黛瓦 Jiangnan curved-eave folk residence A aligned to master_a_tingyu_town.png)",
+      "dimensions": "282x288",
+      "sha256": "5747c323a030326b34b8527206c220132b768c33a5bb6b2490e5c1cc31545e69",
+      "creation_method": "Gemini Imagen (r5_town_folk_houses_raw.jpg) + tools/build_polish_r5_town.py exterior cutout & Song-Ming LUT | Spec: 35-deg Jiangnan 粉墙黛瓦 two-bay residence A with stone plinth",
       "generated_date": "2026-04-12",
-      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_folk_house_b.png",
-      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "source_path": "assets_src/world/r5_town_folk_houses_raw.jpg",
       "category": "world_prop",
-      "dimensions": "224x244",
-      "sha256": "868f35b9b2a12112688425d65f20805708072789b159fb55159a066563cc235e",
-      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled Song-Ming 粉墙黛瓦 Jiangnan eave-veranda folk residence B with hanging paper lantern)",
+      "dimensions": "238x262",
+      "sha256": "bd142fb0bab0f393951e861e788a91a994b54ae746b89c113bf8249db09ca6d1",
+      "creation_method": "Gemini Imagen (r5_town_folk_houses_raw.jpg) + tools/build_polish_r5_town.py exterior cutout & Song-Ming LUT | Spec: 35-deg Jiangnan 粉墙黛瓦 shopfront house B with awning & warm lantern",
       "generated_date": "2026-04-12",
-      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_folk_roof_eave.png",
-      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "source_path": "assets_src/world/r5_town_folk_houses_raw.jpg",
       "category": "world_prop",
-      "dimensions": "348x196",
-      "sha256": "1391604b0d263a021dbfa8c9633e4afac63709fabf56687b808ba1463e81b43d",
-      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled close-up foreground street-facing dark-tile roof & upturned flying eave aligned to master_a bottom-left)",
+      "dimensions": "292x276",
+      "sha256": "b634196c07ef9dea92b3844f75912b4cfb73cc36294673f08383f202f3280612",
+      "creation_method": "Gemini Imagen (r5_town_folk_houses_raw.jpg) + tools/build_polish_r5_town.py exterior cutout & Song-Ming LUT | Spec: 35-deg complete street-side 粉墙黛瓦 courtyard folk house with sweeping double eaves & full bluestone foundation",
       "generated_date": "2026-04-12",
-      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_miasma_pool.png",
@@ -2026,11 +2026,11 @@
       "path": "project/assets/world/prop_peddler_stall.png",
       "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
       "category": "world_prop",
-      "dimensions": "274x145",
-      "sha256": "d591bbd676a9978d1b64e8f9757f54ae84446f00ad815a1cdf77fe84819d4515",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Grid cell extraction, alpha cutout, Y-Sort baseline alignment & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi interactive prop (prop_peddler_stall.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "dimensions": "274x154",
+      "sha256": "a417a4165df6bdf5fb89c9515dc9dfd8ed8a1fb2fda056aa1a6923f41d40027a",
+      "creation_method": "Gemini Imagen (prop_sheet_interactables_raw.jpg + r5_yaolu_walls_lanterns_raw.jpg) + tools/build_polish_r5_town.py portable wind-lantern composite & grounded straw-mat shadow",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_ruined_temple.png",
@@ -2046,11 +2046,11 @@
       "path": "project/assets/world/prop_spirit_herb_node.png",
       "source_path": "assets_src/world/prop_sheet_interactables_raw.jpg",
       "category": "world_prop",
-      "dimensions": "73x95",
-      "sha256": "18e38778d62f8ed4402f5f81df35b5e9c8ef3768da83e7944101595cdc39a7f9",
-      "creation_method": "Song-Ming malachite saturation clamp, bright rim defringing & grounded 35-deg contact shadow | Spec: Harmonized spirit herb node",
-      "generated_date": "2026-11-26",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+      "dimensions": "88x82",
+      "sha256": "38e5337dbba6a8698b9e118dea177d300141d235d14431a8f5bbc1c2f0f038e5",
+      "creation_method": "Gemini Imagen (prop_sheet_interactables_raw.jpg) + tools/build_polish_r5_town.py uncut bottom-right extraction, stem-gap cutout & Song-Ming mineral celadon LUT",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_stele_dim.png",
@@ -2077,10 +2077,20 @@
       "source_path": "assets_src/world/prop_sheet_buildings_raw.jpg",
       "category": "world_ysort_building",
       "dimensions": "323x310",
-      "sha256": "f7721917b71d1b41fbd57c9de85e37ed6b790ee26689c498319cc1e8b9292baa",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Alpha cutout, ink defringe, Y-Sort bottom baseline calibration & Song-Ming LUT.) | Prompt: 35-degree Song-Ming Gongbi building (prop_tea_pavilion.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "sha256": "a9ad69d77336d7407ea05dc4e0000dc3c30a9a49fcd3c1d349f5bea95e75d871",
+      "creation_method": "Gemini Imagen (prop_sheet_buildings_raw.jpg + r5_yaolu_walls_lanterns_raw.jpg) + tools/build_polish_r5_town.py hanging bamboo-paper eave lantern composite",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/world/prop_town_rockery.png",
+      "source_path": "assets_src/world/r5_yaolu_gate_pavilion_raw.jpg",
+      "category": "world_prop",
+      "dimensions": "164x186",
+      "sha256": "7760e1b9929030cc5c35151d06d1976dd7c1bd48aefd1bde67c050cf39798bab",
+      "creation_method": "Gemini Imagen (r5_yaolu_gate_pavilion_raw.jpg) + tools/build_polish_r5_town.py mossy Jiangnan Taihu bluestone rockery & dwarf bamboo",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_treasure_chest.png",
@@ -2104,13 +2114,13 @@
     },
     {
       "path": "project/assets/world/prop_yaolu_alchemy_pavilion.png",
-      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "source_path": "assets_src/world/r5_yaolu_gate_pavilion_raw.jpg",
       "category": "world_prop",
-      "dimensions": "312x308",
-      "sha256": "636b974ce2577e9352cdebccf86576b3061863fd4779c45632d14276c76e708d",
-      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled wide-bay open thatched alchemy pavilion with rolled celadon bamboo blind framing cauldron cleanly inside)",
+      "dimensions": "512x364",
+      "sha256": "3a4950fb537f7880e341371ff962418c80f1104216e2bc3bcbcd843ffb8c403e",
+      "creation_method": "Gemini Imagen (r5_yaolu_gate_pavilion_raw.jpg) + tools/build_polish_r5_town.py wide-bay open thatched alchemy pavilion with rolled celadon bamboo blind",
       "generated_date": "2026-04-12",
-      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_yaolu_alchemy_terrace.png",
@@ -2134,23 +2144,23 @@
     },
     {
       "path": "project/assets/world/prop_yaolu_courtyard_wall.png",
-      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "source_path": "assets_src/world/r5_yaolu_walls_lanterns_raw.jpg",
       "category": "world_prop",
-      "dimensions": "196x112",
-      "sha256": "73d52f2bf1c1c6981b42727f79832ebd9ba63c9e3a4833e6a9997b7eb3f04e60",
-      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled horizontal-baseline whitewashed courtyard wall with Jiangnan lattice leak-window & curved dark-tile coping)",
+      "dimensions": "136x138",
+      "sha256": "bdcc331822743609082813806e5b926803fe1c4ecbe83a2082b5c5ce2836d388",
+      "creation_method": "Gemini Imagen (r5_yaolu_walls_lanterns_raw.jpg) + tools/build_polish_r5_town.py 35-deg isometric modular whitewashed brick-base courtyard wall",
       "generated_date": "2026-04-12",
-      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_yaolu_gatehouse.png",
-      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "source_path": "assets_src/world/r5_yaolu_gate_pavilion_raw.jpg",
       "category": "world_prop",
-      "dimensions": "196x188",
-      "sha256": "5dfd36205ed71d1465533fc9db46c97c86ce4a3d83c72e5e07d9f30a0d92f986",
-      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled timber & thatch courtyard gatehouse with optically centered Simplified Chinese '济世药庐' plaque)",
+      "dimensions": "268x284",
+      "sha256": "1780dbbb09e4d50670a494ea3260fa6be7d35d0710a0c437a475eddab13793c5",
+      "creation_method": "Gemini Imagen (r5_yaolu_gate_pavilion_raw.jpg) + tools/build_polish_r5_town.py 35-deg SW alignment, warm eave lantern & canonical Simplified Chinese '济世药庐' plaque",
       "generated_date": "2026-04-12",
-      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/prop_yaolu_hall.png",
@@ -2164,13 +2174,13 @@
     },
     {
       "path": "project/assets/world/prop_yaolu_side_wall.png",
-      "source_path": "assets_src/world/r4_world_lighting_source.png",
+      "source_path": "assets_src/world/r5_yaolu_walls_lanterns_raw.jpg",
       "category": "world_prop",
-      "dimensions": "84x186",
-      "sha256": "8f618fab48e759af9a250c994983b3b71c8607e08d38cf79ae431894c2d750a9",
-      "creation_method": "tools/build_polish_r4_world.py (2x-supersampled north-south whitewashed courtyard return wall with brick corner pier & dark-tile coping)",
+      "dimensions": "204x154",
+      "sha256": "87b752db45d40a80c8a3e7e536984dbed5aca4f6da1abb0808c1492e404eb750",
+      "creation_method": "Gemini Imagen (r5_yaolu_walls_lanterns_raw.jpg) + tools/build_polish_r5_town.py 35-deg isometric V-corner whitewashed courtyard return wall",
       "generated_date": "2026-04-12",
-      "license": "Project Original Procedural Song-Ming Gongbi World Art (CC0 / Proprietary Clean)"
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/world/tex_bluestone_wet.png",
@@ -2194,13 +2204,13 @@
     },
     {
       "path": "project/assets/world/tex_moss_earth.png",
-      "source_path": "assets_src/world/terrain_gongbi_meadow_raw.jpg",
+      "source_path": "assets_src/world/r5_terrain_moss_meadow_raw.jpg",
       "category": "world_terrain",
       "dimensions": "1024x1024",
-      "sha256": "98586b864e7604252cb8053c765d170c5e2ff6a386e1ab555cae63c64b20aec2",
-      "creation_method": "generate_image (terrain_gongbi_meadow: Song-Ming Gongbi hand-inked short grass tufts, moss patches & fallen bamboo leaves) + 80px edge-only overlap seamless wrap (zero interior blur)",
-      "generated_date": "2026-11-26",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen + Manual/Programmatic Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+      "sha256": "1e41e013adc94d226919676796ff0e63e25cc039e3c6e3e91f046214a514502a",
+      "creation_method": "Gemini Imagen (r5_terrain_moss_meadow_raw.jpg + terrain_moss_natural_raw.jpg) + tools/build_polish_r5_town.py 112px cosine-overlap seamless wrap & rainy celadon-olive harmony (0 spiky grid)",
+      "generated_date": "2026-04-12",
+      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     }
   ]
 }

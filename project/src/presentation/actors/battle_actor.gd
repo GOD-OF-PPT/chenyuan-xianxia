@@ -147,7 +147,10 @@ func setup_actor(
 	_ensure_hit_flash_material()
 	if _overlay_canvas == null:
 		_overlay_canvas = Node2D.new()
-		_overlay_canvas.z_index = 6
+		_overlay_canvas.z_index = 26
+		var ov_mat: CanvasItemMaterial = CanvasItemMaterial.new()
+		ov_mat.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+		_overlay_canvas.material = ov_mat
 		_overlay_canvas.draw.connect(_draw_overhead_ui)
 		add_child(_overlay_canvas)
 
