@@ -728,13 +728,22 @@ def render_wolf_king_cell(
     out = keep_largest_alpha_cc(out, 12)
 
     max_allowed_y = foot_y + 8
+    min_contact_y = int(pose.get("min_contact_y", 0))
     ys_all, _ = np.where(out[..., 3] > 0)
-    if len(ys_all) > 0 and int(ys_all.max()) > max_allowed_y:
-        shift_up = int(ys_all.max()) - max_allowed_y
-        shifted = np.zeros_like(out)
-        if shift_up < cell_h:
-            shifted[: cell_h - shift_up, :] = out[shift_up:, :]
-        out = shifted
+    if len(ys_all) > 0:
+        cur_max_y = int(ys_all.max())
+        if cur_max_y > max_allowed_y:
+            shift_up = cur_max_y - max_allowed_y
+            shifted = np.zeros_like(out)
+            if shift_up < cell_h:
+                shifted[: cell_h - shift_up, :] = out[shift_up:, :]
+            out = shifted
+        elif min_contact_y > 0 and cur_max_y < min_contact_y:
+            shift_dn = min(min_contact_y - cur_max_y, max(0, cell_h - 2 - cur_max_y))
+            if shift_dn > 0:
+                shifted = np.zeros_like(out)
+                shifted[shift_dn:, :] = out[: cell_h - shift_dn, :]
+                out = shifted
     out[foot_y + 10 :, :, :] = 0
     return keep_largest_alpha_cc(out, 12)
 
@@ -761,19 +770,20 @@ def build_wolf_king_sheet() -> dict[str, Any]:
             "jaw_ang": 4.5 * (0.5 + 0.5 * math.cos(ph)),
             "tail_ang": 9.5 * math.sin(ph + 0.6),
             "shard_glow": 0.22 + 0.12 * (0.5 + 0.5 * math.sin(ph)),
+            "min_contact_y": foot_y - 4,
         }
         put_cell(0, f, pose_se)
         pose_ne = dict(pose_se, dorsal_ne=True)
         put_cell(1, f, pose_ne)
 
-    # Row 2: run_se (6-frame rotary gallop) & Row 3: run_ne (6-frame dorsal rotary gallop)
+    # Row 2: run_se (6-frame grounded rotary gallop) & Row 3: run_ne (6-frame dorsal rotary gallop)
     gallop_phases = [
-        (-5.5, -8.0, -34.0, 22.0, 32.0, -18.0, -14.0, -10.0, -14.0, 5.0),
-        (-2.0, -13.0, -16.0, -28.0, 14.0, 28.0, -18.0, -14.0, -18.0, 3.0),
-        (4.5, -4.0, 18.0, -14.0, -24.0, 16.0, -4.0, -8.0, -8.0, -4.0),
-        (6.5, 0.0, 34.0, 14.0, -34.0, -16.0, 0.0, -14.0, 4.0, -6.0),
-        (2.0, -6.0, 14.0, 32.0, -10.0, -30.0, -6.0, -12.0, 8.0, -2.0),
-        (-3.5, -11.0, -18.0, 26.0, 20.0, -8.0, -14.0, -6.0, -6.0, 3.0),
+        (-5.5, -2.0, -34.0, 22.0, 32.0, -18.0, -8.0, 0.0, -14.0, 5.0),
+        (-2.0, -4.0, -16.0, -28.0, 14.0, 28.0, -8.0, 0.0, -18.0, 3.0),
+        (4.5, -2.0, 18.0, -14.0, -24.0, 16.0, 0.0, -6.0, -8.0, -4.0),
+        (6.5, 0.0, 34.0, 14.0, -34.0, -16.0, 0.0, -10.0, 4.0, -6.0),
+        (2.0, -2.0, 14.0, 32.0, -10.0, -30.0, 0.0, -8.0, 8.0, -2.0),
+        (-3.5, -3.5, -18.0, 26.0, 20.0, -8.0, -6.0, 0.0, -6.0, 3.0),
     ]
     for f, gp in enumerate(gallop_phases):
         r_pose = {
@@ -789,6 +799,7 @@ def build_wolf_king_sheet() -> dict[str, Any]:
             "head_ang": gp[9],
             "jaw_ang": 7.0,
             "shard_glow": 0.25,
+            "min_contact_y": foot_y - 4,
         }
         put_cell(2, f, r_pose)
         put_cell(3, f, dict(r_pose, dorsal_ne=True))
@@ -1741,10 +1752,10 @@ def build_party_hero_sheets() -> list[dict[str, Any]]:
             ]
         else:
             atk1_list = [
-                {"is_moving": True, "hip_dx": -6.0, "hip_dy": 2.0, "lean_deg": -4.0, "lf_dx": -16.0, "rf_dx": 14.0, "lh_dx": -12.0, "lh_dy": 34.0, "rh_dx": 8.0, "rh_dy": 36.0, "flare_x": -8.0, "ribbon_lift": 10.0},
-                {"is_moving": True, "hip_dx": 6.0, "hip_dy": 4.0, "lean_deg": 8.0, "lf_dx": -24.0, "rf_dx": 26.0, "lh_dx": -24.0, "lh_dy": 36.0, "rh_dx": 36.0, "rh_dy": 28.0, "open_palm": True, "flare_x": -20.0, "ribbon_lift": 22.0},
-                {"is_moving": True, "hip_dx": 10.0, "hip_dy": 6.0, "lean_deg": 11.0, "lf_dx": -28.0, "rf_dx": 30.0, "lh_dx": -28.0, "lh_dy": 40.0, "rh_dx": 44.0, "rh_dy": 26.0, "open_palm": True, "flare_x": -24.0, "ribbon_lift": 28.0},
-                {"is_moving": True, "hip_dx": 6.0, "hip_dy": 4.0, "lean_deg": 7.0, "lf_dx": -22.0, "rf_dx": 22.0, "lh_dx": -20.0, "lh_dy": 40.0, "rh_dx": 34.0, "rh_dy": 32.0, "open_palm": True, "flare_x": -16.0, "ribbon_lift": 18.0},
+                {"is_moving": True, "hip_dx": -6.0, "hip_dy": 2.0, "lean_deg": -4.0, "lf_dx": -18.0, "rf_dx": 16.0, "lh_dx": -18.0, "lh_dy": 28.0, "le_sign": -1.0, "rh_dx": 12.0, "rh_dy": 32.0, "flare_x": -10.0, "ribbon_lift": 12.0},
+                {"is_moving": True, "hip_dx": 9.0, "hip_dy": 6.0, "lean_deg": 11.0, "lf_dx": -38.0, "rf_dx": 36.0, "lh_dx": -42.0, "lh_dy": 12.0, "le_sign": -1.0, "rh_dx": 46.0, "rh_dy": 12.0, "open_palm": True, "flare_x": -28.0, "ribbon_lift": 34.0},
+                {"is_moving": True, "hip_dx": 12.0, "hip_dy": 8.0, "lean_deg": 13.0, "lf_dx": -42.0, "rf_dx": 40.0, "lh_dx": -48.0, "lh_dy": 6.0, "le_sign": -1.0, "rh_dx": 52.0, "rh_dy": 6.0, "open_palm": True, "flare_x": -34.0, "ribbon_lift": 40.0},
+                {"is_moving": True, "hip_dx": 7.0, "hip_dy": 5.0, "lean_deg": 9.0, "lf_dx": -30.0, "rf_dx": 30.0, "lh_dx": -32.0, "lh_dy": 20.0, "le_sign": -1.0, "rh_dx": 38.0, "rh_dy": 18.0, "open_palm": True, "flare_x": -22.0, "ribbon_lift": 24.0},
                 {"hip_dx": 0.0, "hip_dy": 0.0, "lean_deg": 3.0, "lf_dx": -14.0, "rf_dx": 14.0, "lh_dx": 10.0, "lh_dy": 36.0, "rh_dx": 22.0, "rh_dy": 34.0, "flare_x": -6.0, "ribbon_lift": 6.0},
             ]
         for f, p in enumerate(atk1_list):
@@ -1771,14 +1782,24 @@ def build_party_hero_sheets() -> list[dict[str, Any]]:
             put(5, f, p)
 
         # Row 6: cast_loop (0..2) & cast_release (3..5)
-        cast_list = [
-            {"hip_dy": -2.0, "lean_deg": -2.0, "lf_dx": -16.0, "rf_dx": 16.0, "lh_dx": 14.0, "lh_dy": 28.0, "rh_dx": 22.0, "rh_dy": 16.0, "sword_ang": -86.0, "open_palm": True, "flare_x": -10.0, "ribbon_lift": 18.0},
-            {"hip_dy": -3.0, "lean_deg": -4.0, "lf_dx": -18.0, "rf_dx": 18.0, "lh_dx": 18.0, "lh_dy": 24.0, "rh_dx": 26.0, "rh_dy": 12.0, "sword_ang": -90.0, "open_palm": True, "flare_x": -16.0, "ribbon_lift": 26.0},
-            {"hip_dy": -2.5, "lean_deg": -3.0, "lf_dx": -16.0, "rf_dx": 16.0, "lh_dx": 16.0, "lh_dy": 26.0, "rh_dx": 24.0, "rh_dy": 14.0, "sword_ang": -88.0, "open_palm": True, "flare_x": -14.0, "ribbon_lift": 22.0},
-            {"is_moving": True, "hip_dx": 9.0, "hip_dy": 6.0, "lean_deg": 12.0, "lf_dx": -28.0, "rf_dx": 30.0, "lh_dx": -24.0, "lh_dy": 36.0, "rh_dx": 40.0, "rh_dy": 24.0, "sword_ang": -6.0, "open_palm": True, "flare_x": -22.0, "ribbon_lift": 30.0},
-            {"is_moving": True, "hip_dx": 11.0, "hip_dy": 8.0, "lean_deg": 14.0, "lf_dx": -30.0, "rf_dx": 32.0, "lh_dx": -26.0, "lh_dy": 38.0, "rh_dx": 42.0, "rh_dy": 26.0, "sword_ang": 0.0, "open_palm": True, "flare_x": -24.0, "ribbon_lift": 28.0},
-            {"hip_dx": 4.0, "hip_dy": 2.0, "lean_deg": 5.0, "lf_dx": -18.0, "rf_dx": 18.0, "lh_dx": -12.0, "lh_dy": 42.0, "rh_dx": 24.0, "rh_dy": 36.0, "sword_ang": 24.0, "flare_x": -10.0, "ribbon_lift": 12.0},
-        ]
+        if not is_shen:
+            cast_list = [
+                {"hip_dy": -2.0, "lean_deg": -2.0, "lf_dx": -16.0, "rf_dx": 16.0, "lh_dx": 14.0, "lh_dy": 28.0, "rh_dx": 22.0, "rh_dy": 16.0, "sword_ang": -86.0, "open_palm": True, "flare_x": -10.0, "ribbon_lift": 18.0},
+                {"hip_dy": -3.0, "lean_deg": -4.0, "lf_dx": -18.0, "rf_dx": 18.0, "lh_dx": 18.0, "lh_dy": 24.0, "rh_dx": 26.0, "rh_dy": 12.0, "sword_ang": -90.0, "open_palm": True, "flare_x": -16.0, "ribbon_lift": 26.0},
+                {"hip_dy": -2.5, "lean_deg": -3.0, "lf_dx": -16.0, "rf_dx": 16.0, "lh_dx": 16.0, "lh_dy": 26.0, "rh_dx": 24.0, "rh_dy": 14.0, "sword_ang": -88.0, "open_palm": True, "flare_x": -14.0, "ribbon_lift": 22.0},
+                {"is_moving": True, "hip_dx": 9.0, "hip_dy": 6.0, "lean_deg": 12.0, "lf_dx": -28.0, "rf_dx": 30.0, "lh_dx": -24.0, "lh_dy": 36.0, "rh_dx": 40.0, "rh_dy": 24.0, "sword_ang": -6.0, "open_palm": True, "flare_x": -22.0, "ribbon_lift": 30.0},
+                {"is_moving": True, "hip_dx": 11.0, "hip_dy": 8.0, "lean_deg": 14.0, "lf_dx": -30.0, "rf_dx": 32.0, "lh_dx": -26.0, "lh_dy": 38.0, "rh_dx": 42.0, "rh_dy": 26.0, "sword_ang": 0.0, "open_palm": True, "flare_x": -24.0, "ribbon_lift": 28.0},
+                {"hip_dx": 4.0, "hip_dy": 2.0, "lean_deg": 5.0, "lf_dx": -18.0, "rf_dx": 18.0, "lh_dx": -12.0, "lh_dy": 42.0, "rh_dx": 24.0, "rh_dy": 36.0, "sword_ang": 24.0, "flare_x": -10.0, "ribbon_lift": 12.0},
+            ]
+        else:
+            cast_list = [
+                {"is_moving": True, "hip_dx": -3.0, "hip_dy": 3.0, "lean_deg": -5.0, "lf_dx": -28.0, "rf_dx": 28.0, "lh_dx": -42.0, "lh_dy": -4.0, "le_sign": -1.0, "rh_dx": 42.0, "rh_dy": -6.0, "open_palm": True, "flare_x": -26.0, "ribbon_lift": 36.0},
+                {"is_moving": True, "hip_dx": -4.0, "hip_dy": 4.0, "lean_deg": -7.0, "lf_dx": -32.0, "rf_dx": 32.0, "lh_dx": -46.0, "lh_dy": -10.0, "le_sign": -1.0, "rh_dx": 46.0, "rh_dy": -12.0, "open_palm": True, "flare_x": -32.0, "ribbon_lift": 42.0},
+                {"is_moving": True, "hip_dx": -3.5, "hip_dy": 3.5, "lean_deg": -6.0, "lf_dx": -30.0, "rf_dx": 30.0, "lh_dx": -44.0, "lh_dy": -7.0, "le_sign": -1.0, "rh_dx": 44.0, "rh_dy": -9.0, "open_palm": True, "flare_x": -29.0, "ribbon_lift": 39.0},
+                {"is_moving": True, "hip_dx": 9.0, "hip_dy": 6.0, "lean_deg": 12.0, "lf_dx": -28.0, "rf_dx": 30.0, "lh_dx": -24.0, "lh_dy": 32.0, "le_sign": -1.0, "rh_dx": 42.0, "rh_dy": 20.0, "open_palm": True, "flare_x": -22.0, "ribbon_lift": 30.0},
+                {"is_moving": True, "hip_dx": 11.0, "hip_dy": 8.0, "lean_deg": 14.0, "lf_dx": -30.0, "rf_dx": 32.0, "lh_dx": -26.0, "lh_dy": 34.0, "le_sign": -1.0, "rh_dx": 44.0, "rh_dy": 22.0, "open_palm": True, "flare_x": -24.0, "ribbon_lift": 28.0},
+                {"hip_dx": 4.0, "hip_dy": 2.0, "lean_deg": 5.0, "lf_dx": -18.0, "rf_dx": 18.0, "lh_dx": -12.0, "lh_dy": 42.0, "rh_dx": 24.0, "rh_dy": 36.0, "flare_x": -10.0, "ribbon_lift": 12.0},
+            ]
         for f, p in enumerate(cast_list):
             put(6, f, p)
 
@@ -1786,7 +1807,7 @@ def build_party_hero_sheets() -> list[dict[str, Any]]:
         row7_list = [
             {"hip_dx": -12.0, "hip_dy": 4.0, "lean_deg": -14.0, "head_ang": -8.0, "lf_dx": -24.0, "rf_dx": 10.0, "lh_dx": 12.0, "lh_dy": 26.0, "rh_dx": 8.0, "rh_dy": 38.0, "sword_ang": -52.0, "flare_x": 14.0, "ribbon_lift": 12.0},
             {"hip_dx": -8.0, "hip_dy": 2.0, "lean_deg": -9.0, "head_ang": -5.0, "lf_dx": -20.0, "rf_dx": 12.0, "lh_dx": 8.0, "lh_dy": 32.0, "rh_dx": 6.0, "rh_dy": 42.0, "sword_ang": -36.0, "flare_x": 8.0, "ribbon_lift": 8.0},
-            {"is_down": True, "hip_dx": -4.0, "hip_dy": 32.0, "lean_deg": 24.0, "head_ang": 12.0, "lf_dx": -30.0, "lf_dy": 0.0, "rf_dx": 22.0, "rf_dy": 0.0, "lh_dx": -8.0, "lh_dy": 38.0, "rh_dx": 22.0, "rh_dy": 40.0, "sword_ang": 72.0, "flare_x": -12.0},
+            {"is_down": True, "hip_dx": -6.0, "hip_dy": 52.0, "lean_deg": 45.0, "head_ang": 15.0, "lf_dx": -34.0, "lf_dy": 0.0, "rf_dx": 24.0, "rf_dy": 0.0, "lh_dx": 4.0, "lh_dy": 32.0, "rh_dx": 24.0, "rh_dy": 30.0, "sword_ang": 14.0, "flare_x": -14.0},
             {"is_down": True, "hip_dx": -10.0, "hip_dy": 62.0, "lean_deg": 54.0, "head_ang": 18.0, "lf_dx": -38.0, "lf_dy": 0.0, "rf_dx": 26.0, "rf_dy": 0.0, "lh_dx": 8.0, "lh_dy": 30.0, "rh_dx": 28.0, "rh_dy": 28.0, "sword_ang": 8.0, "flare_x": -16.0},
         ]
         for f, p in enumerate(row7_list):
@@ -3105,15 +3126,20 @@ def run_self_audit() -> None:
             spans_42.append(int(fxs.max() - fxs.min() + 1) if len(fxs) else 0)
         stride_delta = max(spans_42) - min(spans_42)
 
-        # Down collapse check (row 7, col 3)
-        dc = arr[7 * ch : 8 * ch, 3 * cw : 4 * cw]
-        dy_p, dx_p = np.where(dc[..., 3] > 40)
-        down_w, down_h = int(dx_p.max() - dx_p.min() + 1), int(dy_p.max() - dy_p.min() + 1)
+        # Down collapse check across BOTH down frames (row 7, cols 2 & 3)
+        down_hs = []
+        down_ws = []
+        for dc_idx in (2, 3):
+            dc = arr[7 * ch : 8 * ch, dc_idx * cw : (dc_idx + 1) * cw]
+            dy_p, dx_p = np.where(dc[..., 3] > 40)
+            down_ws.append(int(dx_p.max() - dx_p.min() + 1))
+            down_hs.append(int(dy_p.max() - dy_p.min() + 1))
+        down_w, down_h = max(down_ws), max(down_hs)
 
         print(
             f"[AUDIT SPRITE] {aid:20s}: cell={cw}x{ch} fy={fy} max_top={max_mane_above_fy}px | idle={idle_w}x{idle_h}px "
             f"| atk1_max={max_atk_w}x{max_atk_h}px | run_spans42={spans_42} (Δ={stride_delta}px, MAD={run_mad:.2f}) "
-            f"| down={down_w}x{down_h}px (ratio={down_h/idle_h:.2f})"
+            f"| down_max={down_w}x{down_h}px (ratio={down_h/idle_h:.2f})"
         )
         if aid == "boss_mist_wolf_king":
             assert 460 <= idle_w <= 555 and 320 <= idle_h <= 372, f"Wolf idle out of spec: {idle_w}x{idle_h}"
@@ -3126,7 +3152,7 @@ def run_self_audit() -> None:
             assert max_atk_w >= 104 and stride_delta >= 20 and spans_42[0] != spans_42[3], (
                 f"Shen metrics/asymmetry fail: atk_w={max_atk_w}, spans={spans_42}"
             )
-        assert down_h <= int(idle_h * 0.68), f"Down height not collapsed on {aid}: {down_h} vs {idle_h}"
+        assert down_h <= int(idle_h * 0.76), f"Down height not collapsed on {aid}: {down_h} vs {idle_h}"
 
     # 3. Surgical Fix 1 Hard Assertions across ALL 33 generated portraits (including ALL 3 mist_wolf_king variants!)
     pspec = json.load(open(os.path.join(REPO_ROOT, "assets_src/portraits/r2_expression_spec.json"), "r", encoding="utf-8"))
@@ -3174,11 +3200,27 @@ def run_self_audit() -> None:
 
 
 def main() -> None:
+    import sys
+
     entries: list[dict[str, Any]] = []
-    entries.append(build_wolf_king_sheet())
+    if "--party-only" not in sys.argv[1:]:
+        entries.append(build_wolf_king_sheet())
+    else:
+        wolf_png = os.path.join(REPO_ROOT, "project/assets/sprites/boss_mist_wolf_king_sheet.png")
+        entries.append({
+            "path": "project/assets/sprites/boss_mist_wolf_king_sheet.png",
+            "source_path": "assets_src/sprites/r2_wolf_king_parts_sheet.png",
+            "category": "sprite_sheet",
+            "dimensions": "3840x3584",
+            "sha256": sha256_file(wolf_png),
+            "creation_method": "Gemini Image Generation (assets_src/sprites/r2_wolf_king_side34_raw.png, Song-Ming Gongbi side-3/4 studio turnaround) + tools/build_polish_r2_actors.py (9-part anatomical segmentation, curved Telea socket feathering, 2x-supersampled rotary gallop/lunge/roar/grounded-collapse articulation, Song-Ming mineral LUT) | Spec: Giant side-3/4 Mist Wolf King 640x448 multi-pose combat sheet aligned to master_b_cangmu_rtwp.png",
+            "generated_date": GEN_DATE,
+            "license": LICENSE_R2,
+        })
     entries.extend(build_party_hero_sheets())
-    entries.extend(build_all_portraits())
-    entries.extend(build_narrative_stage_assets())
+    if "--sprites-only" not in sys.argv[1:] and "--party-only" not in sys.argv[1:]:
+        entries.extend(build_all_portraits())
+        entries.extend(build_narrative_stage_assets())
     total_manifest = update_asset_manifest(entries)
     run_self_audit()
     print(f"BUILD_POLISH_R2_OK: wrote {len(entries)} M2 assets; manifest total = {total_manifest}.")

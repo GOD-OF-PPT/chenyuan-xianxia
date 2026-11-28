@@ -687,7 +687,7 @@
       "source_path": "assets_src/sprites/r2_wolf_king_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "3840x3584",
-      "sha256": "63b6b1e651154958579acf90de5692229544ad8364c805f309d4c111b584e0e8",
+      "sha256": "69b20dc763abad9a7351080f5f7326a30c466c5775b1f71aa05268860d7e97e0",
       "creation_method": "Gemini Image Generation (assets_src/sprites/r2_wolf_king_side34_raw.png, Song-Ming Gongbi side-3/4 studio turnaround) + tools/build_polish_r2_actors.py (9-part anatomical segmentation, curved Telea socket feathering, 2x-supersampled rotary gallop/lunge/roar/grounded-collapse articulation, Song-Ming mineral LUT) | Spec: Giant side-3/4 Mist Wolf King 640x448 multi-pose combat sheet aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -737,7 +737,7 @@
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "650c57e58191fd1bc421cead34f5959905f5009cda1b50e04370fb3eb462b91a",
+      "sha256": "f18491cd151769ed85b8787cc176069a701ba17c38f0cca8c2a3d659fa791508",
       "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for gu_changqing aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -777,7 +777,7 @@
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "68b340ee754d0acfffdae0c9cca0713ff55fe67f3c06a1d45973d4330292b71a",
+      "sha256": "4b51729840458e3e53c594ebbc7fcbfa276738a30f0c1a5c0465382db094949c",
       "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for pei_zhao aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -807,7 +807,7 @@
       "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
       "category": "sprite_sheet",
       "dimensions": "2112x2240",
-      "sha256": "38c28c05ad7b2235b50a9f74ba3641632a356ea17366ef9bb25a4be0e6dfcf9a",
+      "sha256": "9fc7b0901cbadc7ad6cf58ce046ae50bfa4fad21d75b492c3ae765d0ebec5f36",
       "creation_method": "Gemini Image Generation (assets_src/sprites/char_ref_party_{pets,back}_raw.jpg) + tools/build_polish_r2_actors.py (Canonical head/collar/accessory grafting + 2x-supersampled 2-bone Song-Ming Gongbi limbs, curved Bezier split martial robes/wide sleeves & alternating-foot stride) | Spec: 352x280 multi-pose combat sprite sheet for shen_qinghe aligned to master_b_cangmu_rtwp.png",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1717,7 +1717,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "512x512",
-      "sha256": "c4231aedd7015ab8df315680cceef3e5a44a115ec166f8481f4233e48c001423",
+      "sha256": "81f229a6a0c38178dfe5a8855b905cf6f6ccbcec21941cc52e53ad9467b51341",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: 1:1 square canonical 8-trigram Qian-Kun cinnabar Bagua floor array (foreshortened 2.27:1 in world)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1727,7 +1727,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "256x256",
-      "sha256": "cb8f2c7bd0c1696485eac4a33d4b9d8fb9c045f8158af535a2b27a41d5d54970",
+      "sha256": "eba63c0b05b1ad5f563a65dd0be3bf302e64956cc7d96f2d4a2cd3eddcd01df7",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Three curved feral cinnabar claw-rake danger marks for ground_cone telegraphs",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1737,7 +1737,7 @@
       "source_path": "assets_src/ui/ui_icon_sheet_equips_raw.jpg",
       "category": "vfx",
       "dimensions": "256x96",
-      "sha256": "76b5451f8190fba6223267d03c8c3ecaf3035df1f89f1d8a53c7a75c82601cf5",
+      "sha256": "043883424c446e75a6ee2686212da42d656e22311247096be50d7f51ce7308b6",
       "creation_method": "tools/build_polish_r1_assets.py (Hybrid extraction from assets_src/ui/ui_icon_sheet_equips_raw.jpg + +X projectile orientation, Song-Ming mineral qi envelope & sumi-ink feibai refinement) | Spec: Horizontal (+X right) Qingyun flying sword with ice-cyan qi & sumi-ink feibai wisps",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1747,7 +1747,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "64x64",
-      "sha256": "801ce3f9051376edac70b1b50b9d4c565633dfbc86325e6bbb1d5ea6673920ab",
+      "sha256": "b84000ce6d62e6f86a4ac517f7af71fa91f43b7badf6b9c321384a45282f7806",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Organic calligraphic sumi-spatter droplet particle",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1757,7 +1757,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "64x64",
-      "sha256": "7fc47c31acb0bc017c7bb95fa2f4ae93dedde2f7b064ea1f29ef2cb03d80e424",
+      "sha256": "3db0227e875d4125e893476db6a8ac603d1b50fa57f43de794fa602f22542fd7",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Soft luminous lotus-dew spirit mote particle",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1777,7 +1777,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "64x64",
-      "sha256": "382607cb24f374f45f6eb8f4b3b7f9f8d778973c4bc24c58c19205b7baff3f9f",
+      "sha256": "91d0e603a9e1b510b7179bb5e62d26e634c667aca67626357984228c4409bf38",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Faceted mineral crag / metallic sword-shard particle",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1807,7 +1807,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "160x56",
-      "sha256": "0324b696bd7316811ea2af0c74c64b3c6d49c41c05f7d08ba83ecebdd8cd46e2",
+      "sha256": "6a549ab81942bda9aab1e292605c3dfdc2943159ed3bf8ebcd759d921817adb2",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Horizontal (+X right) Song-Ming medicinal silver acupuncture needle with coiled filigree handle & celadon meridian silk aura",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1817,7 +1817,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "320x256",
-      "sha256": "7aa7c9a01e6375d4cbf3b7bda17a72bb85eb6729df8789d4d51e3bbe64bbd814",
+      "sha256": "44f3775c718fac1ad4eaca34b3991ef20bea658268939975741c8ddacd8f6e4e",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Blazing +X Song-Ming mineral-fire crescent (UV.y 0->1 sweep): ivory-gold core + cinnabar flame tongues",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1827,7 +1827,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "320x256",
-      "sha256": "9df62e35b60329e339a2d9cb3b115569b55512d200c7dca06bb299a026085dd1",
+      "sha256": "4a8cf381c6009f810ce00c71a001c21640518163460e050a61e3721c9017db80",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Calligraphic +X sword crescent (UV.y 0->1 sweep): cyan razor rim + dry-brush sumi-ink feibai",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1837,7 +1837,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "256x64",
-      "sha256": "c9d1baa890fb3d6872dad877938188be04f994bcbe6a8583481b9982682da44e",
+      "sha256": "b50511e7edb10344fe07185ea2a200099917138d6b950b70d7f148eeaa3e21ae",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Stretchable white-cyan sword trail ribbon with longitudinal sumi-ink feibai bristles",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
@@ -1847,7 +1847,7 @@
       "source_path": "assets_src/vfx/r1_vfx_source_sheet.png",
       "category": "vfx",
       "dimensions": "256x256",
-      "sha256": "ae620265a9e35f3ed8489d63b2a8f030a6728955b23aac2c39543b5051359081",
+      "sha256": "196432e20db6a37ea07e6ef02628f5d557eb6b1cd8d11ebf43e5343dde5fd201",
       "creation_method": "tools/build_polish_r1_assets.py (2x supersampled Song-Ming calligraphic brush & polar SDF synthesis + Lanczos downsample, aligned to master_b_cangmu_rtwp.png) | Spec: Swirling S-curve celadon & stone-green wood-qi silk ribbon with dew motes",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"

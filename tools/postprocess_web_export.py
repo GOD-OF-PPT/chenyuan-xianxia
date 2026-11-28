@@ -112,7 +112,7 @@ body {
 
 		<div id="status">
 			<div id="status-title">《尘缘问道》</div>
-			<div id="status-sub">第一卷 · 山雨欲来风满楼（青岚境试玩版）</div>
+			<div id="status-sub">第一卷 · 山雨欲来风满楼（青岚境 v0.1.4-slice 试玩版）</div>
 			<div id="status-bar-bg"><div id="status-bar-fill"></div></div>
 			<div id="status-detail">正在连接云端画卷分片...</div>
 			<div id="status-notice"></div>
