@@ -60,6 +60,7 @@ var _alt_nameplate_overlay: Node2D = null
 var _xuan_nameplate_tex: Texture2D = null
 var _hovered_interactable_id: String = ""
 var _alt_key_down: bool = false
+var _tex_hit_images: Dictionary = {}
 
 
 func _ready() -> void:
@@ -204,12 +205,16 @@ func _connect_global_signals() -> void:
 	InputRouter.target_tab_pressed.connect(func() -> void: _combat_ctrl.cycle_tab_enemy_target())
 	InputRouter.interact_pressed.connect(_try_interact_nearest)
 	InputRouter.map_toggled.connect(func() -> void:
+		if _recap_scroll.visible or _narrative.visible:
+			return
 		if _modals.visible:
 			_modals.close_modal()
 		elif InputRouter.current_mode == InputRouter.MODE_WORLD_COMBAT:
 			_modals.open_world_map_modal()
 	)
 	InputRouter.dao_casket_tab_requested.connect(func(tab_id: String) -> void:
+		if _recap_scroll.visible or _narrative.visible:
+			return
 		if _modals.visible:
 			_modals.close_modal()
 		_casket.open_tab(tab_id)
@@ -223,10 +228,26 @@ func _connect_global_signals() -> void:
 			_alt_nameplate_overlay.queue_redraw()
 	)
 
-	_hud.open_casket_requested.connect(func(tab_id: String) -> void: _casket.open_tab(tab_id))
-	_hud.open_map_requested.connect(func() -> void: _modals.open_world_map_modal())
-	_hud.open_save_modal_requested.connect(func() -> void: _modals.open_save_load_modal(true))
-	_hud.open_settings_requested.connect(func() -> void: _modals.open_settings_modal())
+	_hud.open_casket_requested.connect(func(tab_id: String) -> void:
+		if _recap_scroll.visible or _narrative.visible:
+			return
+		_casket.open_tab(tab_id)
+	)
+	_hud.open_map_requested.connect(func() -> void:
+		if _recap_scroll.visible or _narrative.visible:
+			return
+		_modals.open_world_map_modal()
+	)
+	_hud.open_save_modal_requested.connect(func() -> void:
+		if _recap_scroll.visible or _narrative.visible:
+			return
+		_modals.open_save_load_modal(true)
+	)
+	_hud.open_settings_requested.connect(func() -> void:
+		if _recap_scroll.visible or _narrative.visible:
+			return
+		_modals.open_settings_modal()
+	)
 
 	_casket.replay_cg_requested.connect(func(cg_id: String) -> void: _narrative.play_standalone_cg(cg_id))
 
@@ -762,8 +783,53 @@ func _is_npc_hit_point(npc: BattleActor, pt: Vector2, include_hovered: bool = tr
 	return Rect2(npc.position.x - 46.0, npc.position.y - 160.0, 92.0, 196.0).has_point(pt)
 
 
+func _get_cached_tex_image(tex: Texture2D) -> Image:
+	if tex == null:
+		return null
+	var key: String = tex.resource_path if tex.resource_path != "" else str(tex.get_instance_id())
+	if _tex_hit_images.has(key):
+		return _tex_hit_images[key] as Image
+	var img: Image = tex.get_image()
+	if img != null and not img.is_empty() and img.is_compressed():
+		img.decompress()
+	_tex_hit_images[key] = img
+	return img
+
+
+func _is_interactable_hit_point(inter: Dictionary, pt: Vector2, include_hovered: bool = true) -> bool:
+	if float(inter.get("radius", 0.0)) <= 0.0:
+		return false
+	if include_hovered and _hovered_interactable_id != "" and str(inter.get("id", "")) == _hovered_interactable_id:
+		return true
+	var ipos: Vector2 = inter.get("pos", Vector2.ZERO) as Vector2
+	var d_i: float = _interact_distance_to(pt, ipos)
+	var raw_sp: Variant = inter.get("sprite", null)
+	var sp: Sprite2D = (raw_sp as Sprite2D) if (raw_sp != null and is_instance_valid(raw_sp)) else null
+	if sp != null and sp.texture != null:
+		var local_pt: Vector2 = sp.to_local(pt) - sp.offset
+		var w_px: int = sp.texture.get_width()
+		var h_px: int = sp.texture.get_height()
+		if local_pt.x >= -6.0 and local_pt.x < float(w_px) + 6.0 and local_pt.y >= -6.0 and local_pt.y < float(h_px) + 6.0:
+			var img: Image = _get_cached_tex_image(sp.texture)
+			if img != null and not img.is_empty():
+				var bx: int = int(floor(local_pt.x))
+				var by: int = int(floor(local_pt.y))
+				for off: Vector2i in [Vector2i(0, 0), Vector2i(-6, 0), Vector2i(6, 0), Vector2i(0, -6), Vector2i(0, 6)]:
+					var sx: int = clampi(bx + off.x, 0, img.get_width() - 1)
+					var sy: int = clampi(by + off.y, 0, img.get_height() - 1)
+					if img.get_pixel(sx, sy).a > 0.08:
+						return true
+				return d_i <= 46.0
+			var cx: float = float(w_px) * 0.5
+			var cy: float = float(h_px) * 0.52
+			var d_diamond: float = absf(local_pt.x - cx) / maxf(1.0, float(w_px) * 0.44) + absf(local_pt.y - cy) / maxf(1.0, float(h_px) * 0.46)
+			return d_diamond <= 1.04
+		return d_i <= 46.0
+	return d_i <= 78.0
+
+
 func _handle_right_click_world(world_pt: Vector2) -> void:
-	# 1. 右键敌人：锁定并开启自动平砍！
+	# 1. 右键敌人：锁定并开启自动平砍（若较远则趋近，绝不误生地面青玉水波）！
 	for ea: BattleActor in _combat_ctrl.enemy_actors:
 		if is_instance_valid(ea) and ea.alive and (ea.contains_world_point(world_pt) or ea.is_hovered):
 			_combat_ctrl.set_locked_enemy(ea.actor_id, true)
@@ -771,18 +837,26 @@ func _handle_right_click_world(world_pt: Vector2) -> void:
 				var eu: Dictionary = _combat_ctrl.unit_states.get(ea.actor_id, {}) as Dictionary
 				if ea.position.distance_to(_combat_ctrl.get_controlled_actor_pos()) <= 420.0:
 					_combat_ctrl.engage_enemy_group(str(eu.get("group_id", "")), _combat_ctrl.get_controlled_char_id(), true)
+				else:
+					_combat_ctrl.command_move_selected_to(ea.position)
 			return
 
-	# 2. 右键 NPC 或近处交互器物：交谈/开启
+	# 2. 右键 NPC 或交互器物：近处直接交谈/开启，远处趋近且绝不误生地面青玉水波！
 	if not _combat_ctrl.in_combat:
 		for npc: BattleActor in _npc_actors:
-			if is_instance_valid(npc) and _is_npc_hit_point(npc, world_pt) and npc.position.distance_to(_combat_ctrl.get_controlled_actor_pos()) <= 240.0:
-				_trigger_npc_dialogue(npc.actor_id)
+			if is_instance_valid(npc) and _is_npc_hit_point(npc, world_pt):
+				if npc.position.distance_to(_combat_ctrl.get_controlled_actor_pos()) <= 240.0:
+					_trigger_npc_dialogue(npc.actor_id)
+				else:
+					_combat_ctrl.command_move_selected_to(npc.position)
 				return
 		for inter: Dictionary in _interactables:
-			var ipos: Vector2 = inter.get("pos", Vector2.ZERO) as Vector2
-			if _interact_distance_to(world_pt, ipos) <= 88.0 and _interact_distance_to(_combat_ctrl.get_controlled_actor_pos(), ipos) <= maxf(220.0, float(inter.get("radius", 120.0))):
-				_activate_interactable(inter)
+			if _is_interactable_hit_point(inter, world_pt):
+				var ipos: Vector2 = inter.get("pos", Vector2.ZERO) as Vector2
+				if _interact_distance_to(_combat_ctrl.get_controlled_actor_pos(), ipos) <= maxf(220.0, float(inter.get("radius", 120.0))):
+					_activate_interactable(inter)
+				else:
+					_combat_ctrl.command_move_selected_to(ipos)
 				return
 
 	# 3. 右键地面：指挥选中队员或当前主控角色移动走位，并绽放青玉水波落点（敌/NPC/器物已提前返回，绝不误生水波）！
@@ -819,6 +893,17 @@ func _finish_box_selection(end_screen: Vector2) -> void:
 
 func _clear_all_hover_outlines() -> void:
 	_hovered_interactable_id = ""
+	if _combat_ctrl != null:
+		_combat_ctrl.hovered_world_actor_id = ""
+		for ea_c: BattleActor in _combat_ctrl.enemy_actors:
+			if is_instance_valid(ea_c) and ea_c.is_hovered:
+				ea_c.is_hovered = false
+				ea_c.queue_redraw()
+		for pa_var_c: Variant in _combat_ctrl.party_actors.values():
+			var pa_c: BattleActor = pa_var_c as BattleActor
+			if is_instance_valid(pa_c) and pa_c.is_hovered:
+				pa_c.is_hovered = false
+				pa_c.queue_redraw()
 	for inter_c: Dictionary in _interactables:
 		var raw_sp_c: Variant = inter_c.get("sprite", null)
 		if raw_sp_c != null and is_instance_valid(raw_sp_c):
@@ -826,8 +911,17 @@ func _clear_all_hover_outlines() -> void:
 			if sp_c != null and sp_c.material is ShaderMaterial:
 				(sp_c.material as ShaderMaterial).set_shader_parameter("outline_intensity", 0.0)
 	for npc_c: BattleActor in _npc_actors:
-		if is_instance_valid(npc_c) and npc_c._sprite != null and is_instance_valid(npc_c._sprite) and npc_c._sprite.material is ShaderMaterial:
-			(npc_c._sprite.material as ShaderMaterial).set_shader_parameter("outline_intensity", 0.0)
+		if is_instance_valid(npc_c):
+			if npc_c.is_hovered:
+				npc_c.is_hovered = false
+				npc_c.queue_redraw()
+			if npc_c._overlay_canvas != null and is_instance_valid(npc_c._overlay_canvas):
+				npc_c._overlay_canvas.queue_redraw()
+			if npc_c._sprite != null and is_instance_valid(npc_c._sprite) and npc_c._sprite.material is ShaderMaterial:
+				(npc_c._sprite.material as ShaderMaterial).set_shader_parameter("outline_intensity", 0.0)
+	if _hud != null:
+		_hud.set_interact_prompt("")
+	_set_cursor_mode(0)
 
 
 func _update_interact_prompt_and_cursor(has_world_override: bool = false, world_override: Vector2 = Vector2.ZERO) -> void:
@@ -839,7 +933,10 @@ func _update_interact_prompt_and_cursor(has_world_override: bool = false, world_
 
 	for ea: BattleActor in _combat_ctrl.enemy_actors:
 		if is_instance_valid(ea):
-			ea.is_hovered = ea.alive and ea.contains_world_point(wmouse)
+			var next_ehov: bool = ea.alive and ea.contains_world_point(wmouse)
+			if ea.is_hovered != next_ehov:
+				ea.is_hovered = next_ehov
+				ea.queue_redraw()
 			if ea.is_hovered:
 				over_enemy = true
 
@@ -848,13 +945,21 @@ func _update_interact_prompt_and_cursor(has_world_override: bool = false, world_
 		var raw_pa: Variant = _combat_ctrl.party_actors[cid]
 		if raw_pa != null and is_instance_valid(raw_pa):
 			var pa: BattleActor = raw_pa as BattleActor
-			pa.is_hovered = pa.alive and pa.contains_world_point(wmouse)
+			var next_phov: bool = pa.alive and pa.contains_world_point(wmouse)
+			if pa.is_hovered != next_phov:
+				pa.is_hovered = next_phov
+				pa.queue_redraw()
 			if pa.is_hovered:
 				_combat_ctrl.hovered_world_actor_id = cid
 
 	for npc: BattleActor in _npc_actors:
 		if is_instance_valid(npc):
-			npc.is_hovered = (not _combat_ctrl.in_combat) and _is_npc_hit_point(npc, wmouse, false)
+			var next_nhov: bool = (not _combat_ctrl.in_combat) and _is_npc_hit_point(npc, wmouse, false)
+			if npc.is_hovered != next_nhov:
+				npc.is_hovered = next_nhov
+				npc.queue_redraw()
+				if npc._overlay_canvas != null and is_instance_valid(npc._overlay_canvas):
+					npc._overlay_canvas.queue_redraw()
 			if npc.is_hovered:
 				over_interact = true
 			if npc._sprite != null and is_instance_valid(npc._sprite) and npc._sprite.material is ShaderMaterial:
@@ -867,21 +972,11 @@ func _update_interact_prompt_and_cursor(has_world_override: bool = false, world_
 	if not _combat_ctrl.in_combat:
 		for idx_i: int in range(_interactables.size()):
 			var inter_h: Dictionary = _interactables[idx_i]
-			if float(inter_h.get("radius", 0.0)) <= 0.0:
+			if not _is_interactable_hit_point(inter_h, wmouse, false):
 				continue
 			var ipos_h: Vector2 = inter_h.get("pos", Vector2.ZERO) as Vector2
-			var raw_sp_h: Variant = inter_h.get("sprite", null)
-			var sp_h: Sprite2D = (raw_sp_h as Sprite2D) if (raw_sp_h != null and is_instance_valid(raw_sp_h)) else null
-			var hit_inter: bool = false
 			var d_h: float = _interact_distance_to(wmouse, ipos_h)
-			if sp_h != null and sp_h.texture != null:
-				var tw_h: float = float(sp_h.texture.get_width())
-				var th_h: float = float(sp_h.texture.get_height())
-				var srect_h: Rect2 = Rect2(ipos_h.x - tw_h * 0.46, ipos_h.y - th_h * 0.96, tw_h * 0.92, th_h * 0.96)
-				hit_inter = srect_h.has_point(wmouse) or (d_h <= 78.0)
-			else:
-				hit_inter = (d_h <= 78.0)
-			if hit_inter and d_h < best_hover_dist:
+			if d_h < best_hover_dist:
 				best_hover_dist = d_h
 				best_hover_inter_idx = idx_i
 

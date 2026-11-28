@@ -1578,9 +1578,13 @@ func _build_tab_inventory_and_sword_box() -> void:
 	list_v.add_theme_constant_override("separation", 6)
 	scroll.add_child(list_v)
 
+	var filtered_entries: Array[Dictionary] = []
+	var visible_inv_ids: Array[String] = []
 	for entry: Dictionary in CampaignState.inventory:
 		var iid: String = str(entry.get("id", ""))
 		var cnt: int = int(entry.get("count", 0))
+		if cnt <= 0:
+			continue
 		var is_eq: bool = DataDB.equipment.has(iid)
 		var idef: Dictionary = DataDB.get_any_item_or_equip(iid)
 		var cat: String = str(idef.get("category", "equip" if is_eq else "material"))
@@ -1590,21 +1594,36 @@ func _build_tab_inventory_and_sword_box() -> void:
 			continue
 		if selected_inv_filter == "mat" and (is_eq or ["instant_pill", "elixir", "talisman"].has(cat)):
 			continue
+		filtered_entries.append({
+			"id": iid,
+			"count": cnt,
+			"idef": idef,
+		})
+		visible_inv_ids.append(iid)
 
-		if selected_item_id == "":
-			selected_item_id = iid
+	if visible_inv_ids.is_empty():
+		selected_item_id = ""
+	elif not visible_inv_ids.has(selected_item_id):
+		selected_item_id = visible_inv_ids[0]
 
-		var ibtn: Button = Button.new()
-		ibtn.focus_mode = Control.FOCUS_NONE
-		ibtn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		var iname: String = DataDB.loc(str(idef.get("name_key", iid)))
-		var purify_tag: String = " [可入剑匣]" if str(idef.get("purify_into_item_id", "")) != "" else ""
-		ibtn.text = "%s%s ×%d%s" % ["▶ " if selected_item_id == iid else "", iname, cnt, purify_tag]
-		ibtn.pressed.connect(func() -> void:
-			selected_item_id = iid
-			rebuild_current_tab()
-		)
-		list_v.add_child(ibtn)
+	if filtered_entries.is_empty():
+		list_v.add_child(_dark_label("此分类下暂无器物或丹材。", 17, Color("#5B5248")))
+	else:
+		for fentry: Dictionary in filtered_entries:
+			var iid: String = str(fentry["id"])
+			var cnt: int = int(fentry["count"])
+			var idef: Dictionary = fentry["idef"] as Dictionary
+			var ibtn: Button = Button.new()
+			ibtn.focus_mode = Control.FOCUS_NONE
+			ibtn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			var iname: String = DataDB.loc(str(idef.get("name_key", iid)))
+			var purify_tag: String = " [可入剑匣]" if str(idef.get("purify_into_item_id", "")) != "" else ""
+			ibtn.text = "%s%s ×%d%s" % ["▶ " if selected_item_id == iid else "", iname, cnt, purify_tag]
+			ibtn.pressed.connect(func() -> void:
+				selected_item_id = iid
+				rebuild_current_tab()
+			)
+			list_v.add_child(ibtn)
 
 	# 右侧器物详情与 #8FD4E8 蓝字特技对比窗
 	var detail_box: PanelContainer = PanelContainer.new()
@@ -1700,7 +1719,10 @@ func _build_tab_inventory_and_sword_box() -> void:
 					var bind_b: Button = Button.new()
 					bind_b.text = "装入快捷丹符槽 [%s]" % qslot
 					bind_b.focus_mode = Control.FOCUS_NONE
+					bind_b.disabled = NotifyHub.combat_active
 					bind_b.pressed.connect(func() -> void:
+						if NotifyHub.combat_active:
+							return
 						if qslot == "5":
 							CampaignState.quick_pill_5_id = selected_item_id
 						else:
@@ -1709,7 +1731,6 @@ func _build_tab_inventory_and_sword_box() -> void:
 						rebuild_current_tab()
 					)
 					dv.add_child(bind_b)
-
 			if str(sel_def.get("purify_into_item_id", "")) != "":
 				var pur_b: Button = Button.new()
 				pur_b.text = "置入【断玉剑匣】蕴灵提纯（历战3场化极品）"
@@ -1724,6 +1745,13 @@ func _build_tab_inventory_and_sword_box() -> void:
 						rebuild_current_tab()
 				)
 				dv.add_child(pur_b)
+	else:
+		var empty_detail: Label = Label.new()
+		empty_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty_detail.text = "（当前分类暂无可检视之器物或丹材）"
+		empty_detail.add_theme_font_size_override("font_size", 17)
+		empty_detail.add_theme_color_override("font_color", Color("#B8B0A0"))
+		dv.add_child(empty_detail)
 
 	# 右页：【断玉剑匣 · 混元提纯暗格】与丹道图谱
 	rv.add_child(_dark_label("◆ 绝密古宝【断玉剑匣 · 混元提纯暗格】：", 21, Color("#23483E")))
@@ -1894,11 +1922,17 @@ func _build_tab_journal() -> void:
 
 	# 右页：五阶羁绊词牌 + 五大势力声望 + 朱砂因果水墨签 + 前尘绘卷 CG 回看
 	rv.add_child(_dark_label("◆ 同道五阶羁绊词牌（二阶解锁 G 键双人羁绊合击）：", 20, Color("#5A3B1E")))
+	var shown_bonds: int = 0
 	for comp_id: String in ["shen_qinghe", "pei_zhao"]:
+		if not CampaignState.recruited_order.has(comp_id):
+			continue
+		shown_bonds += 1
 		var btier: int = clampi(int(CampaignState.companion_bonds.get(comp_id, 1)), 1, 5)
 		var cname: String = DataDB.loc(str(DataDB.get_character(comp_id).get("name_key", comp_id)))
 		var ult_note: String = "（已开启合击【青莲引剑】）" if comp_id == "shen_qinghe" and btier >= 2 else ""
 		rv.add_child(_dark_label("  · %s：%s %s" % [cname, tr(CampaignState.BOND_TIER_KEYS[btier - 1]), ult_note], 18, Color("#23483E")))
+	if shown_bonds == 0:
+		rv.add_child(_dark_label("  （游历青岚结识同道后录入金兰词牌）", 16, Color("#5B5248")))
 
 	rv.add_child(_dark_label("◆ 九州五大势力声望阶位：", 20, Color("#5A3B1E")))
 	for fid_var: Variant in DataDB.factions.keys():
