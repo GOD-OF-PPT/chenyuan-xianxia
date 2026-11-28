@@ -697,7 +697,7 @@
       "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1344x1792",
-      "sha256": "0ec281c507fc7780bf9dc6966208cdfc36aa520b43575cf20d05a91094e841f2",
+      "sha256": "e54059de594955f619e123f1c6f0bada1a2ddcda3a3e60f555ddd6645f0d8ea0",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_miasma_shaman)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
@@ -707,7 +707,7 @@
       "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1440x1792",
-      "sha256": "1b5b88a602590d0507f90fc44b1a9b15bedb49f3a812770e19a317831475aa4f",
+      "sha256": "23158137daea5857ea145cce39c6da857b10b33ca44712337be7e0d19b9d3650",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_rogue_cultivator)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
@@ -717,7 +717,7 @@
       "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1536x1536",
-      "sha256": "9835085370df9cc06a10482e31eef8cdc4b766441cb1b8c7100adab92558cde0",
+      "sha256": "c193e71f3a425e9a96c1361ee6cbc5dac5964d37d0937742b1c404b4376d85a7",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_rot_wolf)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
@@ -727,7 +727,7 @@
       "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1632x2112",
-      "sha256": "6402c50563222fb38ea53c9bd3b3bc816c125941a4455f17943d23025e1ee633",
+      "sha256": "523c89fc333f7119314d8311653ece88fc124de549b1a1da14e5da74e17767d9",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_wood_golem)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
@@ -747,7 +747,7 @@
       "source_path": "assets_src/sprites/char_ref_town_npcs_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1344x1792",
-      "sha256": "d3b94b7ee09e40d8509c1ee717e9b8ac7c9b423109fc481b721ac536f14ae70e",
+      "sha256": "38f5a96b3bbd3cca9906058841928ef6e5534d601c76b41dc37145b36a956c95",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_town_npcs_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (npc_elder)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
@@ -757,7 +757,7 @@
       "source_path": "assets_src/world/prop_peddler_and_yaolu_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1344x1792",
-      "sha256": "c306291ea4a8776d2245d383a4bad34bae259a6217c4cb90dcd3140c2c1a8c26",
+      "sha256": "19d408d840d3efbad66163326f2ade90c45dcb12fecac36b25f4213586c2bc19",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/world/prop_peddler_and_yaolu_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (npc_peddler)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
@@ -767,7 +767,7 @@
       "source_path": "assets_src/sprites/char_ref_town_npcs_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1344x1792",
-      "sha256": "f409d0cc1856ea70e25daacc783c724843952e728f74799d04f00347818b1d07",
+      "sha256": "c383c73ea57a0f5408b7a8dfca0be5cc6c2c4a28f9b7890bb6ad36a3d6756dc9",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_town_npcs_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (npc_steward_zhou)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
@@ -787,7 +787,7 @@
       "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1152x1408",
-      "sha256": "d4bb46374b680270d6c7a3389ef7dd6b088ee0bd9682b37b1b619ae4c3441f56",
+      "sha256": "39460bc63060f9b62f5cdd5b3f54092866be21cfa0e9af174ca45abe84e1b251",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_party_pets_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (pet_fire_fox)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"
@@ -797,7 +797,7 @@
       "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
       "category": "sprite_sheet",
       "dimensions": "1248x1408",
-      "sha256": "1ccd792af0d0e28313f2a856606a40df5513e9e9a2d3ffa238d2a448702a678a",
+      "sha256": "b157b0ee5873ff73df209e8e83d9f7778e4ad790c8dae0471bc7a8b7ecdd39bc",
       "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_party_pets_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (pet_spirit_turtle)",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)"

@@ -626,12 +626,11 @@ def build_r6_party_hero_sheets() -> list[dict[str, str]]:
 
 
 # ==================== 2. GROUND-PLANTED SHADOW-FREE NPC / PET / ENEMY SHEETS ====================
-def strip_bottom_studio_cast_shadow(im_rgba: Image.Image, y_start_frac: float = 0.72) -> Image.Image:
+def strip_bottom_studio_cast_shadow(im_rgba: Image.Image, y_start_frac: float = 0.82) -> Image.Image:
     """
-    Removes residual pale beige/tan studio floor cast-shadows painted between feet/paws/staves
-    (`luma >= 122`, low chroma `max-min <= 40` in the bottom floor band `y >= h * y_start_frac`),
-    using BOTH exterior flood-fill (stopping strictly at dark Gongbi ink contours `luma < 88`)
-    AND enclosed inter-leg pale floor pocket clearing so zero tan floor blotches survive on dark stone!
+    Removes residual warm-beige studio floor cast-shadows painted between enemy feet/paws/staves
+    strictly via 4-connected exterior flood-fill (`cv2.connectedComponents`) blocked by dark Gongbi ink
+    contours (`luma < 95`), touching ZERO interior clothing hems or stone armor plates!
     """
     arr = np.asarray(im_rgba, dtype=np.uint8).copy()
     h, w, _ = arr.shape
@@ -641,16 +640,28 @@ def strip_bottom_studio_cast_shadow(im_rgba: Image.Image, y_start_frac: float = 
 
     y0 = int(round(h * y_start_frac))
     yy = np.arange(h)[:, None]
-    pale_floor = (yy >= y0) & (arr[..., 3] > 0) & (luma >= 122.0) & (chroma <= 40.0)
-
-    # Clear all pale neutral studio floor cast-shadow pixels in the bottom foot band (all Gongbi boots/paws/moss
-    # have either dark luma < 115 or saturated color chroma > 40, bounded by dark ink contours < 80)
+    ink_barrier = (arr[..., 3] >= 40) & (luma < 95.0)
+    seed = (
+        cv2.dilate((arr[..., 3] < 20).astype(np.uint8), np.ones((5, 5), np.uint8), iterations=1).astype(bool)
+        & (~ink_barrier)
+    )
+    cand = seed | (
+        (yy >= y0)
+        & (~ink_barrier)
+        & (luma >= 128.0)
+        & (chroma <= 38.0)
+        & ((rgb[..., 0] - rgb[..., 2]) >= 6.0)
+    )
+    _, labels = cv2.connectedComponents(cand.astype(np.uint8), connectivity=4)
+    ext_labels = set(np.unique(labels[seed]))
+    pale_floor = (
+        np.isin(labels, list(ext_labels))
+        & (arr[..., 3] >= 20)
+        & (yy >= y0)
+        & (luma >= 122.0)
+        & (chroma <= 38.0)
+    )
     arr[pale_floor, 3] = 0
-
-    # Soft 1px feather on newly exposed shadow boundary
-    eroded = cv2.erode((arr[..., 3] > 0).astype(np.uint8), np.ones((3, 3), np.uint8), iterations=1)
-    rim = (yy >= y0) & (arr[..., 3] > 0) & (eroded == 0) & (luma >= 108.0) & (chroma <= 36.0)
-    arr[rim, 3] = (arr[rim, 3].astype(np.float32) * 0.35).astype(np.uint8)
     arr = r2_act.prune_tiny_alpha_specks(r2_act.clean_zero_alpha(arr), max_speck_area=18, alpha_thresh=14)
 
     ys, xs = np.where(arr[..., 3] > 14)
@@ -828,7 +839,7 @@ def build_grounded_actor_sheet(
     is_enemy: bool = False,
 ) -> dict[str, str]:
     def prep_scaled(im: Image.Image) -> tuple[Image.Image, int]:
-        cleaned = strip_bottom_studio_cast_shadow(im, y_start_frac=0.72 if is_enemy else 0.78)
+        cleaned = strip_bottom_studio_cast_shadow(im, y_start_frac=0.82) if is_enemy else im
         sc = target_h / float(max(1, cleaned.height))
         max_w = int(cell_w * 0.76)
         nw = min(max_w, max(24, int(round(cleaned.width * sc))))
