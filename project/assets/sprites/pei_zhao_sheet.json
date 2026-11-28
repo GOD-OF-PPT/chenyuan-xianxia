@@ -21,13 +21,13 @@
     "run_se": {
       "row": 2,
       "frames": 6,
-      "fps": 10.5,
+      "fps": 8.5,
       "loop": true
     },
     "run_ne": {
       "row": 3,
       "frames": 6,
-      "fps": 10.5,
+      "fps": 8.5,
       "loop": true
     },
     "attack_1": {

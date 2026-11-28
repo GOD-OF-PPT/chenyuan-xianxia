@@ -694,43 +694,43 @@
     },
     {
       "path": "project/assets/sprites/enemy_miasma_shaman_sheet.png",
-      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "source_path": "assets_src/sprites/r8_enemies_fox_multipose_raw.jpg",
       "category": "sprite_sheet",
-      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_miasma_shaman)",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)",
-      "sha256": "5a235b7bb90d24fba006fc10060ea51c644b2f9ac08ce1092f7d8b8fcd03bb82"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi creature/enemy multi-pose action sheet assets_src/sprites/r8_enemies_fox_multipose_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py genuine 2-pose stride & lunge splice (enemy_miasma_shaman)",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "3e9e3ee48a09170a6f90e52b2c7ff3cb8b0acd4cbe8d3875aeadce34ae2aa2e2"
     },
     {
       "path": "project/assets/sprites/enemy_rogue_cultivator_sheet.png",
-      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "source_path": "assets_src/sprites/r8_enemies_fox_multipose_raw.jpg",
       "category": "sprite_sheet",
-      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_rogue_cultivator)",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)",
-      "sha256": "8627520aa9d0a0ca4b7525cdce8c1b36f624c32edf1a0ad4904041b13271670c"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi creature/enemy multi-pose action sheet assets_src/sprites/r8_enemies_fox_multipose_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py genuine 2-pose stride & lunge splice (enemy_rogue_cultivator)",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "b96360b0116b32531e1ade314ced86a75ccd549be8e92dc5bedee6c64577aa90"
     },
     {
       "path": "project/assets/sprites/enemy_rot_wolf_sheet.png",
-      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "source_path": "assets_src/sprites/r8_enemies_fox_multipose_raw.jpg",
       "category": "sprite_sheet",
-      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_rot_wolf)",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)",
-      "sha256": "28511f3ecf51d97d16a0f5d9f4463430259518246ea6804b28736cce01a5bf52"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi creature/enemy multi-pose action sheet assets_src/sprites/r8_enemies_fox_multipose_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py genuine 2-pose stride & lunge splice (enemy_rot_wolf)",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "ecf2505d7e38cfdee4f8c17f20e243909623fbb00015fb7913e1478dcb35ae01"
     },
     {
       "path": "project/assets/sprites/enemy_wood_golem_sheet.png",
-      "source_path": "assets_src/sprites/char_ref_enemies_boss_raw.jpg",
+      "source_path": "assets_src/sprites/r8_enemies_fox_multipose_raw.jpg",
       "category": "sprite_sheet",
-      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_enemies_boss_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (enemy_wood_golem)",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)",
-      "sha256": "b691fbd8bd5282f47238699c5adba8079899683f48923f4a7639b66c935e3df8"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi creature/enemy multi-pose action sheet assets_src/sprites/r8_enemies_fox_multipose_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py genuine 2-pose stride & lunge splice (enemy_wood_golem)",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "9a90dbaf553a3621480f4caae5975e01a6dc3604fec86bd47b0c9e589f02d461"
     },
     {
       "path": "project/assets/sprites/gu_changqing_sheet.png",
-      "source_path": "assets_src/sprites/r7_gu_multipose_raw.jpg",
+      "source_path": "assets_src/sprites/r8_gu_walk_combat_raw.jpg",
       "category": "sprite_sheet",
-      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi multi-pose action & stride master sheets assets_src/sprites/r7_gu_multipose_raw.jpg, r7_gu_thrust_backrun_raw.jpg, char_ref_party_pets_raw.jpg & char_ref_party_back_raw.jpg) + tools/build_polish_r7_combat_and_cave.py 8-row full hand-painted keyframe assembly (gu_changqing)",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi grounded walk & unified-weapon combat plates assets_src/sprites/r8_gu_walk_combat_raw.jpg, r8_back_walk_raw.jpg, r7_*_multipose_raw.jpg & char_ref_party_*_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py zero-pinch natural stride & multi-pose combo assembly (gu_changqing)",
       "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
-      "sha256": "5f7547b158c738bb816a1ed5a82771c5fd5738ba1ea183e0ecaf474f24bb104a"
+      "sha256": "6c86cf9f8ffcf38fc177aa9d1c5ae2edda87941585eef9bb9b3c208ea235b258"
     },
     {
       "path": "project/assets/sprites/npc_elder_sheet.png",
@@ -758,19 +758,19 @@
     },
     {
       "path": "project/assets/sprites/pei_zhao_sheet.png",
-      "source_path": "assets_src/sprites/r7_pei_shen_multipose_raw.jpg",
+      "source_path": "assets_src/sprites/r8_pei_walk_combat_raw.jpg",
       "category": "sprite_sheet",
-      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi multi-pose action & stride master sheets assets_src/sprites/r7_pei_shen_multipose_raw.jpg, r7_gu_thrust_backrun_raw.jpg, char_ref_party_pets_raw.jpg & char_ref_party_back_raw.jpg) + tools/build_polish_r7_combat_and_cave.py 8-row full hand-painted keyframe assembly (pei_zhao)",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi grounded walk & unified-weapon combat plates assets_src/sprites/r8_pei_walk_combat_raw.jpg, r8_back_walk_raw.jpg, r7_*_multipose_raw.jpg & char_ref_party_*_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py zero-pinch natural stride & multi-pose combo assembly (pei_zhao)",
       "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
-      "sha256": "df6ce5c5d917a1fb72892529e59450c5f6a081043ca55d42cf377c22da697318"
+      "sha256": "fcd42894bf1e9fdb5978518e3f2305e6eaf7217cf683562fa969ff4e53567f5d"
     },
     {
       "path": "project/assets/sprites/pet_fire_fox_sheet.png",
-      "source_path": "assets_src/sprites/char_ref_party_pets_raw.jpg",
+      "source_path": "assets_src/sprites/r8_enemies_fox_multipose_raw.jpg",
       "category": "sprite_sheet",
-      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi reference assets_src/sprites/char_ref_party_pets_raw.jpg) + tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet (pet_fire_fox)",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r6_actors_and_town.py Anatomical Rig, Grounded Stride & Mineral LUT, Commercial Rights Cleared)",
-      "sha256": "35d6c02c67420f3b35ee4613631efdc91c2eee5561eb56b3c54aa2700f1d5cc2"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi creature/enemy multi-pose action sheet assets_src/sprites/r8_enemies_fox_multipose_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py genuine 2-pose stride & lunge splice (pet_fire_fox)",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "e4757049571e6ff738c56f969778ee1f0cbff75c7d9e817471463c3dfaee3889"
     },
     {
       "path": "project/assets/sprites/pet_spirit_turtle_sheet.png",
@@ -782,11 +782,11 @@
     },
     {
       "path": "project/assets/sprites/shen_qinghe_sheet.png",
-      "source_path": "assets_src/sprites/r7_pei_shen_multipose_raw.jpg",
+      "source_path": "assets_src/sprites/r8_shen_walk_combat_raw.jpg",
       "category": "sprite_sheet",
-      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi multi-pose action & stride master sheets assets_src/sprites/r7_pei_shen_multipose_raw.jpg, r7_gu_thrust_backrun_raw.jpg, char_ref_party_pets_raw.jpg & char_ref_party_back_raw.jpg) + tools/build_polish_r7_combat_and_cave.py 8-row full hand-painted keyframe assembly (shen_qinghe)",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi grounded walk & unified-weapon combat plates assets_src/sprites/r8_shen_walk_combat_raw.jpg, r8_back_walk_raw.jpg, r7_*_multipose_raw.jpg & char_ref_party_*_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py zero-pinch natural stride & multi-pose combo assembly (shen_qinghe)",
       "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
-      "sha256": "a4fbd2a7183f74056dd120ea15a42ddbe96a122179089d86efb057a757151ca2"
+      "sha256": "3de9cbf3067598d6976adf1fc700963a2dc88b04900fc71dcbe65e8be43be898"
     },
     {
       "path": "project/assets/ui/cursors/cursor_bronze_sword.png",
@@ -1299,14 +1299,20 @@
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     },
     {
-      "path": "project/assets/ui/icons/item_dew.png",
-      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "path": "project/assets/ui/icons/hud_formation_bagua.png",
+      "source_path": "assets_src/ui/r8_hud_xuan_icons_raw.jpg",
       "category": "ui_icon",
-      "dimensions": "96x96",
-      "sha256": "e56879865941eca2062850ab53b88d28d045051422799644ac46a639747d62cd",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (item_dew.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi warm Xuan-parchment skill/item icon: Z bronze-and-cinnabar Bagua compass) + tools/build_polish_r8_gait_town_and_hud.py 96x96 chamfered bronze framing",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "48fb6d7e7fc29d714f84fa5987692c3ac371764aa2d601b0fd4a9107e7e606d4"
+    },
+    {
+      "path": "project/assets/ui/icons/item_dew.png",
+      "source_path": "assets_src/ui/r8_hud_xuan_icons_extra_raw.jpg",
+      "category": "ui_icon",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi warm Xuan-parchment skill/item icon: 6 celadon-jade double-bulb gourd with luminous spring-dew droplet) + tools/build_polish_r8_gait_town_and_hud.py 96x96 chamfered bronze framing",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "6bc3cdd8162789fcacfa0507c48a28b480fa44b300ee96bb6ccaf8513d89de70"
     },
     {
       "path": "project/assets/ui/icons/item_pouch.png",
@@ -1460,23 +1466,19 @@
     },
     {
       "path": "project/assets/ui/icons/sk_bond_qinglian.png",
-      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "source_path": "assets_src/ui/r8_hud_xuan_icons_raw.jpg",
       "category": "ui_icon",
-      "dimensions": "96x96",
-      "sha256": "cfc7c51ec4d0aa9e4e0fce196b6edb876339f57c10903148bae887edf9e1b2e2",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (96x96 grid crop, Song-Ming LUT & bronze-ebony frame bevel.) | Prompt: Song-Ming Gongbi item/skill icon (sk_bond_qinglian.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi warm Xuan-parchment skill/item icon: R ebony-and-gold sword casket bursting with flying jade swords) + tools/build_polish_r8_gait_town_and_hud.py 96x96 chamfered bronze framing",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "3d619b7c6af5b637d9904b633cd5588f96be155b6a4d7c0c27c4ee67e1627c12"
     },
     {
       "path": "project/assets/ui/icons/sk_earth_cleave.png",
-      "source_path": "assets_src/ui/procedural_seals_spec.json",
-      "category": "ui_seal_badge",
-      "dimensions": "96x96",
-      "sha256": "5ee423ea16688014d5ce72852dc4fb4ea374ebb765fa14bcb43d28399158788f",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (sk_earth_cleave.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "source_path": "assets_src/ui/r8_hud_xuan_icons_extra_raw.jpg",
+      "category": "ui_icon",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi warm Xuan-parchment skill/item icon: 2 bronze-gold broadsword cleaving ochre mountain rock waves) + tools/build_polish_r8_gait_town_and_hud.py 96x96 chamfered bronze framing",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "9c45c41d4f11cd0effca059a7f0c1d4fe3791d6bcf9949010be85fa417cbb6a8"
     },
     {
       "path": "project/assets/ui/icons/sk_fire_blade.png",
@@ -1490,33 +1492,27 @@
     },
     {
       "path": "project/assets/ui/icons/sk_interrupt_seal.png",
-      "source_path": "assets_src/ui/procedural_seals_spec.json",
-      "category": "ui_seal_badge",
-      "dimensions": "96x96",
-      "sha256": "e3e4145daecafb31b4122b1fa084e930d1a5643254dec1fa1cea2273188607b2",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (sk_interrupt_seal.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "source_path": "assets_src/ui/r8_hud_xuan_icons_raw.jpg",
+      "category": "ui_icon",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi warm Xuan-parchment skill/item icon: Q interrupt bronze sword slicing spell circle) + tools/build_polish_r8_gait_town_and_hud.py 96x96 chamfered bronze framing",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "9e50ad08db44337941ef4721120fb2c3aa0bfc07b750ede06b15dae9c3d6ef1f"
     },
     {
       "path": "project/assets/ui/icons/sk_lotus_shield.png",
-      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "source_path": "assets_src/ui/r8_hud_xuan_icons_raw.jpg",
       "category": "ui_icon",
-      "dimensions": "96x96",
-      "sha256": "2a2fa703715447a82b98c0d7046d2b14902fdec801be9d569b9b3c5ddc668cad",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (sk_lotus_shield.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi warm Xuan-parchment skill/item icon: E celadon-jade lotus shield talisman) + tools/build_polish_r8_gait_town_and_hud.py 96x96 chamfered bronze framing",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "e9449247c865f9a26182ca9ea867ae4119c58f6c72a7006fe5f9fdcdcc8e6781"
     },
     {
       "path": "project/assets/ui/icons/sk_metal_sword.png",
-      "source_path": "assets_src/ui/ui_icon_sheet_items_skills_raw.jpg",
+      "source_path": "assets_src/ui/r8_hud_xuan_icons_extra_raw.jpg",
       "category": "ui_icon",
-      "dimensions": "96x96",
-      "sha256": "378eecec5c32e4f1198be71effc0e0655064a660749a8f1baa6506cc94daa848",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (sk_metal_sword.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi warm Xuan-parchment skill/item icon: 1 silver-celadon jian slashing pale-jade wind-qi arc) + tools/build_polish_r8_gait_town_and_hud.py 96x96 chamfered bronze framing",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "7b0a9102976e7a10e676959fd1d30e685b0d1b822886abd8dd68f43ba692b899"
     },
     {
       "path": "project/assets/ui/icons/sk_sweet_rain.png",
@@ -1530,13 +1526,11 @@
     },
     {
       "path": "project/assets/ui/icons/sk_taunt_bell.png",
-      "source_path": "assets_src/ui/procedural_seals_spec.json",
-      "category": "ui_seal_badge",
-      "dimensions": "96x96",
-      "sha256": "a95951790aa2628cb8d0ad88b6957e7475c8d93986e387472be32711ba456286",
-      "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Dual-coded geometric border + NotoSerifCJKsc Bold seal glyph.) | Prompt: Calligraphic Five-Element / tactical seal badge (sk_taunt_bell.png)",
-      "generated_date": "2026-11-26",
-      "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+      "source_path": "assets_src/ui/r8_hud_xuan_icons_extra_raw.jpg",
+      "category": "ui_icon",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi warm Xuan-parchment skill/item icon: Q antique bronze guardian bell radiating amber soundwaves) + tools/build_polish_r8_gait_town_and_hud.py 96x96 chamfered bronze framing",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "82a3961e52525e5d68d63cd2d25c4d2ed9a09026aadb4ceab9bc06d91857826d"
     },
     {
       "path": "project/assets/ui/icons/sk_water_stream.png",
@@ -1995,6 +1989,14 @@
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
+      "path": "project/assets/world/prop_folk_house_c.png",
+      "source_path": "assets_src/world/r8_town_courtyard_props_raw.jpg",
+      "category": "world_prop",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi 35-degree Jiangnan timber-and-whitewash cottage with wooden lattice doors and celadon rainwater jar) + tools/build_polish_r8_gait_town_and_hud.py cutout",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "9374899ce7437348d4773e51640f57a59b7ca22366c2d04fcec455b08d4990e6"
+    },
+    {
       "path": "project/assets/world/prop_folk_house_south.png",
       "source_path": "assets_src/world/r6_south_folk_houses_raw.jpg",
       "category": "world_prop",
@@ -2103,6 +2105,22 @@
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
+      "path": "project/assets/world/prop_town_fence_vignette.png",
+      "source_path": "assets_src/world/r8_town_courtyard_props_raw.jpg",
+      "category": "world_prop",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi 35-degree woven-bamboo courtyard fence with mossy stone lantern, clay rainwater vat and ferns) + tools/build_polish_r8_gait_town_and_hud.py cutout",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "95171478d8d8ef118ed515443f09077fa4e6e42e4c5653f3024aac0c7521ed00"
+    },
+    {
+      "path": "project/assets/world/prop_town_garden_patch.png",
+      "source_path": "assets_src/world/r8_town_courtyard_props_raw.jpg",
+      "category": "world_prop",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi 35-degree mossy flagstone garden patch with boxwood shrubs and wild iris leaves) + tools/build_polish_r8_gait_town_and_hud.py cutout",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "450bcd733a58944e65ce1d0428bb1e420f6d3f7415a4a66dbeda7a1130300fa1"
+    },
+    {
       "path": "project/assets/world/prop_town_rockery.png",
       "source_path": "assets_src/world/r5_yaolu_gate_pavilion_raw.jpg",
       "category": "world_prop",
@@ -2173,6 +2191,14 @@
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
+      "path": "project/assets/world/prop_yaolu_drying_rack.png",
+      "source_path": "assets_src/world/r8_town_courtyard_props_raw.jpg",
+      "category": "world_prop",
+      "creation_method": "Gemini Imagen (2026-11-28, Song-Ming Gongbi 35-degree bamboo herb-drying rack, celadon medicine jars and stone mortar) + tools/build_polish_r8_gait_town_and_hud.py cutout",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "e13856b107140d3d686c3166344470a4277d2fe331fc041f0e7979538e30fcba"
+    },
+    {
       "path": "project/assets/world/prop_yaolu_gatehouse.png",
       "source_path": "assets_src/world/r5_yaolu_gate_pavilion_raw.jpg",
       "category": "world_prop",
@@ -2203,6 +2229,14 @@
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
     },
     {
+      "path": "project/assets/world/prop_yaolu_wall_mid.png",
+      "source_path": "assets_src/world/r5_yaolu_walls_lanterns_raw.jpg",
+      "category": "world_prop",
+      "creation_method": "Gemini Imagen (assets_src/world/r5_yaolu_walls_lanterns_raw.jpg) + tools/build_polish_r8_gait_town_and_hud.py seamless intermediate courtyard wall feathering",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "baaaf18e0fd3c1e239474eeded12ab307c3eec9ec977151f2023f6999cf18120"
+    },
+    {
       "path": "project/assets/world/tex_bluestone_wet.png",
       "source_path": "assets_src/world/terrain_bluestone_seamless_raw.jpg",
       "category": "terrain",
@@ -2230,13 +2264,11 @@
     },
     {
       "path": "project/assets/world/tex_moss_earth.png",
-      "source_path": "assets_src/world/r5_terrain_moss_meadow_raw.jpg",
-      "category": "world_terrain",
-      "dimensions": "1024x1024",
-      "sha256": "1e41e013adc94d226919676796ff0e63e25cc039e3c6e3e91f046214a514502a",
-      "creation_method": "Gemini Imagen (r5_terrain_moss_meadow_raw.jpg + terrain_moss_natural_raw.jpg) + tools/build_polish_r5_town.py 112px cosine-overlap seamless wrap & rainy celadon-olive harmony (0 spiky grid)",
-      "generated_date": "2026-04-12",
-      "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
+      "source_path": "assets_src/world/r8_town_moss_meadow_raw.jpg",
+      "category": "world_tile",
+      "creation_method": "Gemini Imagen (2026-11-28, prompt: 'Top-down 35-degree isometric uniform flat seamless ground texture in Song-Ming Gongbi style: damp rainy Jiangnan mossy earth with river pebbles and ink grass tufts') + tools/build_polish_r8_gait_town_and_hud.py 2x2 cosine-wrapped seamless tile",
+      "license": "Original project artwork generated & hand-refined for Chenyuan Wen Dao (Proprietary, all rights reserved)",
+      "sha256": "897c0b9189204948cba9483491a2570d4f3ebf811073379f4e4abdcdf2e1b87f"
     }
   ]
 }

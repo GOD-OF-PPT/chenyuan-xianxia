@@ -381,7 +381,7 @@ func step_visuals(combat_delta: float, ui_delta: float, is_moving: bool) -> void
 	if _sprite != null:
 		var target_alpha: float = stealth_alpha if alive else 0.72
 		_sprite.modulate = Color(1.0, 1.0, 1.0, target_alpha)
-		_apply_current_frame()
+		_apply_current_frame(combat_delta)
 
 	queue_redraw()
 	if _overlay_canvas != null:
@@ -403,7 +403,7 @@ func _resolve_effective_lookup_key() -> String:
 	return _anim_state
 
 
-func _apply_current_frame() -> void:
+func _apply_current_frame(step_dt: float = 0.0) -> void:
 	if _sprite == null or _sprite.texture == null:
 		return
 	var rows_dict: Dictionary = _sheet_meta.get("rows", {}) as Dictionary
@@ -429,15 +429,17 @@ func _apply_current_frame() -> void:
 	_sprite.flip_h = flip
 
 	var dir_n: Vector2 = facing_dir.normalized() if facing_dir.length_squared() > 0.001 else Vector2(0.894, 0.447)
+	var target_root: Vector2 = Vector2.ZERO
 	if SaveManager.reduced_motion or not alive or is_knocked_down():
 		_visual_root_offset = Vector2.ZERO
-	elif lookup_key == "attack_1" or lookup_key == "attack_2":
-		var lunge_t: float = sin(clampf(_anim_timer / 0.35, 0.0, 1.0) * PI)
-		_visual_root_offset = dir_n * lunge_t * (12.0 if is_boss else 6.0)
-	elif lookup_key == "hit":
-		_visual_root_offset = -dir_n * 4.0
 	else:
-		_visual_root_offset = Vector2.ZERO
+		if lookup_key == "attack_1" or lookup_key == "attack_2":
+			var lunge_t: float = sin(clampf(_anim_timer / 0.35, 0.0, 1.0) * PI)
+			target_root = dir_n * lunge_t * (12.0 if is_boss else 5.0)
+		elif lookup_key == "hit":
+			target_root = -dir_n * 3.5
+		if step_dt > 0.0:
+			_visual_root_offset = _visual_root_offset.move_toward(target_root, step_dt * 84.0)
 	_sprite.position = _visual_root_offset
 	if _occlusion_silhouette != null:
 		_occlusion_silhouette.region_rect = _sprite.region_rect

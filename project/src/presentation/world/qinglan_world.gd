@@ -419,7 +419,7 @@ func _get_spawn_coords(zone_id: String, spawn_tag: String) -> Vector2:
 func _assemble_tingyu_town() -> void:
 	_add_tiled_ground("res://assets/world/tex_moss_earth.png", ZONE_BOUNDS)
 
-	# 1. 35° 斜向青石药庐内院大坪 + 茶寮至散修斜切顺滑连坪（消除生硬 90° 直角折弯） + 蜿蜒湿青石主街（挂载受光 wet_bluestone.gdshader！）
+	# 1. 35° 斜向青石药庐内院大坪 + 茶寮至散修顺滑连坪 + 蜿蜒湿青石主街 + 街南门廊踏跺带 + 东南曲径庭院支巷（挂载受光 wet_bluestone.gdshader！）
 	_add_road_polygon(PackedVector2Array([
 		Vector2(916.0, 620.0), Vector2(1340.0, 416.0), Vector2(1742.0, 607.0), Vector2(1336.0, 822.0)
 	]), "res://assets/world/tex_bluestone_wet.png")
@@ -428,46 +428,54 @@ func _assemble_tingyu_town() -> void:
 		Vector2(1024.0, 902.0), Vector2(666.0, 926.0), Vector2(368.0, 778.0)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(-180.0, 748.0), Vector2(420.0, 718.0), Vector2(740.0, 710.0), Vector2(928.0, 702.0),
-		Vector2(1148.0, 792.0), Vector2(1336.0, 866.0), Vector2(1318.0, 988.0),
-		Vector2(1084.0, 954.0), Vector2(740.0, 916.0), Vector2(410.0, 910.0), Vector2(-180.0, 922.0)
+		Vector2(-180.0, 748.0), Vector2(420.0, 718.0), Vector2(740.0, 708.0), Vector2(936.0, 706.0),
+		Vector2(1062.0, 748.0), Vector2(1196.0, 812.0), Vector2(1336.0, 864.0), Vector2(1318.0, 988.0),
+		Vector2(1168.0, 972.0), Vector2(996.0, 942.0), Vector2(740.0, 916.0), Vector2(410.0, 910.0), Vector2(-180.0, 922.0)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(1298.0, 854.0), Vector2(1545.0, 736.0), Vector2(1772.0, 626.0), Vector2(2040.0, 544.0),
+		Vector2(1298.0, 854.0), Vector2(1468.0, 774.0), Vector2(1638.0, 690.0), Vector2(1802.0, 616.0), Vector2(2040.0, 544.0),
 		Vector2(2580.0, 488.0), Vector2(2580.0, 702.0), Vector2(2045.0, 768.0),
 		Vector2(1822.0, 846.0), Vector2(1560.0, 938.0), Vector2(1318.0, 988.0)
 	]), "res://assets/world/tex_bluestone_wet.png")
-	# 街南朝北迎街民居的连续青石街沿踏跺带（顺应 35° 聚落走势自然衔接三户门廊，消除零碎垂直锯齿支巷！）
+	# 街南三户不同制式江南民居的连续青石街沿踏跺带（直抵三户木廊阶前，彻底消除草地悬空断层！）
 	_add_road_polygon(PackedVector2Array([
-		Vector2(152.0, 908.0), Vector2(420.0, 906.0), Vector2(740.0, 912.0), Vector2(1018.0, 944.0),
-		Vector2(968.0, 1142.0), Vector2(592.0, 1086.0), Vector2(174.0, 1018.0)
+		Vector2(138.0, 908.0), Vector2(420.0, 906.0), Vector2(740.0, 912.0), Vector2(1078.0, 952.0),
+		Vector2(1086.0, 1296.0), Vector2(616.0, 1236.0), Vector2(168.0, 1176.0)
+	]), "res://assets/world/tex_bluestone_wet.png")
+	# 东南竹篱小筑曲径石巷（直抵东南木格廊轩阶前，彻底告别大面积空旷死绿草坪！）
+	_add_road_polygon(PackedVector2Array([
+		Vector2(1312.0, 946.0), Vector2(1564.0, 914.0), Vector2(1826.0, 974.0), Vector2(2052.0, 1068.0),
+		Vector2(2038.0, 1218.0), Vector2(1782.0, 1202.0), Vector2(1692.0, 1082.0), Vector2(1498.0, 1022.0), Vector2(1288.0, 994.0)
 	]), "res://assets/world/tex_bluestone_wet.png")
 
-	# 2. 左街（x < 965）南北夹街宋明工笔粉墙黛瓦民居群：街北朝南临街，街南采用朝北迎街的粉墙花窗与徽派马头墙民居（退界舒展、朝向自洽！）
+	# 2. 左街与东南宋明工笔粉墙黛瓦聚落（北街双宅 + 茶寮；南街采用飞檐楼阁、木格廊轩、徽派马头墙三款不同制式民居 + 东南竹篱小筑！）
 	_add_ysort_structure("res://assets/world/prop_folk_house_b.png", Vector2(204.0, 542.0), 52.0, true)
 	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(428.0, 524.0), 52.0, true)
 	_add_ysort_structure("res://assets/world/prop_folk_house_a.png", Vector2(226.0, 724.0), 58.0, true)
-	_add_ysort_structure("res://assets/world/prop_tea_pavilion.png", Vector2(576.0, 654.0), 84.0, true)
+	_add_ysort_structure("res://assets/world/prop_tea_pavilion.png", Vector2(576.0, 654.0), 68.0, true)
 	_add_ysort_structure("res://assets/world/prop_folk_roof_eave.png", Vector2(258.0, 1162.0), 64.0, true)
-	_add_ysort_structure("res://assets/world/prop_folk_house_south.png", Vector2(614.0, 1218.0), 62.0, true)
-	_add_ysort_structure("res://assets/world/prop_folk_house_south.png", Vector2(956.0, 1272.0), 62.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_house_c.png", Vector2(616.0, 1212.0), 60.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_house_south.png", Vector2(958.0, 1268.0), 62.0, true)
+	_add_ysort_structure("res://assets/world/prop_folk_house_c.png", Vector2(1892.0, 1188.0), 56.0, true)
 
-	# 3. 右侧全闭合真 35° 斜向围合式【济世药庐】院落（与正堂、丹亭、长街共享统一 35° 轴测透视，对标 master_a_tingyu_town.png！）
+	# 3. 右侧全闭合真 35° 斜向围合式【济世药庐】院落（双青石台基 + 晒药竹匾药瓮 + 无缝粉墙搭接零竖向黑缝！）
 	_add_ground_decor_prop("res://assets/world/prop_yaolu_alchemy_terrace.png", Vector2(1406.0, 692.0), "YaoluAlchemyTerrace")
+	_add_ground_decor_prop("res://assets/world/prop_yaolu_alchemy_terrace.png", Vector2(1596.0, 628.0), "YaoluEastFlagstone")
 	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1192.0, 606.0), 85.0, true)
 	_add_ysort_structure("res://assets/world/prop_yaolu_alchemy_pavilion.png", Vector2(1306.0, 688.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_drying_rack.png", Vector2(1558.0, 560.0), 0.0, false)
 
-	# 西北与东北内院背墙 + 西南临街粉墙门楼 + 南转角院墙 + 东南粉墙（短模块中心锚定 + 96px 严丝合缝搭接，0 断缝、0 斜墙腰斩！）
-	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(968.0, 594.0), false, -108.0)
+	# 中段采用去右山墙羽化短模块 prop_yaolu_wall_mid.png，端头采用完整山墙收口模块，彻底根除院墙竖向黑缝与东角腰斩感！
+	_add_ysort_wall_module("res://assets/world/prop_yaolu_wall_mid.png", Vector2(968.0, 594.0), false, -108.0)
 	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1064.0, 542.0), false, -108.0)
-	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(972.0, 648.0), true, -108.0)
+	_add_ysort_wall_module("res://assets/world/prop_yaolu_wall_mid.png", Vector2(972.0, 648.0), true, -108.0)
 	_add_ysort_wall_module("res://assets/world/prop_yaolu_gatehouse.png", Vector2(1134.0, 728.0), false, -228.0)
 	_add_ysort_wall_module("res://assets/world/prop_yaolu_side_wall.png", Vector2(1336.0, 822.0), false, -149.0)
-	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1456.0, 756.0), false, -108.0)
-	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1552.0, 704.0), false, -108.0)
-	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1648.0, 652.0), false, -108.0)
+	_add_ysort_wall_module("res://assets/world/prop_yaolu_wall_mid.png", Vector2(1456.0, 756.0), false, -108.0)
+	_add_ysort_wall_module("res://assets/world/prop_yaolu_wall_mid.png", Vector2(1552.0, 704.0), false, -108.0)
+	_add_ysort_wall_module("res://assets/world/prop_yaolu_wall_mid.png", Vector2(1648.0, 652.0), false, -108.0)
 	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1708.0, 620.0), false, -108.0)
-	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1692.0, 578.0), true, -108.0)
+	_add_ysort_wall_module("res://assets/world/prop_yaolu_wall_mid.png", Vector2(1692.0, 578.0), true, -108.0)
 	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(1596.0, 526.0), true, -108.0)
 
 	_append_wall_segment_obstacles(Vector2(916.0, 620.0), Vector2(1118.0, 518.0), 26.0, 24.0)
@@ -476,18 +484,26 @@ func _assemble_tingyu_town() -> void:
 	_append_wall_segment_obstacles(Vector2(1336.0, 822.0), Vector2(1742.0, 607.0), 26.0, 24.0)
 	_append_wall_segment_obstacles(Vector2(1742.0, 607.0), Vector2(1532.0, 500.0), 26.0, 24.0)
 
-	# 4. 古樟树、太湖苔石假山与净透翠竹簇（保留 Vector2(835, 595) 香樟门禁；假山与街南民居留出舒适间距）
+	# 4. 古樟树、江南竹篱水缸石灯小景、苔石花圃与净透翠竹簇（保留 Vector2(835, 595) 香樟门禁，右下增配实体翠竹呼应前景竹叶！）
+	_add_ground_decor_prop("res://assets/world/prop_town_garden_patch.png", Vector2(784.0, 1236.0), "SouthGardenPatch")
+	_add_ground_decor_prop("res://assets/world/prop_town_garden_patch.png", Vector2(1392.0, 1118.0), "MidGardenPatch")
+	_add_ground_decor_prop("res://assets/world/prop_town_garden_patch.png", Vector2(1988.0, 796.0), "SteleGardenPatch")
+	_add_ground_decor_prop("res://assets/world/prop_town_garden_patch.png", Vector2(2092.0, 1142.0), "EastGardenPatch")
 	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(835.0, 595.0), 52.0, true)
 	_add_ysort_structure("res://assets/world/prop_camphor_tree.png", Vector2(1818.0, 560.0), 52.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(128.0, 565.0), 38.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(2152.0, 886.0), 46.0, true)
+	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(2148.0, 1252.0), 38.0, true)
 	_add_ysort_structure("res://assets/world/prop_bamboo_cluster.png", Vector2(88.0, 1286.0), 38.0, true)
-	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(442.0, 1196.0), 34.0, false)
-	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(1208.0, 1236.0), 34.0, false)
-	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(1742.0, 962.0), 34.0, false)
+	_add_ysort_structure("res://assets/world/prop_town_fence_vignette.png", Vector2(434.0, 1178.0), 26.0, false)
+	_add_ysort_structure("res://assets/world/prop_town_fence_vignette.png", Vector2(1692.0, 1138.0), 28.0, false)
+	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(1212.0, 1244.0), 34.0, false)
+	_add_ysort_structure("res://assets/world/prop_town_rockery.png", Vector2(1748.0, 626.0), 0.0, false)
 
-	# 5. 专属城镇 NPC 序列帧（老樵夫于茶寮檐口避雨歇脚 / 散修退立席后不踩器物 / 沈清禾立于门侧让出敞门 / 周执事立于东柱外侧零遮挡）
-	_spawn_npc("npc_elder", "听雨镇老樵夫", "npc_elder", Vector2(568.0, 668.0), "tea_elder")
+	# 5. 专属城镇 NPC 序列帧（老樵夫立于茶寮竹栏外青石台零穿模 / 散修立席后 / 沈清禾立于柴门前迎诊青石位留足门柱呼吸感）
+	var elder_a: BattleActor = _spawn_npc("npc_elder", "听雨镇老樵夫", "npc_elder", Vector2(568.0, 695.0), "tea_elder")
+	if elder_a != null:
+		elder_a.set_facing(Vector2(0.68, 0.73))
 
 	var ped_a: BattleActor = _spawn_npc("npc_peddler", "游方摆摊散修", "npc_peddler", Vector2(832.0, 756.0), "peddler")
 	if ped_a != null:
@@ -496,8 +512,7 @@ func _assemble_tingyu_town() -> void:
 	_add_interactable("peddler_stall", "stall", Vector2(852.0, 908.0), 144.0, "散修小地摊 [F 掌眼淘旧物]", "res://assets/world/prop_peddler_stall.png", -1, true)
 
 	if not bool(CampaignState.world_flags.get("met_shen_qinghe", false)):
-		# 沈清禾立于柴门右侧檐灯旁青石迎诊位（y=774 > 门楼 y=728，全身 100% 零遮挡，且完整让出敞开柴门通道！）
-		var shen_a: BattleActor = _spawn_npc("shen_npc", "沈清禾 · 药庐医修", "shen_qinghe", Vector2(1206.0, 774.0), "meet_shen")
+		var shen_a: BattleActor = _spawn_npc("shen_npc", "沈清禾 · 药庐医修", "shen_qinghe", Vector2(1218.0, 782.0), "meet_shen")
 		if shen_a != null:
 			shen_a.set_facing(Vector2(-0.68, 0.73))
 
@@ -518,11 +533,11 @@ func _assemble_tingyu_town() -> void:
 		if zhou_a != null:
 			zhou_a.set_facing(Vector2(-0.82, 0.57))
 
-	# 灵草采集点 1（完整工笔石绿灵叶丛，设于街南岩竹坡畔）
+	# 灵草采集点 1（完整工笔石绿灵叶丛，设于街南曲径岩竹坡畔）
 	if not CampaignState.opened_containers.has("herb_town_1"):
 		_add_interactable("herb_town_1", "herb", Vector2(1525.0, 995.0), 96.0, "青木灵叶丛 [F 采摘]", "res://assets/world/prop_spirit_herb_node.png", -1, true)
 
-	# 镇口引灵石碑设于东南官道路台 (1896, 768)，即使南行拉低镜头亦完全处于右上角小地图面板下方零叠压！
+	# 镇口引灵石碑设于东南官道路台 (1896, 768)，配苔石花圃基座，远离右上角小地图遮挡！
 	var stele_obs: int = _combat_ctrl.obstacle_circles.size()
 	_combat_ctrl.obstacle_circles.append({"pos": Vector2(1896.0, 744.0), "radius": 40.0})
 	_add_interactable("stele_tingyu_gate", "stele", Vector2(1896.0, 768.0), 156.0, "听雨镇驿口 · 引灵石碑 [F 休整/夜话/传送]", "res://assets/world/prop_stele_lit.png", stele_obs)
@@ -1601,8 +1616,12 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 						break
 				if not inside_adj:
 					feather.draw_colored_polygon(
-						PackedVector2Array([sa - fnorm * 2.0, sb - fnorm * 2.0, sb + fnorm * 15.0, sa + fnorm * 15.0]),
-						Color(0.13, 0.17, 0.14, 0.28)
+						PackedVector2Array([sa - fnorm * 2.0, sb - fnorm * 2.0, sb + fnorm * 22.0, sa + fnorm * 22.0]),
+						Color(0.15, 0.21, 0.17, 0.20)
+					)
+					feather.draw_colored_polygon(
+						PackedVector2Array([sa - fnorm * 1.5, sb - fnorm * 1.5, sb + fnorm * 10.0, sa + fnorm * 10.0]),
+						Color(0.14, 0.19, 0.16, 0.28)
 					)
 	)
 	_road_feather_sub.add_child(feather)
@@ -1619,14 +1638,14 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 	if CampaignState.current_zone_id != "cangmu_cave" and _wet_bluestone_shader != null:
 		var rmat: ShaderMaterial = ShaderMaterial.new()
 		rmat.shader = _wet_bluestone_shader
-		rmat.set_shader_parameter("wetness", 0.74)
+		rmat.set_shader_parameter("wetness", 0.78)
 		rmat.set_shader_parameter("ripple_speed", 0.0 if SaveManager.reduced_motion else 1.0)
-		rmat.set_shader_parameter("ripple_strength", 0.34)
+		rmat.set_shader_parameter("ripple_strength", 0.38)
 		poly.material = rmat
 		_wet_road_materials.append(rmat)
 	_road_stone_sub.add_child(poly)
 
-	# 2. 沿通路切线排布收边石（城镇/山道用整齐青石条石，地底古窟用参差苍苔碎岩收口，彻底消除城镇砖边穿帮与锯齿！）
+	# 2. 沿通路切线排布宋明工笔风化倒角青石压边条石与苍苔草簇（彻底根除现代水泥马路牙子感！）
 	var is_cave_road: bool = (CampaignState.current_zone_id == "cangmu_cave")
 	var curb: Node2D = Node2D.new()
 	curb.draw.connect(func() -> void:
@@ -1643,10 +1662,10 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 			var norm_v: Vector2 = Vector2(-dir_v.y, dir_v.x)
 			if Geometry2D.is_point_in_polygon((a + b) * 0.5 + norm_v * 6.0, pts):
 				norm_v = -norm_v
-			var step_span: float = 42.0 if is_cave_road else 34.0
+			var step_span: float = 42.0 if is_cave_road else 46.0
 			var steps: int = maxi(2, int(floor(seg_len / step_span)))
-			var half_len: float = (seg_len / float(steps)) * (0.42 if is_cave_road else 0.46)
-			var half_thk: float = 6.2 if is_cave_road else 4.5
+			var half_len: float = (seg_len / float(steps)) * (0.42 if is_cave_road else 0.44)
+			var half_thk: float = 6.2 if is_cave_road else 4.2
 			for s_i: int in range(steps):
 				var t: float = (float(s_i) + 0.5) / float(steps)
 				var base_p: Vector2 = a.lerp(b, t)
@@ -1688,25 +1707,36 @@ func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:
 						1.5
 					)
 				else:
-					var p0: Vector2 = base_p - dir_v * half_len - norm_v * half_thk
-					var p1: Vector2 = base_p + dir_v * half_len - norm_v * half_thk
-					var p2: Vector2 = base_p + dir_v * half_len + norm_v * half_thk
-					var p3: Vector2 = base_p - dir_v * half_len + norm_v * half_thk
-					var sh_off: Vector2 = norm_v * 2.5 + Vector2(1.0, 1.8)
+					var s_center: Vector2 = base_p + norm_v * (h_seed * 1.4)
+					var hl_t: float = half_len * (0.84 + 0.22 * absf(h_seed))
+					var ht_t: float = half_thk * (0.82 + 0.32 * absf(h_seed2))
+					var slab: PackedVector2Array = PackedVector2Array([
+						s_center - dir_v * (hl_t * 0.86) - norm_v * ht_t,
+						s_center + dir_v * (hl_t * 0.88) - norm_v * (ht_t * 0.92),
+						s_center + dir_v * hl_t,
+						s_center + dir_v * (hl_t * 0.82) + norm_v * (ht_t * 1.05),
+						s_center - dir_v * (hl_t * 0.84) + norm_v * (ht_t * 0.96),
+						s_center - dir_v * hl_t,
+					])
+					var sh_off: Vector2 = norm_v * 2.0 + Vector2(0.8, 1.4)
 					curb.draw_colored_polygon(
-						PackedVector2Array([p0 + sh_off, p1 + sh_off, p2 + sh_off, p3 + sh_off]),
-						Color(0.11, 0.14, 0.12, 0.32)
+						PackedVector2Array([slab[0] + sh_off, slab[1] + sh_off, slab[3] + sh_off, slab[4] + sh_off]),
+						Color(0.10, 0.14, 0.12, 0.22)
 					)
-					var stone_tone: float = 0.03 * h_seed
+					var stone_tone: float = 0.028 * h_seed
 					curb.draw_colored_polygon(
-						PackedVector2Array([p0, p1, p2, p3]),
-						Color(0.37 + stone_tone, 0.43 + stone_tone, 0.40 + stone_tone, 0.98)
+						slab,
+						Color(0.30 + stone_tone, 0.37 + stone_tone, 0.35 + stone_tone, 0.78)
 					)
 					curb.draw_polyline(
-						PackedVector2Array([p0, p1, p2, p3, p0]),
-						Color(0.16, 0.20, 0.18, 0.88),
-						1.4
+						PackedVector2Array([slab[0], slab[1], slab[2], slab[3], slab[4], slab[5], slab[0]]),
+						Color(0.15, 0.20, 0.18, 0.50),
+						1.1,
+						true
 					)
+					if (s_i + i) % 2 == 0:
+						var moss_c: Vector2 = s_center + dir_v * (hl_t * 0.78 * signf(h_seed2 + 0.01)) + norm_v * (ht_t * 0.92)
+						curb.draw_circle(moss_c, 3.4 + 1.2 * absf(h_seed), Color(0.19, 0.28, 0.21, 0.56))
 	)
 	_road_curb_sub.add_child(curb)
 
@@ -1869,7 +1899,8 @@ func _rebuild_foreground_bamboo_leaves(enable_outdoor: bool) -> void:
 		lsp.flip_v = bool(cfg["flip_v"])
 		lsp.scale = cfg["scale"] as Vector2
 		lsp.rotation = float(cfg["rot"])
-		lsp.modulate = Color(0.16, 0.25, 0.21, 0.46)
+		var fg_a: float = 0.34 if CampaignState.current_zone_id == "tingyu_town" else 0.45
+		lsp.modulate = Color(0.18, 0.28, 0.23, fg_a)
 		_rain_overlay.add_child(lsp)
 		_fg_bamboo_leaves.append({
 			"node": lsp,
@@ -2425,8 +2456,14 @@ func _step_ambient_world_barks(delta: float) -> void:
 func _draw_atmosphere_rain() -> void:
 	if CampaignState.current_zone_id == "cangmu_cave" or SaveManager.reduced_motion:
 		return
-	for rp: Vector2 in _rain_streaks:
-		_rain_overlay.draw_line(rp, rp + Vector2(-14.0, 38.0), Color(0.78, 0.86, 0.88, 0.24), 1.6)
+	for idx_r: int in range(_rain_streaks.size()):
+		var rp: Vector2 = _rain_streaks[idx_r]
+		var is_fine: bool = (idx_r % 2 == 0)
+		var vec_r: Vector2 = Vector2(-11.0, 30.0) if is_fine else Vector2(-16.0, 44.0)
+		var tail_col: Color = Color(0.76, 0.85, 0.86, 0.08 if is_fine else 0.13)
+		var tip_col: Color = Color(0.82, 0.90, 0.91, 0.16 if is_fine else 0.22)
+		_rain_overlay.draw_line(rp, rp + vec_r * 0.55, tail_col, 1.0, true)
+		_rain_overlay.draw_line(rp + vec_r * 0.45, rp + vec_r, tip_col, 1.0 if is_fine else 1.25, true)
 
 
 func _draw_xuan_plaque_at(center_pt: Vector2, text_str: String, is_hovered: bool) -> void:
