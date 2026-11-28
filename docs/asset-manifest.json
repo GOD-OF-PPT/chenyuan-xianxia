@@ -843,6 +843,146 @@
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
     },
     {
+      "path": "project/assets/ui/frames/alchemy_cauldron_stage.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "540x268",
+      "sha256": "e946469a665bd3327f8891430b4bd05556f07d188718edf979637245b56ad9b2",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled Song-Ming tripod dragon-ear bronze cauldron on bluestone plinth with open firebox grate)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/alchemy_fire_gauge_bg.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "860x54",
+      "sha256": "de2fe8a38c0b327ae143cb50637873f0cd4b11a89577d90428e6f283c8537447",
+      "creation_method": "tools/build_polish_r3_ui.py (Carved dark-ebony & gilt-bronze graduated temperature gauge track)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/alchemy_flame_strip.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "1024x220",
+      "sha256": "6c2d81072474b6e52ef2f24b5963e446a4cae2decf98cf77e6be0b8c71582526",
+      "creation_method": "tools/build_polish_r3_ui.py (8-frame Song-Ming calligraphic flickering hearth flame atlas: 4 Wen-fire celadon + 4 Wu-fire cinnabar-gold)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_ebony_outer_frame.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "1920x1080",
+      "sha256": "76bc196e7833424ffcfe9247e69799103d2699ee7877d237994eb32367a1c7ef",
+      "creation_method": "tools/build_polish_r3_ui.py (Carved dark-ebony outer casket frame with mitered Ruyi reliefs & recessed header trough aligned to master_d_dao_casket.png)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_meridian_figure.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "460x550",
+      "sha256": "550910651e833fed7b3159bd93f1ebe4c020aef7bea00c5aa6fb91c28a2b00cf",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled Song-Ming Gongbi brush-ink front human meridian figure with 8 glowing celadon-jade bi-disc acupoints, 0 baked text)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_page_flip_leaf.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "600x856",
+      "sha256": "55867263e9c7d30d8d45b9c3f45894b1d79201450789a41b86b955046a4362fc",
+      "creation_method": "tools/build_polish_r3_ui.py (Shaded curling Xuan-paper page leaf for unfold and tab-switch page-flip transition)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_potential_bar_bg.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "260x26",
+      "sha256": "54a4467194ff82b61ccdeb020db35001b7cbca7460b8dee40aaf953c1e872a07",
+      "creation_method": "tools/build_polish_r3_ui.py (Carved dark bronze-ebony beveled trough for 5-stat potential gauges)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_potential_bar_fill.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "252x18",
+      "sha256": "6f6ba9fe459888213fe6b4a529b10fbf740b61b3fc2151232e92f8d1dcc779ed",
+      "creation_method": "tools/build_polish_r3_ui.py (Beveled antique mineral-gold fill bar for 5-stat potential gauges)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_slot_embossed.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "144x156",
+      "sha256": "e5939c522c6d92e23e0a3dbe15f301b5049172e43dd8663de13ee44a48bbe88e",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled double-bordered antique-bronze embossed artifact slot card with corner filigree)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_slot_selected.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "144x156",
+      "sha256": "057ec7cb553f3cfd2584524f6d62f57f89e2d8bd1ef925caf3bb7d2788922a60",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled embossed artifact slot card with warm mineral-gilt selection aura)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_tab_active.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "260x58",
+      "sha256": "6a57f8df9fe558d8627dd8a2c3df3319f63a630b3a07db16ec8aed09bafc54cd",
+      "creation_method": "tools/build_polish_r3_ui.py (Gilt-bordered dark-ebony active casket tab plaque with glowing underline bar)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_tab_inactive.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "260x58",
+      "sha256": "7c0aaddc60b332af573bb1508565299fc6343714f48789ce257cc87f42e0a1ff",
+      "creation_method": "tools/build_polish_r3_ui.py (Subdued bronze-hairline dark-ebony inactive casket tab plaque)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_xuan_nameplate.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "240x44",
+      "sha256": "cc88c8481b05be33eb27729f2e81396cd0cd7a7b2eaabeda4d91afaaeb7f01bc",
+      "creation_method": "tools/build_polish_r3_ui.py (Aged Xuan-paper & bronze-corner scroll plaque for world Alt overhead nameplates)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/frames/casket_xuan_tome_spread.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_frame",
+      "dimensions": "1704x856",
+      "sha256": "234deab3c480aae9d8c604961d0b05a4f869e966c45f2dfe7e088f1c43cefefd",
+      "creation_method": "tools/build_polish_r3_ui.py (Open thread-bound aged Xuan-paper tome spread with stepped deckle paper edges, laid bamboo grain & silk stitches)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
       "path": "project/assets/ui/frames/hud_action_bar_bg.png",
       "source_path": "assets_src/ui/r1_hud_frames_source.png",
       "category": "ui_frame",
@@ -989,6 +1129,36 @@
       "dimensions": "128x128",
       "sha256": "dfe6f0929748b8a2612f76981a48c6c9abcded9f704cfd3ad6c6f38cb41f8927",
       "creation_method": "tools/build_polish_r1_assets.py (Collar-safe exterior flood-fill cutout from assets_src/portraits/shen_qinghe_raw.jpg crop (254, 84, 682, 512), #221F1D ink defringe, Song-Ming mineral LUT & warm sage-ochre silk Gongbi backing) | Spec: F1-F3 party card square bust portrait (shen_qinghe)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/casket_acupoint_jade.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_icon",
+      "dimensions": "64x64",
+      "sha256": "7d2ab616083ea999e323169e244dc23b2cdbacf6f4b83fa0c11e89529ad97cc9",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled glowing celadon-jade circular bi-disc acupoint icon)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/casket_jade_ripple.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_icon",
+      "dimensions": "256x256",
+      "sha256": "ac7a0c4203865546315650359701be917250b825223554bf15e0c533a7c9b6ea",
+      "creation_method": "tools/build_polish_r3_ui.py (Unshaded Song-Ming celadon-jade concentric water-ripple ring texture)",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/casket_seal_phase.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_icon",
+      "dimensions": "64x64",
+      "sha256": "c42b4c461dcbf5254c77571ee0fe432b4580593a82ef55af1fc557c05dec25b0",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled cinnabar & gilt-bronze 3-phase alchemy cadence seal medallion)",
       "generated_date": "2026-11-27",
       "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
@@ -1421,6 +1591,56 @@
       "creation_method": "Gemini Image Generation (Song-Ming Gongbi style-locked) + tools/build_step2_assets.py (Mineral hue tinting & bronze bevel framing.) | Prompt: Derived Song-Ming Gongbi icon (sk_wood_heal.png)",
       "generated_date": "2026-11-26",
       "license": "Proprietary Original / Commercial-Permitted First-Party Production"
+    },
+    {
+      "path": "project/assets/ui/icons/slot_silhouette_boots.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "9b3212a185c015c59a0cefe9659795a47860015a81e3485f9fa3728e2f43aef5",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled Song-Ming monochrome brush-ink empty slot silhouette: cloud-scroll riding boots (履腕))",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/slot_silhouette_pendant.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "076f0f1666074bd5408a33da36ddf5777f76cf65d402a0d93f9e6066889182e7",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled Song-Ming monochrome brush-ink empty slot silhouette: circular jade bi-disc pendant with silk cord (灵佩))",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/slot_silhouette_robe.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "08852020f5b8a54dc936acf855d75c7e1c2fc824ff8f6237b064c08a8ee9a7a1",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled Song-Ming monochrome brush-ink empty slot silhouette: wide-sleeved cross-collar Daoist robe (法衣))",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/slot_silhouette_treasure.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "e0afd67d07cd6204232d72ce427b65249090a23fd3250beb0244d5f53242f1e3",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled Song-Ming monochrome brush-ink empty slot silhouette: isometric carved sword casket (本命剑匣))",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
+    },
+    {
+      "path": "project/assets/ui/icons/slot_silhouette_weapon.png",
+      "source_path": "assets_src/ui/r3_casket_alchemy_source.png",
+      "category": "ui_icon",
+      "dimensions": "96x96",
+      "sha256": "d440c157e07eaa4320811bf77a543eba5eb56b477b02ec050539aca7a005e514",
+      "creation_method": "tools/build_polish_r3_ui.py (2x-supersampled Song-Ming monochrome brush-ink empty slot silhouette: diagonal ancient longsword (佩兵))",
+      "generated_date": "2026-11-27",
+      "license": "AI-Assisted & Procedural First-Party Original Asset (Song-Ming Gongbi Refinement, Commercial Rights Cleared)"
     },
     {
       "path": "project/assets/ui/icons/tr_qingnang.png",

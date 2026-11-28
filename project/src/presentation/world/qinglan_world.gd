@@ -55,9 +55,18 @@ var _cursor_normal: Texture2D = null
 var _cursor_attack: Texture2D = null
 var _cursor_interact: Texture2D = null
 var _current_cursor_mode: int = -1
+var _hover_outline_shader: Shader = null
+var _alt_nameplate_overlay: Node2D = null
+var _xuan_nameplate_tex: Texture2D = null
+var _hovered_interactable_id: String = ""
+var _alt_key_down: bool = false
 
 
 func _ready() -> void:
+	if ResourceLoader.exists("res://src/presentation/shaders/hover_outline.gdshader"):
+		_hover_outline_shader = load("res://src/presentation/shaders/hover_outline.gdshader") as Shader
+	if ResourceLoader.exists("res://assets/ui/frames/casket_xuan_nameplate.png"):
+		_xuan_nameplate_tex = load("res://assets/ui/frames/casket_xuan_nameplate.png") as Texture2D
 	_load_custom_cursors()
 	_build_scene_layers()
 	_build_ui_layers()
@@ -125,6 +134,15 @@ func _build_scene_layers() -> void:
 	_sky_vfx = CombatVfxOverlay.new()
 	_sky_vfx.is_ground_layer = false
 	add_child(_sky_vfx)
+
+	# Alt 键场景交互器物与 NPC 旧宣纸题签层（挂载在 _ysort_root 之外，z_index = 8，UNSHADED 保持高对比可读）
+	_alt_nameplate_overlay = Node2D.new()
+	_alt_nameplate_overlay.z_index = 8
+	var np_mat: CanvasItemMaterial = CanvasItemMaterial.new()
+	np_mat.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	_alt_nameplate_overlay.material = np_mat
+	_alt_nameplate_overlay.draw.connect(_draw_alt_xuan_nameplates)
+	add_child(_alt_nameplate_overlay)
 
 	# Layer 3：近景斜风雨丝与区域色彩 LUT
 	_rain_overlay = Node2D.new()
@@ -197,6 +215,13 @@ func _connect_global_signals() -> void:
 		_casket.open_tab(tab_id)
 	)
 	InputRouter.escape_pressed.connect(_on_escape_key)
+	InputRouter.alt_highlight_changed.connect(func(active: bool) -> void:
+		if not active and not Input.is_key_pressed(KEY_ALT) and InputRouter.current_mode != InputRouter.MODE_WORLD_COMBAT:
+			_alt_key_down = false
+		_update_interact_prompt_and_cursor()
+		if _alt_nameplate_overlay != null:
+			_alt_nameplate_overlay.queue_redraw()
+	)
 
 	_hud.open_casket_requested.connect(func(tab_id: String) -> void: _casket.open_tab(tab_id))
 	_hud.open_map_requested.connect(func() -> void: _modals.open_world_map_modal())
@@ -284,11 +309,14 @@ func load_zone(zone_id: String, spawn_tag: String = "", use_saved_pos_if_empty: 
 	_zone_portals.clear()
 	_portal_markers.clear()
 	_npc_actors.clear()
+	_hovered_interactable_id = ""
 	_mm_roads.clear()
 	_mm_buildings.clear()
 	_mm_steles.clear()
 	_mm_portals.clear()
 	_combat_ctrl.reset_for_zone(_ysort_root, _ground_vfx, _sky_vfx, _camera, _audio)
+	if _alt_nameplate_overlay != null:
+		_alt_nameplate_overlay.queue_redraw()
 
 	var spawn_pos: Vector2 = CampaignState.saved_player_pos if (spawn_tag == "" and use_saved_pos_if_empty) else _get_spawn_coords(zone_id, spawn_tag)
 
@@ -575,13 +603,45 @@ func _assemble_cangmu_cave() -> void:
 
 
 ## ==================== 物理帧循环、Y-Sort 55% 遮挡半透与纯键鼠交互 ====================
+func _is_alt_highlight_active() -> bool:
+	if InputRouter.current_mode != InputRouter.MODE_WORLD_COMBAT or _combat_ctrl.in_combat:
+		return false
+	return InputRouter.alt_held or _alt_key_down
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_alt_key_down = false
+		if _alt_nameplate_overlay != null:
+			_alt_nameplate_overlay.queue_redraw()
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var kev: InputEventKey = event as InputEventKey
+		var kcode: Key = kev.physical_keycode if kev.physical_keycode != KEY_NONE else kev.keycode
+		if kcode == KEY_ALT:
+			_alt_key_down = kev.pressed and (InputRouter.current_mode == InputRouter.MODE_WORLD_COMBAT)
+			_update_interact_prompt_and_cursor()
+			if _alt_nameplate_overlay != null:
+				_alt_nameplate_overlay.queue_redraw()
+
+
 func _physics_process(delta: float) -> void:
 	if InputRouter.current_mode == InputRouter.MODE_WORLD_COMBAT:
 		_combat_ctrl.step_world_and_combat(delta, ZONE_BOUNDS)
+		for npc_step: BattleActor in _npc_actors:
+			if is_instance_valid(npc_step):
+				npc_step.step_visuals(delta, delta, false)
 		_check_dynamic_zone_triggers()
 		_check_portal_overlap()
 		_update_interact_prompt_and_cursor()
 		_step_ambient_world_barks(delta)
+	else:
+		_alt_key_down = false
+		_clear_all_hover_outlines()
+	if _alt_nameplate_overlay != null:
+		_alt_nameplate_overlay.queue_redraw()
 
 	# 镜头平滑跟随当前主控角色，远景 0.25x 视差偏移
 	var ctrl_pos: Vector2 = _combat_ctrl.get_controlled_actor_pos()
@@ -636,7 +696,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event is InputEventMouseButton:
 		var mb: InputEventMouseButton = event as InputEventMouseButton
-		var world_pt: Vector2 = get_global_mouse_position()
+		var world_pt: Vector2 = get_canvas_transform().affine_inverse() * mb.position
 
 		if mb.button_index == MOUSE_BUTTON_LEFT:
 			if mb.pressed:
@@ -655,13 +715,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif mb.button_index == MOUSE_BUTTON_RIGHT and mb.pressed:
 			_handle_right_click_world(world_pt)
 
-	elif event is InputEventMouseMotion and _lmb_down:
+	elif event is InputEventMouseMotion:
 		var mm: InputEventMouseMotion = event as InputEventMouseMotion
-		if mm.position.distance_to(_lmb_start_screen) > 14.0:
+		if _lmb_down and mm.position.distance_to(_lmb_start_screen) > 14.0:
 			_is_dragging_box = true
 			var r_pos: Vector2 = Vector2(minf(_lmb_start_screen.x, mm.position.x), minf(_lmb_start_screen.y, mm.position.y))
 			var r_size: Vector2 = (mm.position - _lmb_start_screen).abs()
 			_hud.set_box_selection_visual(true, Rect2(r_pos, r_size))
+		var w_override: Vector2 = get_canvas_transform().affine_inverse() * mm.position
+		_update_interact_prompt_and_cursor(true, w_override)
 
 
 func _handle_left_click_world(world_pt: Vector2) -> void:
@@ -713,8 +775,10 @@ func _handle_right_click_world(world_pt: Vector2) -> void:
 				_activate_interactable(inter)
 				return
 
-	# 3. 右键地面：指挥选中队员或当前主控角色移动走位！
+	# 3. 右键地面：指挥选中队员或当前主控角色移动走位，并绽放青玉水波落点（敌/NPC/器物已提前返回，绝不误生水波）！
 	_combat_ctrl.command_move_selected_to(world_pt)
+	if _ground_vfx != null:
+		_ground_vfx.spawn_move_ripple(world_pt)
 
 
 func _finish_box_selection(end_screen: Vector2) -> void:
@@ -743,11 +807,25 @@ func _finish_box_selection(end_screen: Vector2) -> void:
 			_combat_ctrl.box_selected_ids.append(_combat_ctrl.pet_actor.actor_id)
 
 
-func _update_interact_prompt_and_cursor() -> void:
-	var wmouse: Vector2 = get_global_mouse_position()
+func _clear_all_hover_outlines() -> void:
+	_hovered_interactable_id = ""
+	for inter_c: Dictionary in _interactables:
+		var raw_sp_c: Variant = inter_c.get("sprite", null)
+		if raw_sp_c != null and is_instance_valid(raw_sp_c):
+			var sp_c: Sprite2D = raw_sp_c as Sprite2D
+			if sp_c != null and sp_c.material is ShaderMaterial:
+				(sp_c.material as ShaderMaterial).set_shader_parameter("outline_intensity", 0.0)
+	for npc_c: BattleActor in _npc_actors:
+		if is_instance_valid(npc_c) and npc_c._sprite != null and is_instance_valid(npc_c._sprite) and npc_c._sprite.material is ShaderMaterial:
+			(npc_c._sprite.material as ShaderMaterial).set_shader_parameter("outline_intensity", 0.0)
+
+
+func _update_interact_prompt_and_cursor(has_world_override: bool = false, world_override: Vector2 = Vector2.ZERO) -> void:
+	var wmouse: Vector2 = world_override if has_world_override else get_global_mouse_position()
 	_combat_ctrl.hovered_world_actor_id = ""
 	var over_enemy: bool = false
 	var over_interact: bool = false
+	var alt_active: bool = _is_alt_highlight_active()
 
 	for ea: BattleActor in _combat_ctrl.enemy_actors:
 		if is_instance_valid(ea):
@@ -757,16 +835,62 @@ func _update_interact_prompt_and_cursor() -> void:
 
 	for cid_var: Variant in _combat_ctrl.party_actors.keys():
 		var cid: String = str(cid_var)
-		var pa: BattleActor = _combat_ctrl.party_actors[cid] as BattleActor
-		pa.is_hovered = pa.alive and pa.contains_world_point(wmouse)
-		if pa.is_hovered:
-			_combat_ctrl.hovered_world_actor_id = cid
+		var raw_pa: Variant = _combat_ctrl.party_actors[cid]
+		if raw_pa != null and is_instance_valid(raw_pa):
+			var pa: BattleActor = raw_pa as BattleActor
+			pa.is_hovered = pa.alive and pa.contains_world_point(wmouse)
+			if pa.is_hovered:
+				_combat_ctrl.hovered_world_actor_id = cid
 
 	for npc: BattleActor in _npc_actors:
 		if is_instance_valid(npc):
-			npc.is_hovered = npc.contains_world_point(wmouse)
+			npc.is_hovered = (not _combat_ctrl.in_combat) and npc.contains_world_point(wmouse)
 			if npc.is_hovered:
 				over_interact = true
+			if npc._sprite != null and is_instance_valid(npc._sprite) and npc._sprite.material is ShaderMaterial:
+				var npc_sm: ShaderMaterial = npc._sprite.material as ShaderMaterial
+				npc_sm.set_shader_parameter("outline_intensity", 1.0 if npc.is_hovered else (0.38 if alt_active else 0.0))
+
+	# 器物悬停精细碰撞与描边强度更新（离开悬停且未按 Alt 时立即归零至 0.0）
+	var best_hover_inter_idx: int = -1
+	var best_hover_dist: float = 99999.0
+	if not _combat_ctrl.in_combat:
+		for idx_i: int in range(_interactables.size()):
+			var inter_h: Dictionary = _interactables[idx_i]
+			if float(inter_h.get("radius", 0.0)) <= 0.0:
+				continue
+			var ipos_h: Vector2 = inter_h.get("pos", Vector2.ZERO) as Vector2
+			var raw_sp_h: Variant = inter_h.get("sprite", null)
+			var sp_h: Sprite2D = (raw_sp_h as Sprite2D) if (raw_sp_h != null and is_instance_valid(raw_sp_h)) else null
+			var hit_inter: bool = false
+			var d_h: float = _interact_distance_to(wmouse, ipos_h)
+			if sp_h != null and sp_h.texture != null:
+				var tw_h: float = float(sp_h.texture.get_width())
+				var th_h: float = float(sp_h.texture.get_height())
+				var srect_h: Rect2 = Rect2(ipos_h.x - tw_h * 0.46, ipos_h.y - th_h * 0.96, tw_h * 0.92, th_h * 0.96)
+				hit_inter = srect_h.has_point(wmouse) or (d_h <= 78.0)
+			else:
+				hit_inter = (d_h <= 78.0)
+			if hit_inter and d_h < best_hover_dist:
+				best_hover_dist = d_h
+				best_hover_inter_idx = idx_i
+
+	_hovered_interactable_id = ""
+	if best_hover_inter_idx >= 0:
+		over_interact = true
+		_hovered_interactable_id = str(_interactables[best_hover_inter_idx].get("id", ""))
+
+	for idx_u: int in range(_interactables.size()):
+		var inter_u: Dictionary = _interactables[idx_u]
+		var raw_sp_u: Variant = inter_u.get("sprite", null)
+		if raw_sp_u != null and is_instance_valid(raw_sp_u):
+			var sp_u: Sprite2D = raw_sp_u as Sprite2D
+			if sp_u != null and sp_u.material is ShaderMaterial:
+				var sm_u: ShaderMaterial = sp_u.material as ShaderMaterial
+				var is_hov: bool = (idx_u == best_hover_inter_idx)
+				var valid_u: bool = (float(inter_u.get("radius", 0.0)) > 0.0)
+				var out_str: float = 1.0 if is_hov else (0.38 if (alt_active and valid_u) else 0.0)
+				sm_u.set_shader_parameter("outline_intensity", out_str)
 
 	var ctrl_pos: Vector2 = _combat_ctrl.get_controlled_actor_pos()
 	var best_prompt: String = ""
@@ -794,8 +918,6 @@ func _update_interact_prompt_and_cursor() -> void:
 				best_target_pos = ipos
 				var anchor_y: float = minf(ipos.y - 148.0, ctrl_pos.y - 182.0)
 				best_world_anchor = Vector2(ipos.x, anchor_y)
-			if _interact_distance_to(wmouse, ipos) <= 78.0:
-				over_interact = true
 
 	var place_below: bool = false
 	if best_prompt != "" and best_target_pos.x >= 0.0:
@@ -1256,6 +1378,39 @@ func _add_ysort_structure(tex_path: String, base_pos: Vector2, collision_r: floa
 	return sp
 
 
+func _resolve_interactable_plaque_name(id_str: String, fallback_title: String) -> String:
+	var key_map: Dictionary = {
+		"peddler_stall": "PROP_PEDDLER_STALL_NAME",
+		"yaolu_alchemy": "PROP_YAOLU_ALCHEMY_NAME",
+		"yaolu_shop": "PROP_YAOLU_SHOP_NAME",
+		"yaolu_discarded_pill": "PROP_DISCARDED_BASKET_NAME",
+		"herb_town_1": "PROP_HERB_QINGMU_NAME",
+		"herb_pass_1": "PROP_HERB_CHIYANG_NAME",
+		"herb_cave_stealth": "PROP_HERB_CORRUPT_NAME",
+		"stele_tingyu_gate": "PROP_STELE_TINGYU_NAME",
+		"stele_temple_courtyard": "PROP_STELE_TEMPLE_NAME",
+		"stele_cave_mid": "PROP_STELE_CAVE_MID_NAME",
+		"stele_wolf_altar": "PROP_STELE_ALTAR_NAME",
+		"injured_beast": "PROP_INJURED_BEAST_NAME",
+		"cliff_chest_vista": "PROP_CLIFF_VISTA_NAME",
+		"temple_event_trigger": "PROP_TEMPLE_ENTRY_NAME",
+		"barrier_vine": "PROP_BARRIER_VINE_NAME",
+		"chest_poxue_pendant": "PROP_ANCIENT_CHEST_NAME",
+		"ancient_remains": "PROP_ANCIENT_REMAINS_NAME",
+		"shortcut_gate": "PROP_SHORTCUT_GATE_NAME",
+		"wolf_altar_trigger": "PROP_WOLF_ALTAR_NAME",
+	}
+	if id_str == "barrier_pool":
+		var clean_p: bool = bool(CampaignState.world_flags.get("miasma_pool_cleansed", false))
+		return tr("PROP_CLEAN_POOL_NAME" if clean_p else "PROP_MIASMA_POOL_NAME")
+	if key_map.has(id_str):
+		return tr(str(key_map[id_str]))
+	var bracket_i: int = fallback_title.find(" [")
+	if bracket_i > 0:
+		return fallback_title.substr(0, bracket_i)
+	return fallback_title
+
+
 func _add_interactable(
 	id_str: String,
 	kind: String,
@@ -1274,6 +1429,12 @@ func _add_interactable(
 		var tex: Texture2D = load(tex_path) as Texture2D
 		sp.texture = tex
 		sp.offset = Vector2(-float(tex.get_width()) * 0.5, -float(tex.get_height()))
+		if _hover_outline_shader != null:
+			var sm: ShaderMaterial = ShaderMaterial.new()
+			sm.shader = _hover_outline_shader
+			sm.set_shader_parameter("use_uv_border_clamp", true)
+			sm.set_shader_parameter("outline_intensity", 0.0)
+			sp.material = sm
 		if is_flat_ground:
 			_ground_decor_layer.add_child(sp)
 		else:
@@ -1288,6 +1449,7 @@ func _add_interactable(
 		"pos": pos,
 		"radius": radius,
 		"title": title,
+		"clean_name": _resolve_interactable_plaque_name(id_str, title),
 		"sprite": sp,
 		"obstacle_idx": obs_idx,
 	})
@@ -1493,6 +1655,12 @@ func _spawn_npc(npc_id: String, name_str: String, sprite_id: String, pos: Vector
 	var npc: BattleActor = BattleActor.new()
 	npc.position = pos
 	npc.setup_actor(npc_id, "npc", name_str, sprite_id, 0.96)
+	if npc._sprite != null and _hover_outline_shader != null:
+		var nsm: ShaderMaterial = ShaderMaterial.new()
+		nsm.shader = _hover_outline_shader
+		nsm.set_shader_parameter("use_uv_border_clamp", false)
+		nsm.set_shader_parameter("outline_intensity", 0.0)
+		npc._sprite.material = nsm
 	_ysort_root.add_child(npc)
 	_npc_actors.append(npc)
 	return npc
@@ -1578,3 +1746,109 @@ func _draw_atmosphere_rain() -> void:
 		return
 	for rp: Vector2 in _rain_streaks:
 		_rain_overlay.draw_line(rp, rp + Vector2(-14.0, 38.0), Color(0.78, 0.86, 0.88, 0.24), 1.6)
+
+
+func _draw_xuan_plaque_at(center_pt: Vector2, text_str: String, is_hovered: bool) -> void:
+	if _alt_nameplate_overlay == null or text_str == "":
+		return
+	var font: Font = UIThemeBuilder.get_bold_font()
+	if font == null:
+		font = ThemeDB.fallback_font
+	var text_w: float = font.get_string_size(text_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
+	var bw: float = maxf(116.0, text_w + 34.0)
+	var bh: float = 30.0
+	var bx: float = center_pt.x - bw * 0.5
+	var by: float = center_pt.y - bh * 0.5
+	var rect: Rect2 = Rect2(bx, by, bw, bh)
+
+	if _xuan_nameplate_tex != null:
+		_alt_nameplate_overlay.draw_texture_rect(_xuan_nameplate_tex, rect.grow(2.0), false)
+	else:
+		_alt_nameplate_overlay.draw_rect(Rect2(bx + 2.0, by + 3.0, bw, bh), Color(0.06, 0.05, 0.04, 0.52), true)
+		_alt_nameplate_overlay.draw_rect(rect, Color("#ECE3D3"), true)
+		_alt_nameplate_overlay.draw_rect(rect, UIThemeBuilder.COL_BRONZE_GOLD if is_hovered else Color("#5A3E28"), false, 2.0)
+		_alt_nameplate_overlay.draw_rect(rect.grow(-3.0), Color("#B69766"), false, 1.0)
+
+	if is_hovered:
+		_alt_nameplate_overlay.draw_rect(rect, UIThemeBuilder.COL_BRONZE_GOLD, false, 2.0)
+
+	# 左侧朱砂菱形小印
+	var seal_c: Vector2 = Vector2(bx + 12.0, center_pt.y)
+	var seal_pts: PackedVector2Array = PackedVector2Array([
+		seal_c + Vector2(0.0, -4.2),
+		seal_c + Vector2(4.2, 0.0),
+		seal_c + Vector2(0.0, 4.2),
+		seal_c + Vector2(-4.2, 0.0),
+	])
+	_alt_nameplate_overlay.draw_colored_polygon(seal_pts, Color("#B84332"))
+	_alt_nameplate_overlay.draw_string(
+		font,
+		Vector2(bx + 22.0, by + 21.0),
+		text_str,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		16,
+		Color("#201B18")
+	)
+
+
+func _draw_alt_xuan_nameplates() -> void:
+	if _alt_nameplate_overlay == null:
+		return
+	if not _is_alt_highlight_active():
+		return
+
+	var font: Font = UIThemeBuilder.get_bold_font()
+	if font == null:
+		font = ThemeDB.fallback_font
+	var placed_rects: Array[Rect2] = []
+
+	for inter: Dictionary in _interactables:
+		if float(inter.get("radius", 0.0)) <= 0.0 or str(inter.get("title", "")) == "":
+			continue
+		var iid: String = str(inter.get("id", ""))
+		var clean_name: String = _resolve_interactable_plaque_name(iid, str(inter.get("title", "")))
+		var ipos: Vector2 = inter.get("pos", Vector2.ZERO) as Vector2
+		var raw_sp_a: Variant = inter.get("sprite", null)
+		var sp: Sprite2D = (raw_sp_a as Sprite2D) if (raw_sp_a != null and is_instance_valid(raw_sp_a)) else null
+		var tex_h: float = 140.0
+		if sp != null and sp.texture != null:
+			tex_h = float(sp.texture.get_height())
+		var center_y: float = ipos.y - clampf(tex_h * 0.78, 88.0, 142.0)
+		var est_w: float = maxf(116.0, font.get_string_size(clean_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x + 34.0)
+		var cand_r: Rect2 = Rect2(ipos.x - est_w * 0.5, center_y - 16.0, est_w, 32.0)
+		for _guard_i: int in range(3):
+			var hit_prev: bool = false
+			for pr: Rect2 in placed_rects:
+				if cand_r.intersects(pr):
+					hit_prev = true
+					break
+			if not hit_prev:
+				break
+			center_y -= 34.0
+			cand_r.position.y = center_y - 16.0
+		placed_rects.append(cand_r)
+		_draw_xuan_plaque_at(Vector2(ipos.x, center_y), clean_name, iid == _hovered_interactable_id)
+
+	for npc: BattleActor in _npc_actors:
+		if not is_instance_valid(npc):
+			continue
+		var head_h: float = 136.0
+		if npc._sprite != null:
+			head_h = float(npc._head_top_px) * npc._sprite.scale.y
+		var npc_cy: float = npc.position.y - head_h - 22.0
+		var npc_w: float = maxf(116.0, font.get_string_size(npc.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x + 34.0)
+		var npc_r: Rect2 = Rect2(npc.position.x - npc_w * 0.5, npc_cy - 16.0, npc_w, 32.0)
+		for _guard_j: int in range(3):
+			var hit_n: bool = false
+			for pr2: Rect2 in placed_rects:
+				if npc_r.intersects(pr2):
+					hit_n = true
+					break
+			if not hit_n:
+				break
+			npc_cy -= 34.0
+			npc_r.position.y = npc_cy - 16.0
+		placed_rects.append(npc_r)
+		_draw_xuan_plaque_at(Vector2(npc.position.x, npc_cy), npc.display_name, npc.is_hovered)
+

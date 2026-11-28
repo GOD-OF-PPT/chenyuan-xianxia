@@ -28,8 +28,10 @@ var queued_skill_lines: Array[Dictionary] = []
 ## 兼容旧字段（不再绘制简陋直线/圆环）
 var transient_fx: Array[Dictionary] = []
 
-## 地面青玉水波点击落点（由 ui_delta 驱动，为第 3 轮预留即插即用接口）
+## 地面青玉水波点击落点（由实时 ui_delta 驱动，Space 战术凝时期间依然灵动扩散）
 var _move_ripples: Array[Dictionary] = []
+var _last_ripple_frame: int = -1
+var _jade_ripple_tex: Texture2D = null
 var _telegraph_pulse_clock: float = 0.0
 var _stepped_combat_this_frame: bool = false
 
@@ -53,9 +55,17 @@ var _ppm_cache: Dictionary = {}
 func _ready() -> void:
 	process_priority = 10
 	material = _get_unshaded_mix_material()
+	if is_ground_layer and ResourceLoader.exists("res://assets/ui/icons/casket_jade_ripple.png"):
+		_jade_ripple_tex = load("res://assets/ui/icons/casket_jade_ripple.png") as Texture2D
 	if not is_ground_layer:
 		z_index = 4
 		_init_sky_pools()
+
+
+func _process(delta: float) -> void:
+	if is_ground_layer and not _move_ripples.is_empty():
+		_advance_move_ripples(delta)
+		queue_redraw()
 
 
 func _physics_process(_delta: float) -> void:
@@ -270,16 +280,27 @@ func clear_all_fx() -> void:
 	queue_redraw()
 
 
+func _advance_move_ripples(dt: float) -> void:
+	if dt <= 0.0 or _move_ripples.is_empty():
+		return
+	var cur_pf: int = Engine.get_process_frames()
+	if cur_pf == _last_ripple_frame:
+		return
+	_last_ripple_frame = cur_pf
+	var step_dt: float = clampf(dt, 0.022, 0.042)
+	for i: int in range(_move_ripples.size() - 1, -1, -1):
+		var rp: Dictionary = _move_ripples[i]
+		var next_e: float = float(rp.get("elapsed", 0.0)) + step_dt
+		if next_e >= float(rp.get("duration", 0.52)):
+			_move_ripples.remove_at(i)
+		else:
+			rp["elapsed"] = next_e
+
+
 func step_fx(combat_delta: float, ui_delta: float = 0.0) -> void:
 	if is_ground_layer:
-		if ui_delta > 0.0 and not _move_ripples.is_empty():
-			for i: int in range(_move_ripples.size() - 1, -1, -1):
-				var rp: Dictionary = _move_ripples[i]
-				var next_e: float = float(rp.get("elapsed", 0.0)) + ui_delta
-				if next_e >= float(rp.get("duration", 0.65)):
-					_move_ripples.remove_at(i)
-				else:
-					rp["elapsed"] = next_e
+		if ui_delta > 0.0:
+			_advance_move_ripples(ui_delta)
 		if combat_delta > 0.0:
 			_telegraph_pulse_clock += combat_delta
 		queue_redraw()
@@ -464,10 +485,12 @@ func _dispatch_pending_spawn(pend: Dictionary) -> void:
 
 ## ==================== 公开特效生成接口（全类型安全） ====================
 func spawn_move_ripple(world_pos: Vector2) -> void:
+	if _move_ripples.size() >= 8:
+		_move_ripples.pop_front()
 	_move_ripples.append({
 		"pos": world_pos,
 		"elapsed": 0.0,
-		"duration": 0.65,
+		"duration": 0.52,
 	})
 	queue_redraw()
 
@@ -859,20 +882,7 @@ func _draw() -> void:
 		font = ThemeDB.fallback_font
 
 	if is_ground_layer:
-		# 1. 右键青玉水波落点（ui_delta 驱动，预留第 3 轮无缝接入）
-		for rp: Dictionary in _move_ripples:
-			var r_pos: Vector2 = rp.get("pos", Vector2.ZERO) as Vector2
-			var r_t: float = clampf(float(rp.get("elapsed", 0.0)) / maxf(0.05, float(rp.get("duration", 0.65))), 0.0, 1.0)
-			var r_fade: float = 1.0 - r_t
-			draw_set_transform(r_pos, 0.0, Vector2(1.0, PERSPECTIVE_Y_RATIO))
-			for ring_i: int in range(3):
-				var phase_t: float = clampf(r_t * 1.25 - float(ring_i) * 0.18, 0.0, 1.0)
-				if phase_t > 0.01:
-					var rad_rp: float = lerpf(8.0, 44.0, phase_t)
-					draw_arc(Vector2.ZERO, rad_rp, 0.0, TAU, 32, Color(0.46, 0.88, 0.72, r_fade * (0.82 - float(ring_i) * 0.22)), 2.2)
-			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-
-		# 2. 绘制 2.27:1 斜向透视朱砂八卦危招圆环 / 裂爪扇形阵纹（严格位于角色 FeetOrigin 之下！）
+		# 1. 绘制 2.27:1 斜向透视朱砂八卦危招圆环 / 裂爪扇形阵纹（严格位于角色 FeetOrigin 之下！）
 		for tele: Dictionary in active_telegraphs:
 			var kind: String = str(tele.get("type", "circle"))
 			var orig: Vector2 = tele.get("origin", Vector2.ZERO) as Vector2
@@ -887,7 +897,7 @@ func _draw() -> void:
 			else:
 				_draw_telegraph_circle(orig, rad, prog, intr)
 
-		# 3. 绘制右键/战术凝时走位路径线与青玉落点标
+		# 2. 绘制右键/战术凝时走位路径线与青玉落点标
 		for mp: Dictionary in move_previews:
 			var p_from: Vector2 = mp.get("from", Vector2.ZERO) as Vector2
 			var p_to: Vector2 = mp.get("to", Vector2.ZERO) as Vector2
@@ -897,6 +907,46 @@ func _draw() -> void:
 			var lbl: String = str(mp.get("label", ""))
 			if lbl != "":
 				draw_string(font, p_to + Vector2(12.0, 5.0), lbl, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.84, 0.96, 0.90))
+
+		# 3. 右键青玉水波落点（UNSHADED + 实时 ui_delta 驱动，置于走位线顶层以在战术凝时框选落点处清晰绽放同心涟漪！）
+		for rp: Dictionary in _move_ripples:
+			var r_pos: Vector2 = rp.get("pos", Vector2.ZERO) as Vector2
+			var r_t: float = clampf(float(rp.get("elapsed", 0.0)) / maxf(0.05, float(rp.get("duration", 0.52))), 0.0, 1.0)
+			var ease_main: float = 1.0 - pow(1.0 - r_t, 1.85)
+			draw_set_transform(r_pos, 0.0, Vector2(1.0, 0.52))
+			if _jade_ripple_tex != null:
+				var tex_rad: float = lerpf(8.0, 41.0, ease_main)
+				draw_texture_rect(
+					_jade_ripple_tex,
+					Rect2(-tex_rad, -tex_rad, tex_rad * 2.0, tex_rad * 2.0),
+					false,
+					Color(1.0, 1.0, 1.0, 0.82 * pow(1.0 - r_t, 1.05))
+				)
+			# Layer A: 青玉灵泉扩散波谷（初段亮玉心 -> 中段墨绿深谷衬底）
+			var core_flash: float = clampf(1.0 - r_t * 3.2, 0.0, 1.0)
+			if core_flash > 0.01:
+				draw_circle(Vector2.ZERO, lerpf(15.0, 5.0, 1.0 - core_flash), Color(0.82, 0.93, 0.89, 0.78 * core_flash))
+			draw_circle(Vector2.ZERO, lerpf(10.0, 39.0, ease_main), Color(0.18, 0.48, 0.40, 0.34 * pow(1.0 - r_t, 1.25)))
+			# Layer B: 三重错落同心水波（深墨波谷 + 宋明石绿主波峰 + 白玉高光脊）
+			for ring_i: int in range(3):
+				var delay_f: float = float(ring_i) * 0.13
+				var ring_raw: float = clampf((r_t - delay_f) / maxf(0.25, 1.0 - delay_f), 0.0, 1.0)
+				if ring_raw > 0.005:
+					var ease_r: float = 1.0 - pow(1.0 - ring_raw, 1.75)
+					var rad_rp: float = lerpf(5.0, 41.0 - float(ring_i) * 5.5, ease_r)
+					var a_ring: float = pow(1.0 - ring_raw, 0.85) * (0.98 - float(ring_i) * 0.18)
+					draw_arc(Vector2.ZERO, rad_rp + 1.8, 0.0, TAU, 40, Color(0.06, 0.16, 0.14, a_ring * 0.72), 4.6)
+					draw_arc(Vector2.ZERO, rad_rp, 0.0, TAU, 40, Color(0.45, 0.83, 0.72, a_ring), 3.4 - float(ring_i) * 0.45)
+					draw_arc(Vector2.ZERO, maxf(2.0, rad_rp - 0.8), -PI * 0.92, -PI * 0.08, 20, Color(0.88, 0.95, 0.91, a_ring * 0.94), 2.1)
+			# Layer C: 中心坠水回弹青玉珠（恢复竖直屏幕比例绘制）
+			if r_t < 0.42:
+				var drop_t: float = r_t / 0.42
+				draw_set_transform(r_pos, 0.0, Vector2.ONE)
+				var drop_p: Vector2 = Vector2(0.0, -sin(drop_t * PI) * 14.0)
+				var drop_r: float = lerpf(5.8, 2.2, drop_t)
+				draw_circle(drop_p, drop_r + 1.4, Color(0.14, 0.38, 0.31, 0.88 * (1.0 - drop_t)))
+				draw_circle(drop_p, drop_r, Color(0.86, 0.94, 0.90, 0.95 * (1.0 - drop_t)))
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		return
 
 	# ==================== 空中预排技能连线层 ====================
