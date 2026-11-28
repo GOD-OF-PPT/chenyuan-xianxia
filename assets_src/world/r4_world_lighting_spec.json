@@ -1,0 +1,73 @@
+{
+  "milestone": "M4 Polish R4 — 3-Zone World Richness, Stage C Dynamic PointLight2D & Wet Bluestone (Round 2)",
+  "generated_date": "2026-04-12",
+  "benchmark_master": "docs/reviews/gate3_masters/master_a_tingyu_town.png",
+  "canonical_plaque_text": "济世药庐",
+  "assets": [
+    {
+      "path": "project/assets/world/fg_bamboo_leaf.png",
+      "category": "world_prop",
+      "sha256": "1913dfa376310d55066009bcf84b43c2d62d029e842a21e862f103b208ac15eb"
+    },
+    {
+      "path": "project/assets/world/light_radial_soft.png",
+      "category": "world_light",
+      "sha256": "b7045e895519fb03ea25bc7bdba1830901527569a3c9be5a70d116a747de59a6"
+    },
+    {
+      "path": "project/assets/world/prop_cave_gnarled_roots.png",
+      "category": "world_prop",
+      "sha256": "656877bf5e3eb044efd96628a43b0ced1e180c41bf2acc72a94ee605b74e981d"
+    },
+    {
+      "path": "project/assets/world/prop_cave_stone_steps.png",
+      "category": "world_prop",
+      "sha256": "8ff26a836a984658f49e1154ba79cd24da539ca8758ff98825725473f654ee9b"
+    },
+    {
+      "path": "project/assets/world/prop_folk_house_a.png",
+      "category": "world_prop",
+      "sha256": "100db5356328d31017b1eb5917d3c3c7171dccb9c6b9b17436e34f014a14c697"
+    },
+    {
+      "path": "project/assets/world/prop_folk_house_b.png",
+      "category": "world_prop",
+      "sha256": "868f35b9b2a12112688425d65f20805708072789b159fb55159a066563cc235e"
+    },
+    {
+      "path": "project/assets/world/prop_folk_roof_eave.png",
+      "category": "world_prop",
+      "sha256": "1391604b0d263a021dbfa8c9633e4afac63709fabf56687b808ba1463e81b43d"
+    },
+    {
+      "path": "project/assets/world/prop_mountain_plank_bridge.png",
+      "category": "world_prop",
+      "sha256": "d1ca478c8b86b1d65ab9c21da47721e84877f4d25b9a46259de359513dba9171"
+    },
+    {
+      "path": "project/assets/world/prop_yaolu_alchemy_pavilion.png",
+      "category": "world_prop",
+      "sha256": "636b974ce2577e9352cdebccf86576b3061863fd4779c45632d14276c76e708d"
+    },
+    {
+      "path": "project/assets/world/prop_yaolu_alchemy_terrace.png",
+      "category": "world_prop",
+      "sha256": "3d16e667543de995eea31cfbde48be14ac13cb6ff6e787dd4b364337b115ff8c"
+    },
+    {
+      "path": "project/assets/world/prop_yaolu_courtyard_wall.png",
+      "category": "world_prop",
+      "sha256": "73d52f2bf1c1c6981b42727f79832ebd9ba63c9e3a4833e6a9997b7eb3f04e60"
+    },
+    {
+      "path": "project/assets/world/prop_yaolu_gatehouse.png",
+      "category": "world_prop",
+      "sha256": "5dfd36205ed71d1465533fc9db46c97c86ce4a3d83c72e5e07d9f30a0d92f986"
+    },
+    {
+      "path": "project/assets/world/prop_yaolu_side_wall.png",
+      "category": "world_prop",
+      "sha256": "8f618fab48e759af9a250c994983b3b71c8607e08d38cf79ae431894c2d750a9"
+    }
+  ]
+}
