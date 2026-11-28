@@ -486,9 +486,11 @@ func _assemble_tingyu_town() -> void:
 	# 5. 专属城镇 NPC 序列帧（老樵夫于茶寮檐口避雨歇脚 / 散修退立席后不踩器物 / 沈清禾立于门侧让出敞门 / 周执事立于东柱外侧零遮挡）
 	_spawn_npc("npc_elder", "听雨镇老樵夫", "npc_elder", Vector2(568.0, 668.0), "tea_elder")
 
-	_spawn_npc("npc_peddler", "游方摆摊散修", "npc_peddler", Vector2(894.0, 792.0), "peddler")
-	_combat_ctrl.obstacle_circles.append({"pos": Vector2(894.0, 780.0), "radius": 36.0})
-	_add_interactable("peddler_stall", "stall", Vector2(860.0, 896.0), 144.0, "散修小地摊 [F 掌眼淘旧物]", "res://assets/world/prop_peddler_stall.png", -1, true)
+	var ped_a: BattleActor = _spawn_npc("npc_peddler", "游方摆摊散修", "npc_peddler", Vector2(832.0, 756.0), "peddler")
+	if ped_a != null:
+		ped_a.set_facing(Vector2(0.68, 0.73))
+	_combat_ctrl.obstacle_circles.append({"pos": Vector2(832.0, 746.0), "radius": 34.0})
+	_add_interactable("peddler_stall", "stall", Vector2(852.0, 908.0), 144.0, "散修小地摊 [F 掌眼淘旧物]", "res://assets/world/prop_peddler_stall.png", -1, true)
 
 	if not bool(CampaignState.world_flags.get("met_shen_qinghe", false)):
 		# 沈清禾立于柴门右侧檐灯旁青石迎诊位（y=774 > 门楼 y=728，全身 100% 零遮挡，且完整让出敞开柴门通道！）
@@ -506,10 +508,10 @@ func _assemble_tingyu_town() -> void:
 	_add_interactable("yaolu_shop", "shop", Vector2(1090.0, 624.0), 152.0, "药庐外院药肆 [F 购草寄售]", "res://assets/world/prop_yaolu_counter.png", counter_obs)
 
 	if not CampaignState.opened_containers.has("yaolu_discarded_pill"):
-		_add_interactable("yaolu_discarded_pill", "burnt_pill_pickup", Vector2(1608.0, 614.0), 132.0, "丹炉旁弃置药篓 [F 翻检废丹]", "res://assets/world/prop_discarded_pill_basket.png")
+		_add_interactable("yaolu_discarded_pill", "burnt_pill_pickup", Vector2(1636.0, 588.0), 132.0, "丹炉旁弃置药篓 [F 翻检废丹]", "res://assets/world/prop_discarded_pill_basket.png")
 
 	if not bool(CampaignState.world_flags.get("yaolu_spy_resolved", false)):
-		var zhou_a: BattleActor = _spawn_npc("npc_zhou", "药庐周执事", "npc_steward_zhou", Vector2(1548.0, 694.0), "steward_zhou")
+		var zhou_a: BattleActor = _spawn_npc("npc_zhou", "药庐周执事", "npc_steward_zhou", Vector2(1572.0, 604.0), "steward_zhou")
 		if zhou_a != null:
 			zhou_a.set_facing(Vector2(-0.82, 0.57))
 
@@ -524,7 +526,7 @@ func _assemble_tingyu_town() -> void:
 
 	# Stage C 动态暖/冷光源（每盏均精准锚定实体灯笼/丹炉/石碑发光体，全区严格 5 盏 <= 8 盏/屏）
 	_add_stage_c_point_light(Vector2(606.0, 658.0), Color(0.96, 0.68, 0.34, 1.0), 0.50, 1.62, 0.4)
-	_add_stage_c_point_light(Vector2(842.0, 858.0), Color(0.95, 0.66, 0.32, 1.0), 0.46, 1.45, 1.7)
+	_add_stage_c_point_light(Vector2(887.0, 798.0), Color(0.95, 0.66, 0.32, 1.0), 0.46, 1.45, 1.7)
 	_add_stage_c_point_light(Vector2(1196.0, 724.0), Color(0.96, 0.68, 0.34, 1.0), 0.48, 1.48, 2.9)
 	_add_stage_c_point_light(Vector2(1385.0, 642.0), Color(1.00, 0.60, 0.20, 1.0), 1.52, 2.75, 4.1)
 	_add_stage_c_point_light(Vector2(1896.0, 750.0), Color(0.32, 0.84, 0.76, 1.0), 0.58, 1.88, -1.0)

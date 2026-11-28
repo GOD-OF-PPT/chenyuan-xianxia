@@ -3,7 +3,7 @@
   "cell_w": 256,
   "cell_h": 192,
   "foot_y": 170,
-  "head_top_px": 114,
+  "head_top_px": 116,
   "cols": 6,
   "rows": {
     "idle_se": {

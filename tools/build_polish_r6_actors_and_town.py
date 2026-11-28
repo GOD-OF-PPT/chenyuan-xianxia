@@ -614,7 +614,11 @@ def build_r6_party_hero_sheets() -> list[dict[str, str]]:
                 "path": rel_png,
                 "source_path": "assets_src/sprites/r2_party_parts_sheet.png",
                 "category": "sprite_sheet",
-                "creation_method": f"Canonical Song-Ming Gongbi SE/NE master idle + 2-bone scissor-stride run + anatomical martial combat rig ({aid})",
+                "creation_method": (
+                    f"Gemini Imagen (2026-11-28, Song-Ming Gongbi 3/4 character sheets char_ref_party_pets_raw.jpg, "
+                    f"char_ref_party_back_raw.jpg & r2_party_parts_sheet.png) + tools/build_polish_r6_actors_and_town.py "
+                    f"canonical SE/NE idle + 2-bone scissor-stride run + anatomical martial combat rig ({aid})"
+                ),
                 "license": LIC_R6,
             }
         )
@@ -622,6 +626,42 @@ def build_r6_party_hero_sheets() -> list[dict[str, str]]:
 
 
 # ==================== 2. GROUND-PLANTED SHADOW-FREE NPC / PET / ENEMY SHEETS ====================
+def strip_bottom_studio_cast_shadow(im_rgba: Image.Image, y_start_frac: float = 0.72) -> Image.Image:
+    """
+    Removes residual pale beige/tan studio floor cast-shadows painted between feet/paws/staves
+    (`luma >= 122`, low chroma `max-min <= 40` in the bottom floor band `y >= h * y_start_frac`),
+    using BOTH exterior flood-fill (stopping strictly at dark Gongbi ink contours `luma < 88`)
+    AND enclosed inter-leg pale floor pocket clearing so zero tan floor blotches survive on dark stone!
+    """
+    arr = np.asarray(im_rgba, dtype=np.uint8).copy()
+    h, w, _ = arr.shape
+    rgb = arr[..., :3].astype(np.float32)
+    luma = 0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]
+    chroma = rgb.max(axis=-1) - rgb.min(axis=-1)
+
+    y0 = int(round(h * y_start_frac))
+    yy = np.arange(h)[:, None]
+    pale_floor = (yy >= y0) & (arr[..., 3] > 0) & (luma >= 122.0) & (chroma <= 40.0)
+
+    # Clear all pale neutral studio floor cast-shadow pixels in the bottom foot band (all Gongbi boots/paws/moss
+    # have either dark luma < 115 or saturated color chroma > 40, bounded by dark ink contours < 80)
+    arr[pale_floor, 3] = 0
+
+    # Soft 1px feather on newly exposed shadow boundary
+    eroded = cv2.erode((arr[..., 3] > 0).astype(np.uint8), np.ones((3, 3), np.uint8), iterations=1)
+    rim = (yy >= y0) & (arr[..., 3] > 0) & (eroded == 0) & (luma >= 108.0) & (chroma <= 36.0)
+    arr[rim, 3] = (arr[rim, 3].astype(np.float32) * 0.35).astype(np.uint8)
+    arr = r2_act.prune_tiny_alpha_specks(r2_act.clean_zero_alpha(arr), max_speck_area=18, alpha_thresh=14)
+
+    ys, xs = np.where(arr[..., 3] > 14)
+    if len(xs) == 0:
+        return Image.fromarray(arr, mode="RGBA")
+    return Image.fromarray(
+        arr[int(ys.min()) : int(ys.max()) + 1, int(xs.min()) : int(xs.max()) + 1],
+        mode="RGBA",
+    )
+
+
 def render_grounded_shadowfree_frame(
     fig_rgba: Image.Image,
     shoe_y: int,
@@ -638,14 +678,16 @@ def render_grounded_shadowfree_frame(
     """
     Replaces `build_r2_polish_assets.render_clean_frame`:
     - ZERO baked floor shadow oval inside sprite cells (uses `BattleActor._draw()`'s dynamic shadow!).
-    - Anchors `shoe_y` 100.0% flush on `foot_y` (0px levitation!).
-    - Locks `yn >= 0.48` during `idle` (0px foot/hem float) and keeps stance foot planted during `run`.
+    - Pads `src` by `pad = 28px` transparent margin on all 4 sides BEFORE `cv2.remap` so hats, foreheads,
+      snouts, staves, and tails NEVER slice flat against tight-crop borders!
+    - Anchors `shoe_y` 100.0% flush on `foot_y` (`0px` levitation) and lifts passing legs UPWARD (`dy -= ...`)
+      during `run` while keeping stance feet planted on `foot_y`!
     """
-    src = np.asarray(fig_rgba, dtype=np.float32)
-    sh, sw, _ = src.shape
+    src0 = np.asarray(fig_rgba, dtype=np.float32)
+    sh0, sw0, _ = src0.shape
 
     if is_enemy and state == "hit_down" and frame_idx >= 2:
-        collapsed_h = max(20, int(round(sh * 0.46)))
+        collapsed_h = max(20, int(round(sh0 * 0.46)))
         rot_im = fig_rgba.rotate(-74 if is_quadruped else -80, expand=True, resample=Image.Resampling.BICUBIC)
         ys, xs = np.where(np.asarray(rot_im)[..., 3] > 16)
         if len(xs) > 0:
@@ -664,9 +706,14 @@ def render_grounded_shadowfree_frame(
         canvas.alpha_composite(Image.fromarray(np.clip(r_arr, 0, 255).astype(np.uint8), mode="RGBA"), (px, py))
         return canvas
 
+    pad = 28
+    src = np.pad(src0, ((pad, pad), (pad, pad), (0, 0)), mode="constant", constant_values=0.0)
+    sh, sw, _ = src.shape
+
     yy, xx = np.meshgrid(np.arange(sh, dtype=np.float32), np.arange(sw, dtype=np.float32), indexing="ij")
-    yn = yy / max(1.0, float(sh - 1))
-    xn = (xx / max(1.0, float(sw - 1))) - 0.5
+    # Normalize `yn` & `xn` over the unpadded character body `[pad .. pad + sh0 - 1]`!
+    yn = np.clip((yy - pad) / max(1.0, float(sh0 - 1)), -0.35, 1.35)
+    xn = np.clip((xx - pad) / max(1.0, float(sw0 - 1)), -0.35, 1.35) - 0.5
 
     phase = (2.0 * math.pi * frame_idx) / max(1, total_frames)
     dx = np.zeros_like(xx)
@@ -687,21 +734,21 @@ def render_grounded_shadowfree_frame(
         dy -= upper_w * (0.85 * breath)
         dx += sleeve_w * (0.75 * math.cos(phase))
     elif state == "run":
-        # Stance-planted alternating leg stride: ONLY the passing leg lifts (`dy > 0` pulls source down -> lifts foot UP!),
-        # while the stance leg stays planted at `foot_y` (ZERO global upward bob_px lifting both feet into mid-air!)
+        # Stance-planted alternating leg stride: ONLY the passing leg lifts UPWARD (`dy -= ...` shifts pixels to `-Y`),
+        # while the stance leg (`max == 0`) stays 100% planted on `foot_y`!
         stride = math.sin(phase)
-        leg_amp = 12.5 if not is_quadruped else 14.5
-        lift_amp = 8.5 if not is_quadruped else 7.5
+        leg_amp = 10.5 if not is_quadruped else 12.5
+        lift_amp = 7.0 if not is_quadruped else 6.0
         dx += lower_w * (left_side * stride * leg_amp - right_side * stride * leg_amp)
-        dy += lower_w * (left_side * max(0.0, -stride) * lift_amp + right_side * max(0.0, stride) * lift_amp)
-        dx += upper_w * (3.5 + 2.4 * math.cos(phase))
-        dy += upper_w * (1.4 * abs(math.sin(phase)))
+        dy -= lower_w * (left_side * max(0.0, -stride) * lift_amp + right_side * max(0.0, stride) * lift_amp)
+        dx += upper_w * (3.2 + 2.2 * math.cos(phase))
+        dy += upper_w * (1.2 * abs(math.sin(phase)))
     elif state == "attack_1":
         curves = [-7.0, 12.0, 15.0, 8.0, 2.0]
         rot_deg = [-5.0, 8.0, 10.0, 4.0, 0.0]
         lunge_px = curves[min(frame_idx, 4)]
         ang = math.radians(rot_deg[min(frame_idx, 4)])
-        cx0, cy0 = sw * 0.5, sh * 0.72
+        cx0, cy0 = pad + sw0 * 0.5, pad + sh0 * 0.72
         rx = (xx - cx0) * math.cos(ang) - (yy - cy0) * math.sin(ang) + cx0 - xx
         ry = (xx - cx0) * math.sin(ang) + (yy - cy0) * math.cos(ang) + cy0 - yy
         dx += upper_w * (rx + lunge_px * 0.4)
@@ -732,7 +779,7 @@ def render_grounded_shadowfree_frame(
             )
         else:
             kneel_drop = 0.22 if frame_idx == 2 else 0.26
-            dy += (1.0 - yn) * sh * kneel_drop
+            dy += np.clip(1.0 - yn, 0.0, 1.0) * sh0 * kneel_drop
             dx += upper_w * 6.5
             tint_mult = np.array([0.82, 0.80, 0.82], dtype=np.float32)
 
@@ -748,11 +795,24 @@ def render_grounded_shadowfree_frame(
     w_u8 = clamp_song_ming_mineral_hsv(np.clip(warped, 0, 255).astype(np.uint8))
     w_u8[w_u8[..., 3] < 10] = 0
 
-    canvas = Image.new("RGBA", (cell_w, cell_h), (0, 0, 0, 0))
-    paste_x = max(2, min(cell_w - sw - 2, (cell_w - sw) // 2 + int(round(lunge_px))))
-    paste_y = max(2, foot_y - shoe_y)
-    canvas.alpha_composite(Image.fromarray(w_u8, mode="RGBA"), (paste_x, paste_y))
-    return canvas
+    # Composite padded warped image onto cell_w x cell_h with 2px inner anti-clipping border guard
+    canvas_arr = np.zeros((cell_h, cell_w, 4), dtype=np.uint8)
+    paste_x = int(round((cell_w - sw0) * 0.5 - pad + lunge_px))
+    paste_y = int(round(foot_y - (shoe_y + pad)))
+
+    x0_d = max(2, paste_x)
+    y0_d = max(2, paste_y)
+    x1_d = min(cell_w - 2, paste_x + sw)
+    y1_d = min(cell_h - 2, paste_y + sh)
+    if x1_d > x0_d and y1_d > y0_d:
+        x0_s = x0_d - paste_x
+        y0_s = y0_d - paste_y
+        r2_act.alpha_over_np(
+            canvas_arr[y0_d:y1_d, x0_d:x1_d],
+            w_u8[y0_s : y0_s + (y1_d - y0_d), x0_s : x0_s + (x1_d - x0_d)],
+        )
+    canvas_arr[foot_y + 4 :, :, :] = 0
+    return Image.fromarray(r2_act.clean_zero_alpha(canvas_arr), mode="RGBA")
 
 
 def build_grounded_actor_sheet(
@@ -768,11 +828,12 @@ def build_grounded_actor_sheet(
     is_enemy: bool = False,
 ) -> dict[str, str]:
     def prep_scaled(im: Image.Image) -> tuple[Image.Image, int]:
-        sc = target_h / float(max(1, im.height))
-        max_w = int(cell_w * 0.78)
-        nw = min(max_w, max(24, int(round(im.width * sc))))
-        nh = int(round(im.height * (nw / float(max(1, im.width)))))
-        resized = crisp_resize_rgba(im, nw, nh, unsharp_pct=38)
+        cleaned = strip_bottom_studio_cast_shadow(im, y_start_frac=0.72 if is_enemy else 0.78)
+        sc = target_h / float(max(1, cleaned.height))
+        max_w = int(cell_w * 0.76)
+        nw = min(max_w, max(24, int(round(cleaned.width * sc))))
+        nh = int(round(cleaned.height * (nw / float(max(1, cleaned.width)))))
+        resized = crisp_resize_rgba(cleaned, nw, nh, unsharp_pct=38)
         return trim_stick_overhang_below_shoe(resized, min_span_px=6 if not is_quadruped else 4)
 
     f_scaled, f_shoe_y = prep_scaled(front_im)
@@ -837,7 +898,10 @@ def build_grounded_actor_sheet(
         "path": out_rel,
         "source_path": source_rel,
         "category": "sprite_sheet",
-        "creation_method": f"Song-Ming Gongbi shadow-free shoe-sole grounded keyframe sheet ({actor_id}, 0px float)",
+        "creation_method": (
+            f"Gemini Imagen (2026-11-28, Song-Ming Gongbi reference {source_rel}) + "
+            f"tools/build_polish_r6_actors_and_town.py 28px-padded shadow-free shoe-sole grounded keyframe sheet ({actor_id})"
+        ),
         "license": LIC_R6,
     }
 
@@ -910,6 +974,7 @@ def build_all_grounded_npcs_pets_enemies() -> list[dict[str, str]]:
     )
 
     # 4. Non-Boss Enemies (`boss_mist_wolf_king` kept untouched at M2 giant rig!)
+    # Native facing in `char_ref_enemies_boss_raw.jpg` is ALREADY `+X` (right/SE), matching `BattleActor.flip_h = facing_dir.x < -0.08`!
     ef_src = "assets_src/sprites/char_ref_enemies_boss_raw.jpg"
     ef_figs = isolate_sheet_components(os.path.join(REPO_ROOT, ef_src), 5, shadow_y_start=520, strip_enclosed_cream=True)
     enemy_specs = [
@@ -919,7 +984,7 @@ def build_all_grounded_npcs_pets_enemies() -> list[dict[str, str]]:
         ("enemy_wood_golem", ef_figs[3], 196, 272, 264, (112, 156, 88), False),
     ]
     for eid, efig, th, cw, ch, acc, is_q in enemy_specs:
-        f_right = efig.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+        f_right = efig
         b_right = build_back_silhouette_fallback(f_right)
         updates.append(
             build_grounded_actor_sheet(eid, f_right, b_right, th, cw, ch, acc, ef_src, is_quadruped=is_q, is_enemy=True)
@@ -950,7 +1015,11 @@ def build_r6_town_world_props() -> list[dict[str, str]]:
             "path": eave_rel,
             "source_path": sf_src,
             "category": "world_prop",
-            "creation_method": "Gemini Imagen (r6_south_folk_houses_raw.jpg) + tools/build_polish_r6_actors_and_town.py NE street-facing Jiangnan 粉墙黛瓦 two-bay residence with rear lattice windows & warm corner lantern",
+            "creation_method": (
+                "Gemini Imagen (2026-11-28, prompt: '35-degree isometric Song-Ming Gongbi Jiangnan white-wall "
+                "dark-tile folk houses facing northeast toward street, stepped Matouqiang gable walls, cream studio "
+                "background, no text') + tools/build_polish_r6_actors_and_town.py cutout & mineral palette LUT"
+            ),
             "license": LIC_R6,
         }
     )
@@ -962,7 +1031,11 @@ def build_r6_town_world_props() -> list[dict[str, str]]:
             "path": south_rel,
             "source_path": sf_src,
             "category": "world_prop",
-            "creation_method": "Gemini Imagen (r6_south_folk_houses_raw.jpg) + tools/build_polish_r6_actors_and_town.py NE street-facing stepped 马头墙 Jiangnan courtyard cottage with wooden porch & bamboo awning",
+            "creation_method": (
+                "Gemini Imagen (2026-11-28, prompt: '35-degree isometric Song-Ming Gongbi Jiangnan white-wall "
+                "dark-tile folk houses facing northeast toward street, stepped Matouqiang gable walls, wooden porch "
+                "& bamboo awning, cream studio background') + tools/build_polish_r6_actors_and_town.py cutout & LUT"
+            ),
             "license": LIC_R6,
         }
     )
@@ -983,8 +1056,6 @@ def build_r6_town_world_props() -> list[dict[str, str]]:
         bam_sub[..., 0].astype(np.float32) + bam_sub[..., 2].astype(np.float32)
     )
     yy_b = np.arange(bh_s)[:, None]
-    # In the upper 74% (bamboo canopy & culm gaps above the mossy rock base), replace ALL pale cream/grey mist
-    # wash (`diff_b < 46` OR (`luma_b > 152` and `green_ex < 22`)) with exact bg_fol so cutout makes them 100% transparent!
     canopy_pocket = (yy_b < int(bh_s * 0.74)) & ((diff_b < 46.0) | ((luma_b > 152.0) & (green_ex < 22.0)))
     bam_sub[canopy_pocket] = bg_fol.astype(np.uint8)
     bam_cut = extract_exterior_cutout(
@@ -997,7 +1068,10 @@ def build_r6_town_world_props() -> list[dict[str, str]]:
             "path": bam_rel,
             "source_path": fol_src,
             "category": "world_ysort_foliage",
-            "creation_method": "Gemini Imagen (prop_sheet_foliage_raw.jpg) + tools/build_polish_r6_actors_and_town.py full interior canopy pocket cutout & Song-Ming ink-jade defringe (0 pale blotches)",
+            "creation_method": (
+                "Gemini Imagen (2026-11-28, prop_sheet_foliage_raw.jpg Song-Ming Gongbi emerald bamboo cluster) + "
+                "tools/build_polish_r6_actors_and_town.py full interior canopy pocket cutout & ink-jade defringe"
+            ),
             "license": LIC_R6,
         }
     )
@@ -1025,7 +1099,10 @@ def build_r6_town_world_props() -> list[dict[str, str]]:
             "path": gate_rel,
             "source_path": gp_src,
             "category": "world_prop",
-            "creation_method": "Gemini Imagen (r5_yaolu_gate_pavilion_raw.jpg) + tools/build_polish_r6_actors_and_town.py 35-deg SW alignment, warm eave lantern & enlarged high-contrast '济世药庐' carved plaque",
+            "creation_method": (
+                "Gemini Imagen (2026-11-28, r5_yaolu_gate_pavilion_raw.jpg 35-deg Song-Ming Gongbi white-wall "
+                "pharmacy gatehouse) + tools/build_polish_r6_actors_and_town.py SW alignment & enlarged '济世药庐' plaque"
+            ),
             "license": LIC_R6,
         }
     )
