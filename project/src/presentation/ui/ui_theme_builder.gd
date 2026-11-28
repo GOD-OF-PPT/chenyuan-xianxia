@@ -23,7 +23,7 @@ const COL_WATER_BLUE: Color = Color("#2E5984")
 const COL_CINNABAR_RED: Color = Color("#B84332")
 const COL_EARTH_AMBER: Color = Color("#B58942")
 const COL_MIASMA_PURPLE: Color = Color("#5A3352")
-const COL_BLUE_STUNT: Color = Color("#4F9BD9")
+const COL_BLUE_STUNT: Color = Color("#8FD4E8")
 
 static var _cached_regular_font: Font = null
 static var _cached_bold_font: Font = null

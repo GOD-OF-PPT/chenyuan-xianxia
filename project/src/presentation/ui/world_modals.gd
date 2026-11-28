@@ -33,14 +33,225 @@ var _brew_stage_lbl: Label = null
 var _brew_target_lbl: Label = null
 var _brew_heat_bar: ColorRect = null
 var _brew_target_marker: ColorRect = null
+var _cauldron_stage: AlchemyCauldronStage = null
+var _brew_phase_badges: Array[PanelContainer] = []
+var _brew_phase_labels: Array[Label] = []
+var _modal_tween: Tween = null
 
 ## 键鼠自定义改键监听状态
 var _rebinding_action: String = ""
 var _rebind_status_lbl: Label = null
 
 
+class _CauldronForeOverlay extends Control:
+	var owner_stage: AlchemyCauldronStage = null
+
+	func _draw() -> void:
+		if owner_stage == null:
+			return
+		owner_stage.draw_foreground_flames(self)
+
+
+class AlchemyCauldronStage extends Control:
+	const STAGE_W: float = 540.0
+	const STAGE_H: float = 268.0
+	const FLAME_FRAME_W: float = 128.0
+	const FLAME_FRAME_H: float = 220.0
+
+	var heat: float = 0.35
+	var target_heat: float = 0.35
+	var clock: float = 0.0
+	var is_active_brew: bool = false
+	var modals_ref: WorldModals = null
+
+	var _cauldron_tex: TextureRect = null
+	var _fore_overlay: _CauldronForeOverlay = null
+	var _flame_strip_tex: Texture2D = null
+
+	func _init() -> void:
+		custom_minimum_size = Vector2(STAGE_W, STAGE_H)
+		size = Vector2(STAGE_W, STAGE_H)
+		size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		clip_contents = true
+
+		if ResourceLoader.exists("res://assets/ui/frames/alchemy_flame_strip.png"):
+			_flame_strip_tex = load("res://assets/ui/frames/alchemy_flame_strip.png") as Texture2D
+
+		_cauldron_tex = TextureRect.new()
+		_cauldron_tex.position = Vector2.ZERO
+		_cauldron_tex.size = Vector2(STAGE_W, STAGE_H)
+		_cauldron_tex.custom_minimum_size = Vector2(STAGE_W, STAGE_H)
+		_cauldron_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_cauldron_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		_cauldron_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if ResourceLoader.exists("res://assets/ui/frames/alchemy_cauldron_stage.png"):
+			_cauldron_tex.texture = load("res://assets/ui/frames/alchemy_cauldron_stage.png") as Texture2D
+		add_child(_cauldron_tex)
+
+		_fore_overlay = _CauldronForeOverlay.new()
+		_fore_overlay.owner_stage = self
+		_fore_overlay.position = Vector2.ZERO
+		_fore_overlay.size = Vector2(STAGE_W, STAGE_H)
+		_fore_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_fore_overlay)
+
+	func sync_state(h_val: float, tgt_val: float, dt: float) -> void:
+		heat = clampf(h_val, 0.0, 1.0)
+		target_heat = clampf(tgt_val, 0.0, 1.0)
+		if not SaveManager.reduced_motion:
+			clock += dt * lerpf(1.0, 2.1, heat)
+		if _cauldron_tex != null:
+			var cool_tint: Color = Color(0.86, 0.97, 0.95, 1.0)
+			var warm_tint: Color = Color(1.0, 0.89, 0.76, 1.0)
+			_cauldron_tex.modulate = cool_tint.lerp(warm_tint, heat)
+		queue_redraw()
+		if _fore_overlay != null:
+			_fore_overlay.queue_redraw()
+
+	func _process(delta: float) -> void:
+		if not is_visible_in_tree():
+			return
+		if modals_ref != null and modals_ref._brew_running:
+			var cur_stg: int = clampi(int(floor(modals_ref._brew_elapsed / 5.0)), 0, 2)
+			var tgt: float = float(modals_ref._brew_targets[cur_stg]) if modals_ref._brew_targets.size() > cur_stg else 0.5
+			sync_state(modals_ref._brew_heat, tgt, delta)
+		elif not is_active_brew:
+			sync_state(heat, target_heat, delta * 0.65)
+
+	func _eval_palette(h: float) -> Dictionary:
+		if h <= 0.48:
+			var t: float = clampf(h / 0.48, 0.0, 1.0)
+			return {
+				"bg_wash": Color(0.11, 0.24, 0.23, 0.42).lerp(Color(0.32, 0.24, 0.13, 0.48), t),
+				"outer": Color("#4C9A8E").lerp(Color("#C99642"), t),
+				"mid": Color("#7EC0B2").lerp(Color("#DFB868"), t),
+				"core": Color("#CBE4DC").lerp(Color("#EAD7A2"), t),
+			}
+		var t2: float = clampf((h - 0.48) / 0.52, 0.0, 1.0)
+		return {
+			"bg_wash": Color(0.32, 0.24, 0.13, 0.48).lerp(Color(0.54, 0.19, 0.13, 0.72), t2),
+			"outer": Color("#C99642").lerp(Color("#BD4832"), t2),
+			"mid": Color("#DFB868").lerp(Color("#DA8642"), t2),
+			"core": Color("#EAD7A2").lerp(Color("#ECD294"), t2),
+		}
+
+	func _draw() -> void:
+		var pal: Dictionary = _eval_palette(heat)
+		var c_wash: Color = pal["bg_wash"] as Color
+		var c_outer: Color = pal["outer"] as Color
+		var c_mid: Color = pal["mid"] as Color
+
+		# 1. 乌木青石丹室壁龛底框
+		var box_r: Rect2 = Rect2(4.0, 2.0, STAGE_W - 8.0, STAGE_H - 4.0)
+		draw_rect(box_r, Color("#161311"), true)
+		draw_rect(box_r, Color("#785E3B"), false, 2.0)
+		draw_rect(box_r.grow(-4.0), Color(0.62, 0.49, 0.31, 0.42), false, 1.0)
+
+		# 2. 随文武火候显著张缩的炉膛背光灵晕（文火青碧内敛 vs 武火赤金烈焰铺满炉龛）
+		var cx: float = STAGE_W * 0.5
+		var hearth_y: float = 186.0
+		var flick: float = 0.0 if SaveManager.reduced_motion else sin(clock * 6.2) * 5.0
+		var aura_rx: float = lerpf(86.0, 244.0, heat) + flick
+		var aura_ry: float = lerpf(54.0, 148.0, heat) + flick * 0.6
+
+		for ring_i: int in range(4):
+			var frac: float = 1.0 - float(ring_i) * 0.21
+			var col_a: Color = Color(c_wash.r, c_wash.g, c_wash.b, c_wash.a * (0.36 + float(ring_i) * 0.18))
+			draw_set_transform(Vector2(cx, hearth_y - 18.0 * heat), 0.0, Vector2(1.0, aura_ry / maxf(1.0, aura_rx)))
+			draw_circle(Vector2.ZERO, aura_rx * frac, col_a)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+		# 炉底灰盆映火椭圆
+		draw_set_transform(Vector2(cx, 232.0), 0.0, Vector2(1.0, 0.24))
+		draw_circle(Vector2.ZERO, lerpf(78.0, 198.0, heat), Color(c_outer.r, c_outer.g, c_outer.b, lerpf(0.28, 0.66, heat)))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+		# 3. 炉腹背后与两侧包抄的动态火舌（武火时沿三足鼎腹两侧蹿起烈焰！）
+		if _flame_strip_tex != null:
+			var f_base: int = 4 if heat >= 0.50 else 0
+			var f_anim: int = 0 if SaveManager.reduced_motion else (int(floor(clock * 8.5)) % 4)
+			var src_r: Rect2 = Rect2(float((f_base + f_anim) * int(FLAME_FRAME_W)), 0.0, FLAME_FRAME_W, FLAME_FRAME_H)
+			var center_w: float = lerpf(96.0, 178.0, heat)
+			var center_h: float = lerpf(92.0, 196.0, heat)
+			draw_texture_rect_region(
+				_flame_strip_tex,
+				Rect2(cx - center_w * 0.5, 224.0 - center_h, center_w, center_h),
+				src_r,
+				Color(1.0, 1.0, 1.0, lerpf(0.76, 0.98, heat))
+			)
+			if heat > 0.36:
+				var side_t: float = clampf((heat - 0.36) / 0.64, 0.0, 1.0)
+				var side_w: float = lerpf(54.0, 118.0, side_t)
+				var side_h: float = lerpf(64.0, 172.0, side_t)
+				var f_anim2: int = 0 if SaveManager.reduced_motion else (int(floor(clock * 8.5 + 2.0)) % 4)
+				var src_r2: Rect2 = Rect2(float((f_base + f_anim2) * int(FLAME_FRAME_W)), 0.0, FLAME_FRAME_W, FLAME_FRAME_H)
+				for side_s: float in [-1.0, 1.0]:
+					var sx: float = cx + side_s * lerpf(68.0, 108.0, side_t) - side_w * 0.5
+					draw_texture_rect_region(
+						_flame_strip_tex,
+						Rect2(sx, 220.0 - side_h, side_w, side_h),
+						src_r2,
+						Color(c_mid.r, c_mid.g, c_mid.b, 0.85 * side_t)
+					)
+
+	func draw_foreground_flames(canvas: Control) -> void:
+		var pal: Dictionary = _eval_palette(heat)
+		var c_outer: Color = pal["outer"] as Color
+		var c_mid: Color = pal["mid"] as Color
+		var c_core: Color = pal["core"] as Color
+		var cx: float = STAGE_W * 0.5
+
+		# 1. 炉门火栅前跃动的 9 簇工笔书意火舌
+		var base_y: float = 200.0
+		for i: int in range(9):
+			var frac: float = (float(i) / 8.0) * 2.0 - 1.0
+			var sway: float = 0.0 if SaveManager.reduced_motion else sin(clock * (5.2 + float(i) * 0.65) + float(i) * 1.37) * lerpf(3.5, 11.0, heat)
+			var tx: float = cx + frac * lerpf(30.0, 56.0, heat)
+			var th: float = lerpf(24.0, 92.0, heat) * (1.0 - 0.34 * absf(frac))
+			var tw: float = lerpf(8.5, 21.0, heat) * (1.0 - 0.20 * absf(frac))
+
+			var p_out: PackedVector2Array = PackedVector2Array([
+				Vector2(tx - tw, base_y),
+				Vector2(tx - tw * 0.75 + sway * 0.4, base_y - th * 0.48),
+				Vector2(tx + sway, base_y - th),
+				Vector2(tx + tw * 0.75 + sway * 0.4, base_y - th * 0.48),
+				Vector2(tx + tw, base_y),
+			])
+			canvas.draw_colored_polygon(p_out, Color(c_outer.r, c_outer.g, c_outer.b, 0.86))
+
+			var p_in: PackedVector2Array = PackedVector2Array([
+				Vector2(tx - tw * 0.52, base_y),
+				Vector2(tx + sway * 0.65, base_y - th * 0.68),
+				Vector2(tx + tw * 0.52, base_y),
+			])
+			canvas.draw_colored_polygon(p_in, Color(c_core.r, c_core.g, c_core.b, 0.90))
+
+		# 2. 随火候升腾的金砂火星粒子（文火 5 粒微芒 vs 武火 28 粒流火飞星）
+		var spark_cnt: int = int(round(lerpf(5.0, 28.0, heat)))
+		for s_i: int in range(spark_cnt):
+			var seed_a: float = float(s_i) * 1.61803
+			var cycle: float = fmod((0.35 if SaveManager.reduced_motion else clock * lerpf(0.35, 0.95, heat)) + seed_a, 1.0)
+			var sx: float = cx + sin(seed_a * 4.3) * lerpf(42.0, 138.0, heat) + sin(cycle * TAU + seed_a) * 10.0
+			var sy: float = lerpf(214.0, 18.0, cycle)
+			var sr: float = lerpf(3.2, 1.2, cycle) * lerpf(0.8, 1.35, heat)
+			var sa: float = sin(cycle * PI) * lerpf(0.45, 0.92, heat)
+			canvas.draw_circle(Vector2(sx, sy), sr, Color(c_mid.r, c_mid.g, c_mid.b, sa))
+
+		# 3. 炉盖双龙气孔袅袅丹烟（温区契合 <=0.14 时呈翠玉金霞丹香，偏离时呈苍灰焦烟）
+		var err: float = absf(heat - target_heat)
+		var steam_col: Color = Color(0.48, 0.80, 0.68, 0.46) if err <= 0.14 else (Color(0.82, 0.72, 0.52, 0.36) if err <= 0.34 else Color(0.56, 0.48, 0.44, 0.42))
+		for vx: float in [234.0, 306.0]:
+			var pts_s: PackedVector2Array = PackedVector2Array()
+			for k: int in range(7):
+				var kt: float = float(k) / 6.0
+				var wave: float = 0.0 if SaveManager.reduced_motion else sin(clock * 3.1 + kt * 3.4 + vx * 0.05) * (8.0 * kt)
+				pts_s.append(Vector2(vx + wave, 58.0 - kt * 46.0))
+			canvas.draw_polyline(pts_s, steam_col, 3.2)
+
+
 func _ready() -> void:
 	UIThemeBuilder.bind_full_rect(self)
+	z_index = 25
 	visible = false
 	theme = UIThemeBuilder.get_global_theme()
 
@@ -64,15 +275,31 @@ func _ready() -> void:
 	center.add_child(_card)
 
 	_card_vbox = VBoxContainer.new()
-	_card_vbox.add_theme_constant_override("separation", 12)
+	_card_vbox.add_theme_constant_override("separation", 10)
 	_card.add_child(_card_vbox)
 
 
-func close_modal() -> void:
+func _teardown_alchemy_runtime() -> void:
 	_brew_running = false
 	_rebinding_action = ""
+	if _modal_tween != null and _modal_tween.is_valid():
+		_modal_tween.kill()
+	_modal_tween = null
+	_cauldron_stage = null
+	_brew_stage_lbl = null
+	_brew_target_lbl = null
+	_brew_heat_bar = null
+	_brew_target_marker = null
+	_brew_phase_badges.clear()
+	_brew_phase_labels.clear()
+
+
+func close_modal() -> void:
+	_teardown_alchemy_runtime()
 	if not visible:
 		return
+	for ch: Node in _card_vbox.get_children():
+		ch.queue_free()
 	visible = false
 	_active_kind = ""
 	if not is_standalone_on_title:
@@ -82,8 +309,7 @@ func close_modal() -> void:
 
 
 func _open_base(kind: String, min_size: Vector2 = Vector2(1180.0, 740.0)) -> void:
-	_brew_running = false
-	_rebinding_action = ""
+	_teardown_alchemy_runtime()
 	_active_kind = kind
 	_card.custom_minimum_size = min_size
 	for ch: Node in _card_vbox.get_children():
@@ -109,9 +335,9 @@ func _add_header(title_txt: String) -> void:
 	hb.add_child(cb)
 
 
-## ==================== 1. 济世药庐青铜丹炉（15s 文武控火 + 速炼） ====================
+## ==================== 1. 济世药庐青铜丹炉（15s 炉火跳动文武控温 + 速炼） ====================
 func open_alchemy_furnace(selected_rid: String = "") -> void:
-	_open_base("alchemy", Vector2(1120.0, 680.0))
+	_open_base("alchemy", Vector2(1180.0, 720.0))
 	_add_header("【济世药庐 · 青铜丹炉】首炼文武控火与速炼")
 
 	if selected_rid == "" and not CampaignState.unlocked_recipes.is_empty():
@@ -124,7 +350,7 @@ func open_alchemy_furnace(selected_rid: String = "") -> void:
 	_card_vbox.add_child(cols)
 
 	var left_v: VBoxContainer = VBoxContainer.new()
-	left_v.custom_minimum_size = Vector2(390.0, 520.0)
+	left_v.custom_minimum_size = Vector2(548.0, 560.0)
 	left_v.add_theme_constant_override("separation", 8)
 	cols.add_child(left_v)
 
@@ -138,6 +364,16 @@ func open_alchemy_furnace(selected_rid: String = "") -> void:
 		rb.text = "%s%s%s" % ["▶ " if rid == selected_rid else "", DataDB.loc(str(rdef.get("name_key", rid))), " ★速炼" if qb else ""]
 		rb.pressed.connect(func() -> void: open_alchemy_furnace(rid))
 		left_v.add_child(rb)
+
+	# 待命温炉青铜三足鼎舞台（展示温养余烬与丹室器物感）
+	var preview_cauldron: AlchemyCauldronStage = AlchemyCauldronStage.new()
+	preview_cauldron.is_active_brew = false
+	preview_cauldron.sync_state(0.26, 0.35, 0.0)
+	left_v.add_child(preview_cauldron)
+
+	var burnt_cnt: int = CampaignState.get_item_count("item_burnt_pill")
+	if burnt_cnt > 0:
+		left_v.add_child(_ink_lbl("❖ 行囊现存【焦黑废丹】×%d，可按 B 置入【断玉剑匣】历战 3 场提纯为无瑕极品！" % burnt_cnt, 16, Color("#23483E")))
 
 	var right_box: PanelContainer = PanelContainer.new()
 	right_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -173,12 +409,25 @@ func open_alchemy_furnace(selected_rid: String = "") -> void:
 			var have: int = CampaignState.get_item_count(mid)
 			max_craftable = mini(max_craftable, int(floor(float(have) / float(need))))
 			ing_lines.append("  · %s：需 %d 株（行囊现有 %d 株）" % [
-				DataDB.loc(str(DataDB.get_any_item_or_equip(mid).get("name_key", mid))), need, have
+				DataDB.loc(str(DataDB.get_any_item_or_equip(mid).get("name_key", mid))), need, have,
 			])
 	var ing_lbl: Label = Label.new()
 	ing_lbl.text = "\n".join(ing_lines)
-	ing_lbl.add_theme_color_override("font_color", Color("#9EE0C4") if max_craftable >= 1 else Color("#F09A7E"))
+	ing_lbl.add_theme_color_override("font_color", Color("#9EE0C4") if max_craftable >= 1 else Color("#E6967A"))
 	rv.add_child(ing_lbl)
+
+	var f_targets: Array = rdef_cur.get("fire_targets", [0.35, 0.65, 0.40]) as Array
+	if f_targets.size() >= 3:
+		var cadence_lbl: Label = Label.new()
+		cadence_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		cadence_lbl.text = "三候控火谱：第一候 %d%% ──▶ 第二候 %d%% ──▶ 第三候 %d%%" % [
+			int(round(float(f_targets[0]) * 100.0)),
+			int(round(float(f_targets[1]) * 100.0)),
+			int(round(float(f_targets[2]) * 100.0)),
+		]
+		cadence_lbl.add_theme_font_size_override("font_size", 16)
+		cadence_lbl.add_theme_color_override("font_color", Color("#D8C6A4"))
+		rv.add_child(cadence_lbl)
 
 	var start_fire_btn: Button = Button.new()
 	start_fire_btn.text = "起火开炉 · 15秒文武控火炼丹（炼出无瑕丹纹永久解锁速炼！）"
@@ -223,7 +472,7 @@ func _start_15s_fire_minigame(recipe_id: String) -> void:
 	var rdef: Dictionary = DataDB.get_recipe(recipe_id)
 	if not _consume_recipe_ingredients(rdef):
 		return
-	_open_base("alchemy_active", Vector2(960.0, 520.0))
+	_open_base("alchemy_active", Vector2(1060.0, 680.0))
 	_add_header("【丹炉控火中】使用 A / D 键、鼠标滚轮或下方按钮调节文武火候！")
 
 	_brew_recipe_id = recipe_id
@@ -233,31 +482,111 @@ func _start_15s_fire_minigame(recipe_id: String) -> void:
 	_brew_heat = 0.50
 	_brew_running = true
 
-	_brew_stage_lbl = _ink_lbl("第一候（0.0s / 15.0s）· 温炉引药", 22, Color("#5A3320"))
+	# 1. 三候朱砂印鉴火候牌（高度 46px < 110px，不稀释 find_alchemy_cauldron_rect！）
+	var phase_hb: HBoxContainer = HBoxContainer.new()
+	phase_hb.alignment = BoxContainer.ALIGNMENT_CENTER
+	phase_hb.add_theme_constant_override("separation", 14)
+	_card_vbox.add_child(phase_hb)
+
+	var seal_tex: Texture2D = null
+	if ResourceLoader.exists("res://assets/ui/icons/casket_seal_phase.png"):
+		seal_tex = load("res://assets/ui/icons/casket_seal_phase.png") as Texture2D
+
+	var phase_titles: Array[String] = ["第一候 · 文火融草", "第二候 · 催灵化液", "第三候 · 武收丹纹"]
+	for p_idx: int in range(3):
+		var pcard: PanelContainer = PanelContainer.new()
+		pcard.custom_minimum_size = Vector2(276.0, 46.0)
+		pcard.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(
+			Color(0.15, 0.13, 0.11, 0.96),
+			UIThemeBuilder.COL_BRONZE_GOLD if p_idx == 0 else UIThemeBuilder.COL_BRONZE_DIM,
+			2 if p_idx == 0 else 1, 5
+		))
+		phase_hb.add_child(pcard)
+		_brew_phase_badges.append(pcard)
+
+		var phb_in: HBoxContainer = HBoxContainer.new()
+		phb_in.alignment = BoxContainer.ALIGNMENT_CENTER
+		phb_in.add_theme_constant_override("separation", 8)
+		pcard.add_child(phb_in)
+
+		if seal_tex != null:
+			var s_icon: TextureRect = TextureRect.new()
+			s_icon.custom_minimum_size = Vector2(26.0, 26.0)
+			s_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			s_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			s_icon.texture = seal_tex
+			phb_in.add_child(s_icon)
+
+		var tgt_pct: int = int(round(float(_brew_targets[p_idx]) * 100.0)) if _brew_targets.size() > p_idx else 50
+		var plbl: Label = Label.new()
+		plbl.text = "%s (%d%%)" % [phase_titles[p_idx], tgt_pct]
+		plbl.add_theme_font_size_override("font_size", 16)
+		plbl.add_theme_color_override("font_color", UIThemeBuilder.COL_BRONZE_GOLD if p_idx == 0 else UIThemeBuilder.COL_XUAN_WARM)
+		phb_in.add_child(plbl)
+		_brew_phase_labels.append(plbl)
+
+	# 2. 核心青铜三足鼎炉火跳动舞台（540x268，唯一 >=110px 视觉舞台，确保 cauldron_rect 100% 精准聚焦！）
+	_cauldron_stage = AlchemyCauldronStage.new()
+	_cauldron_stage.is_active_brew = true
+	_cauldron_stage.modals_ref = self
+	_cauldron_stage.sync_state(_brew_heat, float(_brew_targets[0]), 0.0)
+	_card_vbox.add_child(_cauldron_stage)
+
+	# 3. 阶段倒计时与理想温区提示（全宽居中单行排布，绝不竖向折字！）
+	_brew_stage_lbl = Label.new()
+	_brew_stage_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_brew_stage_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_brew_stage_lbl.text = "第一候 · 文火融草（0.0s / 15.0s）"
+	_brew_stage_lbl.add_theme_font_size_override("font_size", 20)
+	_brew_stage_lbl.add_theme_color_override("font_color", Color("#5A3320"))
 	_card_vbox.add_child(_brew_stage_lbl)
 
-	_brew_target_lbl = _ink_lbl("", 18, Color("#23483E"))
+	_brew_target_lbl = Label.new()
+	_brew_target_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_brew_target_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_brew_target_lbl.text = "请将火标保持在翠玉温区内（当前火候 50% / 理想 35%）"
+	_brew_target_lbl.add_theme_font_size_override("font_size", 17)
+	_brew_target_lbl.add_theme_color_override("font_color", Color("#23483E"))
 	_card_vbox.add_child(_brew_target_lbl)
 
-	var gauge_bg: ColorRect = ColorRect.new()
-	gauge_bg.custom_minimum_size = Vector2(860.0, 44.0)
-	gauge_bg.color = Color(0.14, 0.12, 0.11, 0.96)
-	_card_vbox.add_child(gauge_bg)
+	# 4. 雕花乌木错金刻度控温槽（860x54 < 110px） + 翠玉理想温区 + 赤红游标
+	var gauge_wrap: Control = Control.new()
+	gauge_wrap.custom_minimum_size = Vector2(860.0, 54.0)
+	gauge_wrap.size = Vector2(860.0, 54.0)
+	gauge_wrap.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_card_vbox.add_child(gauge_wrap)
+
+	if ResourceLoader.exists("res://assets/ui/frames/alchemy_fire_gauge_bg.png"):
+		var gauge_tex: TextureRect = TextureRect.new()
+		gauge_tex.position = Vector2.ZERO
+		gauge_tex.size = Vector2(860.0, 54.0)
+		gauge_tex.custom_minimum_size = Vector2(860.0, 54.0)
+		gauge_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		gauge_tex.stretch_mode = TextureRect.STRETCH_SCALE
+		gauge_tex.texture = load("res://assets/ui/frames/alchemy_fire_gauge_bg.png") as Texture2D
+		gauge_wrap.add_child(gauge_tex)
+	else:
+		var gauge_fallback: ColorRect = ColorRect.new()
+		gauge_fallback.size = Vector2(860.0, 54.0)
+		gauge_fallback.color = Color(0.14, 0.12, 0.11, 0.96)
+		gauge_wrap.add_child(gauge_fallback)
 
 	_brew_target_marker = ColorRect.new()
 	_brew_target_marker.size = Vector2(120.0, 44.0)
-	_brew_target_marker.color = Color(0.35, 0.78, 0.56, 0.48)
-	gauge_bg.add_child(_brew_target_marker)
+	_brew_target_marker.position = Vector2(clampf(float(_brew_targets[0]) * 860.0 - 60.0, 4.0, 736.0), 5.0)
+	_brew_target_marker.color = Color(0.32, 0.74, 0.56, 0.50)
+	gauge_wrap.add_child(_brew_target_marker)
 
 	_brew_heat_bar = ColorRect.new()
-	_brew_heat_bar.size = Vector2(14.0, 48.0)
-	_brew_heat_bar.position = Vector2(420.0, -2.0)
+	_brew_heat_bar.size = Vector2(14.0, 58.0)
+	_brew_heat_bar.position = Vector2(423.0, -2.0)
 	_brew_heat_bar.color = UIThemeBuilder.COL_CINNABAR_RED
-	gauge_bg.add_child(_brew_heat_bar)
+	gauge_wrap.add_child(_brew_heat_bar)
 
+	# 5. 文火 / 武火交互按钮
 	var ctrl_hb: HBoxContainer = HBoxContainer.new()
 	ctrl_hb.alignment = BoxContainer.ALIGNMENT_CENTER
-	ctrl_hb.add_theme_constant_override("separation", 24)
+	ctrl_hb.add_theme_constant_override("separation", 28)
 	_card_vbox.add_child(ctrl_hb)
 
 	var wen_b: Button = Button.new()
@@ -275,8 +604,37 @@ func _start_15s_fire_minigame(recipe_id: String) -> void:
 
 func _adjust_brew_heat(delta_h: float) -> void:
 	_brew_heat = clampf(_brew_heat + delta_h, 0.0, 1.0)
+	if _cauldron_stage != null:
+		var cur_stg: int = clampi(int(floor(_brew_elapsed / 5.0)), 0, 2)
+		var tgt: float = float(_brew_targets[cur_stg]) if _brew_targets.size() > cur_stg else 0.5
+		_cauldron_stage.sync_state(_brew_heat, tgt, 0.0)
 	if audio_director != null:
 		audio_director.play_sfx("sfx_alchemy_fire", AudioDirector.TIER_B, true)
+
+
+func _refresh_brew_phase_badges(cur_stage: int) -> void:
+	var phase_titles: Array[String] = ["第一候 · 文火融草", "第二候 · 催灵化液", "第三候 · 武收丹纹"]
+	for idx: int in range(mini(3, _brew_phase_badges.size())):
+		var badge: PanelContainer = _brew_phase_badges[idx]
+		var lbl: Label = _brew_phase_labels[idx]
+		if not is_instance_valid(badge) or not is_instance_valid(lbl):
+			continue
+		var tgt_pct: int = int(round(float(_brew_targets[idx]) * 100.0)) if _brew_targets.size() > idx else 50
+		var is_cur: bool = (idx == cur_stage)
+		badge.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(
+			Color(0.18, 0.15, 0.12, 0.98) if is_cur else Color(0.13, 0.12, 0.11, 0.94),
+			UIThemeBuilder.COL_BRONZE_GOLD if is_cur else UIThemeBuilder.COL_BRONZE_DIM,
+			2 if is_cur else 1, 5
+		))
+		if _brew_recorded.size() > idx:
+			var err: float = absf(float(_brew_recorded[idx]) - float(_brew_targets[idx]))
+			var stamp: String = "【无瑕】" if err <= 0.14 else ("【平稳】" if err <= 0.34 else "【焦偏】")
+			var scol: Color = Color("#7FD0B2") if err <= 0.14 else (UIThemeBuilder.COL_BRONZE_GOLD if err <= 0.34 else Color("#D46A56"))
+			lbl.text = "%s %s" % [phase_titles[idx], stamp]
+			lbl.add_theme_color_override("font_color", scol)
+		else:
+			lbl.text = "%s (%d%%)" % [phase_titles[idx], tgt_pct]
+			lbl.add_theme_color_override("font_color", UIThemeBuilder.COL_BRONZE_GOLD if is_cur else UIThemeBuilder.COL_XUAN_WARM)
 
 
 func _process(delta: float) -> void:
@@ -287,7 +645,7 @@ func _process(delta: float) -> void:
 		_brew_heat = clampf(_brew_heat - delta * 0.55, 0.0, 1.0)
 	if Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT):
 		_brew_heat = clampf(_brew_heat + delta * 0.55, 0.0, 1.0)
-	# 炉火轻微自然波动
+	# 炉火轻微自然呼吸波动
 	_brew_heat = clampf(_brew_heat + sin(_brew_elapsed * 2.8) * delta * 0.12, 0.0, 1.0)
 
 	var prev_stage: int = int(floor(_brew_elapsed / 5.0))
@@ -308,10 +666,18 @@ func _process(delta: float) -> void:
 
 	var target_v: float = float(_brew_targets[cur_stage])
 	var stage_names: Array[String] = ["第一候 · 文火融草", "第二候 · 催灵化液", "第三候 · 武收丹纹"]
-	_brew_stage_lbl.text = "%s（%.1fs / 15.0s）" % [stage_names[cur_stage], _brew_elapsed]
-	_brew_target_lbl.text = "请将赤红火标保持在翠玉理想温区内（当前火候 %d%% / 理想 %d%%）" % [int(_brew_heat * 100.0), int(target_v * 100.0)]
-	_brew_target_marker.position.x = clampf(target_v * 860.0 - 60.0, 0.0, 740.0)
-	_brew_heat_bar.position.x = clampf(_brew_heat * 860.0 - 7.0, 0.0, 846.0)
+	if _brew_stage_lbl != null:
+		_brew_stage_lbl.text = "%s（%.1fs / 15.0s）" % [stage_names[cur_stage], _brew_elapsed]
+	if _brew_target_lbl != null:
+		_brew_target_lbl.text = "请将火标保持在翠玉温区内（当前火候 %d%% / 理想 %d%%）" % [int(_brew_heat * 100.0), int(target_v * 100.0)]
+	if _brew_target_marker != null:
+		_brew_target_marker.position.x = clampf(target_v * 860.0 - 60.0, 4.0, 736.0)
+	if _brew_heat_bar != null:
+		_brew_heat_bar.position.x = clampf(_brew_heat * 860.0 - 7.0, 0.0, 846.0)
+		_brew_heat_bar.color = Color("#4C9A8E").lerp(UIThemeBuilder.COL_CINNABAR_RED, _brew_heat)
+	_refresh_brew_phase_badges(cur_stage)
+	if _cauldron_stage != null:
+		_cauldron_stage.sync_state(_brew_heat, target_v, 0.0)
 
 
 func _finish_15s_fire_minigame() -> void:

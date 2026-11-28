@@ -368,10 +368,13 @@ func _apply_current_frame() -> void:
 
 
 func get_hit_rect_local() -> Rect2:
-	var sc: float = _sprite.scale.y if _sprite != null else 1.0
-	var h: float = float(_head_top_px) * sc
-	var w: float = (88.0 if not is_boss else 390.0) * sc
-	return Rect2(-w * 0.5, -h, w, h)
+	var sc_x: float = absf(_sprite.scale.x) if _sprite != null else 1.0
+	var sc_y: float = absf(_sprite.scale.y) if _sprite != null else 1.0
+	var base_w: float = 524.0 if is_boss else maxf(104.0, float(_cell_w) * 0.58)
+	var w: float = base_w * sc_x
+	var top_h: float = float(_head_top_px) * sc_y + 18.0
+	var bot_pad: float = (28.0 if is_boss else 16.0) * sc_y
+	return Rect2(_visual_root_offset.x - w * 0.5, _visual_root_offset.y - top_h, w, top_h + bot_pad)
 
 
 func contains_world_point(world_pt: Vector2) -> bool:
@@ -527,7 +530,7 @@ func _draw_overhead_ui() -> void:
 
 	# 1. NPC 简化名牌与气泡
 	if faction == "npc":
-		if is_hovered or InputRouter.alt_held:
+		if is_hovered and not InputRouter.alt_held and not Input.is_key_pressed(KEY_ALT) and InputRouter.current_mode == InputRouter.MODE_WORLD_COMBAT:
 			var tw_npc: float = font.get_string_size(display_name, HORIZONTAL_ALIGNMENT_CENTER, -1, 16).x + 20.0
 			var nrect: Rect2 = Rect2(-tw_npc * 0.5, head_y - 24.0, tw_npc, 24.0)
 			_overlay_canvas.draw_rect(nrect, Color(0.11, 0.10, 0.09, 0.88), true)
