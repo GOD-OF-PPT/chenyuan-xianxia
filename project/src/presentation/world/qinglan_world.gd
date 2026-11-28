@@ -752,10 +752,20 @@ func _interact_distance_to(pt: Vector2, ipos: Vector2) -> float:
 	return minf(pt.distance_to(ipos), pt.distance_to(ipos + Vector2(0.0, -46.0)))
 
 
+func _is_npc_hit_point(npc: BattleActor, pt: Vector2, include_hovered: bool = true) -> bool:
+	if not is_instance_valid(npc):
+		return false
+	if npc.contains_world_point(pt):
+		return true
+	if include_hovered and npc.is_hovered:
+		return true
+	return Rect2(npc.position.x - 46.0, npc.position.y - 160.0, 92.0, 196.0).has_point(pt)
+
+
 func _handle_right_click_world(world_pt: Vector2) -> void:
 	# 1. 右键敌人：锁定并开启自动平砍！
 	for ea: BattleActor in _combat_ctrl.enemy_actors:
-		if is_instance_valid(ea) and ea.alive and ea.contains_world_point(world_pt):
+		if is_instance_valid(ea) and ea.alive and (ea.contains_world_point(world_pt) or ea.is_hovered):
 			_combat_ctrl.set_locked_enemy(ea.actor_id, true)
 			if not _combat_ctrl.in_combat:
 				var eu: Dictionary = _combat_ctrl.unit_states.get(ea.actor_id, {}) as Dictionary
@@ -766,7 +776,7 @@ func _handle_right_click_world(world_pt: Vector2) -> void:
 	# 2. 右键 NPC 或近处交互器物：交谈/开启
 	if not _combat_ctrl.in_combat:
 		for npc: BattleActor in _npc_actors:
-			if is_instance_valid(npc) and npc.contains_world_point(world_pt) and npc.position.distance_to(_combat_ctrl.get_controlled_actor_pos()) <= 240.0:
+			if is_instance_valid(npc) and _is_npc_hit_point(npc, world_pt) and npc.position.distance_to(_combat_ctrl.get_controlled_actor_pos()) <= 240.0:
 				_trigger_npc_dialogue(npc.actor_id)
 				return
 		for inter: Dictionary in _interactables:
@@ -844,7 +854,7 @@ func _update_interact_prompt_and_cursor(has_world_override: bool = false, world_
 
 	for npc: BattleActor in _npc_actors:
 		if is_instance_valid(npc):
-			npc.is_hovered = (not _combat_ctrl.in_combat) and npc.contains_world_point(wmouse)
+			npc.is_hovered = (not _combat_ctrl.in_combat) and _is_npc_hit_point(npc, wmouse, false)
 			if npc.is_hovered:
 				over_interact = true
 			if npc._sprite != null and is_instance_valid(npc._sprite) and npc._sprite.material is ShaderMaterial:
@@ -1792,6 +1802,21 @@ func _draw_xuan_plaque_at(center_pt: Vector2, text_str: String, is_hovered: bool
 	)
 
 
+func _append_actor_bark_world_rect(actor: BattleActor, font: Font, out_rects: Array[Rect2]) -> void:
+	if not is_instance_valid(actor) or not actor.has_active_bark():
+		return
+	var head_h_b: float = 136.0
+	if actor._sprite != null:
+		head_h_b = float(actor._head_top_px) * actor._sprite.scale.y
+	var single_w: float = font.get_string_size(actor._bark_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
+	var wrap_w: float = minf(272.0, maxf(116.0, single_w + 8.0))
+	var box_w: float = wrap_w + 26.0
+	var box_h: float = 54.0
+	var anchor_y: float = -head_h_b - 46.0
+	var bark_r: Rect2 = Rect2(actor.position.x - box_w * 0.5, actor.position.y + anchor_y - box_h - 8.0, box_w, box_h + 12.0).grow(4.0)
+	out_rects.append(bark_r)
+
+
 func _draw_alt_xuan_nameplates() -> void:
 	if _alt_nameplate_overlay == null:
 		return
@@ -1802,6 +1827,24 @@ func _draw_alt_xuan_nameplates() -> void:
 	if font == null:
 		font = ThemeDB.fallback_font
 	var placed_rects: Array[Rect2] = []
+
+	# 预留当前可见 HUD [F] 近距交互提示框与头顶宣纸气泡的世界空间矩形，确保 Alt 题签自动上移避让零遮挡！
+	if _hud != null and _hud._interact_prompt_box != null and _hud._interact_prompt_box.visible:
+		var inv_xf: Transform2D = get_canvas_transform().affine_inverse()
+		var p_srect: Rect2 = _hud._interact_prompt_box.get_global_rect()
+		var p_min_sz: Vector2 = _hud._interact_prompt_box.get_combined_minimum_size()
+		p_srect.size.x = maxf(p_srect.size.x, p_min_sz.x)
+		p_srect.size.y = maxf(p_srect.size.y, maxf(40.0, p_min_sz.y))
+		var p_tl: Vector2 = inv_xf * p_srect.position
+		var p_br: Vector2 = inv_xf * p_srect.end
+		placed_rects.append(Rect2(p_tl, p_br - p_tl).abs().grow(4.0))
+
+	if _combat_ctrl != null:
+		for pa_var_b: Variant in _combat_ctrl.party_actors.values():
+			if pa_var_b != null and is_instance_valid(pa_var_b):
+				_append_actor_bark_world_rect(pa_var_b as BattleActor, font, placed_rects)
+	for npc_b: BattleActor in _npc_actors:
+		_append_actor_bark_world_rect(npc_b, font, placed_rects)
 
 	for inter: Dictionary in _interactables:
 		if float(inter.get("radius", 0.0)) <= 0.0 or str(inter.get("title", "")) == "":
@@ -1817,7 +1860,7 @@ func _draw_alt_xuan_nameplates() -> void:
 		var center_y: float = ipos.y - clampf(tex_h * 0.78, 88.0, 142.0)
 		var est_w: float = maxf(116.0, font.get_string_size(clean_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x + 34.0)
 		var cand_r: Rect2 = Rect2(ipos.x - est_w * 0.5, center_y - 16.0, est_w, 32.0)
-		for _guard_i: int in range(3):
+		for _guard_i: int in range(4):
 			var hit_prev: bool = false
 			for pr: Rect2 in placed_rects:
 				if cand_r.intersects(pr):
@@ -1839,7 +1882,7 @@ func _draw_alt_xuan_nameplates() -> void:
 		var npc_cy: float = npc.position.y - head_h - 22.0
 		var npc_w: float = maxf(116.0, font.get_string_size(npc.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x + 34.0)
 		var npc_r: Rect2 = Rect2(npc.position.x - npc_w * 0.5, npc_cy - 16.0, npc_w, 32.0)
-		for _guard_j: int in range(3):
+		for _guard_j: int in range(4):
 			var hit_n: bool = false
 			for pr2: Rect2 in placed_rects:
 				if npc_r.intersects(pr2):

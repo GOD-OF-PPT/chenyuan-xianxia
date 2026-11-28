@@ -31,6 +31,7 @@ var selected_inv_filter: String = "all"
 var selected_item_id: String = ""
 var selected_journal_vol: String = "main"
 var _selected_equip_slot: String = "pendant"
+var _slot_manually_selected: bool = false
 
 var _tab_buttons: Dictionary = {}
 var _content_root: MarginContainer
@@ -121,7 +122,7 @@ class _MeridianAcupointCanvas extends Control:
 			{"id": "shanzhong", "pos": Vector2(cx, oy + 222.0), "r": 16.5, "label": tr("CASKET_ACU_SHANZHONG"), "side": -1.0, "lx": ox + 92.0},
 			{"id": "zhongwan", "pos": Vector2(cx, oy + 283.0), "r": 12.5, "label": tr("CASKET_ACU_ZHONGWAN"), "side": 1.0, "lx": ox + 382.0},
 			{"id": "qihai", "pos": Vector2(cx, oy + 334.0), "r": 18.0, "label": tr("CASKET_ACU_QIHAI"), "side": -1.0, "lx": ox + 92.0},
-			{"id": "dantian", "pos": Vector2(cx, oy + 383.0), "r": 19.5, "label": tr("CASKET_ACU_DANTIAN"), "side": -1.0, "lx": ox + 92.0},
+			{"id": "dantian", "pos": Vector2(cx, oy + 383.0), "r": 19.5, "label": tr("CASKET_ACU_DANTIAN"), "side": 1.0, "lx": ox + 382.0},
 			{"id": "laogong_l", "pos": Vector2(ox + 91.0, oy + 384.0), "r": 11.5, "label": tr("CASKET_ACU_LAOGONG"), "side": -1.0, "lx": ox + 12.0},
 			{"id": "laogong_r", "pos": Vector2(ox + 357.0, oy + 384.0), "r": 11.5, "label": "", "side": 1.0, "lx": ox + 392.0},
 		]
@@ -163,8 +164,20 @@ class _MeridianAcupointCanvas extends Control:
 				var lx: float = float(p_dict["lx"])
 				var start_x: float = p.x + side_s * (base_r + 4.0)
 				var end_x: float = lx + (36.0 if side_s < 0.0 else -6.0)
-				draw_line(Vector2(start_x, p.y), Vector2(end_x, p.y), Color(0.26, 0.21, 0.16, 0.72), 1.2)
-				draw_circle(Vector2(end_x, p.y), 2.0, Color(0.32, 0.25, 0.18, 0.85))
+				var line_col: Color = Color(0.26, 0.21, 0.16, 0.72)
+				var dot_col: Color = Color(0.32, 0.25, 0.18, 0.85)
+				if str(p_dict["id"]) == "dantian":
+					var bend_y: float = oy + 346.0
+					var dantian_pts: PackedVector2Array = PackedVector2Array([
+						Vector2(start_x, p.y),
+						Vector2(ox + 300.0, bend_y),
+						Vector2(end_x, bend_y),
+					])
+					draw_polyline(dantian_pts, line_col, 1.2)
+					draw_circle(Vector2(end_x, bend_y), 2.0, dot_col)
+				else:
+					draw_line(Vector2(start_x, p.y), Vector2(end_x, p.y), line_col, 1.2)
+					draw_circle(Vector2(end_x, p.y), 2.0, dot_col)
 
 
 func _get_cached_tex(path: String) -> Texture2D:
@@ -356,6 +369,7 @@ func open_tab(tab_id: String) -> void:
 				cur_f.release_focus()
 
 	active_tab = tab_id
+	_slot_manually_selected = false
 	if not CampaignState.recruited_order.has(selected_char_id):
 		selected_char_id = "gu_changqing"
 	if _breakthrough_modal != null:
@@ -592,10 +606,18 @@ func open_breakthrough_confirm(char_id: String = "") -> void:
 		confirm_b.disabled = NotifyHub.combat_active
 		if pill_cnt <= 0:
 			confirm_b.text = "%s（%s）" % [tr("UI_BTN_CONFIRM"), tr("CASKET_BTN_FORCE_CRACKED")]
-			confirm_b.pressed.connect(func() -> void: request_breakthrough(cid, true))
+			confirm_b.pressed.connect(func() -> void:
+				if NotifyHub.combat_active:
+					return
+				request_breakthrough(cid, true)
+			)
 		else:
 			confirm_b.text = "%s · 服丹破境" % tr("UI_BTN_CONFIRM")
-			confirm_b.pressed.connect(func() -> void: request_breakthrough(cid, false))
+			confirm_b.pressed.connect(func() -> void:
+				if NotifyHub.combat_active:
+					return
+				request_breakthrough(cid, false)
+			)
 		btn_hb.add_child(confirm_b)
 
 	_breakthrough_modal.visible = true
@@ -675,7 +697,7 @@ func _build_tab_cultivation() -> void:
 		[tr("CASKET_ACU_SHANZHONG"), Vector2(86.0, 210.0)],
 		[tr("CASKET_ACU_ZHONGWAN"), Vector2(426.0, 271.0)],
 		[tr("CASKET_ACU_QIHAI"), Vector2(86.0, 322.0)],
-		[tr("CASKET_ACU_DANTIAN"), Vector2(142.0, 412.0)],
+		[tr("CASKET_ACU_DANTIAN"), Vector2(426.0, 334.0)],
 		[tr("CASKET_ACU_LAOGONG"), Vector2(8.0, 372.0)],
 	]
 	for co: Array in callouts:
@@ -758,7 +780,11 @@ func _build_tab_cultivation() -> void:
 
 	var bt_btn: Button = _make_bronze_action_button("【%s】" % tr("CASKET_BTN_BREAKTHROUGH"), Vector2(216.0, 34.0))
 	bt_btn.disabled = NotifyHub.combat_active
-	bt_btn.pressed.connect(func() -> void: open_breakthrough_confirm(selected_char_id))
+	bt_btn.pressed.connect(func() -> void:
+		if NotifyHub.combat_active:
+			return
+		open_breakthrough_confirm(selected_char_id)
+	)
 	bt_row.add_child(bt_btn)
 
 	# 折页中缝 1（28px，跨过 global 712 装订折痕）
@@ -878,6 +904,8 @@ func _build_tab_cultivation() -> void:
 		plus_b.tooltip_text = "投入 1 点自由潜能（%s）" % ftip
 		plus_b.disabled = free_pts <= 0 or NotifyHub.combat_active
 		plus_b.pressed.connect(func() -> void:
+			if NotifyHub.combat_active:
+				return
 			if CampaignState.allocate_potential_point(selected_char_id, fkey, 1):
 				rebuild_current_tab()
 		)
@@ -887,6 +915,8 @@ func _build_tab_cultivation() -> void:
 		minus_b.tooltip_text = "服用【洗髓灵露】洗髓归元（100% 无损退回全部潜能点）"
 		minus_b.disabled = cur_alloc <= 0 or dew_cnt <= 0 or NotifyHub.combat_active
 		minus_b.pressed.connect(func() -> void:
+			if NotifyHub.combat_active:
+				return
 			if CampaignState.reset_potential_points(selected_char_id):
 				rebuild_current_tab()
 		)
@@ -898,6 +928,8 @@ func _build_tab_cultivation() -> void:
 	)
 	reset_btn.disabled = dew_cnt <= 0 or total_alloc <= 0 or NotifyHub.combat_active
 	reset_btn.pressed.connect(func() -> void:
+		if NotifyHub.combat_active:
+			return
 		if CampaignState.reset_potential_points(selected_char_id):
 			rebuild_current_tab()
 	)
@@ -1012,13 +1044,13 @@ func _build_tab_cultivation() -> void:
 func _build_embossed_equip_slot(slot_key: String, eq_id: String, is_selected: bool) -> PanelContainer:
 	var edef: Dictionary = DataDB.get_equipment(eq_id)
 	var has_stunt: bool = (eq_id != "" and str(edef.get("blue_stunt_id", "")) != "")
-	var use_glow: bool = is_selected or has_stunt
+	var use_glow: bool = is_selected
 
 	var card: PanelContainer = PanelContainer.new()
-	card.custom_minimum_size = Vector2(138.0, 150.0)
+	card.custom_minimum_size = Vector2(144.0, 156.0)
 	var sbt: StyleBox = _make_tex_stylebox(
 		TEX_SLOT_SELECTED if use_glow else TEX_SLOT_EMBOSSED,
-		16, 16, 16, 36, 10.0, 14.0, 10.0, 6.0,
+		16, 16, 16, 42, 10.0, 14.0, 10.0, 8.0,
 		Color("#ACA089"), UIThemeBuilder.COL_BRONZE_GOLD if use_glow else UIThemeBuilder.COL_BRONZE_DIM
 	)
 	card.add_theme_stylebox_override("panel", sbt)
@@ -1029,18 +1061,27 @@ func _build_embossed_equip_slot(slot_key: String, eq_id: String, is_selected: bo
 	card.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
 			_selected_equip_slot = slot_key
+			_slot_manually_selected = true
+			if selected_item_id != "":
+				var sel_eq: Dictionary = DataDB.get_equipment(selected_item_id)
+				if str(sel_eq.get("slot", "")) != slot_key:
+					selected_item_id = ""
 			rebuild_current_tab()
 	)
 
 	var vb: VBoxContainer = VBoxContainer.new()
 	vb.mouse_filter = Control.MOUSE_FILTER_PASS
 	vb.alignment = BoxContainer.ALIGNMENT_BEGIN
-	vb.add_theme_constant_override("separation", 14)
+	vb.add_theme_constant_override("separation", 8)
 	card.add_child(vb)
+
+	var icon_wrap: CenterContainer = CenterContainer.new()
+	icon_wrap.custom_minimum_size = Vector2(120.0, 96.0)
+	icon_wrap.mouse_filter = Control.MOUSE_FILTER_PASS
+	vb.add_child(icon_wrap)
 
 	var icon_rect: TextureRect = TextureRect.new()
 	icon_rect.custom_minimum_size = Vector2(74.0, 74.0)
-	icon_rect.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon_rect.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -1050,10 +1091,12 @@ func _build_embossed_equip_slot(slot_key: String, eq_id: String, is_selected: bo
 	if icon_rect.texture == null:
 		icon_rect.texture = _get_cached_tex("res://assets/ui/icons/slot_silhouette_%s.png" % slot_key)
 		icon_rect.modulate = Color(1.0, 1.0, 1.0, 0.86)
-	vb.add_child(icon_rect)
+	icon_wrap.add_child(icon_rect)
 
 	var slot_lbl: Label = Label.new()
+	slot_lbl.custom_minimum_size = Vector2(0.0, 26.0)
 	slot_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	slot_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	slot_lbl.text = slot_title
 	slot_lbl.add_theme_font_size_override("font_size", 16)
 	slot_lbl.add_theme_color_override("font_color", UIThemeBuilder.COL_BLUE_STUNT if has_stunt else Color("#EFE6D5"))
@@ -1063,6 +1106,24 @@ func _build_embossed_equip_slot(slot_key: String, eq_id: String, is_selected: bo
 
 
 func _resolve_comparison_candidate(eq_map: Dictionary) -> Dictionary:
+	# 0. 若玩家在中页左键手动点选了 3+2 槽位，则严格锁定该槽位展示与同部位备选，绝不被其它部位覆盖！
+	if _slot_manually_selected:
+		if selected_item_id != "" and DataDB.equipment.has(selected_item_id) and CampaignState.get_item_count(selected_item_id) > 0:
+			var mdef: Dictionary = DataDB.get_equipment(selected_item_id)
+			if str(mdef.get("slot", "")) == _selected_equip_slot:
+				return {"cand_id": selected_item_id, "slot": _selected_equip_slot}
+		var slot_cand: String = ""
+		for entry_m: Dictionary in CampaignState.inventory:
+			var iid_m: String = str(entry_m.get("id", ""))
+			if int(entry_m.get("count", 0)) > 0 and DataDB.equipment.has(iid_m):
+				var ed_m: Dictionary = DataDB.get_equipment(iid_m)
+				if str(ed_m.get("slot", "")) == _selected_equip_slot:
+					if str(ed_m.get("blue_stunt_id", "")) != "":
+						return {"cand_id": iid_m, "slot": _selected_equip_slot}
+					if slot_cand == "":
+						slot_cand = iid_m
+		return {"cand_id": slot_cand, "slot": _selected_equip_slot}
+
 	# 1. 优先采用外部或行囊已选中的在包装备（如 selected_item_id = "eq_pendant_poxue"）
 	if selected_item_id != "" and DataDB.equipment.has(selected_item_id) and CampaignState.get_item_count(selected_item_id) > 0:
 		var sdef: Dictionary = DataDB.get_equipment(selected_item_id)
@@ -1272,6 +1333,8 @@ func _build_side_by_side_comparison_card(char_id: String, eq_map: Dictionary, ca
 		wear_b.focus_mode = Control.FOCUS_NONE
 		wear_b.disabled = NotifyHub.combat_active
 		wear_b.pressed.connect(func() -> void:
+			if NotifyHub.combat_active:
+				return
 			if CampaignState.equip_item_on_member(char_id, cand_id):
 				rebuild_current_tab()
 		)
@@ -1320,11 +1383,16 @@ func _build_tab_specialization() -> void:
 		var scard: PanelContainer = PanelContainer.new()
 		scard.custom_minimum_size = Vector2(384.0, 660.0)
 		scard.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		scard.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(
+		var sb_scard: StyleBoxFlat = UIThemeBuilder.make_ebony_box(
 			Color(0.14, 0.13, 0.11, 0.96),
 			UIThemeBuilder.COL_BRONZE_GOLD if is_cur else UIThemeBuilder.COL_BRONZE_DIM,
 			3 if is_cur else 1, 6
-		))
+		)
+		sb_scard.content_margin_left = 14.0
+		sb_scard.content_margin_right = 14.0
+		sb_scard.content_margin_top = 10.0
+		sb_scard.content_margin_bottom = 10.0
+		scard.add_theme_stylebox_override("panel", sb_scard)
 		spec_hb.add_child(scard)
 
 		var sv: VBoxContainer = VBoxContainer.new()
@@ -1348,6 +1416,8 @@ func _build_tab_specialization() -> void:
 		sw_btn.focus_mode = Control.FOCUS_NONE
 		sw_btn.disabled = is_cur or NotifyHub.combat_active
 		sw_btn.pressed.connect(func() -> void:
+			if NotifyHub.combat_active:
+				return
 			if CampaignState.switch_specialization(selected_char_id, skey):
 				rebuild_current_tab()
 		)
@@ -1389,11 +1459,16 @@ func _build_tab_specialization() -> void:
 		var is_unlocked: bool = CampaignState.unlocked_formations.has(fid)
 		var is_active: bool = (CampaignState.active_formation_id == fid)
 		var fbox: PanelContainer = PanelContainer.new()
-		fbox.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(
+		var sb_fbox: StyleBoxFlat = UIThemeBuilder.make_ebony_box(
 			Color(0.15, 0.13, 0.12, 0.95),
 			UIThemeBuilder.COL_BRONZE_GOLD if is_active else UIThemeBuilder.COL_BRONZE_DIM,
 			2 if is_active else 1, 5
-		))
+		)
+		sb_fbox.content_margin_left = 14.0
+		sb_fbox.content_margin_right = 14.0
+		sb_fbox.content_margin_top = 10.0
+		sb_fbox.content_margin_bottom = 10.0
+		fbox.add_theme_stylebox_override("panel", sb_fbox)
 		rv.add_child(fbox)
 		var fvb: VBoxContainer = VBoxContainer.new()
 		fbox.add_child(fvb)
@@ -1409,8 +1484,10 @@ func _build_tab_specialization() -> void:
 		var fbtn: Button = Button.new()
 		fbtn.text = "已布阵" if is_active else "启用此阵"
 		fbtn.focus_mode = Control.FOCUS_NONE
-		fbtn.disabled = (not is_unlocked) or is_active
+		fbtn.disabled = (not is_unlocked) or is_active or NotifyHub.combat_active
 		fbtn.pressed.connect(func() -> void:
+			if NotifyHub.combat_active:
+				return
 			CampaignState.set_active_formation(fid)
 			rebuild_current_tab()
 		)
@@ -1449,6 +1526,8 @@ func _build_tab_specialization() -> void:
 			swap_b.focus_mode = Control.FOCUS_NONE
 			swap_b.disabled = NotifyHub.combat_active
 			swap_b.pressed.connect(func() -> void:
+				if NotifyHub.combat_active:
+					return
 				CampaignState.swap_formation_slots(slot_n, slot_n + 1)
 				rebuild_current_tab()
 			)
@@ -1527,9 +1606,14 @@ func _build_tab_inventory_and_sword_box() -> void:
 
 	# 右侧器物详情与 #8FD4E8 蓝字特技对比窗
 	var detail_box: PanelContainer = PanelContainer.new()
-	detail_box.custom_minimum_size = Vector2(416.0, 700.0)
+	detail_box.custom_minimum_size = Vector2(412.0, 700.0)
 	detail_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	detail_box.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.15, 0.14, 0.13, 0.96), UIThemeBuilder.COL_BRONZE_DIM, 2, 6))
+	var sb_detail: StyleBoxFlat = UIThemeBuilder.make_ebony_box(Color(0.15, 0.14, 0.13, 0.96), UIThemeBuilder.COL_BRONZE_DIM, 2, 6)
+	sb_detail.content_margin_left = 14.0
+	sb_detail.content_margin_right = 14.0
+	sb_detail.content_margin_top = 10.0
+	sb_detail.content_margin_bottom = 10.0
+	detail_box.add_theme_stylebox_override("panel", sb_detail)
 	split_hb.add_child(detail_box)
 
 	var detail_scroll: ScrollContainer = ScrollContainer.new()
@@ -1588,6 +1672,8 @@ func _build_tab_inventory_and_sword_box() -> void:
 				eq_b.focus_mode = Control.FOCUS_NONE
 				eq_b.disabled = NotifyHub.combat_active
 				eq_b.pressed.connect(func() -> void:
+					if NotifyHub.combat_active:
+						return
 					if CampaignState.equip_item_on_member(target_cid, selected_item_id):
 						rebuild_current_tab()
 				)
@@ -1598,7 +1684,10 @@ func _build_tab_inventory_and_sword_box() -> void:
 				var use_b: Button = Button.new()
 				use_b.text = "开启搜刮【储物袋】" if icat == "storage_pouch" else "立即服用此丹药"
 				use_b.focus_mode = Control.FOCUS_NONE
+				use_b.disabled = NotifyHub.combat_active
 				use_b.pressed.connect(func() -> void:
+					if NotifyHub.combat_active:
+						return
 					CampaignState.use_out_of_combat_item(selected_item_id)
 					rebuild_current_tab()
 				)
@@ -1623,8 +1712,10 @@ func _build_tab_inventory_and_sword_box() -> void:
 				var pur_b: Button = Button.new()
 				pur_b.text = "置入【断玉剑匣】蕴灵提纯（历战3场化极品）"
 				pur_b.focus_mode = Control.FOCUS_NONE
-				pur_b.disabled = not CampaignState.sword_box_slot.is_empty()
+				pur_b.disabled = (not CampaignState.sword_box_slot.is_empty()) or NotifyHub.combat_active
 				pur_b.pressed.connect(func() -> void:
+					if NotifyHub.combat_active:
+						return
 					if CampaignState.start_sword_box_purify(selected_item_id):
 						if audio_director != null:
 							audio_director.play_sfx("sfx_sword_box_hum", AudioDirector.TIER_A, true)
@@ -1638,7 +1729,12 @@ func _build_tab_inventory_and_sword_box() -> void:
 
 	var box_panel: PanelContainer = PanelContainer.new()
 	box_panel.custom_minimum_size = Vector2(700.0, 185.0)
-	box_panel.add_theme_stylebox_override("panel", UIThemeBuilder.make_ebony_box(Color(0.10, 0.16, 0.14, 0.97), UIThemeBuilder.COL_JADE_GREEN, 2, 6))
+	var sb_box: StyleBoxFlat = UIThemeBuilder.make_ebony_box(Color(0.10, 0.16, 0.14, 0.97), UIThemeBuilder.COL_JADE_GREEN, 2, 6)
+	sb_box.content_margin_left = 14.0
+	sb_box.content_margin_right = 14.0
+	sb_box.content_margin_top = 10.0
+	sb_box.content_margin_bottom = 10.0
+	box_panel.add_theme_stylebox_override("panel", sb_box)
 	rv.add_child(box_panel)
 
 	var bvb: VBoxContainer = VBoxContainer.new()
@@ -1673,8 +1769,10 @@ func _build_tab_inventory_and_sword_box() -> void:
 		var claim_b: Button = Button.new()
 		claim_b.text = "开匣收取提纯至宝"
 		claim_b.focus_mode = Control.FOCUS_NONE
-		claim_b.disabled = rem_b > 0
+		claim_b.disabled = (rem_b > 0) or NotifyHub.combat_active
 		claim_b.pressed.connect(func() -> void:
+			if NotifyHub.combat_active:
+				return
 			if CampaignState.claim_sword_box_output():
 				if audio_director != null:
 					audio_director.play_sfx("sfx_alchemy_success", AudioDirector.TIER_A, true)
@@ -1827,8 +1925,10 @@ func _build_tab_journal() -> void:
 		"重温绘卷一：《破庙剑鸣会少年》" if CampaignState.unlocked_cgs.has("cg_ch01_ruined_temple") else "绘卷一：破庙初会解锁后可随时鉴赏",
 		Vector2(420.0, 42.0)
 	)
-	cg_btn.disabled = not CampaignState.unlocked_cgs.has("cg_ch01_ruined_temple")
+	cg_btn.disabled = (not CampaignState.unlocked_cgs.has("cg_ch01_ruined_temple")) or NotifyHub.combat_active
 	cg_btn.pressed.connect(func() -> void:
+		if NotifyHub.combat_active:
+			return
 		close_casket()
 		replay_cg_requested.emit("cg_ch01_ruined_temple")
 	)
