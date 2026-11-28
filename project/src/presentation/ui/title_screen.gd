@@ -82,7 +82,7 @@ func _build_left_calligraphy_menu() -> void:
 	vb.add_child(title_lbl)
 
 	var sub_lbl: Label = Label.new()
-	var ver_str: String = str(ProjectSettings.get_setting("application/config/version", "0.1.6-slice"))
+	var ver_str: String = str(ProjectSettings.get_setting("application/config/version", "0.1.7-slice"))
 	sub_lbl.text = "%s · v%s" % [tr("GAME_SUBTITLE"), ver_str]
 	sub_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sub_lbl.add_theme_font_size_override("font_size", 18)
