@@ -3,7 +3,7 @@ extends Control
 ## 第三层叙事演出舞台（涵盖 Tier 2 宋明工笔半身立绘演剧台 + 雕花乌木手卷 + Tier 3 全屏 4 层视差动态绘卷 CG）
 ## 严格对齐 docs/design/14-narrative-design.md、21-ui-ux-spec.md 与闸门 3 样片 master_c_temple_stage.png：
 ## - 开启瞬间隐藏同级 CombatHud，调用 NotifyHub.set_narrative_exclusive(true) 清空残字、挂起 P3 轻签
-## - 开启与换行触发 InputRouter 400ms 防连点锁；Space 键与战斗快捷键 100% 物理屏蔽！
+## - 开启、CG 切换与道心抉择展开瞬间触发 InputRouter 400ms 防连点锁；Space 键与战斗快捷键 100% 物理屏蔽！
 ## - 仅限 Enter 键或鼠标左键点击对话手卷推进；已读文本支持长按 Ctrl 快进；重打 Boss 自动跳过已读战前对白。
 
 signal dialogue_action_triggered(action: Dictionary)
@@ -140,9 +140,9 @@ func _build_stage_dimmer_and_portraits() -> void:
 	_left_portrait.anchor_right = 0.0
 	_left_portrait.anchor_top = 1.0
 	_left_portrait.anchor_bottom = 1.0
-	_left_portrait.offset_left = 18.0
-	_left_portrait.offset_right = 898.0
-	_left_portrait.offset_top = -1100.0
+	_left_portrait.offset_left = 20.0
+	_left_portrait.offset_right = 788.0
+	_left_portrait.offset_top = -960.0
 	_left_portrait.offset_bottom = 0.0
 	_left_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_left_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -154,9 +154,9 @@ func _build_stage_dimmer_and_portraits() -> void:
 	_right_portrait.anchor_right = 1.0
 	_right_portrait.anchor_top = 1.0
 	_right_portrait.anchor_bottom = 1.0
-	_right_portrait.offset_left = -898.0
-	_right_portrait.offset_right = -18.0
-	_right_portrait.offset_top = -1100.0
+	_right_portrait.offset_left = -788.0
+	_right_portrait.offset_right = -20.0
+	_right_portrait.offset_top = -960.0
 	_right_portrait.offset_bottom = 0.0
 	_right_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_right_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -221,7 +221,7 @@ func _build_bottom_scroll() -> void:
 	_body_lbl.custom_minimum_size = Vector2(1540.0, 96.0)
 	_body_lbl.add_theme_font_override("font", UIThemeBuilder.get_regular_font())
 	_body_lbl.add_theme_font_size_override("font_size", 24)
-	_body_lbl.add_theme_color_override("font_color", UIThemeBuilder.COL_INK_DARK)
+	_body_lbl.add_theme_color_override("font_color", Color("#0C0907"))
 	_body_lbl.add_theme_constant_override("line_spacing", 8)
 	vb.add_child(_body_lbl)
 
@@ -522,7 +522,6 @@ func _on_advance_input() -> void:
 	if _choices_box.visible:
 		# 抉择分支阶段必须由玩家主动点选具体道心选项，严禁盲按 Enter 误选！
 		return
-	InputRouter.trigger_dialogue_lock()
 	_advance_line()
 
 
@@ -618,13 +617,13 @@ func _render_current_line() -> void:
 	# 当前说话方明亮微抬，聆听方温和保留工笔面部与衣纹层次（对齐 master_c_temple_stage.png）
 	var lift_l: float = -8.0 if (spk_is_left and not SaveManager.reduced_motion) else 0.0
 	var lift_r: float = -8.0 if (spk_is_right and not SaveManager.reduced_motion) else 0.0
-	_left_portrait.offset_top = -1100.0 + lift_l
+	_left_portrait.offset_top = -960.0 + lift_l
 	_left_portrait.offset_bottom = lift_l
-	_right_portrait.offset_top = -1100.0 + lift_r
+	_right_portrait.offset_top = -960.0 + lift_r
 	_right_portrait.offset_bottom = lift_r
 
-	_left_portrait.modulate = Color.WHITE if (spk_is_left or rp_id == "") else Color(0.86, 0.87, 0.90, 0.98)
-	_right_portrait.modulate = Color.WHITE if spk_is_right else Color(0.86, 0.87, 0.90, 0.98)
+	_left_portrait.modulate = Color.WHITE if (spk_is_left or rp_id == "") else Color(0.62, 0.62, 0.66, 0.96)
+	_right_portrait.modulate = Color.WHITE if spk_is_right else Color(0.62, 0.62, 0.66, 0.96)
 
 
 func _present_choices(choices: Array) -> void:

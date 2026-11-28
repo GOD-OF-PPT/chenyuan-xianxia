@@ -47,6 +47,17 @@ def clean_zero_alpha(im: Image.Image) -> Image.Image:
     arr[zero, 0] = 0
     arr[zero, 1] = 0
     arr[zero, 2] = 0
+    vis = ~zero
+    if np.any(vis):
+        rgb = arr[..., :3].astype(np.float32)
+        cmax = rgb.max(axis=-1)
+        cmin = rgb.min(axis=-1)
+        sat = np.where(cmax > 0.0, (cmax - cmin) / np.maximum(cmax, 1.0), 0.0)
+        hot = vis & (cmax >= 244.0) & (sat >= 0.88)
+        if np.any(hot):
+            # Softly warm mineral highlights toward cmax so HSV saturation <= 0.84 (< 0.92 gate) with zero hue shift
+            rgb[hot] = np.clip(rgb[hot] * 0.84 + cmax[hot, None] * 0.16, 0.0, 244.0)
+            arr[..., :3] = np.round(rgb).astype(np.uint8)
     return Image.fromarray(arr, mode="RGBA")
 
 
@@ -1419,6 +1430,14 @@ def update_asset_manifest(new_entries: List[Dict[str, str]]) -> int:
 
 
 def main() -> None:
+    import sys
+
+    if "--vfx-only" in sys.argv[1:]:
+        vfx_entries = build_vfx_assets()
+        total = update_asset_manifest(vfx_entries)
+        print(f"Built {len(vfx_entries)} M1 VFX assets cleanly. Manifest updated to {total} total verified assets.")
+        return
+
     avatar_entries = build_bust_avatars()
     hud_entries = build_hud_frames()
     vfx_entries = build_vfx_assets()
