@@ -115,15 +115,15 @@ class _MeridianAcupointCanvas extends Control:
 		var oy: float = fig_offset.y
 		var cx: float = ox + 224.0
 
-		# 穴位局部坐标（精确映射 460x550 casket_meridian_figure.png 穴位中心）
+		# 穴位局部坐标（精确映射 460x550 casket_meridian_figure.png 穴位中心，引线圆点与文字严格保持 8px 雅致间距）
 		var pts: Array[Dictionary] = [
-			{"id": "baihui", "pos": Vector2(cx, oy + 33.0), "r": 13.5, "label": tr("CASKET_ACU_BAIHUI"), "side": -1.0, "lx": ox + 106.0},
+			{"id": "baihui", "pos": Vector2(cx, oy + 33.0), "r": 13.5, "label": tr("CASKET_ACU_BAIHUI"), "side": -1.0, "lx": ox + 104.0},
 			{"id": "niwan", "pos": Vector2(cx, oy + 68.0), "r": 7.5, "label": tr("CASKET_ACU_NIWAN"), "side": 1.0, "lx": ox + 378.0},
-			{"id": "shanzhong", "pos": Vector2(cx, oy + 222.0), "r": 16.5, "label": tr("CASKET_ACU_SHANZHONG"), "side": -1.0, "lx": ox + 92.0},
+			{"id": "shanzhong", "pos": Vector2(cx, oy + 222.0), "r": 16.5, "label": tr("CASKET_ACU_SHANZHONG"), "side": -1.0, "lx": ox + 50.0},
 			{"id": "zhongwan", "pos": Vector2(cx, oy + 283.0), "r": 12.5, "label": tr("CASKET_ACU_ZHONGWAN"), "side": 1.0, "lx": ox + 382.0},
-			{"id": "qihai", "pos": Vector2(cx, oy + 334.0), "r": 18.0, "label": tr("CASKET_ACU_QIHAI"), "side": -1.0, "lx": ox + 92.0},
+			{"id": "qihai", "pos": Vector2(cx, oy + 334.0), "r": 18.0, "label": tr("CASKET_ACU_QIHAI"), "side": -1.0, "lx": ox + 48.0},
 			{"id": "dantian", "pos": Vector2(cx, oy + 383.0), "r": 19.5, "label": tr("CASKET_ACU_DANTIAN"), "side": 1.0, "lx": ox + 382.0},
-			{"id": "laogong_l", "pos": Vector2(ox + 91.0, oy + 384.0), "r": 11.5, "label": tr("CASKET_ACU_LAOGONG"), "side": -1.0, "lx": ox + 12.0},
+			{"id": "laogong_l", "pos": Vector2(ox + 91.0, oy + 384.0), "r": 11.5, "label": tr("CASKET_ACU_LAOGONG"), "side": -1.0, "lx": ox - 10.0},
 			{"id": "laogong_r", "pos": Vector2(ox + 357.0, oy + 384.0), "r": 11.5, "label": "", "side": 1.0, "lx": ox + 392.0},
 		]
 
@@ -167,10 +167,12 @@ class _MeridianAcupointCanvas extends Control:
 				var line_col: Color = Color(0.26, 0.21, 0.16, 0.72)
 				var dot_col: Color = Color(0.32, 0.25, 0.18, 0.85)
 				if str(p_dict["id"]) == "dantian":
-					var bend_y: float = oy + 346.0
+					var corridor_x: float = ox + 310.0 # >=29px 避开躯干(323)与右掌(381)墨线
+					var bend_y: float = oy + 450.0 # 指尖下方纯白宣纸区
 					var dantian_pts: PackedVector2Array = PackedVector2Array([
 						Vector2(start_x, p.y),
-						Vector2(ox + 300.0, bend_y),
+						Vector2(corridor_x, p.y),
+						Vector2(corridor_x, bend_y),
 						Vector2(end_x, bend_y),
 					])
 					draw_polyline(dantian_pts, line_col, 1.2)
@@ -690,15 +692,15 @@ func _build_tab_cultivation() -> void:
 	acu_canvas.fig_offset = Vector2(42.0, 2.0)
 	meridian_stage.add_child(acu_canvas)
 
-	# 穴位正楷简体批注标签（全部 >= 16px，置于人体两侧留白处，绝不遮盖 Rect2i(160,240,140,140) 亮宣采样区）
+	# 穴位正楷简体批注标签（全部 >= 16px，距页边 >= 28px，与引线圆点严格保持 8px 间距，绝不遮盖 Rect2i(160,240,140,140) 亮宣采样区）
 	var callouts: Array[Array] = [
-		[tr("CASKET_ACU_BAIHUI"), Vector2(98.0, 22.0)],
+		[tr("CASKET_ACU_BAIHUI"), Vector2(142.0, 22.0)],
 		[tr("CASKET_ACU_NIWAN"), Vector2(422.0, 56.0)],
-		[tr("CASKET_ACU_SHANZHONG"), Vector2(86.0, 210.0)],
-		[tr("CASKET_ACU_ZHONGWAN"), Vector2(426.0, 271.0)],
-		[tr("CASKET_ACU_QIHAI"), Vector2(86.0, 322.0)],
-		[tr("CASKET_ACU_DANTIAN"), Vector2(426.0, 334.0)],
-		[tr("CASKET_ACU_LAOGONG"), Vector2(8.0, 372.0)],
+		[tr("CASKET_ACU_SHANZHONG"), Vector2(88.0, 211.0)],
+		[tr("CASKET_ACU_ZHONGWAN"), Vector2(426.0, 272.0)],
+		[tr("CASKET_ACU_QIHAI"), Vector2(86.0, 323.0)],
+		[tr("CASKET_ACU_DANTIAN"), Vector2(426.0, 439.0)],
+		[tr("CASKET_ACU_LAOGONG"), Vector2(28.0, 373.0)],
 	]
 	for co: Array in callouts:
 		var cl: Label = Label.new()

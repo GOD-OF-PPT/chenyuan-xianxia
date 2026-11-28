@@ -1828,15 +1828,20 @@ func _draw_alt_xuan_nameplates() -> void:
 		font = ThemeDB.fallback_font
 	var placed_rects: Array[Rect2] = []
 
+	var inv_vp: Transform2D = get_canvas_transform().affine_inverse()
+	var vp_world_tl: Vector2 = inv_vp * Vector2(12.0, 12.0)
+	var vp_world_br: Vector2 = inv_vp * Vector2(1908.0, 1068.0)
+	var vp_min_x: float = minf(vp_world_tl.x, vp_world_br.x)
+	var vp_max_x: float = maxf(vp_world_tl.x, vp_world_br.x)
+
 	# 预留当前可见 HUD [F] 近距交互提示框与头顶宣纸气泡的世界空间矩形，确保 Alt 题签自动上移避让零遮挡！
 	if _hud != null and _hud._interact_prompt_box != null and _hud._interact_prompt_box.visible:
-		var inv_xf: Transform2D = get_canvas_transform().affine_inverse()
 		var p_srect: Rect2 = _hud._interact_prompt_box.get_global_rect()
 		var p_min_sz: Vector2 = _hud._interact_prompt_box.get_combined_minimum_size()
 		p_srect.size.x = maxf(p_srect.size.x, p_min_sz.x)
 		p_srect.size.y = maxf(p_srect.size.y, maxf(40.0, p_min_sz.y))
-		var p_tl: Vector2 = inv_xf * p_srect.position
-		var p_br: Vector2 = inv_xf * p_srect.end
+		var p_tl: Vector2 = inv_vp * p_srect.position
+		var p_br: Vector2 = inv_vp * p_srect.end
 		placed_rects.append(Rect2(p_tl, p_br - p_tl).abs().grow(4.0))
 
 	if _combat_ctrl != null:
@@ -1859,7 +1864,10 @@ func _draw_alt_xuan_nameplates() -> void:
 			tex_h = float(sp.texture.get_height())
 		var center_y: float = ipos.y - clampf(tex_h * 0.78, 88.0, 142.0)
 		var est_w: float = maxf(116.0, font.get_string_size(clean_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x + 34.0)
-		var cand_r: Rect2 = Rect2(ipos.x - est_w * 0.5, center_y - 16.0, est_w, 32.0)
+		var plaque_cx: float = ipos.x
+		if ipos.x >= vp_min_x - 36.0 and ipos.x <= vp_max_x + 36.0 and (vp_max_x - vp_min_x) > est_w + 16.0:
+			plaque_cx = clampf(ipos.x, vp_min_x + est_w * 0.5, vp_max_x - est_w * 0.5)
+		var cand_r: Rect2 = Rect2(plaque_cx - est_w * 0.5, center_y - 16.0, est_w, 32.0)
 		for _guard_i: int in range(4):
 			var hit_prev: bool = false
 			for pr: Rect2 in placed_rects:
@@ -1871,7 +1879,7 @@ func _draw_alt_xuan_nameplates() -> void:
 			center_y -= 34.0
 			cand_r.position.y = center_y - 16.0
 		placed_rects.append(cand_r)
-		_draw_xuan_plaque_at(Vector2(ipos.x, center_y), clean_name, iid == _hovered_interactable_id)
+		_draw_xuan_plaque_at(Vector2(plaque_cx, center_y), clean_name, iid == _hovered_interactable_id)
 
 	for npc: BattleActor in _npc_actors:
 		if not is_instance_valid(npc):
@@ -1881,7 +1889,10 @@ func _draw_alt_xuan_nameplates() -> void:
 			head_h = float(npc._head_top_px) * npc._sprite.scale.y
 		var npc_cy: float = npc.position.y - head_h - 22.0
 		var npc_w: float = maxf(116.0, font.get_string_size(npc.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x + 34.0)
-		var npc_r: Rect2 = Rect2(npc.position.x - npc_w * 0.5, npc_cy - 16.0, npc_w, 32.0)
+		var npc_cx: float = npc.position.x
+		if npc.position.x >= vp_min_x - 36.0 and npc.position.x <= vp_max_x + 36.0 and (vp_max_x - vp_min_x) > npc_w + 16.0:
+			npc_cx = clampf(npc.position.x, vp_min_x + npc_w * 0.5, vp_max_x - npc_w * 0.5)
+		var npc_r: Rect2 = Rect2(npc_cx - npc_w * 0.5, npc_cy - 16.0, npc_w, 32.0)
 		for _guard_j: int in range(4):
 			var hit_n: bool = false
 			for pr2: Rect2 in placed_rects:
@@ -1893,5 +1904,5 @@ func _draw_alt_xuan_nameplates() -> void:
 			npc_cy -= 34.0
 			npc_r.position.y = npc_cy - 16.0
 		placed_rects.append(npc_r)
-		_draw_xuan_plaque_at(Vector2(npc.position.x, npc_cy), npc.display_name, npc.is_hovered)
+		_draw_xuan_plaque_at(Vector2(npc_cx, npc_cy), npc.display_name, npc.is_hovered)
 
