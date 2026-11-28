@@ -1455,7 +1455,7 @@ func _draw_minimap() -> void:
 		if rpoly.size() >= 3:
 			var scaled_pts: PackedVector2Array = PackedVector2Array()
 			for pt: Vector2 in rpoly:
-				scaled_pts.append(Vector2(pt.x * scale_x, pt.y * scale_y))
+				scaled_pts.append(Vector2(clampf(pt.x * scale_x, 1.5, rect.size.x - 1.5), clampf(pt.y * scale_y, 1.5, rect.size.y - 1.5)))
 			_minimap_canvas.draw_colored_polygon(scaled_pts, Color(0.36, 0.39, 0.37, 0.78))
 
 	for brect: Rect2 in _mm_buildings:

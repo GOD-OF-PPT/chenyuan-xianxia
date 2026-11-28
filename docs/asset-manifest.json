@@ -2116,8 +2116,8 @@
       "path": "project/assets/world/prop_yaolu_alchemy_pavilion.png",
       "source_path": "assets_src/world/r5_yaolu_gate_pavilion_raw.jpg",
       "category": "world_prop",
-      "dimensions": "512x364",
-      "sha256": "3a4950fb537f7880e341371ff962418c80f1104216e2bc3bcbcd843ffb8c403e",
+      "dimensions": "504x326",
+      "sha256": "bffcba0f7d629dc288d2c0ed45abc4345c2652f1572076da3f56aebbe997dfda",
       "creation_method": "Gemini Imagen (r5_yaolu_gate_pavilion_raw.jpg) + tools/build_polish_r5_town.py wide-bay open thatched alchemy pavilion with rolled celadon bamboo blind",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"
@@ -2157,7 +2157,7 @@
       "source_path": "assets_src/world/r5_yaolu_gate_pavilion_raw.jpg",
       "category": "world_prop",
       "dimensions": "268x284",
-      "sha256": "1780dbbb09e4d50670a494ea3260fa6be7d35d0710a0c437a475eddab13793c5",
+      "sha256": "f23c155316c4c2ded09d9799efea1a225b1eb47a2ac8c1dc6ffdcdfe691adf97",
       "creation_method": "Gemini Imagen (r5_yaolu_gate_pavilion_raw.jpg) + tools/build_polish_r5_town.py 35-deg SW alignment, warm eave lantern & canonical Simplified Chinese '济世药庐' plaque",
       "generated_date": "2026-04-12",
       "license": "AI-Assisted First-Party Original Asset (Gemini Imagen Song-Ming Gongbi Style-Locked + tools/build_polish_r5_town.py Cutout, Isometric Plaque Typography & Mineral LUT, Commercial Rights Cleared)"

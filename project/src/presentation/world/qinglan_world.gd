@@ -427,13 +427,13 @@ func _assemble_tingyu_town() -> void:
 		Vector2(662.0, 732.0), Vector2(964.0, 714.0), Vector2(1022.0, 902.0), Vector2(666.0, 926.0)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
-		Vector2(50.0, 742.0), Vector2(420.0, 718.0), Vector2(740.0, 710.0), Vector2(928.0, 702.0),
+		Vector2(-180.0, 748.0), Vector2(420.0, 718.0), Vector2(740.0, 710.0), Vector2(928.0, 702.0),
 		Vector2(1148.0, 792.0), Vector2(1336.0, 866.0), Vector2(1318.0, 988.0),
-		Vector2(1084.0, 954.0), Vector2(740.0, 916.0), Vector2(410.0, 910.0), Vector2(50.0, 916.0)
+		Vector2(1084.0, 954.0), Vector2(740.0, 916.0), Vector2(410.0, 910.0), Vector2(-180.0, 922.0)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	_add_road_polygon(PackedVector2Array([
 		Vector2(1298.0, 854.0), Vector2(1545.0, 736.0), Vector2(1772.0, 626.0), Vector2(2040.0, 544.0),
-		Vector2(2365.0, 502.0), Vector2(2365.0, 712.0), Vector2(2045.0, 768.0),
+		Vector2(2580.0, 488.0), Vector2(2580.0, 702.0), Vector2(2045.0, 768.0),
 		Vector2(1822.0, 846.0), Vector2(1560.0, 938.0), Vector2(1318.0, 988.0)
 	]), "res://assets/world/tex_bluestone_wet.png")
 	# 街南民居门前青石踏跺支坪（贴合南侧 35° 民居台基前缘，零侧溢切边）
@@ -453,8 +453,8 @@ func _assemble_tingyu_town() -> void:
 
 	# 3. 右侧全闭合真 35° 斜向围合式【济世药庐】院落（与正堂、丹亭、长街共享统一 35° 轴测透视，对标 master_a_tingyu_town.png！）
 	_add_ground_decor_prop("res://assets/world/prop_yaolu_alchemy_terrace.png", Vector2(1406.0, 692.0), "YaoluAlchemyTerrace")
-	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1228.0, 582.0), 86.0, true)
-	_add_ysort_structure("res://assets/world/prop_yaolu_alchemy_pavilion.png", Vector2(1312.0, 688.0), 0.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_hall.png", Vector2(1192.0, 606.0), 85.0, true)
+	_add_ysort_structure("res://assets/world/prop_yaolu_alchemy_pavilion.png", Vector2(1306.0, 688.0), 0.0, true)
 
 	# 西北与东北内院背墙 + 西南临街粉墙门楼 + 南转角院墙 + 东南粉墙（短模块中心锚定 + 96px 严丝合缝搭接，0 断缝、0 斜墙腰斩！）
 	_add_ysort_wall_module("res://assets/world/prop_yaolu_courtyard_wall.png", Vector2(968.0, 594.0), false, -108.0)
@@ -494,8 +494,8 @@ func _assemble_tingyu_town() -> void:
 	_add_interactable("peddler_stall", "stall", Vector2(822.0, 876.0), 138.0, "散修小地摊 [F 掌眼淘旧物]", "res://assets/world/prop_peddler_stall.png", -1, true)
 
 	if not bool(CampaignState.world_flags.get("met_shen_qinghe", false)):
-		# 沈清禾立于正堂台阶前开阔青石院心（正对柴门中轴 x=1162，0 门柱遮挡，距 (1215, 675) 仅 57px！）
-		var shen_a: BattleActor = _spawn_npc("shen_npc", "沈清禾 · 药庐医修", "shen_qinghe", Vector2(1164.0, 650.0), "meet_shen")
+		# 沈清禾立于柴门敞口前缘青石踏跺迎诊（y=752 > 门楼 y=728，对标 master_a 全身立像 100% 零遮挡，且不挡匾额与暖灯！）
+		var shen_a: BattleActor = _spawn_npc("shen_npc", "沈清禾 · 药庐医修", "shen_qinghe", Vector2(1144.0, 752.0), "meet_shen")
 		if shen_a != null:
 			shen_a.set_facing(Vector2(-0.62, 0.78))
 
@@ -1522,12 +1522,13 @@ func _respawn_at_latest_stele() -> void:
 
 ## ==================== 场景拼装底层辅助 ====================
 func _add_tiled_ground(tex_path: String, rect: Rect2) -> void:
+	var bleed_rect: Rect2 = rect.grow(320.0)
 	var poly: Polygon2D = Polygon2D.new()
 	poly.polygon = PackedVector2Array([
-		rect.position,
-		Vector2(rect.end.x, rect.position.y),
-		rect.end,
-		Vector2(rect.position.x, rect.end.y),
+		bleed_rect.position,
+		Vector2(bleed_rect.end.x, bleed_rect.position.y),
+		bleed_rect.end,
+		Vector2(bleed_rect.position.x, bleed_rect.end.y),
 	])
 	if ResourceLoader.exists(tex_path):
 		poly.texture = load(tex_path) as Texture2D
@@ -1535,32 +1536,6 @@ func _add_tiled_ground(tex_path: String, rect: Rect2) -> void:
 	else:
 		poly.color = Color("#343E3A")
 	_ground_base_sub.add_child(poly)
-
-
-func _add_town_meadow_tonal_washes() -> void:
-	# 超低频宋明水墨青苔泥土晕染（打破大尺度平铺周期感，使南侧草坡层次温润自然）
-	var wash_canvas: Node2D = Node2D.new()
-	wash_canvas.name = "TownMeadowTonalWashes"
-	wash_canvas.draw.connect(func() -> void:
-		var patches: Array[Dictionary] = [
-			{"pos": Vector2(420.0, 1180.0), "rx": 340.0, "ry": 145.0, "col": Color(0.11, 0.15, 0.12, 0.16)},
-			{"pos": Vector2(1060.0, 1140.0), "rx": 380.0, "ry": 155.0, "col": Color(0.16, 0.21, 0.16, 0.13)},
-			{"pos": Vector2(1680.0, 1165.0), "rx": 410.0, "ry": 165.0, "col": Color(0.10, 0.14, 0.11, 0.16)},
-			{"pos": Vector2(2120.0, 1040.0), "rx": 310.0, "ry": 140.0, "col": Color(0.14, 0.19, 0.15, 0.13)},
-			{"pos": Vector2(780.0, 440.0), "rx": 290.0, "ry": 120.0, "col": Color(0.10, 0.14, 0.11, 0.15)},
-		]
-		for p: Dictionary in patches:
-			var c_pt: Vector2 = p["pos"] as Vector2
-			var rx: float = float(p["rx"])
-			var ry: float = float(p["ry"])
-			var col: Color = p["col"] as Color
-			var epts: PackedVector2Array = PackedVector2Array()
-			for k: int in range(20):
-				var ang: float = TAU * float(k) / 20.0
-				epts.append(c_pt + Vector2(cos(ang) * rx, sin(ang) * ry))
-			wash_canvas.draw_colored_polygon(epts, col)
-	)
-	_ground_base_sub.add_child(wash_canvas)
 
 
 func _add_road_polygon(pts: PackedVector2Array, tex_path: String) -> void:

@@ -147,19 +147,35 @@ def save_grounded_rgba(
     return final_arr
 
 
-def build_isometric_plaque_text_only(chars: str, w_px: int, h_px: int, shear_y_per_x: float = 0.48) -> Image.Image:
+def build_isometric_carved_plaque(
+    chars: str, w_px: int = 26, vert_h: int = 51, shear_y_per_x: float = 0.48
+) -> Image.Image:
     """
-    Render crisp canonical Simplified Chinese '济世药庐' calligraphy at 2x supersampling
-    sheared by +0.48 so it fits right inside the hand-drawn wooden signboard frame!
+    Render a crisp Song-Ming carved wooden signboard with canonical Simplified Chinese
+    '济世药庐' calligraphy at 4x supersampling, sheared by +0.48 and composited directly
+    at final 268x284 gatehouse resolution so zero building-downscale blur softens the glyphs!
     """
-    S = 2
-    bw, bh = w_px * S, h_px * S
-    card = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
+    S = 4
+    bw, bh = w_px * S, vert_h * S
+    pad = 2 * S
+    card = Image.new("RGBA", (bw + pad, bh + pad), (0, 0, 0, 0))
     d = ImageDraw.Draw(card)
 
+    # Subtle contact drop shadow on whitewash plaster
+    d.rectangle([S, int(1.5 * S), bw + S - 1, bh + int(1.5 * S) - 1], fill=(38, 34, 28, 72))
+    # Outer dark ink & aged walnut bevel frame
+    d.rectangle([0, 0, bw - 1, bh - 1], fill=(64, 48, 34, 255), outline=(26, 21, 18, 255), width=max(2, S // 2))
+    in_b = int(round(2.4 * S))
+    d.rectangle(
+        [in_b, in_b, bw - 1 - in_b, bh - 1 - in_b],
+        fill=(186, 160, 122, 255),
+        outline=(92, 70, 48, 255),
+        width=max(1, S // 3),
+    )
+
     if os.path.isfile(FONT_BOLD_PATH):
-        font = ImageFont.truetype(FONT_BOLD_PATH, int(bw * 0.62))
-        pad_v = int(bh * 0.08)
+        font = ImageFont.truetype(FONT_BOLD_PATH, int(round((bw - 2 * in_b) * 0.56)))
+        pad_v = in_b + S
         usable_h = bh - 2 * pad_v
         step_y = usable_h / float(len(chars))
         cx = bw * 0.5
@@ -170,17 +186,21 @@ def build_isometric_plaque_text_only(chars: str, w_px: int, h_px: int, shear_y_p
             cy = pad_v + (idx + 0.5) * step_y
             tx = int(round(cx - gw * 0.5 - bb[0]))
             ty = int(round(cy - gh * 0.5 - bb[1]))
-            d.text((tx, ty), ch, font=font, fill=(26, 21, 18, 250))
+            # Faint warm bevel highlight + bold pine-soot ink stroke
+            d.text((tx, ty + max(1, S // 4)), ch, font=font, fill=(208, 184, 146, 140))
+            d.text((tx, ty), ch, font=font, fill=(20, 16, 14, 255))
 
-    extra_h = int(math.ceil(abs(shear_y_per_x) * bw)) + 4
+    tot_w = bw + pad
+    tot_h = bh + pad
+    extra_h = int(math.ceil(abs(shear_y_per_x) * tot_w)) + 4
     src_arr = np.asarray(card, dtype=np.uint8)
-    sh_arr = np.zeros((bh + extra_h, bw, 4), dtype=np.uint8)
-    for x in range(bw):
-        dy = int(round(shear_y_per_x * x)) if shear_y_per_x >= 0 else int(round(abs(shear_y_per_x) * (bw - 1 - x)))
-        sh_arr[dy : dy + bh, x, :] = src_arr[:, x, :]
+    sh_arr = np.zeros((tot_h + extra_h, tot_w, 4), dtype=np.uint8)
+    for x in range(tot_w):
+        dy = int(round(shear_y_per_x * x)) if shear_y_per_x >= 0 else int(round(abs(shear_y_per_x) * (tot_w - 1 - x)))
+        sh_arr[dy : dy + tot_h, x, :] = src_arr[:, x, :]
 
-    out_w = w_px
-    out_h = max(12, int(round((bh + extra_h) / float(S))))
+    out_w = max(8, int(round(tot_w / float(S))))
+    out_h = max(12, int(round((tot_h + extra_h) / float(S))))
     return Image.fromarray(sh_arr, mode="RGBA").resize((out_w, out_h), Image.Resampling.LANCZOS)
 
 
@@ -284,13 +304,17 @@ def main() -> None:
         extra_hole_boxes=[(175, 180, 286, 382), (80, 110, 185, 225)],
     )
     # Mirror horizontally so gatehouse runs along +0.50 SW courtyard wall facing street (matching master_a!)
-    # Native wooden signboard frame in gate_cut (425x455) was at x=306..348, y=184..298 -> after mirror: x=77..119, y=184..298!
     gate_sw = ImageOps.mirror(gate_cut)
-    plaque_txt = build_isometric_plaque_text_only("济世药庐", w_px=22, h_px=90, shear_y_per_x=0.46)
-    gate_sw.alpha_composite(plaque_txt, (71, 164))
-
     gate_rel = "project/assets/world/prop_yaolu_gatehouse.png"
     gate_arr = save_grounded_rgba(gate_sw, 268, 284, gate_rel, shadow_alpha=76, pad_bot=4, lut_sat=0.92)
+    # Composite 4x-supersampled carved wooden '济世药庐' signboard directly at final 268x284 resolution
+    # (x=39..65, y_left=100..151) covering the native frame cleanly inside the SW whitewash panel!
+    gate_im = Image.fromarray(gate_arr, mode="RGBA")
+    plaque_card = build_isometric_carved_plaque("济世药庐", w_px=26, vert_h=54, shear_y_per_x=0.48)
+    gate_im.alpha_composite(plaque_card, (39, 98))
+    gate_arr = clamp_song_ming_mineral_hsv(np.asarray(gate_im, dtype=np.uint8))
+    assert count_fluorescent_pixels(gate_arr) == 0, "Fluorescent pixels in prop_yaolu_gatehouse.png"
+    Image.fromarray(gate_arr, mode="RGBA").save(os.path.join(REPO_ROOT, gate_rel), format="PNG", optimize=False)
     generated_thumbs[gate_rel] = gate_arr
     manifest_updates.append(
         {
@@ -302,19 +326,30 @@ def main() -> None:
         }
     )
 
-    # Alchemy Pavilion: punch out gable truss openings & tuck tiny rear shadow stub so the 207px front-SE bay frames cauldron cleanly
+    # Alchemy Pavilion: clear ALL enclosed cream openings (gable truss + straw-to-beam gaps) and
+    # surgically tuck ONLY the rear pillar stub strictly below the diagonal wooden tie-beam (zero eave notch!)
+    pav_sub = im_gp[115:596, 515:990]
     pav_cut = extract_exterior_cutout(
-        im_gp[115:596, 515:990],
+        pav_sub,
         bg_gp,
-        tol=19.5,
-        extra_hole_boxes=[(85, 165, 175, 240)],
+        tol=21.5,
+        extra_hole_boxes=[(0, 0, pav_sub.shape[1], pav_sub.shape[0])],
     )
     pav_np = np.asarray(pav_cut, dtype=np.uint8).copy()
     ph_c, pw_c = pav_np.shape[:2]
-    pav_np[int(ph_c * 0.45) : int(ph_c * 0.68), int(pw_c * 0.50) : int(pw_c * 0.68), 3] = 0
+    for x_p in range(232, min(pw_c, 314)):
+        y_beam_bot = 307.0 - 0.484 * float(x_p - 223)
+        y_edge = int(round(y_beam_bot))
+        # Clear ONLY pixels strictly below the continuous diagonal wooden tie-beam
+        if y_edge + 2 < ph_c:
+            pav_np[y_edge + 2 : min(ph_c, 316), x_p, 3] = 0
+        # Restore continuous Song-Ming ink bottom contour across the 43px span where the stub crossed the beam
+        if 252 <= x_p <= 295 and 0 <= y_edge + 1 < ph_c:
+            pav_np[y_edge, x_p] = np.array([34, 30, 26, 250], dtype=np.uint8)
+            pav_np[y_edge + 1, x_p] = np.array([34, 30, 26, 108], dtype=np.uint8)
     pav_rel = "project/assets/world/prop_yaolu_alchemy_pavilion.png"
     pav_arr = save_grounded_rgba(
-        Image.fromarray(pav_np, mode="RGBA"), 512, 364, pav_rel, shadow_alpha=68, pad_bot=4, lut_sat=0.92
+        Image.fromarray(pav_np, mode="RGBA"), 504, 326, pav_rel, shadow_alpha=68, pad_bot=4, lut_sat=0.92
     )
     generated_thumbs[pav_rel] = pav_arr
     manifest_updates.append(
