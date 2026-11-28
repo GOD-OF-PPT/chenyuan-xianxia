@@ -172,9 +172,11 @@ func _draw_stage_rain_and_lantern_glow() -> void:
 	_stage_rain_canvas.draw_circle(Vector2(1410.0, 326.0), 68.0, Color(0.95, 0.68, 0.30, 0.08 * flicker))
 	var shift: float = 0.0 if SaveManager.reduced_motion else (_stage_fx_clock * 460.0)
 	var r_col: Color = Color(0.76, 0.84, 0.88, 0.16)
+	var stage_w: float = maxf(1920.0, _stage_rain_canvas.size.x)
+	var stage_h: float = maxf(1080.0, _stage_rain_canvas.size.y)
 	for seed_v: Vector3 in _rain_seeds:
-		var rx: float = fposmod(seed_v.x - shift * 0.20, 1920.0)
-		var ry: float = fposmod(seed_v.y + shift, 1080.0)
+		var rx: float = fposmod(seed_v.x * (stage_w / 1920.0) - shift * 0.20, stage_w)
+		var ry: float = fposmod(seed_v.y + shift, stage_h)
 		_stage_rain_canvas.draw_line(Vector2(rx, ry), Vector2(rx - seed_v.z * 0.20, ry + seed_v.z), r_col, 1.15)
 
 

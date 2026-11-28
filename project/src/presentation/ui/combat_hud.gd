@@ -343,9 +343,9 @@ func _make_framed_bar_row(
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	lbl.add_theme_font_override("font", UIThemeBuilder.get_bold_font() if use_bold else UIThemeBuilder.get_regular_font())
 	lbl.add_theme_font_size_override("font_size", maxi(UIThemeBuilder.FS_MIN, font_sz))
-	lbl.add_theme_color_override("font_color", Color("#F7F1E8"))
-	lbl.add_theme_constant_override("outline_size", 3)
-	lbl.add_theme_color_override("font_outline_color", Color("#120E0C"))
+	lbl.add_theme_color_override("font_color", Color("#FAF5EC"))
+	lbl.add_theme_constant_override("outline_size", 4)
+	lbl.add_theme_color_override("font_outline_color", Color("#090706"))
 	inner.add_child(lbl)
 
 	return {
@@ -612,15 +612,15 @@ func _build_party_frames() -> void:
 		var ai_btn: Button = _make_compact_btn("AI")
 		top_hb.add_child(ai_btn)
 
-		var hp_info_p: Dictionary = _make_framed_bar_row(312.0, 22.0, Color("#261210"), Color("#6A4838"), 1, 16, false)
+		var hp_info_p: Dictionary = _make_framed_bar_row(312.0, 22.0, Color("#261210"), Color("#6A4838"), 1, 16, true)
 		var hp_fill: ColorRect = hp_info_p["fill"] as ColorRect
-		hp_fill.color = UIThemeBuilder.COL_HP_VERMILION
+		hp_fill.color = Color("#9E3429")
 		var hp_l: Label = hp_info_p["label"] as Label
 		rvb.add_child(hp_info_p["panel"] as PanelContainer)
 
-		var mp_info_p: Dictionary = _make_framed_bar_row(312.0, 20.0, Color("#0F1B26"), Color("#3E5A6E"), 1, 16, false)
+		var mp_info_p: Dictionary = _make_framed_bar_row(312.0, 20.0, Color("#0F1B26"), Color("#3E5A6E"), 1, 16, true)
 		var mp_fill: ColorRect = mp_info_p["fill"] as ColorRect
-		mp_fill.color = UIThemeBuilder.COL_MP_CELADON
+		mp_fill.color = Color("#2F6980")
 		var mp_l: Label = mp_info_p["label"] as Label
 		rvb.add_child(mp_info_p["panel"] as PanelContainer)
 
@@ -1455,7 +1455,7 @@ func _draw_minimap() -> void:
 		if rpoly.size() >= 3:
 			var scaled_pts: PackedVector2Array = PackedVector2Array()
 			for pt: Vector2 in rpoly:
-				scaled_pts.append(Vector2(pt.x * scale_x, pt.y * scale_y))
+				scaled_pts.append(Vector2(clampf(pt.x * scale_x, 1.5, rect.size.x - 1.5), clampf(pt.y * scale_y, 1.5, rect.size.y - 1.5)))
 			_minimap_canvas.draw_colored_polygon(scaled_pts, Color(0.36, 0.39, 0.37, 0.78))
 
 	for brect: Rect2 in _mm_buildings:
@@ -1492,7 +1492,8 @@ func _draw_minimap() -> void:
 
 	if combat_ctrl.world_camera != null:
 		var cam_c: Vector2 = combat_ctrl.world_camera.get_screen_center_position()
-		var vp_sz: Vector2 = Vector2(1920.0 * scale_x, 1080.0 * scale_y)
+		var live_vp: Vector2 = get_viewport_rect().size / combat_ctrl.world_camera.zoom
+		var vp_sz: Vector2 = Vector2(live_vp.x * scale_x, live_vp.y * scale_y)
 		var cam_r: Rect2 = Rect2(Vector2(cam_c.x * scale_x, cam_c.y * scale_y) - vp_sz * 0.5, vp_sz)
 		_minimap_canvas.draw_rect(cam_r.intersection(rect), Color(0.84, 0.68, 0.42, 0.34), false, 1.0)
 
